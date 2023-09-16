@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,12 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import br.com.educa.salas.model.Usuario;
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.internal.OraclePreparedStatement;
 import oracle.jdbc.internal.OracleResultSet;
@@ -87,27 +94,33 @@ public class EducaDb {
 		
 //	}
 	
-	public String Consulta() throws SQLException {
-		
-		try {
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT           "); 
-			sql.append("   TEXTO         ");
-			sql.append("FROM TESTE_JULIO ");	
-			try (OraclePreparedStatement statement = (OraclePreparedStatement) dataSource().getConnection()
-					.prepareStatement(sql.toString());) {
-				try (OracleResultSet rs = (OracleResultSet) statement.executeQuery();) {
-					while (rs.next()) {
-						vTexto = rs.getString("TEXTO");
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public String CriarUsuario(Usuario usuario) throws SQLException, Exception {
 
-		return vTexto;
+		SimpleJdbcCall call = 
+				 new SimpleJdbcCall(dataSource())
+				 .withSchemaName("EDUCACAO")
+				 .withCatalogName("PKG_USUARIO")
+				 .withProcedureName("CRIAR_USUARIO")				 
+              .declareParameters(
+               new SqlOutParameter("PRETORNO", Types.VARCHAR));
 		
+		System.out.println(usuario.toString());
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("PNOME",     usuario.getNome());
+		parametros.put("PENDERECO", usuario.getEndereco());
+		parametros.put("PTELEFONE", usuario.getTelefone());
+		parametros.put("PEMAIL",    usuario.getEmail());
+		parametros.put("PGESTOR",   usuario.getGestor());
+
+		try {
+			vTexto = call.executeObject(String.class, parametros);
+		
+		} catch (Exception e) {
+			throw new SQLException(e.getMessage());
+		}
+		
+		return vTexto;  
 	}
+	
 	
 }
