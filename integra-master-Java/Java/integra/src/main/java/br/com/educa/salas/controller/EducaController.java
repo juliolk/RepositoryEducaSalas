@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.educa.salas.model.Usuario;
+import br.com.educa.salas.model.Login;
 import br.com.educa.salas.service.EducaDb;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,25 +42,21 @@ public class EducaController {
 		return ResponseEntity.ok("");
 	}
 
-	@Operation(summary = "Cadastra Usuário.")
+	@SuppressWarnings("unchecked")
+	@Operation(summary = "Login.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Retorna Sucesso."), })
 //	@PostMapping(value = "/cadastraUsuario",params = nome, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/cadastraUsuario",method = RequestMethod.POST,  produces = "application/json;charset=UTF-8")
-	public ResponseEntity<String> cadastraUsuario(
+	@RequestMapping(value = "/Login",method = RequestMethod.POST,  produces = "application/json;charset=UTF-8")
+	public ResponseEntity<String> Login(
 			@RequestParam(value="nome")     String nome ,
-			@RequestParam(value="endereco") String endereco,
-			@RequestParam(value="telefone") String telefone,
-			@RequestParam(value="email")    String email,
-			@RequestParam(value="gestor")   String gestor) throws Exception {
+			@RequestParam(value="senha") String senha) throws Exception {
 		
-		Usuario usuario = new Usuario();
-		usuario.setNome(nome);
-		usuario.setEndereco(endereco);
-		usuario.setTelefone(telefone);
-		usuario.setEmail(email); 
-		usuario.setGestor(gestor);
-			
-		return ResponseEntity.ok(service.CriarUsuario(usuario));
+		Login login = new Login();
+		login.setNome(nome);
+		login.setSenha(senha);
+				
+		return service.Login(login); 
+		
 	}
 }
 

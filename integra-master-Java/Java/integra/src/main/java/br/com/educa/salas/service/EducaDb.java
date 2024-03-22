@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import br.com.educa.salas.model.Usuario;
+import br.com.educa.salas.model.Login;
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.internal.OraclePreparedStatement;
 import oracle.jdbc.internal.OracleResultSet;
@@ -34,6 +37,7 @@ import oracle.jdbc.pool.OracleDataSource;
 public class EducaDb {
 	
 	private String vTexto;
+	private ResponseEntity validaLogin;
 	
 	@Value("${spring.datasource.url}")
     private String dbUrl;
@@ -94,32 +98,37 @@ public class EducaDb {
 		
 //	}
 	
-	public String CriarUsuario(Usuario usuario) throws SQLException, Exception {
+	@SuppressWarnings("rawtypes")
+	public ResponseEntity Login(Login login) throws SQLException, Exception {
 
 		SimpleJdbcCall call = 
 				 new SimpleJdbcCall(dataSource())
 				 .withSchemaName("EDUCACAO")
 				 .withCatalogName("PKG_USUARIO")
-				 .withProcedureName("CRIAR_USUARIO")				 
+				 .withProcedureName("VALIDA_LOGIN")				 
               .declareParameters(
                new SqlOutParameter("PRETORNO", Types.VARCHAR));
 		
-		System.out.println(usuario.toString());
+		System.out.println(login.toString());
 		Map<String, Object> parametros = new HashMap<>();
-		parametros.put("PNOME",     usuario.getNome());
-		parametros.put("PENDERECO", usuario.getEndereco());
-		parametros.put("PTELEFONE", usuario.getTelefone());
-		parametros.put("PEMAIL",    usuario.getEmail());
-		parametros.put("PGESTOR",   usuario.getGestor());
+		parametros.put("PNOME",     login.getNome());
+		parametros.put("PSENHA", login.getSenha());
 
 		try {
 			vTexto = call.executeObject(String.class, parametros);
-		
+			System.out.println(vTexto);
+			
+			if (vTexto != null) {
+				validaLogin = ResponseEntity.ok("Bem vindo "+vTexto);
+			}else {
+				validaLogin = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");;
+			}
+				
+			return validaLogin;
+			
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
-		}
-		
-		return vTexto;  
+		}  
 	}
 	
 	
