@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="EditalNom"
+			backing="#{editalNomBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_editalNom}"
+					value="#{row.editalNom}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.editalNom}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_simulacao}"
+					value="#{row.simulacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.simulacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_oficial}"
+					value="#{row.oficial}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.oficial}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtEditalNom"
+						label="#{bundle.lbl_editalNom}"
+						required="true"
+						value="#{editalNomBacking.entity.numero}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not editalNomBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{editalNomBacking.entity.descricao}"
+						size="80" />
+
+					<xcp:combo
+						id="cboTipEdital"
+						value="#{editalNomBacking.entity.tipEdital}"
+						label="#{bundle.lbl_tipEdital}"
+						required="true"
+						itens="#{editalNomBacking.itensTipEdital}" />
+
+					<xcp:dateRange
+						id="txtDataPosse"
+						valueStart="#{editalNomBacking.entity.dtiniposse}"
+						valueEnd="#{editalNomBacking.entity.dtfimposse}"
+						required="true"
+						label="#{bundle.lbl_posse}"
+						size="8" />
+
+					<xcp:text
+						id="txtLocal"
+						label="#{bundle.lbl_local}"
+						value="#{editalNomBacking.entity.local}"
+						maxlength="100"
+						size="80" />
+
+					<xcp:lov
+						id="lovAssinatura"
+						value="#{editalNomBacking.entity.assinaturaFk}"
+						label="#{bundle.lbl_assinatura}"
+						required="true"
+						query="assinaturas"
+						size="10" />
+
+					<xcp:date
+						id="txtInternet"
+						value="#{editalNomBacking.entity.internet}"
+						label="#{bundle.lbl_dispPortal}" />
+
+					<xcp:date
+						id="txtReuniao"
+						value="#{editalNomBacking.entity.reuniao}"
+						label="#{bundle.lbl_dtReuniao}" />
+
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{editalNomBacking.entity.data}"
+						label="#{bundle.lbl_dtPub}"
+						readonly="#{editalNomBacking.entity.simulacao != null or editalNomBacking.entity.oficial != null}">
+						<p:ajax
+							event="change"
+							process="@this"
+							update="@this" />
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="@this" />
+					</xcp:date>
+
+
+					<xcp:date
+						id="txtSimulacao"
+						readonly="true"
+						value="#{editalNomBacking.entity.simulacao}"
+						label="#{bundle.lbl_simulacao}" />
+
+					<xcp:date
+						id="txtOficial"
+						readonly="true"
+						value="#{editalNomBacking.entity.oficial}"
+						label="#{bundle.lbl_oficial}" />
+
+					<xcp:memo
+						id="txtVeiculo"
+						label="#{bundle.lbl_veiculo}"
+						value="#{editalNomBacking.entity.veiculo}"
+						cols="80"
+						size="4000" />
+
+					<xcp:memo
+						id="txtObs"
+						cols="80"
+						label="#{bundle.lbl_obs}"
+						value="#{editalNomBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="EditalNomForm/EditalNomCarForm.xhtml" />
+
+				<p:outputPanel
+					rendered="#{editalNomBacking.entity.simulacao != null or editalNomBacking.entity.oficial != null}">
+					<ui:include src="EditalNomForm/EditalNomCarCanForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_sim"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_simular}"
+					rendered="#{!editalNomBacking.entity.novo and editalNomBacking.entity.simulacao == null and editalNomBacking.entity.oficial == null}"
+					disabled="#{editalNomBacking.disabledSim}"
+					action="#{editalNomBacking.actionSimular}"
+					update="@form">
+					<p:confirm
+						header="#{bundle.tit_confirma_simulacao}"
+						message="#{bundle.msg_confirma_simulacao}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_rem_sim"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_remsimulacao}"
+					rendered="#{!editalNomBacking.entity.novo and editalNomBacking.entity.simulacao != null and editalNomBacking.entity.oficial == null}"
+					disabled="#{editalNomBacking.disabledSim}"
+					action="#{editalNomBacking.actionRemNomeacao}"
+					update="@form">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+
+				<xcp:commandButton
+					id="btn_ofi"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_oficializar}"
+					rendered="#{!editalNomBacking.entity.novo and editalNomBacking.entity.oficial == null and editalNomBacking.entity.simulacao != null}"
+					disabled="#{editalNomBacking.disabledOfic}"
+					action="#{editalNomBacking.actionOficializar}"
+					update="@form">
+					<p:confirm
+						header="#{bundle.tit_confirma_oficializacao}"
+						message="#{bundle.msg_confirma_oficializacao}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_rem_ofi"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_remoficializar}"
+					rendered="#{!editalNomBacking.entity.novo and editalNomBacking.entity.oficial != null and editalNomBacking.entity.simulacao != null}"
+					disabled="#{editalNomBacking.disabledOfic}"
+					action="#{editalNomBacking.actionRemNomeacao}"
+					update="@form">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_email"
+					rendered="#{!editalNomBacking.entity.novo and editalNomBacking.entity.oficial != null and editalNomBacking.entity.simulacao != null}"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_enviar_msg}"
+					action="#{editalNomBacking.actionOpenEmail}"
+					update=":formmsg" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_enviar_msg}"
+			modal="true"
+			id="dlgMsg"
+			width="800px"
+			widgetVar="dlgMsg_w">
+			<xcp:form
+				id="formmsg"
+				multipart="true">
+
+				<xcp:panelForm>
+
+					<h:outputText value="" />
+
+					<h:outputText
+						value="#{editalNomBacking.msgCandidatos}"
+						style="color:red;font-style:red; display:block;width:600px; word-wrap:break-word;" /> 
+
+					<xcp:radio
+						id="txtEnvio"
+						label="#{bundle.lbl_tipoEnvio}"
+						required="true"
+						value="#{editalNomBacking.msgHelper.tipEnvio}"
+						itens="#{editalNomBacking.itensTipEnvio}">
+						<p:ajax
+							event="change"
+							update="@form" />
+					</xcp:radio>
+
+					<xcp:lov
+						id="lovCandidato"
+						value="#{editalNomBacking.msgHelper.candidatosLov}"
+						label="#{bundle.lbl_cadidato}"
+						query="candidatosnom"
+						params="#{editalNomBacking.parEspCand}"
+						size="15"
+						update=":formmsg:table_sel"
+						rendered="#{editalNomBacking.msgHelper.tipEnvio == 2}"
+						selectionListener="#{editalNomBacking.selectCandidatoMsg}" />
+
+					<h:outputText
+						value=""
+						rendered="#{editalNomBacking.msgHelper.tipEnvio == 2}" />
+
+					<p:dataTable
+						id="table_sel"
+						var="row"
+						rendered="#{editalNomBacking.msgHelper.tipEnvio == 2}"
+						value="#{editalNomBacking.msgHelper.listCandLov}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						scrollable="true"
+						scrollHeight="161">
+
+						<p:column
+							headerText="#{bundle.col_nome}"
+							type="String">
+							<xcp:outputSimple value="#{row.nome}" />
+						</p:column>
+
+						<p:column style="width: 15px;">
+							<xcp:commandLink
+								id="btn_remover_sel"
+								immediate="true"
+								update=":formmsg:table_sel"
+								process="@this"
+								action="#{editalNomBacking.actionRemoveSel(row)}">
+								<h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" />
+							</xcp:commandLink>
+						</p:column>
+					</p:dataTable>
+
+					<xcp:radio
+						id="txtMsg"
+						label="#{bundle.lbl_tipMsg}"
+						required="true"
+						value="#{editalNomBacking.msgHelper.tipMsg}"
+						itens="#{editalNomBacking.itensTipMsg}">
+						<p:ajax
+							event="change"
+							update="@form" />
+					</xcp:radio>
+
+					<xcp:lov
+						id="lovSeqTexto"
+						required="true"
+						value="#{editalNomBacking.msgHelper.xcpTexto}"
+						label="#{bundle.lbl_textoEmail}"
+						query="xcp_texto"
+						size="20"
+						rendered="#{editalNomBacking.msgHelper.tipMsg == 1}" />
+
+					<xcp:text
+						id="txtAssunto"
+						required="true"
+						label="#{bundle.lbl_assuntoEmail}"
+						value="#{editalNomBacking.msgHelper.assunto}"
+						rendered="#{editalNomBacking.msgHelper.tipMsg == 2}" />
+
+					<h:outputLabel
+						value="#{bundle.lbl_mensagem}:"
+						rendered="#{editalNomBacking.msgHelper.tipMsg == 2}" />
+
+					<p:editor
+						id="txtMsgDlg"
+						required="true"
+						label="#{bundle.lbl_mensagem}"
+						widgetVar="editorWidget"
+						value="#{editalNomBacking.msgHelper.desMsg}"
+						rendered="#{editalNomBacking.msgHelper.tipMsg == 2}"
+						width="600" />
+
+					<h:outputLabel value="#{bundle.lbl_anexo}:" />
+
+					<p:fileUpload
+						id="uploadAnexos"
+						mode="advanced"
+						auto="true"
+						label="#{bundle.btn_upload}"
+						uploadLabel="#{bundle.btn_upload}"
+						invalidFileMessage="#{bundle.msg_upload_arquivo}"
+						converterMessage="#{bundle.msg_upload_conversao}"
+						fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+						invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+						messageTemplate="#{bundle.msg_upload_mensagem}"
+						requiredMessage="#{bundle.msg_upload_requerido}"
+						validatorMessage="#{bundle.msg_upload_validacao}"
+						cancelLabel="#{bundle.btn_upload_cancel}"
+						dragDropSupport="false"
+						fileUploadListener="#{editalNomBacking.actionUploadAnexo}" />
+				</xcp:panelForm>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_enviar"
+							icon="ui-icon-document"
+							process="btn_enviar txtEnvio lovSeqTexto txtMsg txtAssunto txtMsgDlg"
+							value="#{bundle.btn_enviar}"
+							action="#{editalNomBacking.actionEnviarMsg}" />
+					</f:facet>
+				</p:toolbar>
+
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgSet"
+			widgetVar="dlgSet_w"
+			header="#{bundle.tit_setores}"
+			modal="true">
+			<xcp:form id="frmSetor">
+
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovSetor"
+						value="#{editalNomCarBacking.setor.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="10"
+						required="true" />
+
+					<xcp:number
+						id="txtQtdVagas"
+						label="#{bundle.lbl_qtdVagas}"
+						value="#{editalNomCarBacking.setor.qtdVagas}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						minValue="1"
+						required="true" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<!-- update=":form:tblSet" -->
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@form"
+							action="#{editalNomCarBacking.actionGravarSetor}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('dlgSet_w').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+
+	</ui:define>
+</ui:composition>

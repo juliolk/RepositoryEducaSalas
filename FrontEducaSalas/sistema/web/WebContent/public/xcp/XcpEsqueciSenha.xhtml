@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:p="http://primefaces.org/ui"
+	template="#{xcp:getLayout('login')}">
+	<ui:define name="conteudo">
+
+		<p:defaultCommand target="btn_enviar" />
+
+		<p:blockUI
+			block="panelEsqueciSenha"
+			widgetVar="blockForm_w">
+			<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+		</p:blockUI>
+
+		<h:panelGroup
+			id="panelEsqueciSenha"
+			layout="block">
+			<xcp:panelForm floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+				<xcp:text
+					id="txtMatricula"
+					label="#{bundle.lbl_matricula}"
+					value="#{xcpEsqueciSenhaBacking.matricula}"
+					size="8"
+					required="true" />
+
+				<xcp:cpf
+					id="txtCpf"
+					label="#{bundle.lbl_cpf}"
+					value="#{xcpEsqueciSenhaBacking.cpf}"
+					size="26"
+					required="true" />
+
+				<xcp:text
+					id="txtIdentidade"
+					label="#{bundle.lbl_identidade_senha}"
+					value="#{xcpEsqueciSenhaBacking.identidade}"
+					size="15"
+					maxlength="15"
+					required="true" />
+
+				<xcp:date
+					id="txtDtnascimento"
+					value="#{xcpEsqueciSenhaBacking.dtnascimento}"
+					label="#{bundle.lbl_dtnascimento}"
+					required="true" />
+
+				<p:outputPanel
+					styleClass="input-group"
+					rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}">
+
+					<p:outputLabel
+						value="#{bundle.lbl_verificacao}#{viewUtil.labelSufix}"
+						for="txtCaptcha" />
+					<p:inputText
+						id="txtCaptcha"
+						label="#{bundle.lbl_verificacao}"
+						value="#{xcpEsqueciSenhaBacking.desCaptcha}"
+						autocomplete="off"
+						required="true" />
+
+					<hr />
+
+				</p:outputPanel>
+
+				<p:outputPanel 
+					styleClass="input-group"
+					rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}">
+					<p:graphicImage
+						id="imgEsqueciCaptcha"
+						value="#{xcpCaptchaBacking.imgCaptcha.esquecisenha}"
+						cache="false" />
+					<xcp:commandButton
+						id="btnRefreshCaptcha"
+						icon="ui-icon-refresh"
+						process="@this"
+						immediate="true"
+						update="imgEsqueciCaptcha"
+						action="#{xcpCaptchaBacking.actionTrocarCaptcha('esquecisenha')}" />
+				</p:outputPanel>
+				
+				<p:outputPanel
+					styleClass="input-group"
+					rendered="#{xcpCaptchaBacking.tipoCaptcha == 1}">
+					<p:captcha id="reCaptcha" language="pt" requiredMessage="#{bundle.msg_recaptcha_requerido}"/>
+					<br/><br/><br/>
+				</p:outputPanel>
+
+				<xcp:commandButton
+					id="btn_enviar"
+					value="#{bundle.btn_enviar}"
+					ajax="false"
+					icon="ui-icon-check"
+					action="#{xcpEsqueciSenhaBacking.actionEsqueciSenha}"
+					styleClass="botao_login btn-main-action"
+					onstart="PF('blockForm_w').show();"
+					oncomplete="PF('blockForm_w').hide();" />
+			</xcp:panelForm>
+
+		</h:panelGroup>
+
+	</ui:define>
+
+</ui:composition>

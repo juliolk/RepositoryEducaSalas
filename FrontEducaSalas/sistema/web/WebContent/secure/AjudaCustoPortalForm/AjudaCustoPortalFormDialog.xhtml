@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.tit_nova_ajuda}"
+		modal="true"
+		id="dlgAjuda"
+		widgetVar="dlgAjuda_w"
+		closeOnEscape="true"
+		styleClass="full-page-dialog rightside-dialog"
+		dynamic="true"
+		resizable="false"
+		draggable="false"
+		closable="false">
+		<xcp:form id="frmAjuda">
+
+			<xcp:panelForm>
+
+				<p:outputLabel
+					for="txtMesAno"
+					value="#{bundle.lbl_referencia}" />
+
+				<p:inputMask
+					id="txtMesAno"
+					mask="99/9999"
+					required="true"
+					readonly="#{not ajudaCustoPortalBacking.ajuda.novo}"
+					value="#{ajudaCustoPortalBacking.data}" />
+
+				<xcp:combo
+					id="txtTipo"
+					value="#{ajudaCustoPortalBacking.ajuda.tipo}"
+					label="#{bundle.lbl_tipo}"
+					itens="#{ajudaCustoPortalBacking.itensAjuda}"
+					readonly="true" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_ok"
+						action="#{ajudaCustoPortalBacking.actionGravar()}"
+						value="#{bundle.btn_gravar}"
+						update=":form:pnl_ajuda"
+						rendered="#{ajudaCustoPortalBacking.ajuda.situacao == 1}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						immediate="true"
+						value="#{bundle.btn_cancelar}"
+						onclick="PF('dlgAjuda_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:fieldset legend="#{bundle.tit_filhacao}">
+		<p:dataTable
+			id="tabDependentes"
+			editable="true"
+			value="#{talentosPortalBacking.listaFilhacao}"
+			var="filhacao"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			styleClass="tabeladependentes">
+
+			<p:column
+				headerText="#{bundle.lbl_nome}"
+				style="width:400px;">
+				<h:panelGrid>
+					<p:row>
+						<p:column style="">
+							<h:outputText
+								value="#{talentosPortalBacking.getLabelDepend(filhacao.grau)}: "
+								style="text-align:right; width:50px; float:left;" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{filhacao.nome}" />
+						</p:column>
+					</p:row>
+				</h:panelGrid>
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.lbl_dtn}"
+				style="width:100px;">
+				<xcp:outputSimpleDate
+					id="outDtn"
+					value="#{filhacao.dtn}" />
+			</p:column>
+
+
+			<p:column
+				headerText="#{bundle.lbl_dependenteir}"
+				style="width:50px;">
+				<xcp:outputSimple
+					id="outDependenteir"
+					value="#{filhacao.dependenteir}"
+					itens="#{talentosPortalBacking.itensDependentesIRRF}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.lbl_cpf}"
+				style="width:80px;">
+				<xcp:outputCpf
+					id="outCpf"
+					simple="true"
+					value="#{filhacao.cpf}" />
+			</p:column>
+
+			<p:column headerText="#{bundle.lbl_obs}">
+				<xcp:outputSimple
+					id="outObs"
+					value="#{filhacao.obs}" />
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+
+	<p:fieldset legend="#{bundle.tit_dependentes}">
+		<p:dataTable
+			id="tabOutrosDependentes"
+			value="#{talentosPortalBacking.listaOutrosDependentes}"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			editable="true"
+			rowIndexVar="idx"
+			var="outrosDep">
+
+			<p:column
+				headerText="#{bundle.lbl_nro_depend}"
+				style="width:30px;">
+				<xcp:outputSimple
+					id="outSeq"
+					value="#{outrosDep.sequencia}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.lbl_nome}"
+				style="width:200px; text-align:left;">
+				<xcp:outputSimple
+					id="outNome"
+					value="#{outrosDep.nome}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.lbl_dtn}"
+				style="width:100px;">
+				<xcp:outputSimpleDate
+					id="outDtn"
+					value="#{outrosDep.dtn}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.lbl_grau}"
+				style="width:130px;">
+				<xcp:outputSimple
+					id="outDependenteir"
+					simple="true"
+					value="#{outrosDep.grau}"
+					itens="#{talentosPortalBacking.itensParentesco}" />
+			</p:column>
+
+
+			<p:column
+				headerText="#{bundle.lbl_dependenteir}"
+				style="width:50px;">
+				<xcp:outputSimple
+					id="outDependenteir"
+					value="#{outrosDep.dependenteir}"
+					itens="#{talentosPortalBacking.itensDependentesIRRF}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.lbl_cpf}"
+				style="width:80px;">
+				<xcp:outputCpf
+					id="outCpf"
+					simple="true"
+					value="#{outrosDep.cpf}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.lbl_obs}"
+				style="width:150px;">
+				<xcp:outputSimple
+					id="outObs"
+					value="#{outrosDep.obs}" />
+			</p:column>
+		</p:dataTable>
+
+		<p:fieldset legend="#{bundle.tit_filhos}">
+			<p:dataTable
+				id="tabFilhos"
+				value="#{talentosPortalBacking.listaFilhos}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				editable="true"
+				rowIndexVar="idx"
+				var="filho">
+
+				<p:column
+					headerText="#{bundle.lbl_nro_depend}"
+					style="width:50px;">
+					<xcp:outputSimple
+						id="outSeqfilho"
+						value="#{filho.sequencia}" />
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.lbl_nome}"
+					style="width:200px;">
+					<xcp:outputSimple
+						id="outNome"
+						value="#{filho.dependenteFk.nome}" />
+				</p:column>
+
+
+				<p:column
+					headerText="#{bundle.lbl_sexo}"
+					style="width:80px;">
+					<xcp:outputSimple
+						id="outFolha"
+						itens="#{talentosPortalBacking.itensSexo}"
+						value="#{filho.sexo}" />
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.lbl_cidade}"
+					style="width:200px">
+					<xcp:outputSimple
+						id="outCidade"
+						value="#{filho.cidadeFk.descricao}" />
+				</p:column>
+
+				<p:column headerText="#{bundle.lbl_cartorio}">
+					<xcp:outputSimple
+						id="outCartorio"
+						value="#{filho.cartorio}" />
+				</p:column>
+
+				<p:column headerText="#{bundle.lbl_livro}">
+					<xcp:outputSimple
+						id="outLivro"
+						value="#{filho.livro}" />
+				</p:column>
+
+
+				<p:column headerText="#{bundle.lbl_nfolha}">
+					<xcp:outputSimple
+						id="outFolha"
+						value="#{filho.nfolha}" />
+				</p:column>
+
+				<p:column headerText="#{bundle.lbl_nregistro}">
+					<xcp:outputSimple
+						id="outNregistro"
+						value="#{filho.nregistro}" />
+				</p:column>
+
+
+				<p:column
+					headerText="#{bundle.lbl_dta_certificado}"
+					style="width:100px;">
+					<xcp:outputSimpleDate
+						id="outFolha"
+						value="#{filho.certificado}" />
+				</p:column>
+
+			</p:dataTable>
+		</p:fieldset>
+	</p:fieldset>
+</ui:composition>

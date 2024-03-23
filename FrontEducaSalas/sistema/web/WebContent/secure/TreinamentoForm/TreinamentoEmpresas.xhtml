@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<div style="width: 1000px;">
+		<p:dataTable
+			id="tabEmpresasTreinamento"
+			editable="true"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			value="#{treinamentoBacking.listaEmpresasTreinamento}"
+			var="rowEmpresa">
+			<p:ajax
+				event="rowEdit"
+				update=":form:tabTreinamento:upHintsEmp"
+				listener="#{treinamentoBacking.onRowEditEmpresa}" />
+
+			<p:ajax
+				event="rowEditCancel"
+				update=":form:tabTreinamento:upHintsEmp" />
+
+			<p:column
+				headerText="#{bundle.col_Empresa}"
+				style="width:500px">
+				<p:cellEditor>
+					<f:facet name="output">
+						<xcp:outputSimple value="#{rowEmpresa.pessoaFk.nome}" />
+					</f:facet>
+					<f:facet name="input">
+
+						<xcp:lov
+							id="lovPessoa"
+							value="#{rowEmpresa.pessoaFk}"
+							simple="true"
+							label="#{bundle.lbl_pessoa}"
+							required="true"
+							query="autonomos"
+							size="7"
+							readonly="#{not rowEmpresa.novo}" />
+
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="#{bundle.col_descParceria}">
+
+				<p:cellEditor>
+					<f:facet name="output">
+						<xcp:outputSimple value="#{rowEmpresa.desParceria}" />
+					</f:facet>
+					<f:facet name="input">
+						<xcp:memo
+							simple="true"
+							id="txtParc"
+							value="#{rowEmpresa.desParceria}"
+							cols="60"
+							label="#{bundle.lbl_desParceria}"
+							size="1000" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:25px">
+				<xcp:commandLink
+					id="btn_remover_Empresa"
+					icon="ui-icon-trash"
+					immediate="true"
+					update="tabEmpresasTreinamento :form:tabTreinamento:upHintsEmp"
+					rendered="#{!rowEmpresa.novo}"
+					action="#{treinamentoBacking.actionRemoveEmpresa(rowEmpresa)}">
+					<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" />
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandLink>
+			</p:column>
+
+			<p:column style="width:32px">
+				<p:rowEditor />
+			</p:column>
+
+		</p:dataTable>
+
+		<xcp:tableHints
+			id="upHintsEmp"
+			tableId="form:tabTreinamento:tabEmpresasTreinamento" />
+
+		<p:remoteCommand
+			name="rcEmpresas"
+			update="tabEmpresasTreinamento upHintsEmp" />
+	</div>
+</ui:composition>

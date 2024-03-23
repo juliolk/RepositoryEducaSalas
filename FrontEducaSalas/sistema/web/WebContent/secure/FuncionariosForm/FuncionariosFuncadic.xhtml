@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:fieldset legend="#{bundle.tit_funcadic}">
+
+		<p:dataTable
+			id="tabFuncadic"
+			value="#{funcionariosBacking.listaFuncadic}"
+			var="row"
+			emptyMessage="#{bundle.msg_sem_resultado}">
+
+			<p:column
+				headerText="#{bundle.col_inicio}"
+				width="50">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_termino}"
+				width="50">
+				<xcp:outputSimpleDate value="#{row.dttermino}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_funcao}"
+				width="180">
+				<xcp:outputSimple value="#{row.descricaoDe}" />
+			</p:column>
+			
+			<p:column
+				headerText="#{bundle.col_motivo}"
+				width="180">
+				<xcp:outputSimple value="#{row.desMotivo}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_documento}"
+				width="70">
+				<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_tipodocumento}"
+				width="280">
+				<xcp:outputSimple value="#{row.registroFk.descricao}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_numSeqVagaDes}"
+				width="100">
+				<xcp:outputSimple
+					value="#{row.numSeqVagaFk.numSeqVaga} - #{row.numSeqVagaFk.descricao}" />
+			</p:column>
+
+
+		</p:dataTable>
+
+
+	</p:fieldset>
+
+</ui:composition>

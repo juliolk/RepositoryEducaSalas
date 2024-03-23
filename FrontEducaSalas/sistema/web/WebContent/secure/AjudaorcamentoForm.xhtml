@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Ajudaorcamento"
+			backing="#{ajudaorcamentoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_ano}"
+					value="#{row.ano}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.ano}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="8">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{ajudaorcamentoBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdVagas}"
+					value="#{row.qtdVagas}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdVagas}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					value="#{row.valor}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="18"
+						scale="2" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{ajudaorcamentoBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{ajudaorcamentoBacking.itensTipo}">
+						<p:ajax update="form" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtAno"
+						label="#{bundle.lbl_ano}"
+						required="true"
+						value="#{ajudaorcamentoBacking.entity.ano}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<xcp:number
+						id="txtQtdVagas"
+						label="#{bundle.lbl_qtdVagas}"
+						required="true"
+						value="#{ajudaorcamentoBacking.entity.qtdVagas}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"
+						rendered="#{ajudaorcamentoBacking.renderedQtdVagas}" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						size="21"
+						value="#{ajudaorcamentoBacking.entity.valor}"
+						precision="18"
+						scale="2"
+						rendered="#{ajudaorcamentoBacking.renderedValor}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AssinaturasDoc"
+		backing="#{assinaturasDocBacking}"
+		masterId="Assinaturas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_ordem}"
+				value="#{row.ordem}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.ordem}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.funcionarioFk.matricula}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.funcionarioFk.matricula}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_funcionario}"
+				value="#{row.desAssinatura}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.desAssinatura}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtini}"
+				value="#{row.dtini}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfim}"
+				value="#{row.dtfim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtOrdem_AssinaturasDoc"
+					label="#{bundle.lbl_ordem}"
+					required="true"
+					value="#{assinaturasDocBacking.entity.ordem}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+				<xcp:lov
+					id="lovMatricula_AssinaturasDoc"
+					value="#{assinaturasDocBacking.entity.funcionarioFk}"
+					label="#{bundle.lbl_matricula}"
+					query="funcionariosLov"
+					size="8" />
+
+				<xcp:text
+					id="txtNome"
+					label="#{bundle.lbl_nome}"
+					value="#{assinaturasDocBacking.entity.desNome}"
+					size="60" />
+
+				<xcp:combo
+					id="cboTipAssinaturaDoc"
+					value="#{assinaturasDocBacking.entity.tipAssinatura}"
+					label="#{bundle.lbl_tipAssinatura}"
+					required="true"
+					itens="#{assinaturasDocBacking.itensTipAssinatura}" />
+
+				<xcp:memo
+					id="txtTexto_AssinaturasDoc"
+					label="#{bundle.lbl_texto}"
+					value="#{assinaturasDocBacking.entity.texto}"
+					size="4000" />
+
+				<xcp:memo
+					id="txtObs_AssinaturasDoc"
+					label="#{bundle.lbl_obs}"
+					value="#{assinaturasDocBacking.entity.obs}"
+					size="4000" />
+
+				<xcp:dateRange
+					id="txtDt_AssinaturasDoc"
+					label="#{bundle.lbl_validade}"
+					valueStart="#{assinaturasDocBacking.entity.dtini}"
+					valueEnd="#{assinaturasDocBacking.entity.dtfim}"
+					requiredStart="true" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

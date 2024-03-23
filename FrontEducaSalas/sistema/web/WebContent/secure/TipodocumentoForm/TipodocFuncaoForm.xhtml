@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="TipodocFuncao"
+		backing="#{tipoDocFuncaoBacking}"
+		masterId="Tipodocumento">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_funcaocod}"
+				value="#{row.funcoesFk.funcao}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.funcoesFk.funcao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_funcaodesc}"
+				value="#{row.funcoesFk.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.funcoesFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diasminimo}"
+				value="#{row.diasminimo}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.diasminimo}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.col_diasmaximo}"
+				value="#{row.diasmaximo}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.diasmaximo}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovFuncao"
+					value="#{tipoDocFuncaoBacking.entity.funcoesFk}"
+					label="#{bundle.lbl_funcao}"
+					query="funcoes"
+					required="true"
+					size="4"
+					readonly="#{not tipoDocFuncaoBacking.entity.novo}" />
+
+
+				<xcp:number
+					id="txtDiasminimo_TipodocFuncao"
+					label="#{bundle.lbl_diasminimo}"
+					required="true"
+					value="#{tipoDocFuncaoBacking.entity.diasminimo}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:number
+					id="txtDiasmaximo_TipodocFuncao"
+					label="#{bundle.lbl_diasmaximo}"
+					required="true"
+					value="#{tipoDocFuncaoBacking.entity.diasmaximo}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+
+		<ui:define name="headerTitle">
+
+			<h:outputText
+				value="#{bundle[detailTitle]}"
+				rendered="#{tipodocumentoBacking.probatorio}" />
+
+			<h:outputText
+				value="#{bundle.title_funcao_exp}"
+				rendered="#{tipodocumentoBacking.avalExperiencia}" />
+
+			<h:outputText
+				value="#{bundle.title_funcao_teletrabalho}"
+				rendered="#{tipodocumentoBacking.teletrabalho}" />
+
+		</ui:define>
+
+
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

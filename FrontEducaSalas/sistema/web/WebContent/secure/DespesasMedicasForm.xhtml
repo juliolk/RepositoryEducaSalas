@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+        <xcp:panelContent>
+	        <h:panelGroup rendered="#{despesasMedicasBacking.itensReferencia.size() == 0}"  style="padding: 10px;">
+	            <p:fieldset>
+	                <h:outputLabel
+	                    value="#{bundle.lbl_despesasmedicas_semdespesas}"
+	                    style="font-size: 14px; display: block; padding: 10px" />
+	            </p:fieldset>        
+	        </h:panelGroup>
+	        
+	        <ui:fragment rendered="#{despesasMedicasBacking.itensReferencia.size() > 0}">
+
+				<p:fieldset
+					legend="#{bundle.msg_despesasmedicas_selecaoreferencia}"
+					style="height:75px; margin: 10px; ">
+	
+					<p:panelGrid style="width:100%; margin: 10px">
+	
+						<p:row>
+							<p:column style="text-align: right; width: 10%">
+								<h:outputLabel
+									value="#{bundle.lbl_despesasmedicas_referencia}: "
+									style="display: block; margin-top: 5px; margin-right:5px" />
+							</p:column>
+							<p:column colspan="6">
+								<xcp:panelForm>
+									<xcp:combo
+										id="cboReferencia"
+										simple="true"
+										value="#{despesasMedicasBacking.referenciaSelecionada}"
+										itens="#{despesasMedicasBacking.itensReferencia}"
+										>
+	                                    <p:ajax
+	                                        event="change"
+	                                        listener="#{despesasMedicasBacking.actionChangeReferencia}" 
+	                                        update="tabDespesasMedicas"
+	                                    />	                                        
+									</xcp:combo>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+						
+					</p:panelGrid>
+				</p:fieldset>
+				<h:panelGroup>
+                    <p:dataTable 
+                         id="tabDespesasMedicas"
+                         value="#{despesasMedicasBacking.listaDespesasMedicas}"
+                         var="row"
+                         style="margin: 10px"
+                         sortBy="#{row.referencia}">
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_data}"
+                            styleClass="xcp_column_Date"
+                            width="10%">
+                            <xcp:outputSimpleDate value="#{row.dtatend}" />
+                        </p:column>
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_descricao}"
+                            styleClass="xcp_column_String"
+                            width="25%">
+                            <xcp:outputSimple value="#{row.descricao}" />
+                        </p:column>
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_lote}"
+                            styleClass="xcp_column_String"
+                            width="7%">
+                            <xcp:outputSimple value="#{row.lote}" />
+                        </p:column>
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_nota}"
+                            styleClass="xcp_column_String"
+                            width="10%">
+                            <xcp:outputSimple value="#{row.nota}" />
+                        </p:column>
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_nome}"
+                            styleClass="xcp_column_String"
+                            width="20%">
+                            <xcp:outputSimple value="#{row.nome}" />
+                        </p:column>
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_valor}"
+                            styleClass="xcp_column_Number"
+                            width="10%">
+                            <xcp:outputSimpleNumber
+                                value="#{row.valor}"
+                                precision="10"
+                                scale="2" />
+                        </p:column>
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_coparticipacao}"
+                            styleClass="xcp_column_Number"
+                            width="10%">
+                            <xcp:outputSimpleNumber
+                                value="#{row.franquia}"
+                                precision="10"
+                                scale="2" />
+                        </p:column>
+                        <p:column
+                            headerText="#{bundle.col_despesasmedicas_percentual}"
+                            styleClass="xcp_column_Number"
+                            width="10%">
+                            <xcp:outputSimpleNumber
+                                value="#{row.getPercentualCoparticipacao()}"
+                                precision="10"
+                                scale="2" />
+                        </p:column>
+						<p:summaryRow listener="#{despesasMedicasBacking.calcTotal}">
+				            <p:column colspan="5" style="text-align:right">
+				                <h:outputText value="#{bundle.lbl_despesasmedicas_total}:" />
+				            </p:column>
+				            <p:column style="text-align:right">
+	                            <xcp:outputSimpleNumber
+	                                value="#{despesasMedicasBacking.totalValor}"
+	                                precision="10"
+	                                scale="2" />
+				            </p:column>
+				            <p:column style="text-align:right">
+	                            <xcp:outputSimpleNumber
+	                                value="#{despesasMedicasBacking.totalFranquia}"
+	                                precision="10"
+	                                scale="2" />
+				            </p:column>
+				            <p:column>
+				            </p:column>
+				        </p:summaryRow>                        
+                    </p:dataTable>
+				</h:panelGroup>
+    		</ui:fragment>
+	        
+        </xcp:panelContent>
+	</ui:define>
+
+</ui:composition>
+	

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:fieldset legend="#{bundle.title_vagas}">
+				<p:dataTable
+					id="tabVagas"
+					value="#{inscricoesPromoBacking.list}"
+					var="row"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{row}"
+					selectionMode="single"
+					selection="#{inscricoesPromoBacking.row}">
+
+					<p:ajax
+						event="rowSelect"
+						update=":form:pnlvaga"
+						listener="#{inscricoesPromoBacking.actionSelectRow}" />
+
+					<xcp:column
+						headerText="#{bundle.col_numSeqVaga}"
+						type="Number"
+						size="1"
+						value="#{row.numSeqVaga}">
+						<xcp:outputSimpleNumber
+							value="#{row.numSeqVaga}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desVaga}"
+						type="String"
+						size="7"
+						value="#{row.desVaga}">
+						<xcp:outputSimple value="#{row.desVaga}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_edital}"
+						type="Number"
+						size="1"
+						value="#{row.numero}">
+						<xcp:outputSimpleNumber
+							value="#{row.numero}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipEdital}"
+						type="String"
+						size="5"
+						value="#{row.tipEdital}"
+						itens="#{inscricoesPromoBacking.itensTipEdital}">
+						<xcp:outputSimple
+							value="#{row.tipEdital}"
+							itens="#{inscricoesPromoBacking.itensTipEdital}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_setor}"
+						type="Number"
+						size="1"
+						value="#{row.setor}">
+						<xcp:outputSimpleNumber
+							value="#{row.setor}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desSetor}"
+						type="String"
+						size="7"
+						value="#{row.desSetor}">
+						<xcp:outputSimple value="#{row.desSetor}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_codcargo}"
+						type="Number"
+						size="1"
+						value="#{row.cargo}">
+						<xcp:outputSimpleNumber
+							value="#{row.cargo}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desCargo}"
+						type="String"
+						size="7"
+						value="#{row.desCargo}">
+						<xcp:outputSimple value="#{row.desCargo}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+			</p:fieldset>
+
+			<p:spacer height="5px" />
+
+			<p:outputPanel id="pnlvaga">
+
+				<p:fieldset
+					id="fldCursos"
+					legend="#{bundle.title_cursos}"
+					rendered="#{inscricoesPromoBacking.renderedCursos}">
+
+					<p:dataTable
+						id="tblCursos"
+						var="row"
+						value="#{inscricoesPromoBacking.listFormacao}"
+						rows="#{viewUtil.tableRows}"
+						rowKey="#{row}"
+						paginator="true"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginatorPosition="bottom"
+						selection="#{inscricoesPromoBacking.listFormacaoSel}">
+
+						<p:column
+							selectionMode="multiple"
+							style="width:3%;text-align:center" />
+
+						<p:ajax event="toggleSelect" />
+
+						<p:ajax event="rowSelect" />
+
+						<p:ajax event="rowSelectCheckbox" />
+
+						<p:ajax event="rowUnselectCheckbox" />
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							size="15"
+							value="#{row.cursoFk.descricao}">
+							<xcp:outputSimple value="#{row.cursoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_curso}"
+							value="#{row.cursoacadFk.descricao}"
+							type="String"
+							size="10">
+							<xcp:outputSimple
+								value="#{row.area}"
+								rendered="#{row.area !=null}" />
+							<xcp:outputSimple
+								value="#{row.cursoacadFk.descricao}"
+								rendered="#{row.cursoacadFk !=null}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtinicio}"
+							value="#{row.dtini}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtinicio}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtfim}"
+							value="#{row.dtfim}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtfim}" />
+						</xcp:column>
+
+					</p:dataTable>
+				</p:fieldset>
+
+				<p:spacer height="5px" />
+
+				<p:fieldset
+					legend="#{bundle.title_anexos}"
+					rendered="#{inscricoesPromoBacking.row != null}">
+					<p:dataTable
+						id="tabAnexos"
+						value="#{inscricoesPromoBacking.listAnexos}"
+						var="row"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						rowKey="#{row}">
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							size="7">
+							<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_obrigatorio}"
+							type="Date"
+							size="7"
+							itens="#{inscricoesPromoBacking.itensIndSimNao}">
+							<xcp:outputSimple
+								value="#{row.tipoFk.obrigatorio}"
+								itens="#{inscricoesPromoBacking.itensIndSimNao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_anexado}"
+							type="Date"
+							size="7">
+							<xcp:outputSimple
+								value="#{row.anexado ? bundle.lbl_sim : bundle.lbl_nao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_acoes}"
+							type="Date"
+							size="7">
+
+							<xcp:commandButton
+								id="btn_upload"
+								value="#{bundle.btn_upload}"
+								action="#{inscricoesPromoBacking.actionOpenUploadDialog}"
+								icon="ui-icon-gear"
+								disabled="#{inscricoesPromoBacking.disabledInscrever}">
+								<f:setPropertyActionListener
+									target="#{inscricoesPromoBacking.anexoRow}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								label="#{bundle.btn_download}"
+								value="#{bundle.btn_download}"
+								icon="ui-icon-gear"
+								ajax="false"
+								disabled="#{not row.anexado}"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+								<p:fileDownload
+									value="#{inscricoesPromoBacking.getDownloadDocumento(row)}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+
+						</xcp:column>
+					</p:dataTable>
+				</p:fieldset>
+
+				<p:spacer height="5px" />
+
+				<p:fieldset
+					legend="#{bundle.title_informacoes}"
+					rendered="#{inscricoesPromoBacking.row != null}"
+					style="width: fit-content">
+					<xcp:panelForm>
+						<xcp:output
+							id="txtVaga"
+							label="#{bundle.lbl_vaga}"
+							value="#{inscricoesPromoBacking.row.desVaga}" />
+
+						<xcp:output
+							id="txtSituacao"
+							label="#{bundle.lbl_situacao}"
+							value="#{inscricoesPromoBacking.desSituacao}" />
+					</xcp:panelForm>
+
+
+					<xcp:commandButton
+						id="btn_inscrever"
+						value="#{bundle.btn_inscrever}"
+						action="#{inscricoesPromoBacking.actionInscrever}"
+						process="@this"
+						update="@form"
+						disabled="#{inscricoesPromoBacking.disabledInscrever}" />
+
+					<xcp:commandButton
+						id="btn_desinscrever"
+						value="#{bundle.btn_desinscrever}"
+						action="#{inscricoesPromoBacking.actionDesinscrever}"
+						process="@this"
+						update="@form"
+						disabled="#{inscricoesPromoBacking.disabledDesinscrever}" />
+
+				</p:fieldset>
+			</p:outputPanel>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			id="dlgUpload"
+			modal="true"
+			widgetVar="dlgUpload_w"
+			header="#{bundle.title_anexo}">
+			<xcp:form id="formAnexo">
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{inscricoesPromoBacking.actionUploadAnexo}"
+					update=":form:pnlvaga"
+					oncomplete="PF('dlgUpload_w').hide()" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_voltar"
+							value="#{bundle.btn_voltar}"
+							icon="ui-icon-gear"
+							process="@this"
+							update="@none"
+							oncomplete="PF('dlgUpload_w').hide()" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

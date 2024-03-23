@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="VinculosPerfis"
+		backing="#{vinculosPerfisBacking}"
+		masterId="Vinculos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_perfil}"
+				value="#{row.perfilFk.descricao}"
+				type="String"
+				size="2">
+				<xcp:outputSimple value="#{row.perfilFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_indBaixa}"
+				value="#{row.indBaixa}"
+				type="String"
+				size="10"
+				itens="#{vinculosPerfisBacking.itensIndSimNao}">
+				<xcp:outputSimple
+					value="#{row.indBaixa}"
+					itens="#{vinculosPerfisBacking.itensIndSimNao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovPerfil_VinculosPerfis"
+					value="#{vinculosPerfisBacking.entity.perfilFk}"
+					label="#{bundle.lbl_perfill}"
+					required="true"
+					query="perfislov"
+					size="4"
+					readonly="#{not vinculosPerfisBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboIndBaixa_VinculosPerfis"
+					value="#{vinculosPerfisBacking.entity.indBaixa}"
+					label="#{bundle.lbl_indBaixa}"
+					required="true"
+					itens="#{vinculosPerfisBacking.itensIndSimNao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

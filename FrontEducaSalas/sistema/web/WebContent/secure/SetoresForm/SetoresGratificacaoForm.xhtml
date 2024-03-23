@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="SetoresGratificacao"
+		backing="#{setoresGratificacaoBacking}"
+		masterId="Setores">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_variavel}"
+				value="#{row.variavelFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.variavelFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.valor}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.valor}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtiniaval}"
+				value="#{row.dtiniaval}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtiniaval}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfimaval}"
+				value="#{row.dtfimaval}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfimaval}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtinifolha}"
+				value="#{row.dtinifolha}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtinifolha}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfimfolha}"
+				value="#{row.dtfimfolha}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfimfolha}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovVariavel_SetoresGratificacao"
+					value="#{setoresGratificacaoBacking.entity.variavelFk}"
+					label="#{bundle.lbl_variavel}"
+					required="true"
+					query="variaveis"
+					size="20" />
+
+				<xcp:number
+					id="txtValor_SetoresGratificacao"
+					label="#{bundle.lbl_valorGrat}"
+					required="true"
+					size="19"
+					value="#{setoresGratificacaoBacking.entity.valor}"
+					precision="16"
+					scale="2" />
+
+				<xcp:dateRange
+					id="txtDtiniaval_SetoresGratificacao"
+					valueStart="#{setoresGratificacaoBacking.entity.dtiniaval}"
+					valueEnd="#{setoresGratificacaoBacking.entity.dtfimaval}"
+					label="#{bundle.lbl_dtiniaval}" />
+
+				<xcp:dateRange
+					id="txtDtinifolha_SetoresGratificacao"
+					requiredStart="true"
+					valueStart="#{setoresGratificacaoBacking.entity.dtinifolha}"
+					valueEnd="#{setoresGratificacaoBacking.entity.dtfimfolha}"
+					label="#{bundle.lbl_dtinifolha}" />
+
+				<xcp:lov
+					id="lovPadrao"
+					value="#{setoresGratificacaoBacking.entity.padraoFk}"
+					label="#{bundle.lbl_padraoo}"
+					query="padroes"
+					size="30" />
+
+				<xcp:text
+					id="desProc_SetoresGratificacao"
+					value="#{setoresGratificacaoBacking.entity.desproc}"
+					label="#{bundle.lbl_desprocbanco}" />
+
+			</xcp:panelForm>
+
+			<p:dataTable
+				id="tabRest"
+				value="#{setoresGratificacaoBacking.listRest}"
+				var="rowRest"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{rowRest}"
+				style="width: 600px;margin-top:5px"
+				rendered="#{not setoresGratificacaoBacking.entity.novo}">
+
+				<f:facet name="header">#{bundle.tit_restricoes}</f:facet>
+
+				<xcp:column
+					headerText="#{bundle.col_cargo}"
+					value="#{rowRest.cargoFk.descricao}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{rowRest.cargoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vinculo}"
+					value="#{rowRest.vinculoFk.descricao}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{rowRest.vinculoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandLink
+						immediate="true"
+						id="btn_remover"
+						update="tabRest :frmRest"
+						action="#{setoresGratificacaoBacking.actionRemoverRestricao(rowRest)}">
+						<h:graphicImage
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" />
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandLink>
+				</xcp:column>
+
+			</p:dataTable>
+
+			<div style="text-align: center">
+				<xcp:commandButton
+					id="btn_novo"
+					style="margin-top:5px"
+					process="@this"
+					update=":frmRest"
+					action="#{setoresGratificacaoBacking.actionNovaRestricao}"
+					icon="ui-icon-plusthick"
+					value="#{bundle.btn_novo}"
+					rendered="#{not setoresGratificacaoBacking.entity.novo}" />
+			</div>
+
+
+		</ui:define>
+	</xcp:panelManutDetalhes>
+</ui:composition>

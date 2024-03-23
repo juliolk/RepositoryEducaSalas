@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="AgendaCalculo"
+			backing="#{agendaCalculoBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset legend="#{bundle.title_filtro}">
+					<xcp:panelForm>
+						<xcp:dateTimeRange
+							id="txtDataFiltro"
+							label="#{bundle.lbl_data}"
+							valueStart="#{agendaCalculoBacking.dataIni}"
+							valueEnd="#{agendaCalculoBacking.dataFim}" />
+					</xcp:panelForm>
+				</p:fieldset>
+				<p:spacer height="5" />
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleTimestamp value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_titulo}"
+					value="#{row.titulo}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.titulo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:dateTime
+						id="txtData"
+						required="true"
+						value="#{agendaCalculoBacking.entity.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:lov
+						id="lovTipofolha"
+						value="#{agendaCalculoBacking.entity.tipofolhaFk}"
+						label="#{bundle.lbl_tipoFolha}"
+						required="true"
+						query="tipofolha"
+						size="4" />
+
+					<xcp:text
+						id="txtTitulo"
+						label="#{bundle.lbl_titulo}"
+						required="true"
+						value="#{agendaCalculoBacking.entity.titulo}"
+						size="100" />
+
+					<xcp:memo
+						id="txtTexto"
+						cols="100"
+						rows="20"
+						value="#{agendaCalculoBacking.entity.texto}"
+						label="#{bundle.lbl_texto}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

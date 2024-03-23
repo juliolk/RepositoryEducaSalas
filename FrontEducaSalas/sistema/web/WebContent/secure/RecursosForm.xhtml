@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+						<p:fieldset
+							style="width:1020px;height:420px;margin-top:5px !important">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovMatricula_AssinaturasDoc"
+									value="#{recursosBacking.matriculaFk}"
+									label="#{bundle.lbl_matricula}"
+									query="funcionariosLov"
+									size="8"
+									update="tblrec btn_adicionar_novo"
+									selectionListener="#{recursosBacking.selectMatricula}" />
+							</xcp:panelForm>
+
+							<p:spacer height="5" />
+
+							<p:dataTable
+								id="tblrec"
+								var="row"
+								value="#{recursosBacking.list}"
+								rowKey="#{row.PK}"
+								scrollHeight="270"
+								scrollable="true"
+								rowIndexVar="idx"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+
+								<xcp:column
+									headerText="#{bundle.col_data}"
+									type="Date"
+									width="60">
+									<xcp:outputSimpleDate
+										id="txtReferencia"
+										value="#{row.referencia}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_natureza}"
+									type="String">
+									<xcp:outputSimple
+										id="txtReferencia"
+										value="#{row.contabilFk.descricao}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_percentual}"
+									type="Number"
+									width="25">
+									<xcp:outputSimpleNumber
+										id="txtReferencia"
+										precision="3"
+										scale="0"
+										value="#{row.qtd}" />
+								</xcp:column>
+
+								<xcp:column width="30">
+									<p:commandButton
+										id="btneditar"
+										immediate="true"
+										update=":frmNovo"
+										action="#{recursosBacking.actionEditar(row)}"
+										icon="icon-editar" />
+								</xcp:column>
+
+							</p:dataTable>
+
+							<h:panelGroup
+								style="text-align: center"
+								layout="block">
+
+								<xcp:commandButton
+									id="btn_adicionar_novo"
+									value="#{bundle.btn_novo}"
+									update=":frmNovo"
+									disabled="#{recursosBacking.matriculaFk == null}"
+									style="margin-top: 5px"
+									icon="ui-icon-plusthick"
+									action="#{recursosBacking.actionNovo}" />
+							</h:panelGroup>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_adicionar}"
+			modal="true"
+			id="dlgAdd"
+			widgetVar="dlgAdd_w">
+			<xcp:form id="frmAdd">
+				<p:focus for="txtReferencia" />
+
+				<xcp:panelForm>
+					<xcp:date
+						id="txtReferencia"
+						required="true"
+						value="#{recursosBacking.entity.referencia}"
+						label="#{bundle.lbl_referencia}"
+						readonly="#{recursosBacking.editando}" />
+
+					<xcp:lov
+						id="lovContabil"
+						value="#{recursosBacking.entity.contabilFk}"
+						label="#{bundle.lbl_natureza}"
+						required="true"
+						query="recursos"
+						params="#{recursosBacking.paramsLov}"
+						size="8"
+						readonly="#{recursosBacking.editando}" />
+
+					<xcp:number
+						id="txtQtd"
+						label="#{bundle.lbl_quantidade}"
+						value="#{recursosBacking.entity.qtd}"
+						size="3"
+						required="true"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+				</xcp:panelForm>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_adicionar"
+							value="#{bundle.btn_confirmar}"
+							update="@form :frmNovo:tblmem "
+							icon="ui-icon-plusthick"
+							action="#{recursosBacking.actionAdicionar}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_novo}"
+			modal="true"
+			id="dlgNovo"
+			width="750"
+			widgetVar="dlgNovo_w">
+			<xcp:form id="frmNovo">
+				<p:dataTable
+					id="tblmem"
+					var="row"
+					value="#{recursosBacking.listmem}"
+					rowKey="#{rowMult.PK}"
+					emptyMessage="#{bundle.msg_sem_resultado}">
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						type="Date"
+						size="25">
+						<xcp:outputSimpleDate
+							id="txtReferencia"
+							value="#{row.referencia}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_natureza}"
+						type="String"
+						size="25">
+						<xcp:outputSimple
+							id="txtReferencia"
+							value="#{row.contabilFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_quantidade}"
+						type="Number"
+						size="25">
+						<xcp:outputSimpleNumber
+							id="txtReferencia"
+							precision="4"
+							scale="0"
+							value="#{row.qtd}" />
+					</xcp:column>
+
+					<xcp:column>
+
+						<p:commandButton
+							id="btneditar"
+							immediate="true"
+							update=":frmAdd"
+							action="#{recursosBacking.actionEditarMem(row)}"
+							icon="icon-editar" />
+
+						<p:commandButton
+							id="btnremove"
+							immediate="true"
+							update="tblmem"
+							action="#{recursosBacking.actionRemoverMem(row)}"
+							icon="ui-icon-trash" />
+					</xcp:column>
+				</p:dataTable>
+
+				<h:panelGroup
+					layout="block"
+					style="text-align:center;padding:5px">
+					<xcp:commandButton
+						id="btn_adicionar"
+						value="#{bundle.btn_add}"
+						update=":frmAdd"
+						icon="ui-icon-plusthick"
+						action="#{recursosBacking.actionOpenAdicionar}" />
+				</h:panelGroup>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_concluir"
+							value="#{bundle.btn_concluir}"
+							update=":form:tblrec"
+							icon="ui-icon-plusthick"
+							action="#{recursosBacking.actionConcluir}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

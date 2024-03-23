@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+
+	<p:outputPanel id="pnlUpdFuncaoAgente">
+
+		<p:outputPanel rendered="#{setoresInspBacking.telaMedicaoLista}">
+
+			<p:dataTable
+				id="tableCarAgente"
+				var="row"
+				rowKey="#{row.uuid}"
+				value="#{setoresInspBacking.entity.listMedFuncAg}"
+				filteredValue="#{setoresInspBacking.entity.listMedFuncAgFilter}"
+				sortMode="multiple"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				selection="#{setoresInspBacking.helper.medFuncAgSel}"
+				selectionMode="single"
+				rows="#{viewUtil.tableRows}">
+
+				<p:ajax
+					event="rowSelect"
+					listener="#{setoresInspBacking.onRowSelectFuncoesAgente}"
+					update=":form:tabView:pnlUpdFuncaoAgente" />
+
+				<xcp:column
+					headerText="#{bundle.col_funcao}"
+					value="#{row.funcao}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.funcao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.setoresFuncoesAgentesFk.funcaoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.setoresFuncoesAgentesFk.funcaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_agente}"
+					value="#{row.agente}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.agente}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.setoresFuncoesAgentesFk.agenteFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.setoresFuncoesAgentesFk.agenteFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+
+			</p:dataTable>
+
+
+			<xcp:commandButton
+				id="btn_novo_car_agente"
+				style="margin-top:5px"
+				action="#{setoresInspBacking.actionNovoFuncoesAgente}"
+				update=":form:tabView:pnlUpdFuncaoAgente"
+				process="@this"
+				value="#{bundle.btn_novo}"
+				icon="ui-icon-plusthick" />
+
+		</p:outputPanel>
+
+
+		<p:outputPanel rendered="#{setoresInspBacking.telaMedicaoAgenteForm}">
+
+			<p:outputPanel style="margin:10px">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovFuncaoCarAg"
+						value="#{setoresInspBacking.setoresFuncoesAgentes.funcaoFk}"
+						label="#{bundle.lbl_funcao}"
+						required="true"
+						readonly="#{not setoresInspBacking.setoresFuncoesAgentes.novo}"
+						params="#{setoresInspBacking.paramsCarSet}"
+						query="funcoes_setfuncao"
+						size="6" />
+
+					<xcp:lov
+						id="lovAgenteCarAg"
+						value="#{setoresInspBacking.setoresFuncoesAgentes.agenteFk}"
+						label="#{bundle.lbl_agente}"
+						required="true"
+						readonly="#{not setoresInspBacking.setoresFuncoesAgentes.novo}"
+						params="#{setoresInspBacking.paramsAgSetMed}"
+						query="agentes_setag"
+						size="6"
+						update="txtMedicaoCarAg_l txtMedicaoCarAg cboTipunid cboTipunid_l" />
+
+					<xcp:date
+						id="txtDataCarAg"
+						value="#{setoresInspBacking.helper.medFuncAgSel.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:combo
+						id="cboTipunid"
+						value="#{setoresInspBacking.helper.medFuncAgSel.tipunid}"
+						label="#{bundle.lbl_tipunid}"
+						itens="#{setoresInspBacking.itensTipunid}"
+						required="#{setoresInspBacking.helper.medFuncAgSel.setoresFuncoesAgentesFk.agenteFk.tipaval == 1}" />
+
+					<xcp:number
+						id="txtMedicaoCarAg"
+						label="#{bundle.lbl_medicao}"
+						size="23"
+						maxValue="9999999999999999999"
+						value="#{setoresInspBacking.helper.medFuncAgSel.medicao}"
+						precision="20"
+						scale="2"
+						required="#{setoresInspBacking.helper.medFuncAgSel.setoresFuncoesAgentesFk.agenteFk.tipaval == 1}" />
+
+					<xcp:memo
+						id="txtObsCarAg"
+						label="#{bundle.lbl_obs}"
+						value="#{setoresInspBacking.helper.medFuncAgSel.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+
+				<p:toolbar style="margin-top:5px">
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_ok_car_ag"
+							icon="ui-icon-disk"
+							action="#{setoresInspBacking.actionSalvarMedicao}"
+							value="#{bundle.btn_gravar}"
+							process=":form:tabView:pnlUpdFuncaoAgente"
+							update=":form:tabView:pnlUpdFuncaoAgente" />
+
+						<xcp:commandButton
+							id="btn_excluir_car_ag"
+							icon="ui-icon-trash"
+							value="#{bundle.btn_remover}"
+							rendered="#{not setoresInspBacking.helper.medFuncAgSel.novo}"
+							action="#{setoresInspBacking.actionRemoveFuncoesAgente}"
+							process="@this"
+							update=":form:tabView:pnlUpdFuncaoAgente">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btn_voltar_carag_car_ag"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							action="#{setoresInspBacking.actionVoltarFuncoesAgente}"
+							update=":form:tabView:pnlUpdFuncaoAgente" />
+
+					</f:facet>
+				</p:toolbar>
+
+
+			</p:outputPanel>
+		</p:outputPanel>
+	</p:outputPanel>
+
+</ui:composition>

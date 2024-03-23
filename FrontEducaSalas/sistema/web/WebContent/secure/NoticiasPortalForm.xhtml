@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="NoticiasPortal"
+			backing="#{noticiasPortalBacking}"
+			multipart="true">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_publicacao}"
+					value="#{row.publicacao}"
+					type="Date"
+					size="20">
+					<xcp:outputSimpleTimestamp value="#{row.publicacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_titulo}"
+					value="#{row.titulo}"
+					type="String">
+					<xcp:outputSimple value="#{row.titulo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_validade}"
+					value="#{row.validade}"
+					type="Date"
+					size="20">
+					<xcp:outputSimpleDate value="#{row.validade}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:dateTime
+						id="txtPublicacao"
+						required="true"
+						value="#{noticiasPortalBacking.entity.publicacao}"
+						label="#{bundle.lbl_publicacao}"
+						readonly="#{not noticiasPortalBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtTitulo"
+						label="#{bundle.lbl_titulo}"
+						required="true"
+						value="#{noticiasPortalBacking.entity.titulo}"
+						size="100" />
+
+					<p:outputLabel value="#{bundle.lbl_descricao}#{viewUtil.labelSufix}" />
+					<p:editor id="txtDescricao" 
+						value='#{noticiasPortalBacking.entity.descricao}' 
+						maxlength="4000" />
+
+					<xcp:date
+						id="txtValidade"
+						value="#{noticiasPortalBacking.entity.validade}"
+						label="#{bundle.lbl_validade}" />
+
+					<p:outputLabel value="#{bundle.lbl_imagem}#{viewUtil.labelSufix}" />
+					<p:toolbar id="toolBarImagem">
+						<f:facet name="left">
+							<xcp:commandButton
+								onclick="PF('wDlgUploadImagem').show();"
+								type="button"
+								value="#{bundle.btn_upload}" />
+
+							<xcp:commandButton
+								id="btnDownloadImagem"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)"
+								disabled="#{noticiasPortalBacking.entity.imagem == null}">
+								<p:fileDownload
+									value="#{noticiasPortalBacking.downloadImagem}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+						</f:facet>
+					</p:toolbar>
+
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelManut>
+		
+		<script type="text/javascript">
+			function downloadFileStart() {
+				PF('w_dlgXcpExecStatus').show();
+			}
+	
+			function downloadFileStop() {
+				PF('w_dlgXcpExecStatus').hide();
+			}
+		</script>
+		
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgUploadImagem}"
+			widgetVar="wDlgUploadImagem"
+			modal="true">
+			<xcp:form
+				id="formUploadImagem"
+				multipart="true">
+				<p:fileUpload
+					id="uploadImagem"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{noticiasPortalBacking.actionUploadImagem}" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+	
+</ui:composition>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="XcpServerEmail"
+			backing="#{xcpServerEmailBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codServer}"
+					value="#{row.codServer}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.codServer}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desServer}"
+					value="#{row.desServer}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.desServer}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desUsuario}"
+					value="#{row.desUsuario}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.desUsuario}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtDesServer"
+						label="#{bundle.lbl_desServer}"
+						required="true"
+						value="#{xcpServerEmailBacking.entity.desServer}"
+						size="50" />
+
+					<xcp:text
+						id="txtDesUsuario"
+						label="#{bundle.lbl_desUsuario}"
+						value="#{xcpServerEmailBacking.entity.desUsuario}"
+						size="100" />
+
+					<xcp:secret
+						id="txtDesSenha"
+						label="#{bundle.lbl_desSenha}"
+						value="#{xcpServerEmailBacking.entity.desSenha}"
+						size="100"
+						redisplay="true" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="XcpServerEmailForm/XcpServerEmailPropForm.xhtml" />
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					value="#{bundle.btn_testar}"
+					id="btn_testar"
+					icon="ui-icon-gear"
+					immediate="true"
+					update=":formdlg:txtAssuntoTestar :formdlg:txtDestinatarioTestar :formdlg:xcpTextoTestar"
+					oncomplete="PF('dlgEmail_w').show()"
+					resetValues="true"
+					rendered="#{!xcpServerEmailBacking.entity.novo}">
+					<f:setPropertyActionListener
+						value="#{null}"
+						target="#{xcpServerEmailBacking.helper}" />
+				</xcp:commandButton>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgEmail"
+			modal="true"
+			widgetVar="dlgEmail_w"
+			header="#{bundle.title_testarEmail}">
+			<xcp:form id="formdlg">
+				<p:blockUI
+					block="formdlg"
+					trigger="btn_testar">
+					<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+				</p:blockUI>
+				<xcp:panelForm>
+					<xcp:text
+						id="txtAssuntoTestar"
+						value="#{xcpServerEmailBacking.helper.desAssuntoTestar}"
+						label="#{bundle.lbl_assunto}"
+						required="true" />
+
+					<xcp:email
+						id="txtDestinatarioTestar"
+						value="#{xcpServerEmailBacking.helper.desDestinatarioTestar}"
+						label="#{bundle.lbl_destinatario}"
+						required="true" />
+
+					<xcp:lov
+						id="xcpTextoTestar"
+						value="#{xcpServerEmailBacking.helper.xcpTextoTestar}"
+						size="10"
+						label="#{bundle.lbl_seqTexto}"
+						query="xcp_texto"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_testar"
+							value="#{bundle.btn_testar}"
+							process="@form"
+							icon="ui-icon-gear"
+							action="#{xcpServerEmailBacking.actionTestar}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

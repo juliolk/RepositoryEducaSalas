@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags">
+
+	<!-- Upload/Download Documentos -->
+	<xcpfunc:menuDocumento
+		idComponente="field_empresa"
+		tipdocumento="2" />
+
+	<xcpfunc:menuDocumento
+		idComponente="txtDtnascimento"
+		tipdocumento="3" />
+
+	<xcpfunc:menuDocumento
+		idComponente="txtDtnascimento_l"
+		tipdocumento="3" />
+
+	<xcpfunc:menuDocumento
+		idComponente="brd_identidade"
+		tipdocumento="5" />
+
+	<xcpfunc:menuDocumento
+		idComponente="brd_dados_pis"
+		tipdocumento="6" />
+
+	<xcpfunc:menuDocumento
+		idComponente="cboEC"
+		tipdocumento="7" />
+
+	<xcpfunc:menuDocumento
+		idComponente="cboEC_l"
+		tipdocumento="7" />
+
+	<xcpfunc:menuDocumento
+		idComponente="brd_identidade_prof"
+		tipdocumento="8" />
+
+	<xcpfunc:menuDocumento
+		idComponente="brd_dados_titulo"
+		tipdocumento="9" />
+
+	<xcpfunc:menuDocumento
+		idComponente="brd_dados_carteira_prof"
+		tipdocumento="10" />
+
+	<xcpfunc:menuDocumento
+		idComponente="lovGrauInst"
+		tipdocumento="11" />
+
+	<xcpfunc:menuDocumento
+		idComponente="cboDeficiencias"
+		tipdocumento="14" />
+
+	<xcpfunc:menuDocumento
+		idComponente="txtReservista"
+		tipdocumento="16" />
+
+	<xcpfunc:menuDocumento
+		idComponente="cboUniaoEst"
+		tipdocumento="17" />
+
+	<xcpfunc:menuDocumento
+		idComponente="cboUniaoEst_l"
+		tipdocumento="17" />
+
+	<p:panelGrid>
+		<p:row>
+			<p:column>
+				<xcp:endereco
+					id="empresa"
+					classFieldset="#{ funcionariosBacking.getClasseAnexoDocPessoal(2) }"
+					value="#{funcionariosBacking.entity.endereco}" />
+
+				<p:fieldset
+					legend="#{bundle.tit_dados_contato}"
+					style="margin-bottom:7px;">
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<h:panelGrid
+									columns="5"
+									columnClasses="tamanhocoluna"
+									rowClasses="tamanholinha"
+									styleClass="tabela_alinhamento2">
+									<xcp:fone
+										id="txtFone"
+										label="#{bundle.lbl_fone}"
+										value="#{funcionariosBacking.entity.fone}"
+										size="30" />
+									<xcp:fone
+										id="txtCelular"
+										label="#{bundle.lbl_celular}"
+										value="#{funcionariosBacking.entity.celular}"
+										size="30" />
+
+									<xcp:commandButton
+										id="btnAddFone"
+										update=":frmFones"
+										process="@this"
+										icon="ui-icon-plusthick"
+										oncomplete="PF('dlgFones_w').show()"
+										title="#{bundle.hint_addfones}"
+										bypassPanelDisable="true" />
+
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:panelGrid
+									columns="3"
+									columnClasses="tamanhocoluna"
+									rowClasses="tamanholinha"
+									styleClass="tabela_alinhamento2"
+									style="margin-top:3px;">
+
+									<xcp:email
+										id="txtEmail"
+										label="#{bundle.lbl_email}"
+										value="#{funcionariosBacking.entity.email}"
+										maxlength="50"
+										size="73" />
+
+									<xcp:commandButton
+										id="btnAddMail"
+										update=":frmEmails"
+										process="@this"
+										icon="ui-icon-plusthick"
+										oncomplete="PF('dlgEmails_w').show()"
+										title="#{bundle.hint_addemails}"
+										bypassPanelDisable="true" />
+
+								</h:panelGrid>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovNatural"
+						value="#{funcionariosBacking.entity.naturalFk}"
+						label="#{bundle.lbl_natural}"
+						required="true"
+						query="cidades"
+						selectionListener="#{funcionariosBacking.selectNatural}"
+						update="#{funcionariosBacking.updateNatural}"
+						maxlength="7"
+						size="7" />
+						
+
+					<xcp:date
+						id="txtDtchegada"
+						label="#{bundle.lbl_dtchegada}"
+						required="true"
+						value="#{funcionariosBacking.entity.dtchegada}"
+						rendered="#{funcionariosBacking.helper.renderedDtChegada}"
+						size="7" />
+
+					<xcp:lov
+						id="lovGrauInst"
+						inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(11) }"
+						required="true"
+						value="#{funcionariosBacking.entity.grauFk}"
+						label="#{bundle.lbl_GrauInst}"
+						query="graus"
+						maxlength="8"
+						size="7" />
+
+					<!--  
+					<xcp:combo
+						id="cboGrauInst"
+						value="#{funcionariosBacking.entity.grauinst}"
+						required="true"
+						label="#{bundle.lbl_GrauInst}"
+						itens="#{funcionariosBacking.itensGraus}"
+						styleClass="dadospessoaisselect" />
+-->
+				</xcp:panelForm>
+			</p:column>
+			<p:column>
+				<p:fieldset
+					legend="#{bundle.tit_dados_carteira_prof}"
+					styleClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(10) }"
+					id="brd_dados_carteira_prof">
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:number
+										id="txtCpnumero"
+										label="#{bundle.lbl_cpnumero}"
+										value="#{funcionariosBacking.entity.cpnumero}"
+										maxlength="8"
+										maxValue="99999999"
+										size="10" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:text
+										id="txtCpserie"
+										label="#{bundle.lbl_cpserie}"
+										value="#{funcionariosBacking.entity.cpserie}"
+										size="15"
+										maxlength="20" />
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:panelGrid
+									columns="2"
+									style="margin-top:3px;">
+
+									<xcp:combo
+										id="cboCpuf"
+										value="#{funcionariosBacking.entity.cpuf}"
+										label="#{bundle.lbl_cpuf}"
+										itens="#{funcionariosBacking.itensUfNull}"
+										styleClass="combouf" />
+
+								</h:panelGrid>
+							</p:column>
+							<p:column colspan="2">
+								<h:panelGrid
+									columns="2"
+									style="margin-top:1px; margin-left:7px;">
+									<xcp:date
+										id="txtCpdtemissao"
+										value="#{funcionariosBacking.entity.cpdtemissao}"
+										label="#{bundle.lbl_cpdtemissao}" />
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset
+					id="brd_dados_pis"
+					styleClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(6) }"
+					legend="#{bundle.tit_dados_pis}">
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:date
+										id="txtDtcadpis"
+										value="#{funcionariosBacking.entity.dtcadpis}"
+										label="#{bundle.lbl_dtcadpis}" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:pis
+										id="txtPis"
+										label="#{bundle.lbl_pis}"
+										value="#{funcionariosBacking.entity.pis}"
+										required=""
+										size="12" />
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<div>
+					<p:fieldset
+						id="brd_dados_titulo"
+						styleClass="alinha_label #{ funcionariosBacking.getClasseAnexoDocPessoal(9) }"
+						legend="#{bundle.tit_dados_titulo}">
+						<p:panelGrid styleClass="tabela_alinhamento">
+							<p:row>
+								<p:column>
+									<xcp:titulo
+										id="txtTitulo"
+										label="#{bundle.lbl_titulo}"
+										value="#{funcionariosBacking.entity.titulo}" />
+
+								</p:column>
+								<p:column>
+									<xcp:number
+										id="txtZona"
+										label="#{bundle.lbl_zona}"
+										value="#{funcionariosBacking.entity.zona}"
+										size="3"
+										maxValue="999" />
+								</p:column>
+								<p:column>
+									<xcp:text
+										id="txtSessao"
+										label="#{bundle.lbl_sessao}"
+										value="#{funcionariosBacking.entity.sessao}"
+										size="5"
+										maxValue="99999" />
+
+								</p:column>
+								<p:column>
+									<xcp:combo
+										id="cboTitulouf"
+										value="#{funcionariosBacking.entity.titulouf}"
+										label="#{bundle.lbl_titulouf}"
+										itens="#{funcionariosBacking.itensUfNull}"
+										styleClass="combouf" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</div>
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<div style="width: 210px;">
+								<xcp:border
+									id="brd_identidade"
+									classFieldset="#{ funcionariosBacking.getClasseAnexoDocPessoal(5) }"
+									header="#{bundle.tit_dados_identidade}">
+
+
+									<xcp:text
+										id="txtIdentidade"
+										label="#{bundle.lbl_identidade}"
+										value="#{funcionariosBacking.entity.identidade}"
+										size="13"
+										maxlength="15" />
+
+									<xcp:date
+										id="txtDtidentidade"
+										value="#{funcionariosBacking.entity.dtidentidade}"
+										label="#{bundle.lbl_cpdtemissao}"
+										style="float:left;"
+										size="8" />
+
+									<xcp:text
+										id="txtOrgaoexp"
+										label="#{bundle.lbl_orgaoexp}"
+										value="#{funcionariosBacking.entity.orgaoexp}"
+										size="13"
+										maxlength="16" />
+
+									<xcp:combo
+										id="cboIdentidadeuf"
+										value="#{funcionariosBacking.entity.identidadeuf}"
+										label="#{bundle.lbl_identidadeuf}"
+										itens="#{funcionariosBacking.itensUfNull}"
+										styleClass="combouf" />
+								</xcp:border>
+							</div>
+						</p:column>
+
+						<p:column>
+
+							<xcp:border
+								id="brd_identidade_prof"
+								classFieldset="#{ funcionariosBacking.getClasseAnexoDocPessoal(8) }"
+								header="#{bundle.tit_dados_ident_prof}">
+
+								<xcp:text
+									id="txtCredencial"
+									label="#{bundle.lbl_credencial}"
+									value="#{funcionariosBacking.entity.credencial}"
+									maxlength="20"
+									size="12" />
+
+								<xcp:combo
+									id="cboCredenciador"
+									value="#{funcionariosBacking.entity.credenciador}"
+									label="#{bundle.lbl_credenciador}"
+									itens="#{funcionariosBacking.itensCredenciadoresNull}"
+									styleClass="combosituacao"
+									class="combo_entidadeclasse" />
+
+								<xcp:combo
+									id="cboCredencialsit"
+									value="#{funcionariosBacking.entity.credencialsit}"
+									label="#{bundle.lbl_credencialsit}"
+									itens="#{funcionariosBacking.itensCredencialSit}"
+									styleClass="combosituacao"
+									class="combo_entidadeclasse" />
+
+								<xcp:combo
+									id="cboCredencialuf"
+									value="#{funcionariosBacking.entity.credencialuf}"
+									label="#{bundle.lbl_credencialuf}"
+									itens="#{funcionariosBacking.itensUfNull}"
+									class="combo_entidadeclasse" />
+
+							</xcp:border>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<!-- 
+				<p:fieldset legend="#{bundle.tit_dados_identidade}">
+					<div style="width: 435px;">
+						<div style="float: left; margin-left: 32px;">
+							<xcp:panelForm>
+								<xcp:text
+									id="txtIdentidade"
+									label="#{bundle.lbl_identidade}"
+									value="#{funcionariosBacking.entity.identidade}"
+									size="20"
+									maxlength="15" />
+							</xcp:panelForm>
+						</div>
+						<div style="float: left; margin-left: 17px;">
+							<xcp:panelForm>
+								<xcp:date
+									id="txtDtidentidade"
+									value="#{funcionariosBacking.entity.dtidentidade}"
+									label="#{bundle.lbl_cpdtemissao}"
+									style="float:left;" />
+							</xcp:panelForm>
+						</div>
+
+						<div style="clear: both"></div>
+						<div style="float: left;">
+							<xcp:panelForm>
+								<xcp:text
+									id="txtOrgaoexp"
+									label="#{bundle.lbl_orgaoexp}"
+									value="#{funcionariosBacking.entity.orgaoexp}"
+									size="20" />
+							</xcp:panelForm>
+						</div>
+
+						<div style="float: left; margin-left: 8px;">
+							<xcp:panelForm>
+								<xcp:text
+									id="txtCredencial"
+									label="#{bundle.lbl_credencial}"
+									value="#{funcionariosBacking.entity.credencial}"
+									maxlength="12"
+									size="15" />
+							</xcp:panelForm>
+						</div>
+						<div style="clear: both"></div>
+						<div style="float: left; margin-left: 20px">
+							<xcp:panelForm>
+								<xcp:combo
+									id="cboCredenciador"
+									value="#{funcionariosBacking.entity.credenciador}"
+									required="true"
+									label="#{bundle.lbl_credenciador}"
+									itens="#{funcionariosBacking.itensCredenciadores}"
+									styleClass="identidade_select" />
+							</xcp:panelForm>
+						</div>
+
+						<div style="float: left; margin-left: 28px;">
+							<xcp:panelForm>
+								<xcp:combo
+									id="cboCredencialsit"
+									value="#{funcionariosBacking.entity.credencialsit}"
+									label="#{bundle.lbl_credencialsit}"
+									itens="#{funcionariosBacking.itensCredencialSit}"
+									styleClass="identidade_select_irregular" />
+							</xcp:panelForm>
+						</div>
+
+
+
+					</div>
+				</p:fieldset>
+ -->
+
+
+
+
+			</p:column>
+			<p:column>
+				<div style="width: 200px;">
+					<!-- <xcp:border
+						id="brd_pessoais"
+						header="#{bundle.tit_dados_pessoais}">-->
+
+					<p:fieldset
+						legend="#{bundle.tit_dados_pessoais}"
+						id="brd_pessoais"
+						style="height:325px;"
+						class="alinha_label">
+
+						<!-- 
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						required="true"
+						value="#{funcionariosBacking.entity.nome}"
+						size="60" />
+ -->
+						<xcp:date
+							id="txtDtnascimento"
+							required="true"
+							inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(3) }"
+							value="#{funcionariosBacking.entity.dtnascimento}"
+							label="#{bundle.lbl_dtnascimento}"
+							size="10" />
+
+						<xcp:combo
+							id="cboSexo"
+							value="#{funcionariosBacking.entity.sexo}"
+							required="true"
+							label="#{bundle.lbl_sexo}"
+							itens="#{funcionariosBacking.itensSexo}"
+							styleClass="dadospessoaisselect"
+							class="combo_infogerais" />
+
+						<xcp:text
+							id="txtReservista"
+							inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(16) }"
+							label="#{bundle.lbl_reservista}"
+							value="#{funcionariosBacking.entity.reservista}"
+							class="txt-infogerais"
+							maxlength="14" />
+
+
+						<xcp:number
+							id="txtReservistacat"
+							label="#{bundle.lbl_reservistacat}"
+							value="#{funcionariosBacking.entity.reservistacat}"
+							maxlength="2"
+							maxValue="99"
+							class="txt-infogerais" />
+
+
+						<xcp:combo
+							id="cboEC"
+							inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(7) }"
+							value="#{funcionariosBacking.entity.ec}"
+							required="true"
+							label="#{bundle.lbl_ec}"
+							itens="#{funcionariosBacking.itensECFuncNull}"
+							styleClass="dadospessoaisselect"
+							class="combo_infogerais">
+							<p:ajax
+								event="change"
+								listener="#{funcionariosBacking.actionChangeEC}"
+								update="tabDependentes cboUniaoEst cboUniaoEst_l cboUniaoEst_c" />
+						</xcp:combo>
+
+						<xcp:combo
+							id="cboUniaoEst"
+							inputPanelClass="#{funcionariosBacking.renderedUniaoEstavel ? funcionariosBacking.getClasseAnexoDocPessoal(17) : ''}"
+							value="#{funcionariosBacking.entity.uniaoestavel}"
+							required="true"
+							label="#{bundle.lbl_uniaoestavel}"
+							itens="#{funcionariosBacking.itensIndSimNaoNull}"
+							styleClass="dadospessoaisselect"
+							class="combo_infogerais"
+							rendered="#{funcionariosBacking.renderedUniaoEstavel}"
+							readonly="#{funcionariosBacking.helper.inicioucasado}">
+							<p:ajax
+								event="change"
+								listener="#{funcionariosBacking.actionChangeEC}"
+								update="tabDependentes" />
+						</xcp:combo>
+
+						<xcp:combo
+							id="cboCor"
+							value="#{funcionariosBacking.entity.cor}"
+							required="true"
+							label="#{bundle.lbl_cor}"
+							itens="#{funcionariosBacking.itensCorNull}"
+							styleClass="dadospessoaisselect"
+							class="combo_infogerais" />
+
+						<p:outputLabel
+							for="cboDeficiencias"
+							value="#{bundle.lbl_deficiencias}" />
+
+						<h:panelGrid
+							columns="2"
+							styleClass="panel-grid-deficiencia">
+							<xcp:combo
+								id="cboDeficiencias"
+								inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(14) }"
+								value="#{funcionariosBacking.entity.deficiente}"
+								required="true"
+								simple="true"
+								label="#{bundle.lbl_deficiencias}"
+								itens="#{funcionariosBacking.itensDeficienciasNull}"
+								styleClass="dadospessoaisselect"
+								style="width:107px" />
+
+							<xcp:commandButton
+								id="btnAddDef"
+								update=":frmDefs"
+								process="@this"
+								icon="ui-icon-plusthick"
+								oncomplete="PF('dlgDefs_w').show()"
+								title="#{bundle.hint_adddefs}"
+								bypassPanelDisable="true"
+								style="float:left" />
+						</h:panelGrid>
+
+						<xcp:date
+							id="dtrecadastramento"
+							value="#{funcionariosBacking.entity.dtrecadastramento}"
+							label="#{bundle.lbl_dtrecadastramento}"
+							rendered="#{funcionariosBacking.renderedDtRecad}" />
+
+					</p:fieldset>
+
+					<xcp:panelEsoc
+						backing="#{funcionariosBacking}"
+						tipoesoc="1" />
+				</div>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+</ui:composition>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Assistenciaaviso"
+		backing="#{assistenciaavisoBacking}"
+		masterId="Assistencia">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_seq}"
+				value="#{row.seq}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.seq}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matriculaFk.nome}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_email}"
+				value="#{row.email}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.email}" />
+			</xcp:column>
+
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+				<xcp:number
+					id="txtSeq_Assistenciaaviso"
+					label="#{bundle.lbl_seq}"
+					required="true"
+					value="#{assistenciaavisoBacking.entity.seq}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999"
+					readonly="#{not assistenciaavisoBacking.entity.novo}" />
+			</xcp:panelForm>
+			<xcp:border
+				id="brd_origem"
+				header="#{bundle.tit_origem}">
+
+
+				<xcp:lov
+					id="lovOrgao_Assistenciaaviso"
+					value="#{assistenciaavisoBacking.entity.orgaoFk}"
+					selectionListener="#{assistenciaavisoBacking.selectOrgao}"
+					label="#{bundle.lbl_orgao}"
+					query="orgaos"
+					size="10"
+					update="lovDivisao, lovDivisao_l,lovSetor,lovSetor_l" />
+
+				<xcp:lov
+					id="lovDivisao"
+					value="#{assistenciaavisoBacking.entity.divisaoFk}"
+					label="#{bundle.lbl_divisao}"
+					query="divisoes_orgao"
+					selectionListener="#{assistenciaavisoBacking.selectDivisao}"
+					params="#{assistenciaavisoBacking.paramsDivisao}"
+					update="lovSetor"
+					size="10" />
+
+				<xcp:lov
+					id="lovSetor"
+					value="#{assistenciaavisoBacking.entity.setorFk}"
+					label="#{bundle.lbl_setor}"
+					params="#{assistenciaavisoBacking.paramsSetor}"
+					query="set_div_validade"
+					size="10" />
+
+				<xcp:lov
+					id="lovMatricula_Assistenciaaviso"
+					value="#{assistenciaavisoBacking.entity.matriculaFk}"
+					label="#{bundle.lbl_matricula}"
+					query="funcionarios"
+					size="10" />
+			</xcp:border>
+			<xcp:border
+				id="brd_destino"
+				header="#{bundle.tit_destino}">
+
+				<xcp:email
+					id="txtEmail_Assistenciaaviso"
+					label="#{bundle.lbl_email}"
+					required="true"
+					value="#{assistenciaavisoBacking.entity.email}"
+					size="66" />
+
+				<xcp:lov
+					id="lovSeqTexto_Assistenciaaviso"
+					value="#{assistenciaavisoBacking.entity.seqTextoFk}"
+					label="#{bundle.lbl_textoAviso}"
+					required="true"
+					query="xcp_texto"
+					size="10" />
+
+			</xcp:border>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

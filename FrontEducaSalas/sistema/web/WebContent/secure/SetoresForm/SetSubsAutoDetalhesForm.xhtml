@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:lov
+			id="#{id}_lovMat"
+			value="#{backing.subsDocSelecionado.matriculaFk}"
+			label="#{bundle.lbl_subs}"
+			required="true"
+			query="funcionariosLov"
+			size="8"
+			readonly="true" />
+
+		<xcp:date
+			id="#{id}_txtDtaini"
+			required="true"
+			value="#{backing.subsDocSelecionado.dtinicio}"
+			label="#{bundle.lbl_dtaini}"
+			readonly="true" />
+
+		<xcp:date
+			id="#{id}_txtDtafim"
+			value="#{backing.subsDocSelecionado.dtfim}"
+			label="#{bundle.lbl_dtafim}"
+			readonly="true" />
+
+		<xcp:lov
+			id="#{id}_lovTipodoc"
+			value="#{backing.subsDocSelecionado.tipodocFk}"
+			label="#{bundle.lbl_tipodoc}"
+			query="tipodocumento_setsub"
+			params="#{backing.paramsTipoDoc}"
+			size="5"
+			readonly="true" />
+
+		<xcp:lov
+			id="#{id}_lovDocumento"
+			value="#{backing.subsDocSelecionado.registroFk}"
+			params="#{backing.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			query="documentosman"
+			size="5"
+			readonly="true" />
+
+		<xcp:lov
+			id="#{id}_lovProcesso"
+			value="#{backing.subsDocSelecionado.processoFk}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			readonly="true"
+			required="#{backing.requiredProc}"
+			size="25" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+
+		<p:panelGrid>
+			<p:row>
+				<p:column>
+					<p:splitButton
+						id="#{id}_btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{backing.subsDocSelecionado.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(backing.subsDocSelecionado.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{backing.model.actionOpenVisDialog(backing.subsDocSelecionado.registro)}"
+							process="@this" />
+
+					</p:splitButton>
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:dateTime
+							id="#{id}_txtRetificacao"
+							value="#{backing.subsDocSelecionado.retificacao}"
+							label="#{backing.labelRetif}"
+							rendered="#{backing.subsDocSelecionado.retificacao!=null}"
+							readonly="true"
+							tabindex="240" />
+					</xcp:panelForm>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+		<xcp:memo
+			id="#{id}_txtObs"
+			label="#{bundle.lbl_obs}"
+			value="#{backing.subsDocSelecionado.obs}"
+			size="1000"
+			readonly="true" />
+
+	</xcp:panelForm>
+
+</ui:composition>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+.alinhamento {
+	padding-left: 8px;
+}
+</style>
+		<xcp:panelMestre
+			id="Candidatos"
+			backing="#{candidatosRemClassBacking}"
+			renderedNovo="false">
+
+			<ui:define name="colunasMaster">
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{rowMaster.editalFk.numero}"
+					type="Number"
+					size="2">
+					<xcp:outputSimple value="#{rowMaster.editalFk.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desEdital}"
+					value="#{rowMaster.editalFk.descricao}"
+					type="String"
+					size="4">
+					<xcp:outputSimple value="#{rowMaster.editalFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{rowMaster.orgao}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{rowMaster.orgao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{rowMaster.orgaoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimpleNumber value="#{rowMaster.orgaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{rowMaster.data}"
+					type="Date"
+					size="4">
+					<xcp:outputSimpleDate value="#{rowMaster.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vagas}"
+					value="#{rowMaster.vagas}"
+					type="Number"
+					size="2"
+					rendered="#{not candidatosRemClassBacking.vagaIndividual}">
+					<xcp:outputSimpleNumber
+						value="#{rowMaster.vagas}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desVaga}"
+					value="#{rowMaster.numSeqVagaFk.descricao}"
+					type="String"
+					size="20"
+					rendered="#{candidatosRemClassBacking.vagaIndividual}">
+					<xcp:outputSimple value="#{rowMaster.numSeqVagaFk.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setor}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.setor}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descset}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.descset}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classfinal}"
+					value="#{row.classfinal}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.classfinal}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_acoes}"
+					type="String"
+					size="5">
+
+					<xcp:commandButton
+						id="btn_desinscrever"
+						value="#{bundle.btn_desinscrever}"
+						action="#{candidatosRemClassBacking.actionDesinscrever(row)}"
+						process="@this"
+						update=":frmjust"
+						rendered="#{not candidatosRemClassBacking.concursoEncerrado and empty row.justdesist}" />
+
+					<xcp:commandButton
+						id="btn_detalhes"
+						process="@this"
+						icon="ui-icon-search"
+						rendered="#{not candidatosRemClassBacking.concursoEncerrado and not empty row.justdesist}"
+						update=":frmjust"
+						oncomplete="PF('dlgjust_w').show()">
+						<f:setPropertyActionListener
+							target="#{candidatosRemClassBacking.candvo}"
+							value="#{row}" />
+					</xcp:commandButton>
+
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					icon="ui-icon-gear"
+					id="btnGerar"
+					value="#{bundle.btn_gerarClass}"
+					action="#{candidatosRemClassBacking.actionGerar}"
+					process="@this"
+					update="table_Candidatos"
+					disabled="#{candidatosRemClassBacking.masterEntity.edital == null or candidatosRemClassBacking.concursoEncerrado}" />
+
+				<xcp:commandButton
+					icon="ui-icon-gear"
+					id="btnEncerrar"
+					value="#{bundle.btn_encerrar_conc}"
+					action="#{candidatosRemClassBacking.actionEncerrar}"
+					process="@this"
+					update=":form"
+					disabled="#{candidatosRemClassBacking.masterEntity.edital == null or candidatosRemClassBacking.concursoEncerrado}" />
+			</ui:define>
+
+		</xcp:panelMestre>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			modal="true"
+			id="dlgjust"
+			header="#{bundle.lbl_justificativa}"
+			widgetVar="dlgjust_w">
+			<xcp:form id="frmjust">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_descricao}"
+						value="#{candidatosRemClassBacking.candvo.justdesist}"
+						size="1000"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar id="toolbarconf">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_confirmar"
+							icon="ui-icon-disk"
+							update="@form :form"
+							action="#{candidatosRemClassBacking.actionConfirmDesiscricao}"
+							value="#{bundle.btn_confirmar}"
+							disabled="#{candidatosRemClassBacking.disabledJust}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

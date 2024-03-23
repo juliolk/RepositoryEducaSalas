@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="ConsignacoesContas"
+		backing="#{consignacoesContasBacking}"
+		masterId="Consignacoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_conta}"
+				type="Number"
+				size="16">
+				<xcp:outputSimpleNumber
+					value="#{row.conta}"
+					precision="16"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao_conta}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.contaFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				type="String"
+				size="15">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{consignacoesContasBacking.itensTipo}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovConta_ConsignacoesContas"
+					value="#{consignacoesContasBacking.entity.contaFk}"
+					label="#{bundle.lbl_conta}"
+					required="true"
+					query="contas"
+					size="16"
+					readonly="#{not consignacoesContasBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboTipo_ConsignacoesContas"
+					value="#{consignacoesContasBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{consignacoesContasBacking.itensTipo}">
+					<p:ajax
+						event="change"
+						update="lovContamod_ConsignacoesContas,lovContamod_ConsignacoesContas_l" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovContamod_ConsignacoesContas"
+					value="#{consignacoesContasBacking.entity.contamodFk}"
+					label="#{bundle.lbl_contamod}"
+					required="true"
+					query="contas"
+					size="16"
+					rendered="#{consignacoesContasBacking.entity.tipo==3}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

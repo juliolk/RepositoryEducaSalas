@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="#{id}"
+		backing="#{backing}"
+		masterId="Setores">
+
+		<ui:define name="colunas">
+
+			<p:column
+				style="width:1px"
+				rendered="#{id == 'auto'}">
+				<p:rowToggler rendered="#{row.detalhes}" />
+			</p:column>
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.matricula}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.matriculaFk.nome}"
+				type="String"
+				size="8">
+				<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtaini}"
+				value="#{row.dtinicio}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtafim}"
+				value="#{row.dtfim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+
+			<p:rowExpansion rendered="#{id == 'auto'}">
+				<p:dataTable
+					id="tabDoc"
+					var="rowDoc"
+					value="#{row.listaSubsSetDoc}"
+					rowKey="#{rowDoc.PK}"
+					paginator="true"
+					selectionMode="single"
+					paginatorPosition="bottom"
+					rowIndexVar="idx"
+					selection="#{backing.subsDocSelecionado}"
+					rows="#{viewUtil.tableRows}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="margin-bottom:0;">
+
+					<p:ajax
+						event="rowSelect"
+						update=":frmDlg"
+						oncomplete="PF('dlg_w').show();" />
+
+					<xcp:column
+						headerText="#{bundle.col_dtaini}"
+						value="#{row.dtinicio}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtinicio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtafim}"
+						value="#{row.dtfim}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtfim}" />
+					</xcp:column>
+
+					<ui:include src="../DocManual/DocUnificadoDetalhesDoc.xhtml">
+						<ui:param
+							name="rowDoc"
+							value="#{rowDoc}" />
+
+						<ui:param
+							name="rowPrincipal"
+							value="#{row}" />
+
+						<ui:param
+							name="actionExclusao"
+							value="#{backing.model}" />
+
+					</ui:include>
+
+
+				</p:dataTable>
+			</p:rowExpansion>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="#{id}_lovMat"
+					value="#{backing.entity.matriculaFk}"
+					label="#{bundle.lbl_subs}"
+					required="true"
+					query="funcionariosLov"
+					size="8" />
+
+				<xcp:date
+					id="#{id}_txtDtaini"
+					required="true"
+					value="#{backing.entity.dtinicio}"
+					label="#{bundle.lbl_dtaini}" />
+
+				<xcp:date
+					id="#{id}_txtDtafim"
+					value="#{backing.entity.dtfim}"
+					label="#{bundle.lbl_dtafim}" />
+
+				<xcp:lov
+					id="#{id}_lovTipodoc"
+					value="#{backing.entity.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_setsub"
+					params="#{backing.paramsTipoDoc}"
+					selectionListener="#{backing.selectTipodocumento}"
+					update="#{id}_lovDocumento,#{id}_lovDocumento_l,#{id}_lovProcesso,#{id}_lovProcesso_l,#{id}_btnDownloadDocumento,#{id}_pnlinfotipodoc,#{id}_btnAddDoc"
+					size="5"
+					readonly="#{backing.readOnlyTipdoc}"
+					rendered="#{id == 'auto'}" />
+
+				<xcp:lov
+					id="#{id}_lovDocumento"
+					value="#{backing.entity.registroFk}"
+					params="#{backing.paramsTipodocumento}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					size="5"
+					update="#{id}_lovProcesso,#{id}_lovProcesso_l"
+					readonly="#{backing.readOnlyDoc}"
+					selectionListener="#{backing.selectDocumento}"
+					rendered="#{id == 'auto'}" />
+
+				<xcp:lov
+					id="#{id}_lovProcesso"
+					value="#{backing.entity.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="#{backing.readOnlyProc}"
+					required="#{backing.requiredProc}"
+					size="25"
+					rendered="#{id == 'auto'}" />
+
+				<p:spacer
+					height="1"
+					width="1"
+					rendered="#{id == 'auto'}" />
+
+				<p:panelGrid rendered="#{id == 'auto'}">
+					<p:row>
+						<p:column>
+							<p:splitButton
+								id="#{id}_btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{backing.entity.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(backing.entity.registro)}"
+									contentDisposition="attachment" />
+								<p:menuitem
+									value="#{bundle.btn_detalhes_doc}"
+									action="#{backing.model.actionOpenVisDialog(backing.entity.registro)}"
+									process="@this" />
+
+							</p:splitButton>
+						</p:column>
+						<p:column>
+							<xcp:btnAddDocUni
+								id="#{id}_btnAddDoc"
+								model="#{backing.model}" />
+						</p:column>
+						<p:column>
+							<p:outputPanel id="#{id}_pnlinfotipodoc">
+								<p:commandButton
+									id="#{id}_btninst"
+									value="#{bundle.btn_info_tipodoc}"
+									type="button"
+									rendered="#{not empty backing.entity.tipodocFk.instrucoes}"
+									tabindex="230" />
+
+
+								<p:overlayPanel
+									for="#{id}_btninst"
+									style="max-width:600px;text-align: left;">
+									<h:outputText
+										value="#{backing.entity.tipodocFk.instrucoes}"
+										escape="false" />
+								</p:overlayPanel>
+							</p:outputPanel>
+						</p:column>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:dateTime
+									id="#{id}_txtRetificacao"
+									value="#{backing.entity.retificacao}"
+									label="#{backing.labelRetif}"
+									rendered="#{backing.entity.retificacao!=null}"
+									readonly="true"
+									tabindex="240">
+									<ui:define name="right">
+										<xcp:commandLink
+											id="#{id}_btn_remove_retificacao"
+											update="@form"
+											action="#{backing.actionRemoveRetificacao}">
+											<h:graphicImage
+												title="#{bundle.hint_remover_retificacao}"
+												value="/resources/img/remover.png"
+												style="margin-top:3px;" />
+											<p:confirm
+												header="#{bundle.tit_confirma_remover}"
+												message="#{bundle.msg_confirma_remover}"
+												icon="ui-icon-alert" />
+										</xcp:commandLink>
+									</ui:define>
+								</xcp:dateTime>
+							</xcp:panelForm>
+							<xcp:panelForm>
+								<xcp:check
+									id="#{id}_chk_retificacao"
+									label="#{backing.labelRetif}"
+									rendered="#{backing.renderedRetificacao}"
+									value="#{backing.retificacao}"
+									tabindex="250">
+									<p:ajax update="@form" />
+								</xcp:check>
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<xcp:memo
+					id="#{id}_txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{backing.entity.obs}"
+					size="1000" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

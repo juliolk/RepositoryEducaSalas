@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tabListaAtestados"
+		value="#{funcionariosBacking.listaAtestados}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="atestados"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		styleClass="tabelaAtestados">
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="4">
+			<xcp:outputSimpleDate value="#{atestados.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_crm}"
+			type="Number"
+			size="12">
+			<xcp:outputSimpleNumber
+				value="#{atestados.crm}"
+				precision="12"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_duracao}"
+			type="Number"
+			size="9">
+			<xcp:outputSimpleNumber
+				value="#{atestados.duracao}"
+				precision="6"
+				scale="0" />
+		</xcp:column>
+
+
+		<xcp:column
+			headerText="#{bundle.col_internacao}"
+			type="String"
+			size="10">
+			<xcp:outputSimple
+				value="#{atestados.internacao}"
+				itens="#{funcionariosBacking.itensAtestadoInternacao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_origem}"
+			type="String"
+			size="10">
+			<xcp:outputSimple
+				value="#{atestados.origem}"
+				itens="#{funcionariosBacking.itensAtestadoOrigem}" />
+		</xcp:column>
+
+
+		<!--
+		<xcp:column
+			headerText="#{bundle.col_caracteristica}"
+			type="String"
+			size="10">
+			<xcp:outputSimple
+				value="#{atestados.caracteristica}"
+				itens="#{funcionariosBacking.itensAtestadoCaracteristica}" />
+		</xcp:column>
+		<xcp:column
+			headerText="#{bundle.col_afastamento}"
+			value="#{atestados.afastamento}"
+			type="Number"
+			size="4">
+			<xcp:outputSimpleNumber
+				value="#{atestados.afastamento}"
+				precision="4"
+				scale="0" />
+		</xcp:column>
+
+
+		<xcp:column
+			headerText="#{bundle.col_descricao}"
+			value="#{atestados.descricao}"
+			type="String"
+			size="200">
+			<xcp:outputSimple value="#{atestados.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_diagnostico}"
+			value="#{atestados.diagnostico}"
+			type="String"
+			size="200">
+			<xcp:outputSimple value="#{atestados.diagnostico}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_cid}"
+			value="#{atestados.cid}"
+			type="String"
+			size="15">
+			<xcp:outputSimple value="#{atestados.cid}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_obs}"
+			value="#{atestados.obs}"
+			type="String"
+			size="200">
+			<xcp:outputSimple value="#{atestados.obs}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_cat}"
+			value="#{atestados.cat}"
+			type="Number"
+			size="2">
+			<xcp:outputSimpleNumber
+				value="#{atestados.cat}"
+				precision="2"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_horaac}"
+			value="#{atestados.horaac}"
+			type="Number"
+			size="7">
+			<xcp:outputSimpleNumber
+				value="#{atestados.horaac}"
+				precision="4"
+				scale="2" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataac}"
+			value="#{atestados.dataac}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{atestados.dataac}" />
+		</xcp:column>
+-->
+	</p:dataTable>
+</ui:composition>

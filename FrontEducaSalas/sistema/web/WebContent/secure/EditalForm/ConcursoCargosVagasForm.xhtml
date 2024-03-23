@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_adicionar_vaga"
+				oncomplete="PF('dlgVaga_w').show();"
+				update=":frmVaga"
+				value="#{bundle.btn_adicionar}"
+				action="#{editalBacking.setVagaManut(null)}"
+				icon="ui-icon-plusthick" />
+		</f:facet>
+	</p:toolbar>
+
+	<p:dataTable
+		id="table_ConcursoVagas"
+		widgetVar="table_ConcursoVagas_w"
+		var="row"
+		value="#{editalBacking.listaVagas}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		scrollable="true"
+		scrollHeight="161"
+		selectionMode="single"
+		selection="#{editalBacking.vagaManut}"
+		rowKey="#{row.PK}">
+
+		<xcp:column
+			headerText="#{bundle.col_numSeqVaga}"
+			type="Number"
+			size="18">
+			<xcp:outputSimpleNumber
+				value="#{row.numSeqVaga}"
+				precision="18"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_desFuncao}"
+			type="String">
+			<xcp:outputSimple value="#{row.numSeqVagaFk.descricao}" />
+		</xcp:column>
+
+
+		<xcp:column
+			type="String"
+			size="3">
+			<xcp:commandButton
+				id="btn_removerSel"
+				immediate="true"
+				update="table_ConcursoVagas"
+				action="#{editalBacking.actionExcluirVaga(row)}"
+				icon="ui-icon-trash">
+				<p:confirm
+					header="#{bundle.tit_confirma_remover}"
+					message="#{bundle.msg_confirma_remover}"
+					icon="ui-icon-alert" />
+			</xcp:commandButton>
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="3">
+			<xcp:commandButton
+				id="btn_editarVaga"
+				icon="icon-navegar"
+				update="table_ConcursoVagas,:#{p:component('frmVaga')}"
+				oncomplete="PF('dlgVaga_w').show();"
+				action="#{editalBacking.setVagaManut(row)}">
+			</xcp:commandButton>
+		</xcp:column>
+
+	</p:dataTable>
+
+</ui:composition>

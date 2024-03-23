@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		
+		<xcp:panelManut id="PerguntasFrequentes"
+			backing="#{perguntasFrequentesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_pergunta}"
+					value="#{row.pergunta}" type="Number" size="6">
+					<xcp:outputSimpleNumber value="#{row.pergunta}" precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_topico}" value="#{row.topico}"
+					type="String" size="10">
+					<xcp:outputSimple value="#{row.topicoFk.descricao}"/>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}" type="String" size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_validade}"
+					value="#{row.validade}" type="Date" size="7">
+					<xcp:outputSimpleDate value="#{row.validade}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number id="txtPergunta" label="#{bundle.lbl_pergunta}"
+						required="true"
+						value="#{perguntasFrequentesBacking.entity.pergunta}" size="6"
+						precision="6" scale="0" maxValue="999999" />
+
+					<xcp:lov id="lovTopico"
+						value="#{perguntasFrequentesBacking.entity.topicoFk}"
+						label="#{bundle.lbl_topico}" required="true"
+						query="perguntas_topicos" size="4" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						rows="4"
+						required="true"
+						size="200"
+						value="#{perguntasFrequentesBacking.entity.descricao}"/>
+						
+					<xcp:memo
+						id="txtResposta"
+						label="#{bundle.lbl_resposta}"
+						rows="10"
+						required="true"
+						size="2000"
+						value="#{perguntasFrequentesBacking.entity.resposta}"/>
+
+					<xcp:date id="txtValidade"
+						value="#{perguntasFrequentesBacking.entity.validade}"
+						label="#{bundle.lbl_validade}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

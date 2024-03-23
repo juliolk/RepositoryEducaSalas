@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="XcpObjeto"
+			backing="#{xcpObjetoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codObjeto}"
+					value="#{row.codObjeto}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.codObjeto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desObjeto}"
+					value="#{row.desObjeto}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.desObjeto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_txtObservacoes}"
+					value="#{row.txtObservacoes}"
+					type="String"
+					size="70">
+					<xcp:outputSimple value="#{row.txtObservacoes}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtCodObjeto"
+						label="#{bundle.lbl_codObjeto}"
+						required="true"
+						value="#{xcpObjetoBacking.entity.codObjeto}"
+						size="50"
+						readonly="#{not xcpObjetoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDesObjeto"
+						label="#{bundle.lbl_desObjeto}"
+						value="#{xcpObjetoBacking.entity.desObjeto}"
+						size="50" />
+
+					<xcp:memo
+						id="txtTxtObservacoes"
+						value="#{xcpObjetoBacking.entity.txtObservacoes}"
+						label="#{bundle.lbl_txtObservacoes}"
+						style="font-family: monospace;" />
+
+					<xcp:combo
+						id="cboTipObjeto"
+						value="#{xcpObjetoBacking.entity.tipObjeto}"
+						label="#{bundle.lbl_tipObjeto}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensTipObjeto}">
+						<p:ajax
+							update="txtDesSqlPadrao,txtDesSqlPadrao_l,radIndDownload,radIndDownload_l,txtDesProcedure,txtDesProcedure_l,txtDesClasse,txtDesClasse_l" />
+					</xcp:combo>
+
+					<xcp:text
+						id="txtDesClasse"
+						label="#{bundle.lbl_desClasse}"
+						value="#{xcpObjetoBacking.entity.desClasse}"
+						rendered="#{xcpObjetoBacking.entity.tipObjeto != 4}"
+						size="100" />
+
+					<xcp:text
+						id="txtDesProcedure"
+						label="#{bundle.lbl_desProcedure}"
+						value="#{xcpObjetoBacking.entity.desProcedure}"
+						rendered="#{xcpObjetoBacking.entity.tipObjeto != 4}"
+						size="100" />
+
+					<xcp:radio
+						id="radIndUpload"
+						value="#{xcpObjetoBacking.entity.indUpload}"
+						label="#{bundle.lbl_indUpload}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensIndSimNao}">
+						<p:ajax
+							update="txtDesUpCharset txtDesUpCharset_l"
+							listener="#{xcpObjetoBacking.changeIndUpload}" />
+					</xcp:radio>
+
+					<xcp:text
+						id="txtDesUpCharset"
+						label="#{bundle.lbl_desCharset}"
+						value="#{xcpObjetoBacking.entity.desUploadCharset}"
+						rendered="#{xcpObjetoBacking.entity.indUpload == 1}"
+						size="30" />
+
+					<xcp:radio
+						id="radIndDownload"
+						value="#{xcpObjetoBacking.entity.indDownload}"
+						label="#{bundle.lbl_indDownload}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensIndSimNao}"
+						rendered="#{xcpObjetoBacking.entity.tipObjeto == 3}">
+						<p:ajax update="txtDesNomeArqDownload, txtDesNomeArqDownload_l" />
+					</xcp:radio>
+
+					<xcp:text
+						id="txtDesNomeArqDownload"
+						label="#{bundle.lbl_desDesNomeArqDownload}"
+						value="#{xcpObjetoBacking.entity.desNomeArqDownload}"
+						rendered="#{xcpObjetoBacking.entity.indDownload == 1}"
+						size="100" />
+
+					<xcp:radio
+						id="radIndLimpar"
+						value="#{xcpObjetoBacking.entity.indLimpar}"
+						label="#{bundle.lbl_indLimpar}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensIndSimNao}" />
+
+					<xcp:radio
+						id="radIndCancelar"
+						value="#{xcpObjetoBacking.entity.indCancelar}"
+						label="#{bundle.lbl_indCancelar}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensIndSimNao}" />
+
+					<xcp:radio
+						id="cboIndAgendamento"
+						value="#{xcpObjetoBacking.entity.indAgendamento}"
+						label="#{bundle.lbl_indAgendamento}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensIndSimNao}" />
+
+					<xcp:radio
+						id="cboIndCabRod"
+						value="#{xcpObjetoBacking.entity.indCabRod}"
+						label="#{bundle.lbl_indCabRod}"
+						itens="#{xcpObjetoBacking.itensIndSimNao}" />
+
+					<xcp:radio
+						id="cboIndPaisagem"
+						value="#{xcpObjetoBacking.entity.indPaisagem}"
+						required="true"
+						label="#{bundle.lbl_indPaisagem}"
+						itens="#{xcpObjetoBacking.itensIndSimNao}" />
+
+					<xcp:radio
+						id="cboIndSalvarConfig"
+						value="#{xcpObjetoBacking.entity.indSalvarConfig}"
+						label="#{bundle.lbl_indSalvarConfig}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensIndSimNao}" />
+
+					<xcp:radio
+						id="cboIndSegundos"
+						value="#{xcpObjetoBacking.entity.indSegundos}"
+						label="#{bundle.lbl_indSegundos}"
+						required="true"
+						itens="#{xcpObjetoBacking.itensIndSimNao}" />
+
+					<xcp:text
+						id="txtDesGrupoAgenda"
+						label="#{bundle.lbl_desGrupoAgenda}"
+						value="#{xcpObjetoBacking.entity.desGrupoAgenda}"
+						size="100" />
+
+					<xcp:text
+						id="txtDesCopia"
+						label="#{bundle.lbl_desCopia}"
+						value="#{xcpObjetoBacking.entity.desCopia}"
+						size="100" />
+
+					<xcp:combo
+						id="cboIndVincdoc"
+						value="#{xcpObjetoBacking.entity.indVincdoc}"
+						label="#{bundle.lbl_indVincdoc}"
+						itens="#{xcpObjetoBacking.itensIndSimNao}"
+						rendered="#{xcpObjetoBacking.entity.tipObjeto == 1}">
+						<p:ajax update="cboTipUtilizacao cboTipUtilizacao_l" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboTipUtilizacao"
+						value="#{xcpObjetoBacking.entity.tipUtilizacao}"
+						label="#{bundle.lbl_tipUtilizacao}"
+						itens="#{xcpObjetoBacking.itensTipUtilizacao}"
+						required="true"
+						rendered="#{xcpObjetoBacking.entity.tipObjeto == 1 and xcpObjetoBacking.entity.indVincdoc == 1}" />
+
+					<xcp:memo
+						id="txtDesSqlPadrao"
+						value="#{xcpObjetoBacking.entity.desSqlPadrao}"
+						label="#{bundle.lbl_desSqlPadrao}"
+						style="font-family: monospace;white-space: pre;word-wrap: normal;overflow-x: scroll;"
+						required="#{xcpObjetoBacking.entity.tipObjeto == 2 or xcpObjetoBacking.entity.tipObjeto == 4}"
+						cols="150"
+						size="8000"
+						rendered="#{xcpObjetoBacking.entity.tipObjeto != 3}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="XcpObjetoForm/XcpObjetoParametroForm.xhtml" />
+
+				<ui:include src="XcpObjetoForm/XcpObjetoGruposForm.xhtml" />
+
+				<ui:include src="XcpObjetoForm/XcpObjetoModeloForm.xhtml" />
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_duplicar"
+					value="#{bundle.btn_duplicar}"
+					oncomplete="PF('dlgDup_w').show();"
+					update=":formDup"
+					icon="ui-icon-gear">
+					<f:setPropertyActionListener
+						target="#{xcpObjetoBacking.desNovoNome}"
+						value="#{null}" />
+				</xcp:commandButton>
+			</ui:define>
+
+		</xcp:panelManut>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgDuplicar}"
+			widgetVar="dlgDup_w"
+			modal="true">
+			<xcp:form id="formDup">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtNovoNome"
+						value="#{xcpObjetoBacking.desNovoNome}"
+						label="#{bundle.lbl_novoNome}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravar"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_duplicar}"
+							process="@form"
+							update=":form"
+							action="#{xcpObjetoBacking.actionDuplicarObj}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_dlgUploadJrxml}"
+			widgetVar="wDlgUploadJrxml"
+			modal="true">
+			<xcp:form
+				id="formUpload"
+				multipart="true">
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					allowTypes="/(\.|\/)(jrxml)$/"
+					fileUploadListener="#{xcpObjetoModeloBacking.actionUploadJrxml}" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panelGrid>
+		<p:row>
+			<p:column styleClass="alinhatopo">
+				<p:dataTable
+					id="tabMenus"
+					var="rowMenu"
+					value="#{operadoresBacking.listaMenus}"
+					rowKey="#{rowMenu.PK}"
+					filteredValue="#{operadoresBacking.listaFiltrados5}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}"
+					selectionMode="single"
+					selection="#{operadoresBacking.selectedMenu}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="margin-bottom:0;">
+					<f:facet name="header">#{bundle.tit_menus_disponives}</f:facet>
+					<p:ajax
+						event="rowSelect"
+						update=":#{p:component('tabRotinasMenu')},:#{p:component('tabAcoes')}" />
+					<xcp:column
+						value="#{rowMenu.descricao}"
+						size="40"
+						type="String"
+						headerText="#{bundle.col_menus_sistema}"
+						style="height:18px;">
+						<xcp:outputSimple value="#{rowMenu.descricao}" />
+					</xcp:column>
+				</p:dataTable>
+			</p:column>
+			<p:column styleClass="alinhatopo">
+				<p:dataTable
+					id="tabRotinasMenu"
+					var="rowRotinaMenu"
+					value="#{operadoresBacking.listaRotinasMenusVO}"
+					paginator="true"
+					paginatorPosition="bottom"
+					filteredValue="#{operadoresBacking.listaFiltrados6}"
+					rows="#{viewUtil.tableRows}"
+					rowKey="#{rowRotinaMenu.rotina}"
+					selectionMode="single"
+					selection="#{operadoresBacking.rotinaSelecionada}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="margin-bottom:0">
+					<f:facet name="header">#{bundle.tit_rotinas_disponives}</f:facet>
+					<p:ajax
+						event="rowSelect"
+						update=":#{p:component('tabAcoes')}" />
+					<xcp:column
+						size="4"
+						type="Center"
+						headerText="#{bundle.col_rotinas_liberada}"
+						style="height:18px;">
+						<xcp:check
+							id="chk_acesso"
+							simple="true"
+							value="#{rowRotinaMenu.permissao}"
+							readonly="true" />
+					</xcp:column>
+					<xcp:column
+						value="#{rowRotinaMenu.descricao}"
+						size="40"
+						type="String"
+						headerText="#{bundle.col_rotinas_menu}">
+						<xcp:outputSimple
+							value="#{rowRotinaMenu.descricao} (#{rowRotinaMenu.rotina})" />
+					</xcp:column>
+				</p:dataTable>
+			</p:column>
+
+			<p:column
+				styleClass="alinhatopo"
+				style="min-width: 520px;">
+				<h:panelGroup id="tabAcoes">
+					<p:dataTable
+						rendered="#{operadoresBacking.rotinaSelecionada.permissao}"
+						var="rowAcoes"
+						value="#{operadoresBacking.listaPermissaoAcao}"
+						paginator="true"
+						filteredValue="#{operadoresBacking.listaFiltrados7}"
+						paginatorPosition="bottom"
+						rowKey="#{rowAcoes.PK}"
+						rows="#{viewUtil.tableRows}"
+						selectionMode="single"
+						selection="#{operadoresBacking.permissaoAcao}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-bottom:0;">
+						<f:facet name="header">#{bundle.tit_acoes}</f:facet>
+						<p:ajax
+							event="rowSelect"
+							update=":frmDlgAcao"
+							oncomplete="PF('dlgAcao_w').show();" />
+						<xcp:column
+							value="#{rowAcoes.acao}"
+							size="15"
+							type="String"
+							headerText="#{bundle.col_acao}">
+							<xcp:outputSimple value="#{rowAcoes.acao}" />
+						</xcp:column>
+
+						<xcp:column
+							value="#{operadoresBacking.getLabelPermissao(rowAcoes)}"
+							size="15"
+							type="String"
+							headerText="#{bundle.col_data}">
+							<xcp:outputSimple
+								value="#{operadoresBacking.getLabelPermissao(rowAcoes)}" />
+						</xcp:column>
+
+						<xcp:column
+							size="8"
+							value="#{rowAcoes.situacao}"
+							type="Center"
+							headerText="#{bundle.col_situacao_acao}"
+							itens="#{operadoresBacking.itensSituacaoNull}"
+							style="height:18px;">
+							<xcp:combo
+								id="cboSituacao"
+								simple="true"
+								styleClass="combooperadores"
+								value="#{rowAcoes.situacao}"
+								itens="#{operadoresBacking.itensSituacao}"
+								readonly="true" />
+						</xcp:column>
+						<xcp:column size="2">
+							<xcp:commandButton
+								icon="ui-icon-trash"
+								immediate="true"
+								id="btn_exclusao_acao"
+								update=":#{p:component('tabAcoes')}"
+								action="#{operadoresBacking.actionExcluiAcao(rowAcoes)}">
+								<!-- <h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" /> -->
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+						</xcp:column>
+
+						<f:facet name="footer">
+							<xcp:commandButton
+								id="btn_adicionar_acao"
+								value="#{bundle.btn_adicionar_acao}"
+								action="#{operadoresBacking.actionNovaAcao}"
+								update=":frmDlgAcao"
+								oncomplete="PF('dlgAcao_w').show();"
+								icon="ui-icon-document">
+							</xcp:commandButton>
+						</f:facet>
+					</p:dataTable>
+				</h:panelGroup>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+
+	<p:remoteCommand
+		name="rcTabAcoes"
+		update="tabAcoes" />
+
+</ui:composition>

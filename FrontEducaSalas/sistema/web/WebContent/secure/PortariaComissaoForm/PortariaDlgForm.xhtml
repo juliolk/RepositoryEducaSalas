@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:dialog
+		header="#{bundle.tit_informacoes_documento}"
+		modal="true"
+		id="dlg"
+		widgetVar="dlg_w">
+		<xcp:form id="frm">
+			<xcp:panelForm>
+				<xcp:dateRange
+					id="txtDataPonto"
+					valueStart="#{portariaComissaoBacking.helper.documento.dtini}"
+					valueEnd="#{portariaComissaoBacking.helper.documento.dtfim}"
+					required="true"
+					readonly="true"
+					label="#{bundle.lbl_data_periodo}" />
+
+				<xcp:date
+					id="txtDtpublicacao"
+					value="#{portariaComissaoBacking.helper.documento.dtpublicacao}"
+					label="#{bundle.lbl_dtpublicacao}"
+					readonly="#{portariaComissaoBacking.readonlyDtPublicacao}" />
+
+
+			<!-- 	<xcp:number
+					id="txtAnoproc"
+					label="#{bundle.lbl_anoproc}"
+					value="#{portariaComissaoBacking.helper.documento.anoproc}"
+					readonly="true"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					rendered="#{portariaComissaoBacking.processoInformado}" />
+
+				<xcp:number
+					id="txtNroproc"
+					label="#{bundle.lbl_nroproc}"
+					value="#{portariaComissaoBacking.helper.documento.nroproc}"
+					size="10"
+					precision="10"
+					scale="0"
+					minValue="1"
+					maxValue="9999999999"
+					rendered="#{portariaComissaoBacking.processoInformado}" /> -->
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{portariaComissaoBacking.helper.processoDialogFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					size="25"
+					rendered="#{portariaComissaoBacking.renderedProcDialog}" />
+
+				<xcp:text
+					id="txtDescricao"
+					label="#{bundle.lbl_descricao}"
+					value="#{portariaComissaoBacking.helper.documento.descricao}"
+					maxlength="100"
+					size="75" />
+					
+				<xcp:number
+					id="txtNumDocInformado"
+					value="#{portariaComissaoBacking.helper.numDocInformado}"
+					label="#{bundle.lbl_nrdoc}"
+					size="20"
+					rendered="#{portariaComissaoBacking.portariaInformada}"
+					required="true" />
+
+				<xcp:lov
+					id="lovDocumentoExc"
+					value="#{portariaComissaoBacking.helper.documentosExc}"
+					label="#{bundle.lbl_documentoExc}"
+					update="btnDownloadDocumentoExcluido,txtDtpublicacao"
+					query="documentos_exc"
+					size="20"
+					selectionListener="#{portariaComissaoBacking.selectDocExc}" 
+					rendered="#{not portariaComissaoBacking.portariaInformada}"/>
+
+				<p:spacer
+					height="1"
+					width="1" 
+					rendered="#{not portariaComissaoBacking.portariaInformada}"/>
+
+				<xcp:commandButton
+					id="btnDownloadDocumentoExcluido"
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					disabled="#{portariaComissaoBacking.helper.documentosExc == null}" 
+					rendered="#{not portariaComissaoBacking.portariaInformada}">
+					<p:fileDownload
+						value="#{documentosBacking.getDownloadDocumento(backing.helper.documentosExc.registro)}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gerar_documento"
+						icon="ui-icon-disk"
+						action="#{portariaComissaoBacking.actionGerarPortaria}"
+						value="#{bundle.btn_gerar_documento}" />
+
+					<xcp:commandButton
+						id="btn_sair"
+						immediate="true"
+						oncomplete="PF('dlg_w').hide();"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_sair}" />
+				</f:facet>
+			</p:toolbar>
+			<p:remoteCommand
+				name="rcOpen"
+				oncomplete="PF('dlg_w').show();" />
+
+			<p:remoteCommand
+				name="rcClose"
+				update=":#{p:component('panelPortaria')}"
+				oncomplete="PF('dlg_w').hide();" />
+		</xcp:form>
+
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:blockUI
+				block="panel"
+				widgetVar="blockForm_w">
+				<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+			</p:blockUI>
+			<h:panelGroup
+				id="panel"
+				layout="block">
+				<p:fieldset
+					id="brdPesq"
+					legend="#{bundle.tit_pesq_execucoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="dtaExecucao"
+							valueStart="#{xcpExecucaoConsultaBacking.helper.dtaIniExecucao}"
+							valueEnd="#{xcpExecucaoConsultaBacking.helper.dtaFimExecucao}"
+							label="#{bundle.lbl_data}" />
+
+						<h:outputText value=" " />
+						<p:panelGrid columns="3">
+							<p:fieldset
+								id="brdSelecao"
+								legend="#{bundle.tit_tip_execucao}">
+								<xcp:panelForm>
+									<xcp:check
+										id="txtSitExecucao"
+										label="#{bundle.lbl_SitExecucao}"
+										value="#{xcpExecucaoConsultaBacking.helper.situacaoExecucao}" />
+									<xcp:check
+										id="txtSitEmail"
+										label="#{bundle.lbl_SitEmail}"
+										value="#{xcpExecucaoConsultaBacking.helper.situacaoEmail}" />
+									<xcp:check
+										id="txtSitConcluido"
+										label="#{bundle.lbl_SitConcluido}"
+										value="#{xcpExecucaoConsultaBacking.helper.situacaoConcluido}" />
+									<xcp:check
+										id="txtSitComErro"
+										label="#{bundle.lbl_SitComErro}"
+										value="#{xcpExecucaoConsultaBacking.helper.situacaoComErro}" />
+									<xcp:check
+										id="txtSitCancelado"
+										label="#{bundle.lbl_SitCancelado}"
+										value="#{xcpExecucaoConsultaBacking.helper.situacaoCancelado}" />
+									<xcp:check
+										id="txtSitQuedasistema"
+										label="#{bundle.lbl_SitQuedasistema}"
+										value="#{xcpExecucaoConsultaBacking.helper.situacaoQuedaSistema}" />
+
+								</xcp:panelForm>
+							</p:fieldset>
+							<p:fieldset
+								id="brdPermissao"
+								legend="#{bundle.tit_permissao}">
+								<xcp:panelForm>
+									<xcp:check
+										id="txtSistema"
+										label="#{bundle.lbl_sistema}"
+										value="#{xcpExecucaoConsultaBacking.helper.permissaoSistema}" />
+									<xcp:check
+										id="txtPortal"
+										label="#{bundle.lbl_portal}"
+										value="#{xcpExecucaoConsultaBacking.helper.permissaoPortal}" />
+								</xcp:panelForm>
+							</p:fieldset>
+							<p:fieldset
+								id="brdOperadores"
+								legend="#{bundle.tit_operadores_selecionados}">
+								<p:dataTable
+									id="tabOperadores"
+									editable="true"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									value="#{xcpExecucaoConsultaBacking.helper.listaOperadores}"
+									var="rowOperador">
+									<p:ajax
+										event="rowEdit"
+										update=":form:upHints"
+										listener="#{xcpExecucaoConsultaBacking.onRowEditOperador}" />
+
+									<p:ajax
+										event="rowEditCancel"
+										update=":form:upHints" />
+
+									<xcp:column headerText="#{bundle.col_operador}">
+										<p:cellEditor>
+											<f:facet name="output">
+												<xcp:outputSimple value="#{rowOperador.nome}" />
+											</f:facet>
+											<f:facet name="input">
+												<xcp:panelForm>
+													<xcp:lov
+														id="lovOperador"
+														value="#{rowOperador.operadorFk}"
+														label="#{bundle.lbl_operador}"
+														simple="true"
+														required="true"
+														row="#{rowOperador}"
+														query="operadoreslov"
+														size="15"
+														readonly="#{not rowOperador.novo}" />
+												</xcp:panelForm>
+											</f:facet>
+										</p:cellEditor>
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										size="10">
+										<xcp:commandLink
+											icon="ui-icon-trash"
+											immediate="true"
+											update="tabOperadores :form:upHints"
+											id="btn_remove_operador"
+											rendered="#{rowOperador.operador!=null}"
+											action="#{xcpExecucaoConsultaBacking.actionRemoveOperador(rowOperador)}">
+											<h:graphicImage
+												title="#{bundle.hint_remover}"
+												value="/resources/img/remover.png"
+												style="margin-top:3px;" />
+											<p:confirm
+												header="#{bundle.tit_confirma_remover}"
+												message="#{bundle.msg_confirma_remover}"
+												icon="ui-icon-alert" />
+										</xcp:commandLink>
+									</xcp:column>
+									<p:column style="width:32px">
+										<p:rowEditor />
+									</p:column>
+								</p:dataTable>
+
+								<xcp:tableHints
+									id="upHints"
+									tableId="form:tabOperadores" />
+
+							</p:fieldset>
+						</p:panelGrid>
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_pesquisar"
+								icon="icon-pesquisar_azul"
+								value="#{bundle.btn_pesquisar}"
+								process="brdPesq"
+								update="tblLogs"
+								onstart="PF('blockForm_w').show();"
+								oncomplete="PF('blockForm_w').hide();"
+								action="#{xcpExecucaoConsultaBacking.actionPesquisar}" />
+						</f:facet>
+					</p:toolbar>
+				</p:fieldset>
+
+				<p:dataTable
+					id="tblLogs"
+					value="#{xcpExecucaoConsultaBacking.listaXcpExecucaoConsulta}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_seqExecucao}"
+						value="#{row.seqExecucao}"
+						type="Number"
+						size="10">
+						<xcp:outputSimpleNumber
+							value="#{row.seqExecucao}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dthExecucao}"
+						value="#{row.dthExecucao}"
+						type="Date"
+						size="14">
+						<xcp:outputSimpleTimestamp
+							value="#{row.dthExecucao}"
+							pattern="dd/MM/yyyy HH:mm:ss" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dthFinalizacao}"
+						value="#{row.dthFinalizacao}"
+						type="Date"
+						size="14">
+						<xcp:outputSimpleTimestamp
+							value="#{row.dthFinalizacao}"
+							pattern="dd/MM/yyyy HH:mm:ss" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_codObjeto}"
+						value="#{row.codObjeto}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.codObjeto}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desObjeto}"
+						value="#{row.codObjetoFk.desObjeto}"
+						type="String"
+						size="30">
+						<xcp:outputSimple value="#{row.codObjetoFk.desObjeto}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_operador}"
+						value="#{row.operadorFk.nome}"
+						type="String"
+						size="30">
+						<xcp:outputSimple value="#{row.operadorFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_permissao}"
+						value="#{row.operadorFk.permissao}"
+						itens="#{xcpExecucaoConsultaBacking.itensPermissao}"
+						type="String"
+						size="15">
+						<xcp:outputSimple
+							value="#{row.operadorFk.permissao}"
+							itens="#{xcpExecucaoConsultaBacking.itensPermissao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipSituacaoExecucao}"
+						value="#{row.tipSituacao}"
+						itens="#{xcpExecucaoConsultaBacking.itensTipSituacao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple
+							value="#{row.tipSituacao}"
+							itens="#{xcpExecucaoConsultaBacking.itensTipSituacao}" />
+
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="10">
+						<xcp:commandButton
+							immediate="true"
+							id="btnConsultaAgendamento"
+							rendered="#{row.seqExecucaoAgendamento!=null}"
+							action="#{xcpExecucaoConsultaBacking.setXcpExecucaoConsultaAgendaDet(row)}"
+							update=":frmDlgAgenda"
+							oncomplete="PF('dlgLogAgenda_w').show();"
+							icon="ui-icon-agenda" />
+
+						<xcp:commandButton
+							immediate="true"
+							id="btnDetalhes"
+							action="#{xcpExecucaoConsultaBacking.setXcpExecucaoConsultaDet(row)}"
+							update=":frmDlg"
+							oncomplete="PF('dlgLog_w').show();"
+							icon="ui-icon-search" />
+
+						<xcp:commandButton
+							immediate="true"
+							id="bntDownload"
+							update="tblLogs"
+							rendered="#{row.indObjRelatorio == 1}"
+							action="#{xcpExecucaoConsultaBacking.actionDownload(row)}"
+							icon="ui-icon-download"
+							onstart="PF('w_dlgXcpExecStatus').show();"
+							oncomplete="PF('w_dlgXcpExecStatus').hide();" />
+
+						<xcp:commandButton
+							immediate="true"
+							id="bntDownloadProcessado"
+							update="tblLogs"
+							rendered="#{row.indObjProcessado == 1}"
+							action="#{xcpExecucaoConsultaBacking.actionDownloadProcessado(row)}"
+							icon="ui-icon-download"
+							onstart="PF('w_dlgXcpExecStatus').show();"
+							oncomplete="PF('w_dlgXcpExecStatus').hide();" />
+					</xcp:column>
+				</p:dataTable>
+
+				<p:remoteCommand
+					name="rcTabOperadores"
+					update="tabOperadores :form:upHints" />
+
+				<xcp:commandButton
+					id="btnDownloadFile"
+					widgetVar="wBtnDownloadFile"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)"
+					style="display: none;">
+					<p:fileDownload
+						value="#{xcpExecucaoConsultaBacking.file}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+
+				<script type="text/javascript">
+					function downloadFileStart() {
+						PF('w_dlgXcpExecStatus').show();
+					}
+
+					function downloadFileStop() {
+						PF('w_dlgXcpExecStatus').hide();
+					}
+				</script>
+			</h:panelGroup>
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_det_execucao}"
+			modal="true"
+			id="dlgLog"
+			widgetVar="dlgLog_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmDlg">
+				<ui:include
+					src="XcpExecucaoConsultaForm/XcpExecucaoConsultaDlgForm.xhtml" />
+			</xcp:form>
+		</p:dialog>
+		<p:dialog
+			modal="true"
+			header="#{bundle.tit_det_agenda}"
+			id="dlgLogAgenda"
+			widgetVar="dlgLogAgenda_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmDlgAgenda">
+				<ui:include
+					src="XcpExecucaoConsultaForm/XcpExecucaoConsultaAgendaDlgForm.xhtml" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

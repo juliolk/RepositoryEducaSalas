@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+
+			<p:blockUI
+				widgetVar="wBlock"
+				block="panelTransf"
+				trigger="btn_buscar,btn_limpar,btn_gravar">
+				<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+			</p:blockUI>
+
+			<h:panelGroup
+				id="panelTransf"
+				layout="block">
+
+				<p:outputPanel
+					id="pnlInfo"
+					rendered="#{lancLotesBacking.helper.telaAtual == 1}">
+
+					<p:spacer height="20px;" />
+
+					<p:outputLabel
+						value="#{bundle.txt_selTipLancGerar}"
+						style="font-size:12px;" />
+					<div style="padding-top: 15px; padding-bottom: 15px">
+						<xcp:panelForm>
+
+							<xcp:radio
+								id="cboLancSel"
+								value="#{lancLotesBacking.helper.lancLoteSel}"
+								itens="#{lancLotesBacking.itensTipLancLote}"
+								label="#{bundle.tipLancLote}"
+								layout="pageDirection">
+								<p:ajax update="cboTipoFolha,barraBotoes" />
+							</xcp:radio>
+
+
+							<xcp:combo
+								id="cboTipoFolha"
+								label="#{bundle.lbl_tipFolha}"
+								value="#{lancLotesBacking.helper.tipofolhaSel}"
+								itens="#{lancLotesBacking.helper.listaTipofolha}"
+								readonly="#{lancLotesBacking.helper.lancLoteSel > 2}">
+								<f:converter converterId="xcpConverterComboEntityInteger" />
+							</xcp:combo>
+
+						</xcp:panelForm>
+					</div>
+					<p:toolbar
+						styleClass="xcp_pmanut_form_toolbar"
+						id="barraBotoes"
+						rendered="#{lancLotesBacking.idxAvailable != null}">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_gerar_1"
+								value="#{bundle.btn_gerar}"
+								process="pnlInfo"
+								update="@form"
+								action="#{lancLotesBacking.actionDetalhes}" />
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+
+				<p:outputPanel
+					id="pnlOpts"
+					rendered="#{lancLotesBacking.helper.telaAtual == 2}">
+
+					<p:fieldset legend="#{bundle.title_dados}">
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 1}">
+							<ui:include src="LancLotesForm/LancLotesCalcFunc.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 2}">
+							<ui:include src="LancLotesForm/LancLotesOcorFix.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 3}">
+							<ui:include src="LancLotesForm/LancLotesOcorPonto.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 4}">
+							<ui:include src="LancLotesForm/LancLotesTransf.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 5}">
+							<ui:include src="LancLotesForm/LancLotesFerias.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 6}">
+							<ui:include src="LancLotesForm/LancLotesAgencia.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 7}">
+							<ui:include src="LancLotesForm/LancLotesRescisao.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 8}">
+							<ui:include src="LancLotesForm/LancLotesLicPremio.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 9}">
+							<ui:include src="LancLotesForm/LancLotesCartaoPonto.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 10}">
+							<ui:include src="LancLotesForm/LancLotesAfast.xhtml" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 11}">
+							<ui:include src="LancLotesForm/LancLotesHist.xhtml" />
+						</p:outputPanel>
+						
+						<p:outputPanel
+							rendered="#{lancLotesBacking.helper.lancLoteSel == 12}">
+							<ui:include src="LancLotesForm/LancLotesPub.xhtml" />
+						</p:outputPanel>
+
+					</p:fieldset>
+
+					<p:spacer height="5" />
+
+					<ui:include src="LancLotesForm/LancLotesGrpFunc.xhtml" />
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_gravar"
+								icon="ui-icon-disk"
+								value="#{bundle.btn_gravar}"
+								process="@form"
+								update="@form :formErros"
+								action="#{lancLotesBacking.actionGravar}">
+								<p:confirm
+									header="#{bundle.tit_confirma_gravar}"
+									message="#{bundle.msg_confirma_gravar}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+
+
+							<xcp:commandButton
+								id="btn_desfazer"
+								icon="ui-icon-trash"
+								value="#{bundle.btn_desfazer}"
+								process="@form"
+								update="@form"
+								rendered="#{lancLotesBacking.renderedDesfazer}"
+								action="#{lancLotesBacking.actionDesfazer}">
+								<p:confirm
+									header="#{bundle.tit_confirma_desfazer_sel}"
+									message="#{bundle.msg_confirma_desfazer_sel}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_voltar"
+								icon="ui-icon-arrowreturnthick-1-w"
+								value="#{bundle.btn_voltar}"
+								action="#{lancLotesBacking.actionVoltar}"
+								update="@form"
+								immediate="true" />
+
+						</f:facet>
+					</p:toolbar>
+				</p:outputPanel>
+			</h:panelGroup>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgErros"
+			header="#{bundle.tit_dlgErrosMat}"
+			widgetVar="wDlgErros"
+			width="600"
+			resizable="true"
+			modal="true">
+
+			<h:panelGroup
+				id="mypanel"
+				layout="block"
+				style="padding-bottom: 10px;font-weight: bold;">
+				<h:outputText value="#{bundle.tit_alguns_erros}" />
+			</h:panelGroup>
+
+			<xcp:form id="formErros">
+				<p:inputTextarea
+					value="#{lancLotesBacking.listErrosStr}"
+					cols="75"
+					autoResize="false"
+					rows="20" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

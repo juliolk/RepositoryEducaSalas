@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:tab
+		id="#{id}"
+		title="#{title}"
+		rendered="#{renderedTab and transferenciasBacking.isRendered(''.concat(id))}">
+
+		<p:dataTable
+			id="table_#{id}"
+			var="row"
+			value="#{value}"
+			rowKey="#{row.PK}"
+			paginator="true"
+			selectionMode="single"
+			paginatorPosition="bottom"
+			selection="#{transferenciasBacking.helper.transfSel}"
+			rows="#{viewUtil.tableRows}"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			style="margin-bottom:0;"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc,row.dtcancelamento)}">
+
+			<p:ajax
+				event="rowSelect"
+				listener="#{transferenciasBacking.actionMontaSelecao}"
+				update=":dlgTrans"
+				oncomplete="PF('dlgTrans_w').show();" />
+
+			<p:column style="width:16px">
+				<p:rowToggler rendered="#{row.detalhes}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_inicio}"
+				width="100">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_termino}"
+				width="100">
+				<xcp:outputSimpleDate value="#{row.dttermino}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_qtdDias}"
+				rendered="#{renderedDiffDays}"
+				width="20">
+				<xcp:outputSimpleNumber
+					scale="0"
+					precision="5"
+					value="#{row.diffDays}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_desPadrao}"
+				rendered="#{renderedPadrao}"
+				width="25">
+				<xcp:outputSimple value="#{row.desPadrao}" />
+			</p:column>
+
+			<p:column
+				headerText="#{transferenciasBacking.getLabelTelaAtual(id)}"
+				rendered="#{renderedObs}"
+				width="210">
+				<xcp:outputSimple value="#{row.obs2}" />
+			</p:column>
+
+			<p:column
+				headerText="#{transferenciasBacking.getLabelTelaAtual(id)}"
+				rendered="#{not renderedObs}"
+				width="210">
+				<xcp:outputSimple value="#{row.descricaoDe}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_documento}"
+				width="70"
+				rendered="#{!transferenciasBacking.exibirMotivoTabela}">
+				<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_tipodocumento}"
+				width="280"
+				rendered="#{!transferenciasBacking.exibirMotivoTabela}">
+				<xcp:outputSimple value="#{row.registroFk.descricao}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_motivo}"
+				width="70"
+				rendered="#{transferenciasBacking.exibirMotivoTabela}">
+				<xcp:outputSimpleNumber
+					value="#{row.codMotivo}"
+					precision="3"
+					scale="0" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_descricao}"
+				width="280"
+				rendered="#{transferenciasBacking.exibirMotivoTabela}">
+				<xcp:outputSimple value="#{row.desMotivo}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_remover}"
+				width="60">
+				<xcp:commandButton
+					id="btnRemov"
+					update=":form:tab:table_#{id}"
+					rendered="#{row.showRem and !transferenciasBacking.demitido}"
+					action="#{transferenciasBacking.actionRemove(row, id)}"
+					icon="ui-icon-trash" 
+					disabled="#{transferenciasBacking.disabledExcluir}">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+			</p:column>
+
+			<p:rowExpansion>
+				<p:dataTable
+					id="tabDoc"
+					var="rowDoc"
+					value="#{row.listaMovDoc}"
+					rowKey="#{rowDoc.PK}"
+					paginator="true"
+					selectionMode="single"
+					paginatorPosition="bottom"
+					rowIndexVar="idx"
+					selection="#{transferenciasBacking.helper.movDocSelecionada}"
+					rows="#{viewUtil.tableRows}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="margin-bottom:0;">
+
+					<p:ajax
+						event="rowSelect"
+						update=":formdlgdoc"
+						listener="#{transferenciasBacking.selectTransDoc}" />
+
+					<ui:include src="../DocManual/DocUnificadoDetalhesDoc.xhtml">
+						<ui:param
+							name="rowDoc"
+							value="#{rowDoc}" />
+						<ui:param
+							name="rowPrincipal"
+							value="#{row}" />
+						<ui:param
+							name="actionExclusao"
+							value="#{transferenciasBacking.model}" />
+					</ui:include>
+
+				</p:dataTable>
+			</p:rowExpansion>
+
+		</p:dataTable>
+	</p:tab>
+</ui:composition>

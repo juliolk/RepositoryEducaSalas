@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="DocumentosPortal"
+			backing="#{documentosPortalBacking}"
+			multipart="true">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_publicacao}"
+					value="#{row.publicacao}"
+					type="Date"
+					size="20">
+					<xcp:outputSimpleTimestamp value="#{row.publicacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_titulo}"
+					value="#{row.titulo}"
+					type="String">
+					<xcp:outputSimple value="#{row.titulo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_validade}"
+					value="#{row.validade}"
+					type="Date"
+					size="20">
+					<xcp:outputSimpleDate value="#{row.validade}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_tipoDocumentoPortal}"
+					value="#{row.tipoDocumentoPortalFk.descricao}"
+					type="String">
+					<xcp:outputSimpleDate value="#{row.tipoDocumentoPortalFk.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:dateTime
+						id="txtPublicacao"
+						required="true"
+						value="#{documentosPortalBacking.entity.publicacao}"
+						label="#{bundle.lbl_publicacao}"
+						readonly="#{not documentosPortalBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtTitulo"
+						label="#{bundle.lbl_titulo}"
+						required="true"
+						value="#{documentosPortalBacking.entity.titulo}"
+						size="100" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{documentosPortalBacking.entity.descricao}"
+						size="4000" />
+					
+					<xcp:lov
+						id="lovTipoDocumentoPortal"
+						value="#{documentosPortalBacking.entity.tipoDocumentoPortalFk}"
+						label="#{bundle.lbl_tipoDocumentoPortal}"
+						query="tipodocumentoportal"
+						required="false"
+						size="5" />
+
+					<xcp:number
+						id="txtOrdem"
+						label="#{bundle.lbl_ordem}"
+						value="#{documentosPortalBacking.entity.ordem}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999" />
+
+					<xcp:date
+						id="txtValidade"
+						value="#{documentosPortalBacking.entity.validade}"
+						label="#{bundle.lbl_validade}" />
+
+					<p:outputLabel rendered="false" value="#{bundle.lbl_imagem}#{viewUtil.labelSufix}" />
+					<p:toolbar id="toolBarImagem"  rendered="false">
+						<f:facet name="left">
+							<xcp:commandButton
+								onclick="PF('wDlgUploadImagem').show();"
+								type="button"
+								value="#{bundle.btn_upload}" />
+
+							<xcp:commandButton
+								id="btnDownloadImagem"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)"
+								disabled="#{documentosPortalBacking.entity.imagem == null}">
+								<p:fileDownload
+									value="#{documentosPortalBacking.downloadImagem}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+						</f:facet>
+					</p:toolbar>
+
+					<p:outputLabel value="#{bundle.lbl_arquivo}#{viewUtil.labelSufix}" />
+					<p:toolbar id="toolBarArquivo">
+						<f:facet name="left">
+							<xcp:commandButton
+								onclick="PF('wDlgUploadArquivo').show();"
+								type="button"
+								value="#{bundle.btn_upload}" />
+
+							<xcp:commandButton
+								id="btnDownloadArquivo"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)"
+								disabled="#{documentosPortalBacking.entity.arquivo == null}">
+								<p:fileDownload
+									value="#{documentosPortalBacking.downloadArquivo}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+						</f:facet>
+					</p:toolbar>
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+
+		<script type="text/javascript">
+			function downloadFileStart() {
+				PF('w_dlgXcpExecStatus').show();
+			}
+	
+			function downloadFileStop() {
+				PF('w_dlgXcpExecStatus').hide();
+			}
+		</script>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgUploadImagem}"
+			widgetVar="wDlgUploadImagem"
+			modal="true">
+			<xcp:form
+				id="formUploadImagem"
+				multipart="true">
+				<p:fileUpload
+					id="uploadImagem"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{documentosPortalBacking.actionUploadImagem}" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_dlgUploadArquivo}"
+			widgetVar="wDlgUploadArquivo"
+			modal="true">
+			<xcp:form
+				id="formUploadArquivo"
+				multipart="true">
+				<p:fileUpload
+					id="uploadArquivo"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{documentosPortalBacking.actionUploadArquivo}" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

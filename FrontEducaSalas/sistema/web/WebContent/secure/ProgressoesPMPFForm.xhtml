@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(18)}"
+			escape="false" />
+
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.tit_filtros_geracao}"
+				style="margin-bottom : 5px">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovPeriodo"
+						value="#{progressoesPMPFBacking.periodo}"
+						label="#{bundle.lbl_periodo}"
+						required="true"
+						query="periodos"
+						params="#{progressoesPMPFBacking.paramsPeriodo}"
+						size="8"
+						sizeDesc="60"
+						update="funcList btn_gerar btn_gerar_progressoes"
+						selectionListener="#{progressoesPMPFBacking.selectPeriodo}" />
+
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:toolbar
+				styleClass="xcp_pmanut_form_toolbar"
+				style="margin-bottom : 5px">
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_buscar"
+						update="funcList"
+						value="#{bundle.btn_pesquisar}"
+						action="#{progressoesPMPFBacking.actionBuscar}"
+						icon="ui-icon-search" />
+
+					<xcp:commandButton
+						id="btn_gerar"
+						update="funcList"
+						value="#{bundle.btn_gerar_aval}"
+						disabled="#{!progressoesPMPFBacking.ultimoPeriodo}"
+						action="#{progressoesPMPFBacking.actionGerar}"
+						icon="ui-icon-gear" />
+
+					<xcp:commandButton
+						id="btn_gerar_progressoes"
+						value="#{bundle.btn_gerar_prog}"
+						action="#{progressoesPMPFBacking.actionGerarProgresssoes}"
+						disabled="#{!progressoesPMPFBacking.ultimoPeriodo}"
+						icon="ui-icon-gear" />
+
+					<xcp:commandButton
+						icon="ui-icon-print"
+						id="btnportaria"
+						value="#{bundle.btn_portaria}"
+						action="#{progressoesPMPFBacking.actionPortaria}"
+						process="@this" />
+
+					<xcp:commandButton
+						icon="ui-icon-print"
+						id="btnImprimir_com"
+						value="#{bundle.btn_relatorio}"
+						rendered="#{not empty progressoesPMPFBacking.rotina.codObjeto}"
+						action="#{progressoesPMPFBacking.actionImprimir}"
+						process="@this" />
+
+				</f:facet>
+			</p:toolbar>
+
+			<p:dataTable
+				id="funcList"
+				var="row"
+				value="#{progressoesPMPFBacking.listaFuncionarios}"
+				rowKey="#{row.PK}"
+				scrollHeight="400"
+				scrollable="true"
+				rowIndexVar="idx"
+				selectionMode="single"
+				rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc)}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				selection="#{progressoesPMPFBacking.sel}">
+
+				<p:ajax
+					event="rowSelect"
+					update=":frm"
+					oncomplete="PF('w_form').show()"
+					listener="#{progressoesPMPFBacking.actionSelecionarLinha}" />
+
+				<xcp:column
+					headerText="#{bundle.col_numMatricula}"
+					type="Number"
+					size="4"
+					value="#{row.matricula}">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desNome}"
+					type="String"
+					size="15"
+					value="#{row.matriculaFk.nome}">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_grau}"
+					value="#{row.grau}"
+					type="String"
+					size="4">
+					<xcp:outputSimple value="#{row.grau}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dfaltas}"
+					value="#{row.dfaltas}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.dfaltas}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dpenali}"
+					value="#{row.dpenali}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.dpenali}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dlicsau}"
+					value="#{row.dlicsau}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.dlicsau}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dlicint}"
+					value="#{row.dlicint}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.dlicint}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dlicdpf}"
+					value="#{row.dlicdpf}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.dlicdpf}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dlicacj}"
+					value="#{row.dlicacj}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.dlicacj}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hcursos}"
+					value="#{row.hcursos}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.hcursos}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_progride}"
+					value="#{row.situacao}"
+					type="Number"
+					size="7"
+					itens="#{progressoesPMPFBacking.itensProgrideNull}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{progressoesPMPFBacking.itensProgride}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_portaria}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.processoFk.processo}" />
+				</xcp:column>
+
+
+			</p:dataTable>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			id="dlgOcorEnv"
+			widgetVar="w_form"
+			header="#{bundle.tit_lancval}"
+			modal="true">
+			<xcp:form id="frm">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{progressoesPMPFBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="funcionariosLov"
+						readonly="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovPeriodo"
+						value="#{progressoesPMPFBacking.entity.periodoFk}"
+						label="#{bundle.lbl_periodo}"
+						required="true"
+						query="periodos"
+						readonly="true"
+						size="7" />
+
+					<xcp:text
+						id="txtGrau"
+						label="#{bundle.lbl_grau}"
+						value="#{progressoesPMPFBacking.entity.grau}"
+						size="6" />
+
+					<xcp:number
+						id="txtDfaltas"
+						label="#{bundle.lbl_dfaltas}"
+						value="#{progressoesPMPFBacking.entity.dfaltas}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDpenali"
+						label="#{bundle.lbl_dpenali}"
+						value="#{progressoesPMPFBacking.entity.dpenali}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDlicsau"
+						label="#{bundle.lbl_dlicsau}"
+						value="#{progressoesPMPFBacking.entity.dlicsau}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDlicint"
+						label="#{bundle.lbl_dlicint}"
+						value="#{progressoesPMPFBacking.entity.dlicint}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDlicdpf"
+						label="#{bundle.lbl_dlicdpf}"
+						value="#{progressoesPMPFBacking.entity.dlicdpf}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDlicacj"
+						label="#{bundle.lbl_dlicacj}"
+						value="#{progressoesPMPFBacking.entity.dlicacj}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{progressoesPMPFBacking.entity.situacao}"
+						label="#{bundle.lbl_progride}"
+						required="true"
+						itens="#{progressoesPMPFBacking.itensProgride}" />
+
+					<xcp:number
+						id="txtHcursos"
+						label="#{bundle.lbl_hcursos}"
+						value="#{progressoesPMPFBacking.entity.hcursos}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:combo
+						id="cboIndicador"
+						value="#{progressoesPMPFBacking.entity.indicador}"
+						label="#{bundle.lbl_indicador}"
+						required="true"
+						itens="#{progressoesPMPFBacking.itensIndicador}" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{progressoesPMPFBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_prog"
+						selectionListener="#{progressoesPMPFBacking.selectTipodocumento}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento"
+						params="#{progressoesPMPFBacking.paramsTipoDoc}"
+						size="5" 
+						readonly="#{progressoesPMPFBacking.readOnlyTipdoc}"/>
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{progressoesPMPFBacking.entity.registroFk}"
+						params="#{progressoesPMPFBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_registro}"
+						query="documentosman"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento"
+						readonly="#{progressoesPMPFBacking.readOnlyDoc}"
+						selectionListener="#{progressoesPMPFBacking.selectDocumento}"
+						size="18" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{progressoesPMPFBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{progressoesPMPFBacking.readOnlyProc}"
+						required="#{progressoesPMPFBacking.requiredProc}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<xcp:commandButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									icon="icon-pesquisar_azul"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{progressoesPMPFBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(progressoesPMPFBacking.entity.registro)}"
+										contentDisposition="attachment" />
+								</xcp:commandButton>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{progressoesPMPFBacking.entity.obs}"
+						size="400" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}"
+							update=":form:funcList"
+							action="#{progressoesPMPFBacking.actionGravaDialog}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('w_form').hide();return false;" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

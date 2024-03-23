@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="ConcessoesLimites"
+			backing="#{concessoesLimitesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_agrupador}"
+					value="#{row.agrupador}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.agrupador}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipoUso}"
+					value="#{row.tipoUso}"
+					type="String"
+					size="9"
+					itens="#{concessoesLimitesBacking.itensTipoUso}">
+					<xcp:outputSimple
+						value="#{row.tipoUso}"
+						itens="#{concessoesLimitesBacking.itensTipoUso}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="10"
+					itens="#{concessoesLimitesBacking.itensTipoFull}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{concessoesLimitesBacking.itensTipoFull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dias}"
+					value="#{row.dias}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.dias}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasRetorno}"
+					value="#{row.diasRetorno}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.diasRetorno}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtAgrupador"
+						label="#{bundle.lbl_agrupador}"
+						required="true"
+						value="#{concessoesLimitesBacking.entity.agrupador}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not concessoesLimitesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{concessoesLimitesBacking.entity.descricao}"
+						size="80" />
+
+					<xcp:combo
+						id="cboTipoUso"
+						value="#{concessoesLimitesBacking.entity.tipoUso}"
+						label="#{bundle.lbl_tipoUso}"
+						required="true"
+						readonly="#{!concessoesLimitesBacking.entity.novo}"
+						itens="#{concessoesLimitesBacking.itensTipoUso}">
+						<p:ajax
+							event="change"
+							update="cboTipo,txtDiasRetorno,txtDiasRetorno_l,txtDiasMaximo_ConcessoesPonto,txtDiasMaximo_ConcessoesPonto_l">
+						</p:ajax>
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{concessoesLimitesBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{concessoesLimitesBacking.itensTipo}">
+						<p:ajax
+							event="change"
+							update="txtDiasRetorno,txtDiasRetorno_l" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtDias"
+						label="#{bundle.lbl_diasLim}"
+						value="#{concessoesLimitesBacking.entity.dias}"
+						size="5"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						required="#{concessoesLimitesBacking.entity.tipoUso == 2}" />
+
+					<xcp:number
+						id="txtDiasRetorno"
+						label="#{bundle.lbl_diasRetornoLim}"
+						value="#{concessoesLimitesBacking.entity.diasRetorno}"
+						rendered="#{concessoesLimitesBacking.entity.tipo != 3 and concessoesLimitesBacking.entity.tipoUso == 1}"
+						size="5"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<xcp:number
+						id="txtDiasMaximo_ConcessoesPonto"
+						label="#{bundle.lbl_diasMaximo}"
+						value="#{concessoesLimitesBacking.entity.diasMaximo}"
+						rendered="#{concessoesLimitesBacking.entity.tipoUso == 2}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="9999"
+						required="#{concessoesLimitesBacking.entity.tipoUso == 2}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Tipooperacao"
+			backing="#{tipooperacaoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.tipo}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtTipo"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						value="#{tipooperacaoBacking.entity.tipo}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not tipooperacaoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{tipooperacaoBacking.entity.descricao}"
+						size="40" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

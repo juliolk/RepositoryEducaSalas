@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tblEpi"
+		var="row"
+		value="#{funcionariosSESMTBacking.helper.listaMateriais}"
+		filteredValue="#{funcionariosSESMTBacking.helper.listaMateriaisFiltro}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="#{viewUtil.tableRows}"
+		emptyMessage="#{bundle.msg_sem_resultado}">
+
+		<xcp:column
+			headerText="#{bundle.col_material}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{row.materialFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_ca}"
+			type="String"
+			size="10">
+			<xcp:outputSimple value="#{row.ca}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataval}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.dataval}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_quantidade}"
+			type="Number"
+			size="11">
+			<xcp:outputSimpleNumber
+				value="#{row.quantidade}"
+				precision="8"
+				scale="2" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_datadev}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.datadev}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_obs}"
+			type="String"
+			size="50">
+			<xcp:outputSimple value="#{row.obs}" />
+		</xcp:column>
+
+	</p:dataTable>
+
+</ui:composition>

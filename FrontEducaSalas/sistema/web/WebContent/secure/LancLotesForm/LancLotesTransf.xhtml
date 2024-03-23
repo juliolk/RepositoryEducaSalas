@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:combo
+			id="cboTipTransf"
+			value="#{lancLotesBacking.helper.tipTransf}"
+			itens="#{lancLotesBacking.itensTipTransf}"
+			label="#{bundle.lbl_tipTransf}"
+			required="true">
+			<p:ajax
+				listener="#{lancLotesBacking.actionAtualizaTransf}"
+				update="lovTransfDe,lovTransfDe_l,lovTransfNivelDe,lovTransfNivelDe_l,lovTransfPara,lovTransfNivelPara,lovTransfNivelPara_l,lovTransfPadraoPara,lovTransfPadraoPara_l lovMotivoTransf lovMotivoTransf_l lovMatriculaPerm lovMatriculaPerm_l txtDtsessao txtDtsessao_l,cboIndtemp_l cboIndtemp,lovParaTiposReajustes,lovParaTiposReajustes_l" />
+		</xcp:combo>
+
+		<xcp:date
+			id="txtTransfData"
+			required="true"
+			value="#{lancLotesBacking.helper.dtaMov}"
+			label="#{bundle.lbl_dtaIni}">
+			<p:ajax
+				event="change"
+				process="@this"
+				update="@none" />
+			<p:ajax
+				event="dateSelect"
+				process="@this"
+				update="@none" />
+		</xcp:date>
+
+		<xcp:lov
+			id="lovTransfDe"
+			label="#{lancLotesBacking.labelTransfDe}"
+			query="#{lancLotesBacking.queryDe}"
+			required="#{lancLotesBacking.telaNivel}"
+			value="#{lancLotesBacking.helper.tipTransfDe}" />
+
+		<xcp:lov
+			id="lovTransfNivelDe"
+			label="#{lancLotesBacking.labelTransfNivel}"
+			query="padroesniveis_padrao"
+			rendered="#{lancLotesBacking.telaPadroes or lancLotesBacking.telaNivel}"
+			value="#{lancLotesBacking.helper.tipTransfNivelDe}"
+			params="#{lancLotesBacking.parEspDeNivel}" />
+
+		<xcp:lov
+			id="lovTransfPara"
+			required="true"
+			label="#{bundle.lbl_tipTransfPara}"
+			params="#{lancLotesBacking.parEspPara}"
+			query="#{lancLotesBacking.queryPara}"
+			value="#{lancLotesBacking.helper.tipTransfPara}"
+			selectionListener="#{lancLotesBacking.selectPara}"
+			update="lovTransfPadraoPara,lovTransfNivelPara" />
+
+		<xcp:lov
+			id="lovTransfPadraoPara"
+			required="true"
+			label="#{bundle.lbl_tipTransfDePadrao}"
+			query="cargos_padroes_trans"
+			value="#{lancLotesBacking.helper.tipTransfParaPadrao}"
+			rendered="#{lancLotesBacking.telaCargos}"
+			params="#{lancLotesBacking.parEspParaPadrao}"
+			selectionListener="#{lancLotesBacking.selectParaPadrao}"
+			update="lovTransfNivelPara" />
+
+		<xcp:lov
+			id="lovTransfNivelPara"
+			required="true"
+			label="#{bundle.lbl_tipTransfDeNivel}"
+			query="padroesniveis_padrao"
+			value="#{lancLotesBacking.helper.tipTransfParaNivel}"
+			rendered="#{lancLotesBacking.telaPadroes or lancLotesBacking.telaCargos}"
+			params="#{lancLotesBacking.parEspParaNivel}" />
+
+		<xcp:lov
+			id="lovParaTiposReajustes"
+			value="#{lancLotesBacking.helper.tiporeajusteFk}"
+			label="#{bundle.lbl_motivoreajuste}"
+			query="tiporeajustes"
+			required="true"
+			rendered="#{lancLotesBacking.renderedTipoReajuste}"
+			size="5" />
+
+		<xcp:combo
+			id="cboIndtemp"
+			value="#{lancLotesBacking.helper.indtemp}"
+			label="#{bundle.lbl_indtemp}"
+			required="true"
+			itens="#{lancLotesBacking.itensIndSimNao}"
+			rendered="#{lancLotesBacking.renderedIndTemp}">
+			<p:ajax update="txtDtproxaval txtDtproxaval_l" />
+		</xcp:combo>
+
+		<xcp:date
+			id="txtDtproxaval"
+			value="#{lancLotesBacking.helper.dtproxaval}"
+			label="#{bundle.lbl_dtproxaval}"
+			rendered="#{lancLotesBacking.helper.indtemp == 1}" />
+
+		<xcp:lov
+			id="lovMotivoTransf"
+			value="#{lancLotesBacking.helper.motivoTransfFk}"
+			label="#{bundle.lbl_motivoTransf}"
+			query="motivo_transf"
+			size="10"
+			rendered="#{lancLotesBacking.renderedMotivoTransf}"
+			update="lovMatriculaPerm lovMatriculaPerm_l"
+			params="#{lancLotesBacking.paramsMotivoTransf}" />
+
+		<xcp:lov
+			id="lovMatriculaPerm"
+			value="#{lancLotesBacking.helper.matriculaPermFk}"
+			label="#{bundle.lbl_matriculaPerm}"
+			query="funcionariosLov"
+			size="10"
+			rendered="#{lancLotesBacking.telaSetor and lancLotesBacking.helper.motivoTransfFk.permuta == 1}" />
+
+		<xcp:date
+			id="txtDtsessao"
+			value="#{lancLotesBacking.helper.dtsessaopleno}"
+			label="#{bundle.lbl_dtsessaopleno}"
+			rendered="#{lancLotesBacking.renderedDtSessao}" />
+
+		<xcp:lov
+			id="lovTipodocumentoTransf"
+			value="#{lancLotesBacking.helper.tipdoc}"
+			label="#{bundle.lbl_tipodocumento}"
+			params="#{lancLotesBacking.paramsTipoDoc}"
+			update="lovProcessoTransf lovProcessoTransf_l"
+			query="tipodocumento_transf"
+			size="10" />
+
+		<xcp:lov
+			id="lovDocumentoTransf"
+			value="#{lancLotesBacking.helper.doc}"
+			params="#{lancLotesBacking.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			query="documentosman"
+			size="10"
+			update="lovProcessoTransf,lovProcessoTransf_l"
+			selectionListener="#{lancLotesBacking.selectDocumento}" />
+
+		<xcp:lov
+			id="lovProcessoTransf"
+			value="#{lancLotesBacking.helper.proc}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			required="#{lancLotesBacking.requiredProc}"
+			size="25" />
+
+		<xcp:memo
+			id="txtTransObs"
+			label="#{bundle.lbl_txtPort}"
+			value="#{lancLotesBacking.helper.txtTransfObs}"
+			size="200" />
+
+		<xcp:memo
+			id="txtTransObsLivre"
+			label="#{bundle.lbl_obsLivre}"
+			value="#{lancLotesBacking.helper.txtTransfObsLivre}"
+			size="200" />
+	</xcp:panelForm>
+
+</ui:composition>

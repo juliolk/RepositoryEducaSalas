@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="EfetSoldiarias"
+			backing="#{efetSoldiariasBacking}"
+			consulta="true"
+			update=":form:pnlupd">
+
+			<ui:define name="barraLista">
+				<p:outputPanel id="pnlupd">
+					<xcp:commandButton
+						id="btn_aprovar_lote"
+						icon="ui-icon-check"
+						value="#{bundle.btn_aprovar_lote}"
+						rendered="#{efetSoldiariasBacking.tipStatus == 1}"
+						action="#{efetSoldiariasBacking.actionAprovarLote}"
+						update="@form :formErros">
+
+						<p:confirm
+							header="#{bundle.tit_confirma_aprovar}"
+							message="#{bundle.msg_confirma_aprovar}"
+							icon="ui-icon-alert" />
+
+					</xcp:commandButton>
+				</p:outputPanel>
+			</ui:define>
+
+			<ui:define name="filtro">
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+					<xcp:panelForm>
+						<xcp:radio
+							id="cboStatusPesq"
+							value="#{efetSoldiariasBacking.tipStatus}"
+							label="#{bundle.lbl_status}"
+							itens="#{efetSoldiariasBacking.itensStatusNotNull}" />
+					</xcp:panelForm>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<p:column
+					width="1"
+					rendered="#{efetSoldiariasBacking.tipStatus == 1}">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox value="#{efetSoldiariasBacking.checked}">
+							<p:ajax
+								listener="#{efetSoldiariasBacking.actionCheckAll}"
+								update="table_EfetSoldiarias" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{row.checked}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="9">
+					<xcp:outputSimple value="#{row.matricula}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.matriculaFk.nome}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtsaida}"
+					type="Date"
+					value="#{row.dtsaida}"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtsaida}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtchegada}"
+					value="#{row.dtchegada}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtchegada}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qp1}"
+					value="#{row.qp1}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.qp1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_p1}"
+					value="#{row.p1}"
+					type="Number"
+					size="8"
+					rendered="#{efetSoldiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.p1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qr1}"
+					value="#{row.qr1}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.qr1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_r1}"
+					value="#{row.r1}"
+					type="Number"
+					size="8"
+					rendered="#{efetSoldiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.r1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_nivel}"
+					value="#{row.nivel}"
+					type="String"
+					itens="#{efetSoldiariasBacking.itensDiariasNiveisNull}"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.nivel}"
+						itens="#{efetSoldiariasBacking.itensDiariasNiveis}"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codlocal}"
+					value="#{row.codlocal}"
+					itens="#{efetSoldiariasBacking.itensCodLocalNull}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.codlocal}"
+						itens="#{efetSoldiariasBacking.itensCodLocal}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_total}"
+					value="#{row.total}"
+					type="Number"
+					size="11"
+					rendered="#{lctodiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.total}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_origem}"
+					value="#{row.origemFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.origemFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_destino}"
+					value="#{row.destinoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.destinoFk.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtsaida"
+						required="true"
+						value="#{efetSoldiariasBacking.entity.dtsaida}"
+						label="#{bundle.lbl_dtsaida}"
+						readonly="true" />
+
+					<xcp:date
+						id="txtDtchegada"
+						required="true"
+						value="#{efetSoldiariasBacking.entity.dtchegada}"
+						label="#{bundle.lbl_dtchegada}"
+						readonly="true" />
+
+					<xcp:combo
+						id="txtNivel"
+						value="#{efetSoldiariasBacking.entity.nivel}"
+						label="#{bundle.lbl_nivel}"
+						required="true"
+						readonly="true"
+						itens="#{efetSoldiariasBacking.itensDiariasNiveis}"
+						width="120px">
+						<p:ajax
+							process="@this"
+							update="txtDtPrazo,txtDtPrazo_l"
+							listener="#{efetSoldiariasBacking.actionCalculaPrazo}" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtQp1"
+						label="#{bundle.lbl_qtd_diarias_dia_semana}"
+						value="#{efetSoldiariasBacking.entity.qp1}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="true"
+						required="true"
+						rendered="#{efetSoldiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQr1"
+						label="#{bundle.lbl_qtd_diarias_final_semana}"
+						value="#{efetSoldiariasBacking.entity.qr1}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="true"
+						required="true"
+						rendered="#{efetSoldiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQp1s"
+						label="#{bundle.lbl_qtd_diarias_dia_semana_s}"
+						value="#{efetSoldiariasBacking.entity.qp1s}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="true"
+						rendered="#{efetSoldiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQr1s"
+						label="#{bundle.lbl_qtd_diarias_final_semana_s}"
+						value="#{efetSoldiariasBacking.entity.qr1s}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="true"
+						rendered="#{efetSoldiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQtdKm"
+						label="#{bundle.lbl_qtdKm}"
+						size="11"
+						value="#{efetSoldiariasBacking.entity.qtdkm}"
+						precision="8"
+						scale="2"
+						readonly="true" />
+
+					<xcp:number
+						id="txtQtdAjuda"
+						label="#{bundle.lbl_qtdajuda}"
+						size="11"
+						value="#{efetSoldiariasBacking.entity.qtdajuda}"
+						precision="8"
+						scale="2"
+						readonly="true" />
+
+					<xcp:combo
+						id="txtCodlocal"
+						value="#{efetSoldiariasBacking.entity.codlocal}"
+						label="#{bundle.lbl_codlocal}"
+						required="true"
+						readonly="true"
+						itens="#{efetSoldiariasBacking.itensCodLocal}"
+						width="120px">
+						<p:ajax
+							update="txtVlrdolar,txtVlrdolar_l,txtDtPrazo,txtDtPrazo_l"
+							process="@this"
+							listener="#{efetSoldiariasBacking.actionCalculaPrazo}" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtVlrdolar"
+						label="#{bundle.lbl_vlrdolar}"
+						size="11"
+						value="#{efetSoldiariasBacking.entity.vlrdolar}"
+						precision="8"
+						scale="2"
+						required="true"
+						rendered="#{efetSoldiariasBacking.entity.codlocal == 3}"
+						readonly="true" />
+
+					<xcp:combo
+						id="txtTransporte"
+						value="#{efetSoldiariasBacking.entity.transporte}"
+						label="#{bundle.lbl_transporte}"
+						required="true"
+						itens="#{efetSoldiariasBacking.itensTransporte}"
+						width="120px"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovOrigem"
+						value="#{efetSoldiariasBacking.entity.origemFk}"
+						label="#{bundle.lbl_origem}"
+						required="true"
+						query="cidades"
+						size="8"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovDestino"
+						value="#{efetSoldiariasBacking.entity.destinoFk}"
+						label="#{bundle.lbl_destino}"
+						required="true"
+						query="cidades"
+						size="8"
+						readonly="true" />
+
+					<xcp:text
+						id="txtLocal"
+						label="#{bundle.lbl_local}"
+						value="#{efetSoldiariasBacking.entity.local}"
+						size="100"
+						readonly="true" />
+
+					<xcp:date
+						id="txtDtlcto"
+						value="#{efetSoldiariasBacking.entity.dtlcto}"
+						label="#{bundle.lbl_dtlcto}"
+						readonly="true" />
+
+					<xcp:date
+						id="txtDtPrazo"
+						value="#{efetSoldiariasBacking.entity.dtaPrazo}"
+						label="#{bundle.lbl_dtaprazo}"
+						readonly="true" />
+
+					<xcp:memo
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						value="#{efetSoldiariasBacking.entity.motivo}"
+						size="500"
+						readonly="true" />
+
+					<xcp:text
+						id="txtPa"
+						label="#{bundle.lbl_pa}"
+						value="#{efetSoldiariasBacking.entity.pa}"
+						size="20"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboStatus"
+						value="#{efetSoldiariasBacking.entity.status}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{efetSoldiariasBacking.itensStatus}"
+						readonly="true" />
+
+				</xcp:panelForm>
+
+				<p:outputPanel rendered="#{efetSoldiariasBacking.renderedDesloc}">
+					<p:dataTable
+						id="tabDeslocm"
+						value="#{efetSoldiariasBacking.listkm}"
+						var="row"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						rowKey="#{row}"
+						selectionMode="single"
+						selection="#{soldiariasBacking.row}"
+						style="width:800px">
+
+						<f:facet name="header">#{bundle.tit_desclocmultiplos}</f:facet>
+
+						<p:column
+							headerText="#{bundle.col_origem}"
+							value="#{row.origemFk.descricao}"
+							width="200">
+							<xcp:outputSimple value="#{row.origemFk.descricao}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_destino}"
+							value="#{row.destinoFk.descricao}"
+							width="200">
+							<xcp:outputSimple value="#{row.destinoFk.descricao}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_qtdkm}"
+							value="#{row.qtdkm}"
+							width="50">
+							<xcp:outputSimpleNumber
+								value="#{row.qtdkm}"
+								precision="8"
+								scale="3" />
+						</p:column>
+					</p:dataTable>
+				</p:outputPanel>
+			</ui:define>
+
+			<ui:define name="barraFormAnt">
+
+
+				<xcp:commandButton
+					id="btnAprovar"
+					value="#{bundle.btn_aprovar}"
+					icon="ui-icon-check"
+					action="#{efetSoldiariasBacking.actionAprovar}"
+					update="@form"
+					rendered="#{efetSoldiariasBacking.entity.status == 1 or efetSoldiariasBacking.entity.status == 4}">
+					<p:confirm
+						header="#{bundle.tit_confirma_aprov_efet}"
+						message="#{bundle.msg_confirma_aprov_efet}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btnReprovar"
+					value="#{bundle.btn_reprovar}"
+					icon="ui-icon-close"
+					action="#{efetSoldiariasBacking.actionReprovar}"
+					update="@form"
+					rendered="#{efetSoldiariasBacking.entity.status == 1 or efetSoldiariasBacking.entity.status == 4}">
+					<p:confirm
+						header="#{bundle.tit_confirma_rem_efet}"
+						message="#{bundle.msg_confirma_rem_efet}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{efetSoldiariasBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					oncomplete="PF('w_anexos').show()" />
+
+				<xcp:commandButton
+					id="btnPendencia"
+					value="#{bundle.btn_pendencia}"
+					update=":frmPendencia"
+					oncomplete="PF('dlgPendencia_w').show()"
+					rendered="#{efetSoldiariasBacking.entity.status == 1 or efetSoldiariasBacking.entity.status == 4}" />
+
+
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgPendencia"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgPendencia_w">
+			<xcp:form id="frmPendencia">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtPendencia"
+						value="#{efetSoldiariasBacking.entity.txtPendencia}"
+						required="true"
+						label="#{bundle.lbl_motivo}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-check"
+							action="#{efetSoldiariasBacking.actionPendencia}"
+							update=":form" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgPendencia_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{efetSoldiariasBacking.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{efetSoldiariasBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{efetSoldiariasBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgErros"
+			header="#{bundle.tit_dlgErrosMat}"
+			widgetVar="wDlgErros"
+			width="610"
+			resizable="true"
+			modal="true">
+
+			<h:panelGroup
+				id="mypanel"
+				layout="block"
+				style="padding-bottom: 10px;font-weight: bold;">
+				<h:outputText value="#{bundle.tit_sol_nao_processada}" />
+			</h:panelGroup>
+
+			<xcp:form id="formErros">
+				<p:inputTextarea
+					value="#{efetSoldiariasBacking.txtErro}"
+					cols="80"
+					autoResize="false"
+					rows="20" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

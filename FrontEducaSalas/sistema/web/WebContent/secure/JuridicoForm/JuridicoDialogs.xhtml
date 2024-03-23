@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgTest"
+		widgetVar="w_test"
+		header="#{bundle.tit_dlgTestemunha}"
+		modal="true">
+		<xcp:form id="frmTest">
+
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovMatricula"
+					value="#{audienciaBacking.test.funcionarioFk}"
+					label="#{bundle.lbl_matricula}"
+					query="funcionariosLov"
+					size="8"
+					required="true"
+					readonly="#{not audienciaBacking.test.novo}" />
+
+				<xcp:combo
+					id="numParte"
+					value="#{audienciaBacking.test.parte}"
+					label="#{bundle.lbl_parte}"
+					itens="#{audienciaBacking.itensParte}"
+					required="true"
+					size="1" />
+
+			</xcp:panelForm>
+
+			<p:spacer height="1" />
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_gravar"
+						update=":form:tabTest"
+						action="#{audienciaBacking.actionGravarTestemunha}"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}" />
+
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_test').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

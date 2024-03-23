@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+	
+		<!-- estilo separa por que nao pode ser formatado -->
+		<ui:include src="CalculosForm/CalculosFormEstilo.xhtml" />
+
+		<xcp:panelFuncionarioLazy
+			id="Calculos"
+			apresentaIndice="true"
+			backing="#{calculosBacking}"
+			scrollable="false"
+			tableStyleClass="#{calculosBacking.opcaoListagem}"
+			rowStyleClass="#{calculosBacking.getClasseLancamento(row)}">
+
+
+			<ui:define name="barraLista">
+
+				<p:column>
+					<xcp:commandButton
+						id="btn_contracheque"
+						value="#{bundle.btn_contracheque}"
+						action="#{calculosBacking.actionContracheque}"
+						icon="ui-icon-print">
+					</xcp:commandButton>
+				</p:column>
+
+			</ui:define>
+			
+			<ui:define name="barraDetalhesDireita">
+				<p:column styleClass="label-column">
+					<p:outputLabel value="#{bundle.lbl_opcaolistagemcalculo}: "></p:outputLabel>
+				</p:column>
+				<p:column>
+					<p:selectOneMenu
+						id="selOpcaoListagem"
+						value="#{calculosBacking.opcaoListagem}">
+						<f:selectItems value="#{calculosBacking.itensOpcaoListagem}" />
+						<p:ajax
+							event="change"
+							update="table_Calculos"
+							listener="#{calculosBacking.actionSelecionaOpcaoListagem}" />
+					</p:selectOneMenu>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="filtros">
+				<div
+					class="tabela_ocorrencia_fixas"
+					style="width: 245px; padding: 10px; padding-left: 25px;">
+					<h:panelGrid id="tblleft">
+						<p:row>
+							<p:column colspan="5">
+								<xcp:combo
+									id="cboTiposFolhas"
+									label="#{bundle.lbl_tipo_folha}"
+									value="#{calculosBacking.tipoFolhaSelecionada}"
+									itens="#{calculosBacking.itensTipoFoha}"
+									styleClass="combotipofolhas">
+									<p:ajax
+										event="change"
+										update="calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+										listener="#{calculosBacking.actionTrocaPeriodo}" />
+								</xcp:combo>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="5">
+								<h:outputLabel
+									value="#{bundle.lbl_referencia_folha}"
+									style="position:relative; top:13px;" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<xcp:commandButton
+									value=" "
+									style="height:24px; width:28px; position:relative; top:7px;"
+									id="btnPeriodoPrimeiro"
+									ajax="true"
+									actionListener="#{calculosBacking.buscaPeriodoPrimeiro}"
+									update="btnPesq_Calculos,btnNovo_Calculos,calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+									icon="ui-icon-seek-first" />
+
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoAnterior"
+									ajax="true"
+									actionListener="#{calculosBacking.buscaPeriodoAnterior}"
+									update="btnPesq_Calculos,btnNovo_Calculos,calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+									icon="ui-icon-seek-prev"
+									style="height:24px; width:28px; position:relative; top:7px;" />
+								<span class="calendar"> <p:calendar
+										id="calReferencia"
+										pattern="dd/MM/yyyy"
+										size="9"
+										navigator="true"
+										readonlyInput="true"
+										value="#{calculosBacking.dataSelecao}"
+										showOn="both">
+										<p:ajax
+											event="dateSelect"
+											update="btnPesq_Calculos,btnNovo_Calculos,calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+											listener="#{calculosBacking.actionSelectData}" />
+									</p:calendar></span>
+								<xcp:commandButton
+									value=""
+									id="btnPeriodoProximo"
+									actionListener="#{calculosBacking.buscaPeriodoProximo}"
+									update="btnPesq_Calculos,btnNovo_Calculos,calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+									ajax="true"
+									icon="ui-icon-seek-next"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoUltimo"
+									ajax="true"
+									actionListener="#{calculosBacking.buscaPeriodoUltimo}"
+									update="btnPesq_Calculos,btnNovo_Calculos,calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+									icon="ui-icon-seek-end"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+							</p:column>
+
+						</p:row>
+						<p:row>
+							<p:column colspan="6">
+								<!-- 
+								<xcp:commandButton
+									value="#{bundle.btn_calcular_old}"
+									style="width:100px; float:left; position:relative; top:20px;"
+									disabled="#{!calculosBacking.permitidoCalculo}"
+									action="#{calculosBacking.actionCalcular}"
+									update="calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+									id="btn_calcular_old">
+								</xcp:commandButton>
+ -->
+
+								<xcp:commandButton
+									value="#{bundle.btn_calcular}"
+									style="width:100px; float:left; position:relative; top:20px;"
+									disabled="#{!calculosBacking.permitidoCalculo}"
+									action="#{calculosBacking.actionExecutarCalculo}"
+									update="calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+									id="btn_calcular">
+								</xcp:commandButton>
+
+								<xcp:commandButton
+									value="#{bundle.btn_descalcular}"
+									disabled="#{!calculosBacking.permitidoCalculo}"
+									style="width:100px; float:left; margin-left:2px; position:relative; top:20px;"
+									action="#{calculosBacking.actionDescalcular}"
+									update="calReferencia,table_Calculos,btn_calcular,btn_descalcular"
+									id="btn_descalcular" />
+							</p:column>
+						</p:row>
+					</h:panelGrid>
+				</div>
+			</ui:define>
+
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_conta}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.conta}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_des_conta}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.contaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_incidencia}"
+					type="Center"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.incidencia}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtd}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.qtd}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_percentual}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.percentual}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipolcto}"
+					type="Center"
+					itens="#{calculosBacking.itensTipolcto}"
+					size="3">
+					<xcp:outputSimple value="#{row.tipolcto}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovConta"
+						value="#{calculosBacking.entity.contaFk}"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						query="contasativas"
+						size="4"
+						readonly="#{not calculosBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtIncidencia"
+						label="#{bundle.lbl_incidencia}"
+						required="true"
+						value="#{calculosBacking.entity.incidencia}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<xcp:number
+						id="txtQtd"
+						label="#{bundle.lbl_qtd}"
+						required="true"
+						size="19"
+						readonly="#{calculosBacking.entity.tipolcto == 'C' || calculosBacking.entity.tipolcto == 'R' || calculosBacking.entity.tipolcto == 'L' || calculosBacking.entity.tipolcto == 'O'}"
+						value="#{calculosBacking.entity.qtd}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtPercentual"
+						label="#{bundle.lbl_percentual}"
+						size="19"
+						readonly="#{calculosBacking.entity.tipolcto == 'C' || calculosBacking.entity.tipolcto == 'R' || calculosBacking.entity.tipolcto == 'L' || calculosBacking.entity.tipolcto == 'O'}"
+						value="#{calculosBacking.entity.percentual}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						size="19"
+						readonly="#{calculosBacking.entity.tipolcto == 'C' || calculosBacking.entity.tipolcto == 'R' || calculosBacking.entity.tipolcto == 'L' || calculosBacking.entity.tipolcto == 'O'}"
+						value="#{calculosBacking.entity.valor}"
+						precision="16"
+						scale="2" />
+
+					<xcp:combo
+						id="txtTipolcto"
+						label="#{bundle.lbl_tipolcto}"
+						readonly="true"
+						value="#{calculosBacking.entity.tipolcto}"
+						itens="#{calculosBacking.itensTipolcto}"
+						size="2" />
+
+					<xcp:memo
+						id="txtObs"
+						required="#{calculosBacking.entity.tipolcto == 'F' and calculosBacking.obsObrigatorio}"
+						label="#{bundle.lbl_obs}"
+						value="#{calculosBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+
+				<div
+					id="dvlanc"
+					style="margin-top: 5px">
+					<p:dataTable
+						id="tblLanc"
+						var="row"
+						style="max-width: 600px; margin: 0 auto;"
+						value="#{calculosBacking.listLanc}"
+						rows="#{viewUtil.tableRows}"
+						rowKey="#{row}"
+						paginator="false"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						rendered="#{not empty calculosBacking.listLanc}">
+
+						<f:facet name="header">
+        				#{bundle.title_lanc_retroativos}
+				    </f:facet>
+
+						<p:column
+							headerText="#{bundle.col_data}"
+							type="Date">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</p:column>
+
+						<xcp:column
+							headerText="#{bundle.col_qtd}"
+							type="Number">
+							<xcp:outputSimpleNumber
+								value="#{row.qtd}"
+								precision="16"
+								scale="2" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_valor}"
+							type="Number">
+							<xcp:outputSimpleNumber
+								value="#{row.valor}"
+								precision="16"
+								scale="2" />
+						</xcp:column>
+
+
+					</p:dataTable>
+				</div>
+			</ui:define>
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+</ui:composition>

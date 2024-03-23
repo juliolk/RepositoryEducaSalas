@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelTreinamento
+			id="Inscricoes"
+			backing="#{funcTreinamentoBacking}">
+
+			<ui:define name="panelLista">
+
+				<p:fieldset legend="#{bundle.tit_avaliacao}">
+					<p:dataTable
+						id="table_avaliacoes"
+						var="rowInscritos"
+						value="#{funcTreinamentoBacking.listaInscritos}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						scrollable="true"
+						scrollHeight="161"
+						rowKey="#{rowInscritos.PK}">
+
+						<p:ajax
+							event="rowSelect"
+							listener="#{funcTreinamentoBacking.onRowSelect}" />
+
+						<xcp:column
+							headerText="#{bundle.col_empresa}"
+							type="Number"
+							size="1">
+							<xcp:outputSimpleNumber
+								value="#{rowInscritos.empresa}"
+								precision="3"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_matricula}"
+							type="Number"
+							size="8">
+							<xcp:outputSimpleNumber
+								value="#{rowInscritos.matricula}"
+								precision="8"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_nome}"
+							type="String"
+							size="30">
+							<xcp:outputSimple value="#{rowInscritos.funcionarioFk.nome}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_conceito}"
+							type="Center"
+							size="15">
+							<p:rating
+								value="#{rowInscritos.ratingConceio}"
+								stars="4">
+								<p:ajax
+									event="rate"
+									listener="#{funcTreinamentoBacking.onrate}" />
+								<p:ajax
+									event="cancel"
+									listener="#{funcTreinamentoBacking.onrateCancel}" />
+							</p:rating>
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_pontos_treinamento}"
+							type="Center"
+							size="8">
+							<xcp:number
+								id="txtPontos"
+								label="#{bundle.lbl_pontos}"
+								simple="true"
+								value="#{rowInscritos.pontos}"
+								size="2"
+								precision="2"
+								scale="0"
+								maxValue="10" />
+						</xcp:column>
+
+						<!-- <xcp:column
+							headerText="#{bundle.col_hr_treinamento}"
+							type="Center"
+							size="8">
+							<xcp:number
+								id="txtHorasfalta"
+								label="#{bundle.lbl_horasfalta}"
+								simple="true"
+								value="#{rowInscritos.horasfalta}"
+								size="3"
+								precision="3"
+								scale="0"
+								maxValue="999" />
+						</xcp:column> -->
+
+					</p:dataTable>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="panelAcoes">
+				<xcp:panelForm>
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						update="table_avaliacoes"
+						action="#{funcTreinamentoBacking.actionGravarAvaliacao}"
+						disabled="#{backing.disabledGravar}" />
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="panelDet">
+				<p:panelGrid
+					id="panelTotais"
+					columns="4"
+					styleClass="tabela_alinhamento">
+					<xcp:number
+						id="txtNrovagas"
+						label="#{bundle.lbl_nrovagas}"
+						value="#{funcTreinamentoBacking.entity.nrovagas}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:number
+						id="txtInscritos"
+						label="#{bundle.lbl_inscritos}"
+						value="#{funcTreinamentoBacking.qtdInscritos}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+				</p:panelGrid>
+			</ui:define>
+		</xcp:panelTreinamento>
+	</ui:define>
+</ui:composition>

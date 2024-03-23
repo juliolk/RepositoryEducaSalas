@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				id="fsPes"
+				legend="#{bundle.title_pesquisar}">
+
+				<xcp:panelForm>
+					<xcp:dateRange
+						id="dtaPesq"
+						valueStart="#{consultaAuditoriaBacking.dtaPesqIni}"
+						valueEnd="#{consultaAuditoriaBacking.dtaPesqFim}"
+						label="#{bundle.lbl_dtaPesq}" />
+
+					<xcp:lov
+						id="lovFunc"
+						label="#{bundle.lbl_operador}"
+						query="operadores"
+						size="30"
+						value="#{consultaAuditoriaBacking.oper}" />
+
+					<xcp:lov
+						id="lovTabela"
+						label="#{bundle.lbl_codTabela}"
+						query="tables"
+						size="30"
+						value="#{consultaAuditoriaBacking.tabela}" />
+						
+					<xcp:lov
+						id="lovPesq"
+						label="#{bundle.lbl_campo}"
+						query="camposauditoria"
+						size="30"
+						value="#{consultaAuditoriaBacking.campos}" />
+
+				</xcp:panelForm>
+
+
+			</p:fieldset>
+
+			<p:fieldset
+				id="fsPesFunc"
+				legend="#{bundle.title_dadosserv}">
+
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovServidor"
+						label="#{bundle.lbl_funcionario}"
+						query="funcionarios"
+						size="10"
+						value="#{consultaAuditoriaBacking.funcionario}"
+						selectionListener="#{consultaAuditoriaBacking.actionAddServidor}"
+						update="tblServidores" />
+
+					<p:spacer width="1" />
+
+					<p:dataTable
+						id="tblServidores"
+						var="row"
+						value="#{consultaAuditoriaBacking.listFuncionarios}"
+						rowKey="#{row.PK}"
+						rowIndexVar="idx"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="#{viewUtil.tableRows}"
+						style="width: 686px">
+
+						<p:column
+							headerText="#{bundle.col_matricula}"
+							width="20%">
+							<xcp:outputSimple value="#{row.matricula}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_nome}"
+							width="50%">
+							<xcp:outputSimple value="#{row.nome}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_acoes}"
+							width="10%">
+							<xcp:commandButton
+								icon="ui-icon-trash"
+								id="btn_remover"
+								update="tblServidores"
+								action="#{consultaAuditoriaBacking.actionRemoverServidor(row)}" />
+						</p:column>
+
+					</p:dataTable>
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{consultaAuditoriaBacking.setor}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="10" />
+
+					<xcp:lov
+						id="lovVinculo"
+						value="#{consultaAuditoriaBacking.vinculo}"
+						label="#{bundle.lbl_vinculo}"
+						query="vinculos"
+						size="10" />
+
+				</xcp:panelForm>
+
+			</p:fieldset>
+
+			<p:spacer height="2px" />
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_pesquisar"
+						value="#{bundle.btn_pesquisar}"
+						process="fsPes"
+						update="tblLogs pnlExportar"
+						onClick="PF('table_func_#{id}_w').filter()"
+						icon="ui-icon-search" />
+				</f:facet>
+			</p:toolbar>
+
+			<p:spacer height="5px" />
+
+			<p:fieldset>
+				<p:dataTable
+					id="tblLogs"
+					value="#{consultaAuditoriaBacking.listAuditLazy}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}"
+					lazy="true"
+					sortBy="#{row.data}"
+					sortOrder="descending"
+					selectionMode="single"
+					selection="#{consultaAuditoriaBacking.selectedAuditRow}"
+					rowKey="#{row.numlog}">
+
+					<p:ajax
+						event="rowSelect"
+						oncomplete="PF('dlgDetalheAudit_w').show();"
+						update=":dlgDetalheAudit" />
+
+
+					<xcp:column
+						headerText="#{bundle.lbl_operador}"
+						filterBy="#{row.nome}"
+						sortBy="#{row.nome}"
+						type="String"
+						width="10%">
+						<xcp:outputSimple value="#{row.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						filterBy="#{row.data}"
+						sortBy="#{row.data}"
+						type="Date"
+						width="10%">
+						<xcp:outputSimpleTimestamp value="#{row.data}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.lbl_campo}"
+						filterBy="#{row.campo}"
+						sortBy="#{row.campo}"
+						type="String"
+						width="20%">
+						<xcp:outputSimple value="#{row.campo}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.lbl_matricula}"
+						filterBy="#{row.matFunc}"
+						sortBy="#{row.matFunc}"
+						type="Number"
+						width="20%">
+						<xcp:outputSimpleNumber
+							value="#{row.matFunc}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_anterior}"
+						filterBy="#{row.anterior}"
+						sortBy="#{row.anterior}"
+						type="String"
+						width="30%">
+						<p:outputPanel
+							rendered="#{row.dataType != 'CLOB' and row.dataType != 'BLOB'}">
+							<xcp:outputSimple value="#{row.anterior}" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{row.dataType == 'BLOB'}"
+							style="text-align: center">
+							<p:link
+								value="[Download]"
+								href="#{consultaAuditoriaBacking.getPathAuditoriaServlet(row.numlog, 'anterior_blob')}"
+								target="_blank" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{row.dataType == 'CLOB'}"
+							style="text-align: center">
+							<p:link
+								value="[Download]"
+								href="#{consultaAuditoriaBacking.getPathAuditoriaServlet(row.numlog, 'anterior_clob')}"
+								target="_blank" />
+						</p:outputPanel>
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_atual}"
+						filterBy="#{row.atual}"
+						sortBy="#{row.atual}"
+						type="String"
+						width="30%">
+						<p:outputPanel
+							rendered="#{row.dataType != 'CLOB' and row.dataType != 'BLOB'}">
+							<xcp:outputSimple value="#{row.atual}" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{row.dataType == 'BLOB'}"
+							style="text-align: center">
+							<p:link
+								value="[Download]"
+								href="#{consultaAuditoriaBacking.getPathAuditoriaServlet(row.numlog, 'atual_blob')}"
+								target="_blank" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{row.dataType == 'CLOB'}"
+							style="text-align: center">
+							<p:link
+								value="[Download]"
+								href="#{consultaAuditoriaBacking.getPathAuditoriaServlet(row.numlog, 'atual_clob')}"
+								target="_blank" />
+						</p:outputPanel>
+					</xcp:column>
+				</p:dataTable>
+
+				<p:outputPanel
+					id="pnlExportar"
+					style="padding-top: 5px">
+					<xcp:commandButton
+						id="btn_exportar"
+						value="#{bundle.btn_exportar}"
+						icon="ui-icon-arrowthick-1-e"
+						ajax="false"
+						immediate="true"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						rendered="#{consultaAuditoriaBacking.listAuditLazy.rowCount > 0}">
+						<p:fileDownload
+							value="#{consultaAuditoriaBacking.export}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+				</p:outputPanel>
+
+			</p:fieldset>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgDetalheAudit"
+			widgetVar="dlgDetalheAudit_w"
+			header="#{bundle.col_log}"
+			resizable="false">
+			<xcp:form id="frmDetAudit">
+				<xcp:panelForm>
+
+					<xcp:memo
+						id="registro"
+						cols="52"
+						label="#{bundle.col_registro}"
+						readonly="true"
+						value="#{consultaAuditoriaBacking.selectedAuditRow.registro}" />
+
+					<xcp:text
+						id="ipServidor"
+						label="#{bundle.col_ipServidor}"
+						readonly="true"
+						value="#{consultaAuditoriaBacking.selectedAuditRow.ipservidor}" />
+
+					<xcp:text
+						id="porta"
+						label="#{bundle.col_porta}"
+						readonly="true"
+						value="#{consultaAuditoriaBacking.selectedAuditRow.porta}" />
+
+					<xcp:text
+						id="ip"
+						label="#{bundle.col_ip}"
+						readonly="true"
+						value="#{consultaAuditoriaBacking.selectedAuditRow.ip}" />
+
+				</xcp:panelForm>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

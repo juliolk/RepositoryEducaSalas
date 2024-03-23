@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Tipomovtos"
+			backing="#{tipomovtosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipmov}"
+					value="#{row.tipmov}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.tipmov}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="70">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_classificacao}"
+					value="#{row.classificacao}"
+					type="String"
+					itens="#{tipomovtosBacking.itensClassificacao}"
+					size="20">
+					<xcp:outputSimple
+						value="#{row.classificacao}"
+						itens="#{tipomovtosBacking.itensClassificacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_esocial}"
+					value="#{row.seqCodigoFk.codigo}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.seqCodigoFk.codigo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fgts}"
+					value="#{row.fgts}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.fgts}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tce}"
+					value="#{row.tce}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.tce}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+			
+				<style>
+					.aligntop {
+						vertical-align: top;
+					}
+				</style>
+				
+				<h:panelGrid
+					columns="3"
+					columnClasses=",,aligntop">
+					<xcp:panelForm>
+
+						<xcp:number
+							id="txtTipmov"
+							label="#{bundle.lbl_tipmov}"
+							required="true"
+							value="#{tipomovtosBacking.entity.tipmov}"
+							size="6"
+							precision="4"
+							scale="0"
+							maxValue="9999"
+							readonly="#{not tipomovtosBacking.entity.novo}" />
+
+						<xcp:text
+							id="txtDescricao"
+							label="#{bundle.lbl_descricao}"
+							required="true"
+							value="#{tipomovtosBacking.entity.descricao}"
+							size="70" />
+
+						<xcp:number
+							id="txtRais"
+							label="#{bundle.lbl_rais}"
+							required="true"
+							value="#{tipomovtosBacking.entity.rais}"
+							size="6"
+							precision="8"
+							scale="0"
+							maxValue="99999999" />
+
+						<xcp:text
+							id="txtCaged"
+							label="#{bundle.lbl_caged}"
+							required="true"
+							value="#{tipomovtosBacking.entity.caged}"
+							size="6" />
+
+						<xcp:text
+							id="txtFgts"
+							label="#{bundle.lbl_fgts}"
+							required="true"
+							value="#{tipomovtosBacking.entity.fgts}"
+							size="6" />
+
+						<xcp:combo
+							id="cboClassificacao"
+							value="#{tipomovtosBacking.entity.classificacao}"
+							label="#{bundle.lbl_classificacao}"
+							required="true"
+							itens="#{tipomovtosBacking.itensClassificacao}">
+							<p:ajax
+								event="change"
+								listener="#{tipomovtosBacking.limpaLov}"
+								update="cboDeschoras,cboDesc13,cboDescfer,txtQtdfer,cboFgtsRet,txtTce,cboDeschoras_l,cboDesc13_l,cboDescfer_l,txtQtdfer_l,cboFgtsRet_l,txtTce_l,lovTipeSocial,lovTipeSocial_l,cboGrupotela,cboGrupotela_l,lovTipInativo,lovTipInativo_l,cboParidade,cboParidade_l,cboIndLaudo,cboIndLaudo_l,cboIndConv,cboIndConv_l" />
+						</xcp:combo>
+
+						<xcp:combo
+							id="cboDeschoras"
+							value="#{tipomovtosBacking.entity.deschoras}"
+							label="#{bundle.lbl_deschoras}"
+							rendered="#{tipomovtosBacking.renderedExtraFields}"
+							itens="#{tipomovtosBacking.itensIndSimNao}"
+							styleClass="combosim" />
+
+						<xcp:combo
+							id="cboDesc13"
+							value="#{tipomovtosBacking.entity.desc13}"
+							label="#{bundle.lbl_desc13}"
+							rendered="#{tipomovtosBacking.renderedExtraFields}"
+							itens="#{tipomovtosBacking.itensIndSimNao}"
+							styleClass="combosim" />
+
+						<xcp:combo
+							id="cboDescfer"
+							value="#{tipomovtosBacking.entity.descfer}"
+							label="#{bundle.lbl_descfer}"
+							rendered="#{tipomovtosBacking.renderedExtraFields}"
+							itens="#{tipomovtosBacking.itensIndSimNao}"
+							styleClass="combosim" />
+
+						<xcp:combo
+							id="cboIndPrevret"
+							value="#{tipomovtosBacking.entity.indPrevret}"
+							label="#{bundle.lbl_indPrevret}"
+							required="true"
+							itens="#{tipomovtosBacking.itensIndSimNao}" />
+
+						<xcp:combo
+							id="cboTipUso"
+							value="#{tipomovtosBacking.entity.tipUso}"
+							label="#{bundle.lbl_tipUso}"
+							itens="#{tipomovtosBacking.itensTipUso}"
+							required="true" />
+
+						<xcp:lov
+							id="lovTipInativo"
+							value="#{tipomovtosBacking.entity.tipoadmInatFk}"
+							label="#{bundle.lbl_tipoapos}"
+							query="tadmissaoinat"
+							rendered="#{tipomovtosBacking.renderedAposentadoria}"
+							size="8" />
+
+						<xcp:combo
+							id="cboParidade"
+							value="#{tipomovtosBacking.entity.indParidade}"
+							rendered="#{tipomovtosBacking.renderedAposentadoria}"
+							label="#{bundle.lbl_paridade}"
+							itens="#{tipomovtosBacking.itensParidade}" />
+
+						<xcp:combo
+							id="cboIndDtocorrencia"
+							value="#{tipomovtosBacking.entity.indDtocorrencia}"
+							label="#{bundle.lbl_indDtocorrencia}"
+							itens="#{tipomovtosBacking.itensIndSimNao}" />
+
+						<xcp:combo
+							id="cboIndLaudo"
+							value="#{tipomovtosBacking.entity.indLaudo}"
+							label="#{bundle.lbl_indLaudoMed}"
+							itens="#{tipomovtosBacking.itensIndSimNao}"
+							rendered="#{tipomovtosBacking.renderedLaudo}" />
+
+					</xcp:panelForm>
+
+					<p:spacer width="10" />
+
+					<xcp:panelForm>
+
+						<xcp:number
+							id="txtQtdfer"
+							label="#{bundle.lbl_qtdfer}"
+							value="#{tipomovtosBacking.entity.qtdfer}"
+							size="6"
+							rendered="#{tipomovtosBacking.renderedExtraFields}"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+						<xcp:combo
+							id="cboFgtsRet"
+							value="#{tipomovtosBacking.entity.fgtsRet}"
+							rendered="#{tipomovtosBacking.renderedExtraFields}"
+							label="#{bundle.lbl_fgtsRet}"
+							itens="#{tipomovtosBacking.itensIndSimNao}"
+							styleClass="combosim" />
+
+						<xcp:text
+							id="txtTce"
+							label="#{bundle.lbl_tce}"
+							rendered="#{tipomovtosBacking.renderedExtraFields}"
+							value="#{tipomovtosBacking.entity.tce}"
+							size="6" />
+
+						<xcp:combo
+							id="cboEstavel"
+							value="#{tipomovtosBacking.entity.estavel}"
+							label="#{bundle.lbl_estavel}"
+							required="true"
+							itens="#{tipomovtosBacking.itensEstavel}" />
+
+						<xcp:combo
+							id="cboAvisoprevio"
+							value="#{tipomovtosBacking.entity.avisoprevio}"
+							label="#{bundle.lbl_avisoprevio}"
+							itens="#{tipomovtosBacking.itensAvisoprevio}" />
+
+						<xcp:combo
+							id="cboLibCalc"
+							value="#{tipomovtosBacking.entity.libCalculo}"
+							label="#{bundle.lbl_libCalculo}"
+							itens="#{tipomovtosBacking.itensIndSimNao}" />
+
+						<xcp:text
+							id="txtFuncRest"
+							label="#{bundle.lbl_funcao}"
+							value="#{tipomovtosBacking.entity.funcao}"
+							size="50"
+							maxlength="100" />
+
+						<xcp:text
+							id="txtMte"
+							label="#{bundle.lbl_mte}"
+							value="#{tipomovtosBacking.entity.mte}"
+							size="4" />
+
+						<xcp:combo
+							id="cboDtfimObr"
+							value="#{tipomovtosBacking.entity.dtfimObr}"
+							label="#{bundle.lbl_indTermino}"
+							itens="#{tipomovtosBacking.itensIndSimNao}">
+							<p:ajax update="txtQtddiasfim,txtQtddiasfim_l" />
+						</xcp:combo>
+
+						<xcp:number
+							id="txtQtddiasfim"
+							label="#{bundle.lbl_qtddiasfim}"
+							value="#{tipomovtosBacking.entity.qtddiasfim}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999"
+							rendered="#{tipomovtosBacking.entity.dtfimObr == 1}" />
+
+						<xcp:combo
+							id="cboGrupotela"
+							value="#{tipomovtosBacking.entity.grupoTela}"
+							label="#{bundle.lbl_grupoTela}"
+							rendered="#{tipomovtosBacking.renderedExtraFields}"
+							required="true"
+							itens="#{tipomovtosBacking.itensGrupotela}" />
+
+						<xcp:lov
+							id="lovTipeSocial"
+							value="#{tipomovtosBacking.entity.seqCodigoFk}"
+							label="#{bundle.lbl_codigoeSocial}"
+							query="tipomovtosesocial"
+							size="10"
+							params="#{tipomovtosBacking.paramsTipo}"
+							rendered="#{tipomovtosBacking.renderedCodEsocial}"
+							required="true" />
+
+						<xcp:combo
+							id="cboIndConv"
+							value="#{tipomovtosBacking.entity.indConv}"
+							label="#{bundle.lbl_indConvenio}"
+							rendered="#{tipomovtosBacking.renderedConv}"
+							itens="#{tipomovtosBacking.itensIndSimNao}">
+						</xcp:combo>
+
+					</xcp:panelForm>
+
+				</h:panelGrid>
+
+				<p:fieldset
+					legend="#{bundle.title_avisos}"
+					style="margin-left: 0px !important">
+					<xcp:panelForm>
+
+						<xcp:lov
+							id="lovTexto"
+							value="#{tipomovtosBacking.entity.seqTextoFk}"
+							label="#{bundle.lbl_textoAviso}"
+							query="xcp_texto"
+							size="10" />
+
+						<xcp:memo
+							id="txtEmail"
+							label="#{bundle.lbl_emails}"
+							value="#{tipomovtosBacking.entity.desEmail}" />
+						
+						<xcp:number
+							id="txtDiasminimo"
+							label="#{bundle.lbl_diasMinimo}"
+							value="#{tipomovtosBacking.entity.diasMinimo}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+						<xcp:combo
+							id="cboIndEnviachefia"
+							value="#{tipomovtosBacking.entity.indEnviachefia}"
+							label="#{bundle.lbl_indEnviachefia}"
+							itens="#{tipomovtosBacking.itensIndSimNao}" />
+
+						<xcp:combo
+							id="cboIndEnviaServ"
+							value="#{tipomovtosBacking.entity.indEnviaserv}"
+							label="#{bundle.lbl_indEnviaserv}"
+							itens="#{tipomovtosBacking.itensIndSimNao}" />
+
+						<xcp:combo
+							id="cboTipMsgchefia"
+							value="#{tipomovtosBacking.entity.tipMsgchefia}"
+							label="#{bundle.lbl_tipMsgchefia}"
+							itens="#{tipomovtosBacking.itensTipMsgchefia}"
+							required="true" />
+
+					</xcp:panelForm>
+				</p:fieldset>
+			</ui:define>
+			<ui:define name="detalhes">
+				<ui:include src="TipomovtosForm/TipomovtosRestricoesForm.xhtml" />
+				<ui:include src="TipomovtosForm/TipomovtosRestricoesCodForm.xhtml" />
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

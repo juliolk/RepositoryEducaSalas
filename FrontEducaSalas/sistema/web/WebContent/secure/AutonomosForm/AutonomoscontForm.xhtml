@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Autonomoscont"
+		backing="#{autonomoscontBacking}"
+		masterId="Autonomos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="Number"
+				size="2"
+				itens="#{autonomoscontBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{autonomoscontBacking.itensTipo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.valor}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.valor}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:combo
+					id="cboTipo_Autonomoscont"
+					value="#{autonomoscontBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{autonomoscontBacking.itensTipo}">
+					<p:ajax
+						update="txtValorFone,txtValorFone_l,txtValorEmail,txtValorEmail_l" />
+				</xcp:combo>
+
+				<xcp:fone
+					id="txtValorFone"
+					label="#{bundle.lbl_valor}"
+					required="true"
+					value="#{autonomoscontBacking.entity.valor}"
+					size="100"
+					rendered="#{autonomoscontBacking.entity.tipo == 1}" />
+
+				<xcp:email
+					id="txtValorEmail"
+					label="#{bundle.lbl_email}"
+					required="true"
+					value="#{autonomoscontBacking.entity.valor}"
+					size="100"
+					rendered="#{autonomoscontBacking.entity.tipo == 2}" />
+
+				<xcp:memo
+					id="txtObs_Autonomoscont"
+					label="#{bundle.lbl_obs}"
+					value="#{autonomoscontBacking.entity.obs}"
+					size="1000" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

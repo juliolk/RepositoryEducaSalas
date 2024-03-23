@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="EfetivaSolicPortal"
+			consulta="true"
+			backing="#{efetivaAjudaCustoBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					id="brdPesq"
+					legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="dtaSolicitacao"
+							valueStart="#{efetivaAjudaCustoBacking.dtaIniFiltro}"
+							valueEnd="#{efetivaAjudaCustoBacking.dtaFimFiltro}"
+							required="true"
+							label="#{bundle.lbl_data}" />
+					</xcp:panelForm>
+
+					<p:fieldset
+						id="brdSelecao"
+						legend="#{bundle.tit_situacao}"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtSitSolicitada"
+								label="#{bundle.opt_situacaoAjuda_1}"
+								value="#{efetivaAjudaCustoBacking.situacaoAbertaFiltro}" />
+							<xcp:check
+								id="txtSitAprovada"
+								label="#{bundle.opt_situacaoAjuda_2}"
+								value="#{efetivaAjudaCustoBacking.situacaoAprovadaFiltro}" />
+							<xcp:check
+								id="txtSitNaoAceita"
+								label="#{bundle.opt_situacaoAjuda_3}"
+								value="#{efetivaAjudaCustoBacking.situacaoReprovadaFiltro}" />
+
+							<xcp:check
+								id="txtSitPendente"
+								label="#{bundle.opt_situacaoAjuda_4}"
+								value="#{efetivaAjudaCustoBacking.situacaoPendenteFiltro}" />
+						</xcp:panelForm>
+					</p:fieldset>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_aceitar"
+					icon="ui-icon-arrowthickstop-1-s"
+					disabled="#{efetivaAjudaCustoBacking.entity.situacao != 1}"
+					actionListener="#{efetivaAjudaCustoBacking.actionAceitar}"
+					value="#{bundle.btn_aprovar}"
+					update="@form">
+					<p:confirm
+						header="#{bundle.title_confirmacao}"
+						message="#{bundle.msg_confirma_aprovar_ajuda}" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_rejeitar"
+					icon="icon-navegar"
+					disabled="#{efetivaAjudaCustoBacking.entity.situacao != 1}"
+					actionListener="#{efetivaAjudaCustoBacking.actionRejeitar}"
+					value="#{bundle.btn_reprovar}"
+					update="@form">
+					<p:confirm
+						header="#{bundle.title_confirmacao}"
+						message="#{bundle.msg_confirma_rejeitar_ajuda}" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_pendencia"
+					icon="icon-navegar"
+					disabled="#{efetivaAjudaCustoBacking.entity.situacao != 1}"
+					actionListener="#{efetivaAjudaCustoBacking.actionPendencia}"
+					value="#{bundle.btn_pendencia}"
+					update=":dlgMsg" />
+
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="12"
+					sortBy="data">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					type="Number"
+					size="7"
+					sortBy="matricula">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="String"
+					size="50"
+					sortBy="nome">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{efetivaAjudaCustoBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtData"
+						label="#{bundle.lbl_data}"
+						value="#{efetivaAjudaCustoBacking.entity.data}"
+						readonly="true" />
+
+					<xcp:combo
+						id="optSituacao"
+						label="#{bundle.lbl_situacao}"
+						itens="#{efetivaAjudaCustoBacking.itensSituacao}"
+						value="#{efetivaAjudaCustoBacking.entity.situacao}"
+						readonly="true" />
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						value="#{efetivaAjudaCustoBacking.entity.matriculaFk.nome}"
+						size="70"
+						readonly="true" />
+				</xcp:panelForm>
+
+				<p:fieldset legend="#{bundle.title_anexos}">
+
+					<p:dataTable
+						value="#{efetivaAjudaCustoBacking.listAnexos}"
+						var="row">
+						<p:column headerText="#{bundle.col_nome}">
+							<xcp:outputSimple value="#{row.nome}" />
+						</p:column>
+
+						<p:column headerText="#{bundle.col_data}">
+							<xcp:outputSimpleTimestamp value="#{row.dthUpload}" />
+						</p:column>
+						<p:column headerText="#{bundle.col_acoes}">
+							<p:commandButton
+								immediate="true"
+								id="btn_download_anex"
+								ajax="false"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								icon="ui-icon-download">
+								<p:fileDownload
+									value="#{efetivaAjudaCustoBacking.getAnexo(row)}"
+									contentDisposition="attachment" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+				</p:fieldset>
+			</ui:define>
+
+		</xcp:panelManut>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_pendencia}"
+			modal="true"
+			id="dlgMsg"
+			widgetVar="dlgMsg_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo
+							id="txtPendencia"
+							label="#{bundle.lbl_pendencia}"
+							required="true"
+							value="#{efetivaAjudaCustoBacking.entity.pendencia}"
+							size="2000" />
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_confirmar"
+								value="#{bundle.btn_confirmar}"
+								process="@form"
+								action="#{efetivaAjudaCustoBacking.actionGravarPendencia}"
+								update=":form"
+								oncomplete="PF('dlgMsg_w').hide();" />
+
+							<xcp:commandButton
+								id="btnVoltar"
+								icon="ui-icon-arrowreturnthick-1-w"
+								value="#{bundle.btn_voltar}"
+								onclick="PF('dlgMsg_w').hide();return false;" />
+
+						</f:facet>
+					</p:toolbar>
+				</p:outputPanel>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

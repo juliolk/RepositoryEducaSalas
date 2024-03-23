@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('erro')}">
+
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+
+			.error-page-container {
+			    margin: 60px 70px 50px;
+			}
+			
+			.error-page-icon {
+				float: left;
+				margin-left: 20px;
+			}
+			
+			.error-page-icon span.fa-stack {
+				width: 100px;
+			    height: 100px;
+			    line-height: 1em;		
+			}
+	
+			.error-page-icon .fa-desktop {
+				font-size: 100px;
+	    		color: #77787b;
+	    	}
+	
+			.error-page-icon .fa-exclamation-circle {
+				font-size: 50px;
+			    padding-top: 25px;
+			    color: #e09d18;
+			    padding-left: 4px;
+	    	}
+	    	
+	    	.error-page-content {
+				margin-left: 170px;
+	    	}	
+	    	
+	    	.error-page-content h1 {
+				text-transform: uppercase;
+			    font-size: 35px;
+			    padding-top: 5px;
+			    font-weight: 600;
+			    color: #77787b;
+	       	}
+	       	
+	       	.error-page-content h2 {
+				font-size: 20px;
+			    line-height: 1.3em;
+	       	}
+	       	
+	       	.error-page-cause h2 {
+	       		color: darkred
+	      	}			
+			
+	       	.error-page-solution h2 {
+	       		color: darkgreen
+	      	}		
+	      	
+	      	.error-page-content ul {
+				padding: 20px 20px 20px 40px;
+			    border: 1px solid #ddd;
+			    margin-bottom: 40px;
+			    border-radius: 10px;
+        	}
+        	
+			.error-page-content ul li {
+			    font-size: 16px;
+			    line-height: 1.7em;
+			}        	
+			
+			.error-page-button-container {
+				margin-bottom: 20px;
+			}
+			
+			.error-page-detail {
+				padding-right: 20px;
+			}
+			
+			.error-page-detail h3 {
+				font-size: 18px;
+			    color: #777;
+			    position: relative;
+			    margin-bottom: 5px;
+			    margin-top: 30px;
+			    border-bottom: 1px solid #cacaca;
+    		}
+			
+			.clipboard {
+			    position: absolute;
+			    font-size: 12px;
+			    padding: 0px 15px;
+			    color: white;
+			    font-weight: 100;
+			    top: 0;
+			    right: 0;
+			}
+			
+			.clipboard-info {
+			    background-color: #149bdf;
+				z-index: 2;
+				display: none;
+			}
+			
+			.clipboard-copy {
+				background-color: #777;
+				z-index: 1;
+				cursor: pointer;
+			}
+			
+			.clipboard-copy:hover {
+				background-color: #555;
+			}
+			
+			.error-page-detail p {
+				font-size: 12px;
+    			line-height: 1.5em;
+    			color: #555;			
+    			margin-bottom: 20px;
+			}
+			
+			.error-page-detail textarea {
+				width: 100%;
+			    line-height: 1.5em;
+			    font-family: monospace;
+			    white-space: nowrap;
+			    overflow: auto;
+			    max-height: 300px;	
+			    resize: auto;		
+			}
+			
+			.error-page-button-container .ui-button {
+			    min-width: 185px;
+			}
+			
+			@media (max-width:768px){
+				.error-page-container {
+					margin: 60px 40px 50px;
+				}
+				
+				.error-page-icon {
+					display: block;
+				    float: none;
+				    margin: 0 auto;
+				    text-align: center;
+				}
+				
+				.error-page-content {
+					margin-left: auto;
+				}
+				
+				.error-page-content h1 {
+					text-align: center;
+				}
+				
+				.error-page-detail h3 {
+					margin-bottom: 40px;
+				}
+				
+				.clipboard {
+					top: 28px;
+				}
+			}
+			
+      		
+		</style>
+		
+	
+	
+	
+		<div class="error-page-container">
+			<div class="error-page-icon">
+				<span class="fa-stack fa-lg">
+				  <i class="fa fa-desktop fa-stack-2x"></i>
+				  <i class="fa fa-exclamation-circle fa-stack-1x"></i>
+				</span>	
+			</div>
+			<div class="error-page-content">
+				<h1>Erro Inesperado do Servidor</h1>
+				<div class="error-page-cause">
+					<h2>Desculpe, mas ocorreu um erro inesperado.<br/>
+					    Isso pode ter ocorrido pelos seguintes motivos:</h2>
+					<ul>
+						<li>Estamos fazendo uma manutenção em nossos servidores.</li>
+						<li>Há muitas pessoas tentando acessar essa página no momento, sobrecarregando os servidores.</li>
+						<li>Ocorreu uma falha durante sua navegação.</li>
+					</ul>
+				</div>
+				<div class="error-page-solution">
+					<h2>Para tentar solucionar o problema, por favor:</h2>
+					<ul>
+						<li>Aguarde alguns minutos e tente realizar o procedimento novamente. Para isso você pode utilizar o botão abaixo.
+							<div class="error-page-button-container">
+								<xcp:commandButton
+									action="home"
+									id="btn_voltar_inicio"
+									value="Voltar para a Página Inicial" />
+							</div>
+						</li>
+						<li>Se a ação acima não resolver, clique no botão abaixo para detalhar a causa do problema e entre em contato com o suporte informando as informações listadas. Isso ajuda muito na solução do problema.
+							<div class="error-page-button-container">
+								<a id="btn_detalhar_erro" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only error-page-button-detail">
+									<span class="ui-button-text ui-c">Detalhar Causa do Erro</span>
+								</a>
+							</div>
+							<div class="error-page-detail" style="display:none;">
+							
+								<h3>Detalhes da Causa do Erro 
+									<span class="clipboard clipboard-info">Copiado para Área de Transferência</span>
+									<span class="clipboard clipboard-copy">Copiar Detalhes</span>
+								</h3>
+								<p>Não se preocupe se você não entender o que está descrito abaixo. Envie esses dados para o suporte para encaminhamento da solução clicando em "Copiar Detalhes".</p>
+								<p:inputTextarea
+									value="#{xcpErroBacking.desErro}"
+									cols="200"
+									rows="50" />
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+
+			var copyTextareaBtn = document.querySelector('.clipboard clipboard-copy');
+
+			$('.clipboard-copy').on('click', function(event) {
+			  $('textarea').select();
+	
+			  try {
+			    var successful = document.execCommand('copy');
+			    if(successful){
+				    $('.clipboard-info').text('Copiado para Área de Transferência');
+				} else {
+					$('.clipboard-info').text('Não foi possível copiar para Área de Transferência');
+				}
+			  } catch (err) {
+				$('.clipboard-info').text('Erro ao copiar para Área de Transferência');
+					  
+			  } finally {
+				  $('.clipboard-info').fadeIn(1000);
+				  setTimeout(function(){ $('.clipboard-info').fadeOut(1000); }, 3000);
+			  }
+			});
+		
+			$('#btn_detalhar_erro').on('click', function(){
+				$('.error-page-detail').fadeToggle();		
+			});
+		
+		</script>
+		
+	</ui:define>
+</ui:composition>

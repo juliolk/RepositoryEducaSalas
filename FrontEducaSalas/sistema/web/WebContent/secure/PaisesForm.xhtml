@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Paises"
+			backing="#{paisesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_pais}"
+					value="#{row.pais}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.pais}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codrais}"
+					value="#{row.codrais}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.codrais}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_caged}"
+					value="#{row.caged}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.caged}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nacionalidade}"
+					value="#{row.nacionalidadeFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.nacionalidadeFk.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtPais"
+						label="#{bundle.lbl_pais}"
+						required="true"
+						value="#{paisesBacking.entity.pais}"
+						size="4"
+						maxValue="9999"
+						readonly="#{not paisesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{paisesBacking.entity.descricao}"
+						size="71" />
+
+					<xcp:text
+						id="txtCodrais"
+						label="#{bundle.lbl_codrais}"
+						value="#{paisesBacking.entity.codrais}"
+						size="4" />
+
+					<xcp:text
+						id="txtCaged"
+						label="#{bundle.lbl_caged}"
+						value="#{paisesBacking.entity.caged}"
+						size="4" />
+
+					<xcp:lov
+						id="lovNacionalidade"
+						value="#{paisesBacking.entity.nacionalidadeFk}"
+						label="#{bundle.lbl_nacionalidade}"
+						query="nacionalidade"
+						size="4" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

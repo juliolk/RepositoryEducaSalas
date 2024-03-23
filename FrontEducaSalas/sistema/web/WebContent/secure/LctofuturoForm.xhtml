@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Lctofuturo"
+			backing="#{lctofuturoBacking}"
+			scrollable="false">
+			
+			<ui:define name="barraForm">
+			
+				<c:set
+					var="anxicon"
+					value="#{lctofuturoAnexosBacking.getIcon(lctofuturoBacking.entity.PK, lctofuturoBacking.entity,lctofuturoBacking)}" />
+				
+				<c:if test="#{anxicon.isEmpty()}">
+					<xcp:commandButton
+						id="btnLctofuturoAnexos"
+						value="#{bundle.btn_anexos}"
+						action="#{lctofuturoAnexosBacking.actionAbrir(lctofuturoBacking.entity.PK, lctofuturoBacking.entity, lctofuturoBacking.disabledGravar, lctofuturoBacking.disabledNovo, lctofuturoBacking.disabledExcluir)}"
+						disabled="#{lctofuturoBacking.entity.novo}"
+						update=":frmLctofuturoAnexos" />
+				</c:if>
+				<c:if test="#{!anxicon.isEmpty()}">
+					<xcp:commandButton
+						id="btnLctofuturoAnexos"
+						value="#{bundle.btn_anexos}"
+						action="#{lctofuturoAnexosBacking.actionAbrir(lctofuturoBacking.entity.PK, lctofuturoBacking.entity, lctofuturoBacking.disabledGravar, lctofuturoBacking.disabledNovo, lctofuturoBacking.disabledExcluir)}"
+						disabled="#{lctofuturoBacking.entity.novo}"
+						update=":frmLctofuturoAnexos"
+						icon="#{anxicon}" />
+				</c:if>
+			</ui:define>
+
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<xcp:commandButton
+						id="btn_filtrar_dtini"
+						value="#{lctofuturoBacking.labelDtFim}"
+						action="#{lctofuturoBacking.actionFiltrarAtivo}"
+						update="@form"
+						process="@this" />
+				</p:column>
+			</ui:define>
+
+			<ui:define name="filtros">
+				<div style="width: 250px; padding: 10px; padding-left: 0px;">
+					<xcp:combo
+						id="cboTipofolhaFitro"
+						value="#{lctofuturoBacking.tipoFolhaSelecionado}"
+						label="#{bundle.lbl_tipofolha}"
+						itens="#{lctofuturoBacking.itensTipoFolha}">
+						<p:ajax
+							event="change"
+							listener="#{lctofuturoBacking.actionPesquisar(id)}"
+							update="table_Lctofuturo,brdFiltro" />
+					</xcp:combo>
+
+					<div style="width: 220px;">
+						<xcp:border
+							id="brdFiltro"
+							header="#{bundle.tit_vlr_aberto}">
+							<xcp:number
+								label="#{bundle.lbl_vlrPago}"
+								id="vlrPago"
+								value="#{lctofuturoBacking.vlrPago}"
+								size="10"
+								readonly="true"
+								precision="10"
+								scale="2" />
+							<xcp:number
+								label="#{bundle.lbl_vlrTotal}"
+								id="vlrTotal"
+								value="#{lctofuturoBacking.vlrTotal}"
+								size="10"
+								readonly="true"
+								precision="10"
+								scale="2" />
+							<xcp:number
+								label="#{bundle.lbl_vlrSaldo}"
+								id="vlrSaldo"
+								value="#{lctofuturoBacking.vlrSaldo}"
+								size="10"
+								readonly="true"
+								precision="10"
+								scale="2" />
+						</xcp:border>
+					</div>
+				</div>
+			</ui:define>
+
+
+
+			<ui:define name="colunas">
+				<p:spacer width="50px;"></p:spacer>
+				<xcp:column
+					headerText="#{bundle.col_conta}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.conta}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desConta}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.contaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicial}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicial}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					type="Number"
+					size="13">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="10"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nroparcelas}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.nroparcelas}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtultpgto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtultpgto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nroparcelaspagas}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.nrpagas}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+				
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovConta"
+						value="#{lctofuturoBacking.entity.contaFk}"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						query="contas"
+						size="8"
+						readonly="#{not lctofuturoBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						size="13"
+						value="#{lctofuturoBacking.entity.valor}"
+						precision="10"
+						scale="2" />
+
+					<xcp:number
+						id="txtNroparcelas"
+						label="#{bundle.lbl_nroparcelas}"
+						required="true"
+						value="#{lctofuturoBacking.entity.nroparcelas}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtNrpagas"
+						label="#{bundle.lbl_nrpagas}"
+						value="#{lctofuturoBacking.entity.nrpagas}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:date
+						id="txtDtinicial"
+						required="true"
+						value="#{lctofuturoBacking.entity.dtinicial}"
+						label="#{bundle.lbl_dtinicial}"
+						readonly="#{not lctofuturoBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDtultpgto"
+						value="#{lctofuturoBacking.entity.dtultpgto}"
+						label="#{bundle.lbl_dtultpgto}" />
+						
+					<xcp:date
+						id="txtDtquitacao"
+						value="#{lctofuturoBacking.entity.dtquitacao}"
+						label="#{bundle.lbl_dtquitacao}" />	
+						
+					<xcp:lov
+						id="lovProcesso"
+						value="#{lctofuturoBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						size="25" />
+						
+					<xcp:text
+						id="txtContrato"
+						label="#{bundle.lbl_contrato}"
+						value="#{lctofuturoBacking.entity.contrato}"
+						size="40" />		
+						
+					<xcp:combo
+						id="cboSuspenso"
+						value="#{lctofuturoBacking.entity.indSuspenso}"
+						label="#{bundle.lbl_suspenso}"
+						required="true"
+						itens="#{tipomovtosBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboTipofolha"
+						value="#{lctofuturoBacking.entity.tipofolha}"
+						label="#{bundle.lbl_tipofolha}"
+						readonly="true"
+						itens="#{lctofuturoBacking.itensTipoFolha}" />
+						
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{lctofuturoBacking.entity.obs}"
+						size="1000" />
+
+					<!-- 
+					<xcp:number
+						id="txtVlrpago"
+						label="#{bundle.lbl_vlrpago}"
+						size="15"
+						value="#{lctofuturoBacking.entity.vlrpago}"
+						precision="12"
+						scale="2" />
+ -->
+
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+	
+		<ui:include src="LctofuturoForm/LctofuturoAnexosDialog.xhtml" />
+		
+		<p:dialog
+		id="dlgUploadAnexo"
+		header="#{bundle.tit_dlgUploadAnexo}"
+		widgetVar="dlgUploadAnexo_w"
+		modal="true">
+		<xcp:form
+			id="formUploadAnexos"
+			multipart="true">
+			<p:fileUpload
+				id="uploadLctofuturoAnexos"
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				uploadLabel="#{bundle.btn_upload}"
+				invalidFileMessage="#{bundle.msg_upload_arquivo}"
+				converterMessage="#{bundle.msg_upload_conversao}"
+				fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				messageTemplate="#{bundle.msg_upload_mensagem}"
+				requiredMessage="#{bundle.msg_upload_requerido}"
+				validatorMessage="#{bundle.msg_upload_validacao}"
+				cancelLabel="#{bundle.btn_upload_cancel}"
+				dragDropSupport="false"
+				fileUploadListener="#{lctofuturoAnexosBacking.actionUploadAnexo}" />
+		</xcp:form>
+	</p:dialog>
+		
+	</ui:define>
+</ui:composition>

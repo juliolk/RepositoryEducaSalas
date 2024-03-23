@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<h:outputScript
+			name="highlight.pack.js"
+			library="js" />
+
+
+		<h:outputStylesheet
+			name="default.css"
+			library="css" />
+
+
+		<style type="text/css">
+pre {
+	font-size: 12px;
+	height: auto;
+	max-height: 600px;
+	overflow: auto;
+	background-color: #eeeeee;
+	word-break: normal !important;
+	word-wrap: normal !important;
+	white-space: pre !important;
+}
+</style>
+
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtMes"
+						label="#{bundle.lbl_mes}"
+						size="10"
+						value="#{esocConsultaRetornoBacking.mes}"
+						precision="2"
+						scale="0"
+						required="true" />
+
+					<xcp:number
+						id="txtAno"
+						label="#{bundle.lbl_ano}"
+						size="10"
+						value="#{esocConsultaRetornoBacking.ano}"
+						precision="4"
+						scale="0"
+						required="true" />
+
+					<xcp:combo
+						id="cmbApur"
+						value="#{esocConsultaRetornoBacking.apuracao}"
+						label="#{bundle.lbl_apuracao}"
+						size="8"
+						itens="#{esocConsultaRetornoBacking.itensApuracao}"
+						required="true" />
+
+					<xcp:combo
+						id="cmbEvento"
+						value="#{esocConsultaRetornoBacking.evento}"
+						label="#{bundle.lbl_evento}"
+						size="8"
+						itens="#{esocConsultaRetornoBacking.itensEvento}"
+						required="true" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnPesq"
+							icon="ui-icon-refresh"
+							value="#{bundle.btn_pesquisar}"
+							action="#{esocConsultaRetornoBacking.actionBuscar}"
+							update="pnltbl" />
+					</f:facet>
+				</p:toolbar>
+
+
+			</p:fieldset>
+			<p:outputPanel id="pnltbl">
+
+				<p:dataTable
+					id="tbl"
+					var="row"
+					value="#{esocConsultaRetornoBacking.lista}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}"
+					rendered="#{not empty esocConsultaRetornoBacking.lista}">
+
+					<p:columns
+						value="#{esocConsultaRetornoBacking.colunas}"
+						var="col"
+						columnIndexVar="colIndex"
+						filterBy="#{esocConsultaRetornoBacking.getValue(row,colIndex)}"
+						filterMatchMode="contains">
+						<f:facet name="header">
+							<h:outputText
+								value="#{esocConsultaRetornoBacking.colunas[colIndex].header}" />
+						</f:facet>
+
+						<xcp:outputSimple
+							value="#{esocConsultaRetornoBacking.getValue(row,colIndex)}"
+							rendered="#{col.tipo == 1}" />
+
+						<xcp:outputSimpleNumber
+							value="#{esocConsultaRetornoBacking.getValue(row,colIndex)}"
+							rendered="#{col.tipo == 2}"
+							precision="10"
+							scale="2" />
+
+					</p:columns>
+
+					<p:column
+						headerText="#{bundle.col_xml}"
+						type="String">
+
+						<p:commandButton
+							id="basic"
+							value="#{bundle.btn_xml}"
+							type="button" />
+						<p:overlayPanel
+							for="basic"
+							style="width:600px"
+							at="left bottom">
+							<pre>
+								<code class="xml">
+									<h:outputText
+										value="#{esocConsultaRetornoBacking.getValue(row,-100)}" />
+								</code>
+							</pre>
+
+						</p:overlayPanel>
+
+					</p:column>
+
+				</p:dataTable>
+
+				<p:outputPanel
+					id="pnlExportar"
+					style="padding-top: 5px;padding-left: 5px;"
+					deferred="false">
+					<xcp:commandButton
+						id="btn_exportar"
+						value="#{bundle.btn_exportar}"
+						icon="ui-icon-arrowthick-1-e"
+						ajax="false"
+						immediate="true"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						rendered="#{not empty esocConsultaRetornoBacking.lista}">
+						<p:fileDownload
+							value="#{esocConsultaRetornoBacking.export}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+				</p:outputPanel>
+
+				<script> $('pre code').each(function(i, block) {
+				    hljs.highlightBlock(block);
+				  });</script>
+
+			</p:outputPanel>
+
+
+		</xcp:panelContent>
+
+
+	</ui:define>
+
+
+
+</ui:composition>

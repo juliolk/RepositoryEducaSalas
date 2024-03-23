@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(17)}"
+			escape="false" />
+
+		<xcp:panelFuncionario
+			id="Lctoviagens"
+			backing="#{lctoviagensPmpfBacking}"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc)}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtsaida}"
+					value="#{row.dtsaida}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.dtsaida}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_horasaida}"
+					value="#{row.horasaida}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.horasaida}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtchegada}"
+					value="#{row.dtchegada}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.dtchegada}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_horachegada}"
+					value="#{row.horachegada}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.horachegada}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_destino}"
+					value="#{row.destinoFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.destinoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_transporteid}"
+					value="#{row.transporteid}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.transporteid}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_exerciciopedido}"
+					value="#{row.exerciciopedido}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.exerciciopedido}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipodoc}"
+					value="#{row.tipodocFk.descricao}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.tipodocFk.descricao}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_portaria}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.registroFk.processo}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtsaida"
+						required="true"
+						value="#{lctoviagensPmpfBacking.entity.dtsaida}"
+						label="#{bundle.lbl_dtsaida}"
+						readonly="#{not lctoviagensPmpfBacking.entity.novo}" />
+
+					<xcp:timeNumber
+						id="txtHorasaida"
+						label="#{bundle.lbl_horasaida}"
+						size="7"
+						value="#{lctoviagensPmpfBacking.entity.horasaida}"
+						precision="4"
+						scale="2" />
+
+					<xcp:date
+						id="txtDtchegada"
+						required="true"
+						value="#{lctoviagensPmpfBacking.entity.dtchegada}"
+						label="#{bundle.lbl_dtchegada}" />
+
+					<xcp:timeNumber
+						id="txtHorachegada"
+						label="#{bundle.lbl_horachegada}"
+						size="7"
+						value="#{lctoviagensPmpfBacking.entity.horachegada}"
+						precision="4"
+						scale="2" />
+
+					<xcp:lov
+						id="lovOrigem"
+						value="#{lctoviagensPmpfBacking.entity.origemFk}"
+						label="#{bundle.lbl_origem}"
+						query="cidades"
+						size="8" />
+
+					<xcp:lov
+						id="lovDestino"
+						value="#{lctoviagensPmpfBacking.entity.destinoFk}"
+						label="#{bundle.lbl_destino}"
+						query="cidades"
+						size="8" />
+
+					<xcp:text
+						id="txtLocal"
+						label="#{bundle.lbl_local}"
+						value="#{lctoviagensPmpfBacking.entity.local}"
+						size="100" />
+
+					<xcp:combo
+						id="txtTransporte"
+						value="#{lctoviagensPmpfBacking.entity.transporte}"
+						label="#{bundle.lbl_transporte}"
+						required="true"
+						itens="#{lctoviagensPmpfBacking.itensTransporte}" />
+
+					<xcp:combo
+						id="cboOnus"
+						value="#{lctoviagensPmpfBacking.entity.onus}"
+						label="#{bundle.lbl_onus}"
+						required="true"
+						itens="#{lctoviagensPmpfBacking.itensOnus}">
+						<p:ajax
+							update="txtExerciciopedido txtExerciciopedido_l txtNumeropedido txtNumeropedido_l"
+							process="@this	" />
+					</xcp:combo>
+					
+					<xcp:combo
+						id="cboJustPonto"
+						value="#{lctoviagensPmpfBacking.entity.justificarPonto}"
+						label="#{bundle.lbl_justificarPonto}"
+						itens="#{lctoviagensPmpfBacking.itensIndSimNao}"/>
+
+					<xcp:number
+						id="txtExerciciopedido"
+						label="#{bundle.lbl_exerciciopedido}"
+						value="#{lctoviagensPmpfBacking.entity.exerciciopedido}"
+						size="4"
+						precision="4"
+						scale="0"
+						required="#{lctoviagensPmpfBacking.requiredPedido}"
+						maxValue="9999" />
+
+					<xcp:number
+						id="txtNumeropedido"
+						label="#{bundle.lbl_numeropedido}"
+						value="#{lctoviagensPmpfBacking.entity.numeropedido}"
+						size="5"
+						precision="5"
+						scale="0"
+						required="#{lctoviagensPmpfBacking.requiredPedido}"
+						maxValue="99999" />
+
+					<xcp:text
+						id="txtTransporteid"
+						label="#{bundle.lbl_transporteid}"
+						value="#{lctoviagensPmpfBacking.entity.transporteid}"
+						size="10" />
+
+					<xcp:memo
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						value="#{lctoviagensPmpfBacking.entity.motivo}"
+						size="500" />
+
+					<xcp:combo
+						id="cboFechado"
+						value="#{lctoviagensPmpfBacking.entity.fechado}"
+						label="#{bundle.lbl_fechado}"
+						required="true"
+						itens="#{lctoviagensPmpfBacking.itensIndSimNao}" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{lctoviagensPmpfBacking.entity.tipodocFk}"
+						selectionListener="#{lctoviagensPmpfBacking.selectTipodocumento}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_viag"
+						readonly="#{lctoviagensPmpfBacking.readOnlyTipdoc}"
+						params="#{lctoviagensPmpfBacking.paramsTipoDoc}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento"
+						size="5" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{lctoviagensPmpfBacking.entity.registroFk}"
+						params="#{lctoviagensPmpfBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_registro}"
+						readonly="#{lctoviagensPmpfBacking.readOnlyDoc}"
+						query="documentosman"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento"
+						size="18"
+						selectionListener="#{lctoviagensPmpfBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{lctoviagensPmpfBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{lctoviagensPmpfBacking.readOnlyProc}"
+						required="#{lctoviagensPmpfBacking.requiredProc}"
+						size="25" />
+
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<xcp:commandButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									icon="icon-pesquisar_azul"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{lctoviagensPmpfBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(lctoviagensPmpfBacking.entity.registro)}"
+										contentDisposition="attachment" />
+								</xcp:commandButton>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:date
+						id="txtDatadoc"
+						value="#{lctoviagensPmpfBacking.entity.datadoc}"
+						label="#{bundle.lbl_datadoc}" />
+						
+						
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

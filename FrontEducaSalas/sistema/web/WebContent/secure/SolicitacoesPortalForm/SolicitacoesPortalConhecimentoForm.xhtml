@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<xcp:panelForm
+				id="pnl_form_dados_conhecimento"
+				floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+			<xcp:combo
+				id="comboConhecimento"
+				required="true"
+				value="#{solicitacoesPortalBacking.conhecimentoSelecionado.conhecimento}"
+				itens="#{solicitacoesPortalBacking.itensConhecimento}"
+				label="#{bundle.lbl_conhecimento}"/>
+				
+			<xcp:memo 
+				id="obsConhecimento"
+				label="#{bundle.lbl_obs}"
+				value="#{solicitacoesPortalBacking.conhecimentoSelecionado.obs}"
+			 />				
+
+		</xcp:panelForm>
+
+		<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btn_confirmaAlteracaoConhecimento"
+					value="#{bundle.btn_gravar}"
+					process="@form"
+					update="@form"
+					oncomplete="$(this).eachHasValue();"
+					action="#{solicitacoesPortalBacking.actionGravaConhecimento}" />
+
+				<xcp:commandButton
+					id="btnVoltar_AlteracaoConhecimento"
+					immediate="true"
+					value="#{bundle.btn_cancelar}"
+					onclick="PF('dlgConhecimento_w').hide();" />
+					
+			</f:facet>
+		</p:toolbar>
+
+	</p:outputPanel>
+</ui:composition>

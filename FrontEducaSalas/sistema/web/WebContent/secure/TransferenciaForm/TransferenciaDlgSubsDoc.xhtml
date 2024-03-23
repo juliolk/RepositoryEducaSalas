@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgSubsDoc"
+		header="#{bundle.title_substituicao}"
+		widgetVar="dlgSubsDoc_w"
+		dynamic="true"
+		modal="true"
+		resizable="false">
+
+		<xcp:form id="formdlgSubsDoc">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtdtini"
+					required="true"
+					readonly="true"
+					value="#{transferenciasBacking.helper.transfSel.dtinicio}"
+					label="#{bundle.lbl_dtini}" />
+
+				<xcp:date
+					id="txtdttermino"
+					required="true"
+					readonly="true"
+					value="#{transferenciasBacking.helper.transfSel.dttermino}"
+					label="#{bundle.lbl_dttermino}" />
+
+				<xcp:lov
+					id="lovSetor"
+					update="lovFuncSubs"
+					readonly="true"
+					value="#{transferenciasBacking.helper.transfSel.setorSubsFk}"
+					label="#{bundle.lbl_setor}"
+					query="setores"
+					selectionListener="#{transferenciasBacking.selectSetorSubs}"
+					size="10" />
+
+				<xcp:lov
+					id="lovFuncSubs"
+					value="#{transferenciasBacking.helper.transfSel.matriculaSubsFk}"
+					readonly="true"
+					label="#{bundle.lbl_funcSubs}"
+					query="funcionariosLovAtiv"
+					required="true"
+					update="lovSetor"
+					size="8" />
+
+				<xcp:combo
+					id="cboIndprejatrib"
+					value="#{movimentacoesBacking.entity.indprejatrib}"
+					label="#{bundle.lbl_indprejatrib}"
+					required="true"
+					readonly="true"
+					itens="#{movimentacoesBacking.itensIndSimNao}" />
+
+				<xcp:date
+					id="txtDtsessao"
+					value="#{transferenciasBacking.helper.transfSel.dtsessaopleno}"
+					label="#{bundle.lbl_dtsessaopleno}"
+					rendered="#{transferenciasBacking.renderedDtSessao}"
+					readonly="true" />
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{transferenciasBacking.helper.transfSel.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_transf"
+					readonly="true"
+					params="#{transferenciasBacking.paramsTipoDoc}"
+					selectionListener="#{transferenciasBacking.selectTipodocumento}"
+					update="lovDoc,lovProcesso,lovProcesso_l,btnDownloadDocumento"
+					size="5" />
+
+				<xcp:lov
+					id="lovDoc"
+					value="#{transferenciasBacking.helper.transfSel.registroFk}"
+					params="#{transferenciasBacking.paramsDoc}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					readonly="true"
+					size="5"
+					update="lovProcesso,lovProcesso_l,btnDownloadDocumento"
+					selectionListener="#{transferenciasBacking.selectDocumento}" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{transferenciasBacking.helper.transfSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="true"
+					required="#{transferenciasBacking.requiredProc}"
+					size="25" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:splitButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{transferenciasBacking.helper.transfSel.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(transferenciasBacking.helper.transfSel.registro)}"
+									contentDisposition="attachment" />
+								<p:menuitem
+									value="#{bundle.btn_detalhes_doc}"
+									action="#{transferenciasBacking.model.actionOpenVisDialog(transferenciasBacking.helper.transfSel.registro)}"
+									process="@this" />
+							</p:splitButton>
+						</p:column>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:dateTime
+									id="txtRetificacao"
+									value="#{transferenciasBacking.helper.transfSel.retificacao}"
+									label="#{bundle.lbl_retificacao}"
+									rendered="#{transferenciasBacking.helper.transfSel.retificacao!=null}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_txtPort}"
+					value="#{transferenciasBacking.helper.transfSel.obs}"
+					readonly="#{transferenciasBacking.readOnlyFields}" />
+
+			</xcp:panelForm>
+			<h:panelGroup id="panelBotoesSub">
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlgSubsDoc_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</h:panelGroup>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

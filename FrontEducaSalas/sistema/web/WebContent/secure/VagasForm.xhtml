@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="Vagas"
+			backing="#{vagasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_vaga}"
+					value="#{row.vaga}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.vaga}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setorFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.setorFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_funcao}"
+					value="#{row.funcaoFk.descricao}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.funcaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_horario}"
+					value="#{row.horarioFk.descricao}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.horarioFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdVagas}"
+					value="#{row.nro}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.nro}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_dtsolicitacao}"
+					value="#{row.dtsolicitacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtsolicitacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="8"
+					itens="#{vagasBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{vagasBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtVaga"
+						label="#{bundle.lbl_vaga}"
+						required="true"
+						value="#{vagasBacking.entity.vaga}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						rendered="#{not vagasBacking.entity.novo}"
+						readonly="true" />
+
+
+					<xcp:date
+						id="txtDtsolicitacao"
+						value="#{vagasBacking.entity.dtsolicitacao}"
+						label="#{bundle.lbl_dtsolicitacao}"
+						required="true" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{vagasBacking.entity.descricao}"
+						size="50" />
+
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{vagasBacking.entity.situacao}"
+						label="#{bundle.lbl_situacaoVaga}"
+						required="true"
+						readonly="true"
+						rendered="#{not vagasBacking.entity.novo}"
+						itens="#{vagasBacking.itensSituacao}" />
+
+					<xcp:lov
+						id="lovFuncao"
+						value="#{vagasBacking.entity.funcaoFk}"
+						label="#{bundle.lbl_funcao}"
+						required="true"
+						params="#{vagasBacking.paramsFuncaoLov}"
+						query="funcoes_vagas"
+						size="8"
+						update="lovProposta lovProposta_l" 
+						selectionListener="#{vagasBacking.selectFuncao}"/>
+
+					<xcp:combo
+						id="cboOrigem"
+						value="#{vagasBacking.entity.origem}"
+						label="#{bundle.lbl_origem}"
+						itens="#{vagasBacking.itensOrigem}"
+						update="lovMattit lovMattit_l lovProposta lovProposta_l"
+						rendered="#{vagasBacking.vagaIndividual}"
+						required="true">
+						<p:ajax
+							event="change"
+							update="lovProposta lovProposta_l lovMattit lovMattit_l lovNumSeqVaga lovNumSeqVaga_l lovSetor lovSetor_l lovMatSubs lovMatSubs_l"
+							listener="#{vagasBacking.actionChangeOrigem}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovProposta"
+						value="#{vagasBacking.entity.propostaFk}"
+						label="#{bundle.lbl_proposta}"
+						params="#{vagasBacking.paramsVagaIndiv}"
+						query="propostasativas_func"
+						size="8"
+						required="true"
+						rendered="#{vagasBacking.vagaIndividual and vagasBacking.entity.origem == 1}"
+						update="lovNumSeqVaga lovSetor txtDtsaida"
+						selectionListener="#{vagasBacking.selectProposta}" />
+
+					<xcp:lov
+						id="lovMattit"
+						value="#{vagasBacking.entity.matTitFk}"
+						label="#{bundle.lbl_subs}"
+						query="funcionariosLov"
+						size="10"
+						required="true"
+						rendered="#{vagasBacking.vagaIndividual and vagasBacking.entity.origem == 2}" />
+
+					<xcp:lov
+						id="lovNumSeqVaga"
+						value="#{vagasBacking.entity.numSeqVagaFk}"
+						label="#{bundle.lbl_vaga}"
+						params="#{vagasBacking.paramsVagaIndiv}"
+						query="cargosvagasvaga"
+						size="18"
+						rendered="#{vagasBacking.vagaIndividual}"
+						selectionListener="#{vagasBacking.selectVagaIndiv}"
+						update="lovMatSubs,lovMatSubs_l,lovSetor,lovSetor_l,txtDtsaida"
+						required="true"
+						readonly="#{vagasBacking.entity.origem == 1}" />
+
+					<xcp:lov
+						id="lovMatSubs"
+						value="#{vagasBacking.entity.matSubsFk}"
+						label="#{bundle.lbl_matSubs}"
+						query="funcionarios_vagas"
+						params="#{vagasBacking.paramsTipoVinculoLov}"
+						size="8"
+						readonly="#{vagasBacking.vagaIndividual}" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{vagasBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						required="true"
+						query="set_validade_org"
+						size="8"
+						readonly="#{vagasBacking.vagaIndividual}" />
+
+					<xcp:date
+						id="txtDtsaida"
+						value="#{vagasBacking.entity.dtsaida}"
+						label="#{bundle.lbl_dtsaida}"
+						readonly="#{vagasBacking.readonlyField}" />
+
+					<xcp:lov
+						id="lovHorario"
+						value="#{vagasBacking.entity.horarioFk}"
+						label="#{bundle.lbl_horario}"
+						required="true"
+						query="horarios_geral"
+						size="8" />
+
+					<xcp:lov
+						id="lovMotivo"
+						value="#{vagasBacking.entity.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						query="motivovaga"
+						size="8" />
+
+					<xcp:lov
+						id="lovEntrevistador"
+						value="#{vagasBacking.entity.entrevistadorFk}"
+						selectionListener="#{vagasBacking.selectEntrevistador}"
+						label="#{bundle.lbl_entrevistador}"
+						query="funcionariosvagas"
+						size="8" />
+
+					<xcp:lov
+						id="lovSupervisor"
+						value="#{vagasBacking.entity.supervisorFk}"
+						label="#{bundle.lbl_supervisor}"
+						selectionListener="#{vagasBacking.selectSupervisor}"
+						query="funcionariosvagas"
+						size="8" />
+
+					<xcp:number
+						id="txtNro"
+						label="#{bundle.lbl_qtdVagas}"
+						value="#{vagasBacking.entity.nro}"
+						size="8"
+						precision="6"
+						scale="0"
+						required="true"
+						maxValue="999999"
+						rendered="#{not vagasBacking.vagaIndividual}" />
+
+					<xcp:fone
+						id="txtTelefone"
+						label="#{bundle.lbl_telefone}"
+						value="#{vagasBacking.entity.telefone}" />
+
+					<xcp:memo
+						id="txtAtividades"
+						label="#{bundle.lbl_atividades}"
+						value="#{vagasBacking.entity.atividades}"
+						size="500"
+						cols="79" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{vagasBacking.entity.obs}"
+						size="200"
+						cols="79" />
+
+					<xcp:memo
+						id="txtRequisitos"
+						label="#{bundle.lbl_requisitos}"
+						value="#{vagasBacking.entity.requisitos}"
+						size="500"
+						cols="79" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_troca_situacao"
+					value="#{bundle.btn_trocasituacao}"
+					action="#{vagasBacking.actionAbrirTrocaSituacao}"
+					update=":formSit"
+					disabled="#{not vagasBacking.pendente}"
+					rendered="#{not vagasBacking.entity.novo and not vagasBacking.vagaIndividual}" />
+					
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{vagasBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					immediate="true"
+					action="#{vagasBacking.actionOpenAnexos}"
+					disabled="#{vagasBacking.disabledAnexo}" />
+					
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<p:outputPanel rendered="#{not vagasBacking.vagaIndividual}">
+					<ui:include src="VagasForm/VagasCursosForm.xhtml" />
+				</p:outputPanel>
+
+				<ui:include src="VagasForm/VagasConsignacoesForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgNovaSit"
+			modal="true"
+			widgetVar="dlgNovaSituacao_w"
+			header="#{bundle.title_troca_situacao}">
+			<xcp:form id="formSit">
+				<xcp:panelForm>
+					<xcp:combo
+						id="cboNovaSit"
+						value="#{vagasBacking.novasituacao}"
+						label="#{bundle.lbl_situacaoVaga}"
+						required="true"
+						itens="#{vagasBacking.itensNovaSituacao}" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							value="#{bundle.btn_salvar}"
+							action="#{vagasBacking.actionSalvarTrocaSituacao}"
+							update=":form"
+							icon="ui-icon-gear" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{vagasBacking.listAnexos}"
+					var="rowAnex"
+					widgetVar="w_tblAnex"
+					filteredValue="#{vagasBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_documento}"
+						value="#{rowAnex.docprovFk.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.docprovFk.descricao}" />
+					</xcp:column>
+
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{vagasBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo">
+							<f:setPropertyActionListener
+								value="#{rowAnex}"
+								target="#{vagasBacking.anexo}" />
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update=":frmAnexos :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{vagasBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{vagasBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{vagasBacking.anexo.descricao}" />
+
+					<xcp:lov
+						id="lovProv"
+						value="#{vagasBacking.anexo.docprovFk}"
+						label="#{bundle.lbl_documento}"
+						query="funcoesprovimento"
+						size="3"
+						params="#{vagasBacking.paramsProv}" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{vagasBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos :form:btn_anexos"
+							action="#{vagasBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

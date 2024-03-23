@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Cep"
+			backing="#{cepBacking}">
+
+			<ui:define name="barraFiltro">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovCidadeFiltro"
+						value="#{cepBacking.cidadeFiltro}"
+						label="#{bundle.lbl_cidade}"
+						query="cidades"
+						size="7" />
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_cep}"
+					value="#{row.cep}"
+					type="Number"
+					size="8">
+					<h:outputText
+						value="#{row.cep}"
+						converter="convertCep" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cidade}"
+					value="#{row.cidadeFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.cidadeFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_bairro}"
+					value="#{row.bairroFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.bairroFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_logradouro}"
+					value="#{row.logradouroFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.logradouroFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nrinicial}"
+					value="#{row.nrinicial}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.nrinicial}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nrfinal}"
+					value="#{row.nrfinal}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.nrfinal}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipLado}"
+					value="#{row.tipLado}"
+					size="15"
+					itens="#{cepBacking.itensTipLado}">
+
+					<xcp:outputSimple
+						value="#{row.tipLado}"
+						itens="#{cepBacking.itensTipLado}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:cep
+						id="txtCep"
+						label="#{bundle.lbl_cep}"
+						required="true"
+						value="#{cepBacking.entity.cep}"
+						readonly="#{not cepBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovCidade"
+						value="#{cepBacking.entity.cidadeFk}"
+						label="#{bundle.lbl_cidade}"
+						selectionListener="#{cepBacking.selectCidade}"
+						required="true"
+						update="lovBairro,lovLogradouro"
+						query="cidades"
+						size="7" />
+
+					<xcp:lov
+						id="lovBairro"
+						value="#{cepBacking.entity.bairroFk}"
+						label="#{bundle.lbl_bairro}"
+						params="#{cepBacking.paramsCidade}"
+						query="bairro"
+						size="7" />
+
+					<xcp:lov
+						id="lovLogradouro"
+						value="#{cepBacking.entity.logradouroFk}"
+						params="#{cepBacking.paramsCidade}"
+						label="#{bundle.lbl_logradouro}"
+						query="logradouro"
+						size="7" />
+
+					<xcp:number
+						id="txtNrinicial"
+						label="#{bundle.lbl_nrinicial}"
+						value="#{cepBacking.entity.nrinicial}"
+						size="7"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:number
+						id="txtNrfinal"
+						label="#{bundle.lbl_nrfinal}"
+						value="#{cepBacking.entity.nrfinal}"
+						size="7"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:combo
+						id="cboTipLado"
+						value="#{cepBacking.entity.tipLado}"
+						label="#{bundle.lbl_tipLado}"
+						itens="#{cepBacking.itensTipLado}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

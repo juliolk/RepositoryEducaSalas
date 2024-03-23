@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Valetransp"
+			backing="#{valetranspBacking}">
+			
+			<ui:define name="barraForm">
+			
+				<c:set
+					var="anxicon"
+					value="#{valetranspAnexosBacking.getIcon(valetranspBacking.entity.PK, valetranspBacking.entity,valetranspBacking)}" />
+				
+				<c:if test="#{anxicon.isEmpty()}">
+					<xcp:commandButton
+						id="btnValetranspAnexos"
+						value="#{bundle.btn_anexos}"
+						action="#{valetranspAnexosBacking.actionAbrir(valetranspBacking.entity.PK, valetranspBacking.entity, valetranspBacking.disabledGravar, valetranspBacking.disabledNovo, valetranspBacking.disabledExcluir)}"
+						disabled="#{valetranspBacking.entity.novo}"
+						update=":frmValetranspAnexos" />
+				</c:if>
+				<c:if test="#{!anxicon.isEmpty()}">
+					<xcp:commandButton
+						id="btnValetranspAnexos"
+						value="#{bundle.btn_anexos}"
+						action="#{valetranspAnexosBacking.actionAbrir(valetranspBacking.entity.PK, valetranspBacking.entity, valetranspBacking.disabledGravar, valetranspBacking.disabledNovo, valetranspBacking.disabledExcluir)}"
+						disabled="#{valetranspBacking.entity.novo}"
+						update=":frmValetranspAnexos"
+						icon="#{anxicon}" />
+				</c:if>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_linha}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.linha}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					size="30">
+					<xcp:outputSimple value="#{row.linhaFk.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nrcartao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.nrcartao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtddia}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.qtddia}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdsaldo}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdsaldo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdsolicitada}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdsolicitada}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdentregue}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.nrentregue}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.motivoFk.descricao}" />
+				</xcp:column>
+
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.motivo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtdevolucao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtdevolucao}" />
+				</xcp:column>
+ -->
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovLinha"
+						value="#{valetranspBacking.entity.linhaFk}"
+						label="#{bundle.lbl_linha}"
+						required="true"
+						query="linha"
+						size="6"
+						readonly="#{not valetranspBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDtinicio"
+						required="true"
+						value="#{valetranspBacking.entity.dtinicio}"
+						label="#{bundle.lbl_dtinicio}"
+						readonly="#{not valetranspBacking.entity.novo}"
+						size="11" />
+
+					<xcp:text
+						id="txtNrcartao"
+						label="#{bundle.lbl_nrcartao}"
+						required="true"
+						value="#{valetranspBacking.entity.nrcartao}"
+						size="15" />
+
+					<xcp:number
+						id="txtQtddia"
+						label="#{bundle.lbl_qtddia}"
+						required="true"
+						value="#{valetranspBacking.entity.qtddia}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtNrentregue"
+						label="#{bundle.lbl_nrentregue}"
+						value="#{valetranspBacking.entity.nrentregue}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:combo
+						id="cboMovimenta"
+						value="#{valetranspBacking.entity.movimenta}"
+						label="#{bundle.lbl_movimenta}"
+						required="false"
+						itens="#{valetranspBacking.itensIndSimNaoNull}" />
+
+					<xcp:number
+						id="txtQtdsolicitada"
+						label="#{bundle.lbl_qtdsolicitada}"
+						value="#{valetranspBacking.entity.qtdsolicitada}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:date
+						id="txtDtfim"
+						value="#{valetranspBacking.entity.dtfim}"
+						label="#{bundle.lbl_dtfim}">
+						<p:ajax
+							event="change"
+							update="txtDtdevolucao,txtDtdevolucao_l,lovMotivo,lovMotivo_l" />
+						<p:ajax
+							event="dateSelect"
+							update="txtDtdevolucao,txtDtdevolucao_l,lovMotivo,lovMotivo_l" />
+					</xcp:date>
+
+					<xcp:lov
+						id="lovMotivo"
+						value="#{valetranspBacking.entity.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						rendered="#{!valetranspBacking.entity.novo or valetranspBacking.entity.dtfim != null}"
+						required="#{valetranspBacking.entity.dtfim != null}"
+						query="valetransp_motivo"
+						size="10" />
+
+					<xcp:date
+						id="txtDtdevolucao"
+						value="#{valetranspBacking.entity.dtdevolucao}"
+						rendered="#{valetranspBacking.entity.dtfim != null}"
+						label="#{bundle.lbl_dtdevolucao}" />
+
+					<xcp:number
+						id="txtQtdsaldo"
+						label="#{bundle.lbl_qtdsaldo}"
+						value="#{valetranspBacking.entity.qtdsaldo}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:memo
+						id="txtLogErro"
+						label="#{bundle.lbl_logErro}"
+						readonly="true"
+						rendered="#{valetranspBacking.entity.logErro!=null}"
+						value="#{valetranspBacking.entity.logErro}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{valetranspBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+	
+		<ui:include src="ValetranspForm/ValeTranspAnexosDialog.xhtml" />
+	
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="CargosNom"
+		backing="#{cargosNomBacking}"
+		masterId="Cargos"
+		update=":form:txtTotVag :form:cboSituacao">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_documento}"
+				value="#{row.documento}"
+				type="Number">
+				<xcp:outputSimpleNumber
+					value="#{row.documento}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vagas}"
+				value="#{row.vagas}"
+				type="Number">
+				<xcp:outputSimpleNumber
+					value="#{row.vagas}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtinicio}"
+				value="#{row.dtinicio}"
+				type="Date">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfim}"
+				value="#{row.dtfim}"
+				type="Date">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipoFk.descricao}"
+				type="String">
+				<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtDocumento_cn"
+					label="#{bundle.lbl_documento}"
+					required="true"
+					value="#{cargosNomBacking.entity.documento}"
+					size="10"
+					maxValue="9999999999"
+					readonly="#{not cargosNomBacking.entity.novo}" />
+
+				<xcp:date
+					id="txtDtinicio"
+					required="true"
+					value="#{cargosNomBacking.entity.dtinicio}"
+					label="#{bundle.lbl_dtini}" />
+
+				<xcp:date
+					id="txtDtfim"
+					required="true"
+					value="#{cargosNomBacking.entity.dtfim}"
+					label="#{bundle.lbl_dtfim}" />
+
+				<xcp:number
+					id="txtVagas_cn"
+					label="#{bundle.lbl_vagas}"
+					required="true"
+					value="#{cargosNomBacking.entity.vagas}"
+					size="4"
+					maxValue="99999" />
+
+				<xcp:lov
+					id="lovTipo_cn"
+					value="#{cargosNomBacking.entity.tipoFk}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					query="tipoato"
+					size="2" />
+
+				<xcp:memo
+					id="txtObs_cn"
+					label="#{bundle.lbl_obs}"
+					value="#{cargosNomBacking.entity.obs}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

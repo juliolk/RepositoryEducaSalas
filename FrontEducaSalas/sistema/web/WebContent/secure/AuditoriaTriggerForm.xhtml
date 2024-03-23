@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+		<style>
+.tabela-auditada {
+	font-weight: 700 !important;
+	font-size: 1.1em;
+	color: #0081c2 !important;
+}
+
+.tabela-auditada.ui-state-highlight {
+	color: #ddddff !important;
+}
+
+.tabela-selecionada {
+	font-size: 1.3em;
+	padding: 15px 10px;
+}
+</style>
+
+		<xcp:panelManut
+			id="Auditoria"
+			backing="#{auditoriaTriggerBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tabela}"
+					value="#{row.tabela}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.tabela}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data_criacao}"
+					value="#{row.dataCriacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataCriacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data_alteracao}"
+					value="#{row.dataAlteracao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataAlteracao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao_auditoria}"
+					value="#{row.status}"
+					itens="#{auditoriaTriggerBacking.itensSituacaoTrigger}"
+					type="String"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.status}"
+						itens="#{auditoriaTriggerBacking.itensSituacaoTrigger}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_campos_auditados}"
+					value="#{row.campos}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.campos}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<h:panelGrid
+						columns="2"
+						columnClasses="form_content,form_content">
+						<p:fieldset legend="#{bundle.title_tabelas}">
+							<p:dataTable
+								id="tblSelTbl"
+								value="#{auditoriaTriggerBacking.listTabelas}"
+								widgetVar="listTabelas_w"
+								var="row"
+								selectionMode="single"
+								selection="#{auditoriaTriggerBacking.tabelaSel}"
+								paginator="true"
+								paginatorPosition="bottom"
+								rows="#{viewUtil.tableRows}"
+								rowKey="#{row}"
+								rowStyleClass="#{auditoriaTriggerBacking.isTabelaAuditada(row) ? 'tabela-auditada' : 'tabela-normal'}">
+
+								<p:ajax
+									event="rowSelect"
+									listener="#{auditoriaTriggerBacking.actionSelecionar}"
+									update=":#{p:component('fieldsetListaCampos')}" />
+
+								<xcp:column
+									value="#{row}"
+									size="10"
+									type="String"
+									headerText="#{bundle.col_tableName}">
+									<xcp:outputSimple value="#{row}" />
+								</xcp:column>
+
+							</p:dataTable>
+						</p:fieldset>
+						<p:fieldset
+							id="fieldsetListaCampos"
+							legend="#{bundle.title_campos}">
+							<p:outputPanel>
+								<p:outputPanel
+									rendered="#{auditoriaTriggerBacking.tabelaSel != null}"
+									styleClass="tabela-selecionada">
+									<strong>#{bundle.col_tabela}: </strong> #{auditoriaTriggerBacking.tabelaSel} - 
+									<strong>#{bundle.col_situacao_auditoria}: </strong> #{ auditoriaTriggerBacking.triggerTabelaSelecionada != null ? auditoriaTriggerBacking.triggerTabelaSelecionada.situacao : 'NÃO AUDITADA' }
+								</p:outputPanel>
+							</p:outputPanel>
+							<p:dataTable
+								id="tblSelCampos"
+								value="#{auditoriaTriggerBacking.listCampos}"
+								var="row"
+								widgetVar="tblSelCampos_w"
+								paginator="true"
+								paginatorPosition="bottom"
+								rows="#{viewUtil.tableRows}"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								selection="#{auditoriaTriggerBacking.listCamposSel}"
+								rowKey="#{row.PK}">
+
+								<p:column
+									selectionMode="multiple"
+									style="width:12px;text-align:center" />
+
+								<xcp:column
+									value="#{row.columnName}"
+									size="10"
+									type="String"
+									headerText="#{bundle.col_columnName}">
+									<xcp:outputSimple value="#{row.columnName}" />
+								</xcp:column>
+
+								<xcp:column
+									value="#{row.comments}"
+									size="30"
+									type="String"
+									headerText="#{bundle.col_comments}">
+									<xcp:outputSimple value="#{row.comments}" />
+								</xcp:column>
+
+
+							</p:dataTable>
+						</p:fieldset>
+					</h:panelGrid>
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_recriar"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_recriarTriggers}"
+					action="#{auditoriaTriggerBacking.actionRecriarTriggers}">
+
+					<p:confirm
+						header="#{bundle.tit_confirmacao}"
+						message="#{bundle.msg_confirma_recriar}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+				
+				<xcp:commandButton
+						id="btnDownload"
+						icon="ui-icon-download"
+						value="#{bundle.btn_exportar}"
+						ajax="false"
+						immediate="true"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{empty auditoriaTriggerBacking.lista}">
+						<p:fileDownload
+							value="#{auditoriaTriggerBacking.download}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+			</ui:define>
+			
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="cbos"
+			backing="#{xcpTipoListaBacking}">
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtCodLov"
+						required="true"
+						value="#{xcpTipoListaBacking.entity.codLov}"
+						size="20"
+						label="#{bundle.lbl_codLov}"
+						readonly="#{not xcpTipoListaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDesLov"
+						required="true"
+						value="#{xcpTipoListaBacking.entity.desLov}"
+						size="50"
+						label="#{bundle.lbl_desLov}" />
+
+					<xcp:memo
+						id="txtDesEjbql"
+						required="true"
+						value="#{xcpTipoListaBacking.entity.desEjbql}"
+						label="#{bundle.lbl_desEjbql}"
+						style="font-family: monospace;" 
+						size="4000"/>
+
+					<xcp:text
+						id="txtDesOrderby"
+						label="#{bundle.lbl_desOrderby}"
+						value="#{xcpTipoListaBacking.entity.desOrderby}"
+						size="100" />
+
+					<xcp:text
+						id="txtDesCampos"
+						required="true"
+						value="#{xcpTipoListaBacking.entity.desCampos}"
+						size="100"
+						label="#{bundle.lbl_desCampos}" />
+
+					<xcp:text
+						id="txtDesCampoCodigo"
+						required="true"
+						value="#{xcpTipoListaBacking.entity.desCampoCodigo}"
+						size="50"
+						label="#{bundle.lbl_desCampoCodigo}" />
+
+					<xcp:text
+						id="txtDesCampoDescricao"
+						required="true"
+						value="#{xcpTipoListaBacking.entity.desCampoDescricao}"
+						size="100"
+						label="#{bundle.lbl_desCampoDescricao}" />
+
+					<xcp:combo
+						id="cboTipCodigo"
+						value="#{xcpTipoListaBacking.entity.tipCodigo}"
+						label="#{bundle.lbl_tipCodigo}"
+						itens="#{xcpTipoListaBacking.itensTipCodigo}"
+						required="true" />
+
+					<xcp:lov
+						id="lovRotina"
+						value="#{xcpTipoListaBacking.entity.rotinaFk}"
+						label="#{bundle.lbl_rotina}"
+						query="rotinas"
+						size="6" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					value="#{row.codLov}"
+					type="String"
+					size="20"
+					headerText="#{bundle.col_codLov}">
+					<xcp:outputSimple value="#{row.codLov}" />
+				</xcp:column>
+
+				<xcp:column
+					value="#{row.desLov}"
+					type="String"
+					size="100"
+					headerText="#{bundle.col_desLov}">
+					<xcp:outputSimple value="#{row.desLov}" />
+				</xcp:column>
+
+				<xcp:column
+					value="#{row.rotina}"
+					type="Number"
+					size="5"
+					headerText="#{bundle.col_codRotina}">
+					<xcp:outputSimpleNumber
+						value="#{row.rotina}"
+						size="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					value="#{row.rotinaFk.descricao}"
+					type="String"
+					size="30"
+					headerText="#{bundle.col_desRotina}">
+					<xcp:outputSimple value="#{row.rotinaFk.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

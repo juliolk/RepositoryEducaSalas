@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+
+						<p:fieldset
+							legend="#{bundle.tit_filtros_padroes}"
+							style="width:440px;height:320px;">
+
+							<p:dataTable
+								id="padroes"
+								var="rowMult"
+								value="#{reajustePadroesBacking.listaPadroes}"
+								selection="#{reajustePadroesBacking.listaPadroesSel}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="247"
+								scrollWidth="500"
+								scrollable="true"			
+								rowSelectMode="checkbox"
+								emptyMessage="#{bundle.msg_sem_resultado}">								
+								
+								<p:column
+									selectionMode="multiple" 
+									style="width:20px;text-align:center" />
+
+								<xcp:column 
+									headerText="#{bundle.col_padrao}"
+									type="String"
+									size="25"
+									filterBy="#{rowMult.padrao}"
+									sortBy="#{rowMult.padrao}">
+									<xcp:outputSimple value="#{rowMult.padrao}" />
+								</xcp:column>
+								
+								<p:column
+									headerText="#{bundle.col_categoria}"
+									type="String"
+									size="25"
+									filterBy="#{rowMult.categoriaFk}" 
+									filterFunction="#{reajustePadroesBacking.filterBy}"
+									sortBy="#{rowMult.categoria}">
+									<xcp:outputSimple value="#{rowMult.categoriaFk}" />
+								</p:column>
+								
+							</p:dataTable>
+						</p:fieldset>
+
+						<p:fieldset legend="#{bundle.tit_atualiza_padroes}">
+
+							<xcp:panelForm>
+								<xcp:number
+									id="txtPerReajuste"
+									label="#{bundle.lbl_per_reajuste}"
+									size="8"
+									value="#{reajustePadroesBacking.percReajuste}"
+									precision="7"
+									scale="4" />
+
+								<xcp:date
+									id="txtDataReajustePadrao"
+									value="#{reajustePadroesBacking.dtaReajustePadrao}"
+									label="#{bundle.lbl_data_reajuste_padrao}" />
+
+								<xcp:text
+									id="txtObsPad"
+									value="#{reajustePadroesBacking.desObsPad}"
+									label="#{bundle.lbl_obs}"
+									size="40"
+									maxlength="40" />
+
+							</xcp:panelForm>
+
+							<xcp:commandButton
+								id="btn_atualiza_padroes"
+								value="#{bundle.btn_atualiza_padroes}"
+								action="#{reajustePadroesBacking.actionAtualizarPadroes}"
+								icon="ui-icon-gear" />
+							
+							<xcp:commandButton
+								id="btn_mostrar_servidores"
+								value="#{bundle.btn_mostrar_servidores}"
+								action="#{reajustePadroesBacking.actionAtualizaLista}"
+								update=":form"
+								icon="ui-icon-gear" />
+
+
+						</p:fieldset>
+					</p:column>
+
+					<p:column styleClass="alinhatopo">
+						<p:fieldset
+							legend="#{bundle.tit_filtros_serivdores}"
+							style="width:720px;height:320px;">
+							  
+							<p:dataTable
+								id="funcReajuste"
+								var="rowMult"
+								value="#{reajustePadroesBacking.listaFuncionarios}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="270"
+								scrollWidth="700"
+								scrollable="true"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+
+								<xcp:column
+									headerText="#{bundle.col_numMatricula}"
+									type="Number"
+									size="6">
+									<xcp:outputSimpleNumber
+										value="#{rowMult.numMatricula}"
+										precision="8"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desNome}"
+									type="String"
+									size="30">
+									<xcp:outputSimple value="#{rowMult.desNome}" />
+								</xcp:column>
+
+							</p:dataTable>
+							
+						</p:fieldset>
+						<p:fieldset legend="#{bundle.tit_atualiza_servidores}">
+
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovTiposReajustes"
+									value="#{reajustePadroesBacking.tipoReajuste}"
+									label="#{bundle.lbl_tiporeajustes}"
+									query="tiporeajustes"
+									size="3" />
+
+								<xcp:date
+									id="txtDataReajusteServidor"
+									value="#{reajustePadroesBacking.dtaReajusteServidor}"
+									label="#{bundle.lbl_data_reajuste_servidor}" />
+
+								<xcp:date
+									id="txtDataDireitoServidor"
+									value="#{reajustePadroesBacking.dtaDireitoServidor}"
+									label="#{bundle.lbl_direito}" />
+
+								<xcp:text
+									id="txtObsServ"
+									value="#{reajustePadroesBacking.desObsServ}"
+									label="#{bundle.lbl_obs}"
+									size="40"
+									maxlength="40" />
+							</xcp:panelForm>
+
+							<xcp:commandButton
+								id="btn_atualiza_serv"
+								value="#{bundle.btn_atualiza_serv}"
+								action="#{reajustePadroesBacking.actionAtualizarServidores}"
+								icon="ui-icon-gear" />
+
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<!-- 
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+				para futuro relatório
+				</f:facet>
+			</p:toolbar>
+ -->
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_formacao}"
+		modal="true"
+		id="dlgFor"
+		widgetVar="dlgFor_w"
+		dynamic="true">
+		<xcp:form id="frmFor">
+
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCurso"
+					value="#{funcionariosBacking.formacaoSel.cursoFk}"
+					label="#{bundle.lbl_tipo}"
+					query="tipoformacao"
+					readonly="#{not funcionariosBacking.formacaoSel.novo}"
+					required="true"
+					update="txtArea,txtArea_l,lovCursoacad,lovCursoacad_l,lovAvaliacao,lovAvaliacao_l,lovConhecimento,lovConhecimento_l,cboIndRelacaoativ,cboIndRelacaoativ_l,cboIndTrabalhoFinal,cboIndTrabalhoFinal_l"
+					size="6" />
+
+				<xcp:lov
+					id="lovAvaliacao"
+					value="#{funcionariosBacking.formacaoSel.avaliacaoFk}"
+					label="#{bundle.lbl_avalForm}"
+					query="avaliacoesConhec"
+					update="lovConhecimento,lovConhecimento_l"
+					rendered="#{funcionariosBacking.formacaoSel.cursoFk.indConhecimento == 1}"
+					selectionListener="#{funcionariosBacking.selectAvaliacao}"
+					size="6" />
+
+				<xcp:lov
+					id="lovConhecimento"
+					value="#{funcionariosBacking.formacaoSel.conhecimentoFk}"
+					label="#{bundle.lbl_conhecForm}"
+					query="conhecimentos"
+					rendered="#{funcionariosBacking.formacaoSel.cursoFk.indConhecimento == 1}"
+					params="#{funcionariosBacking.paramsAvaliacao}"
+					size="6" />
+
+				<xcp:lov
+					id="lovInstituicao"
+					value="#{funcionariosBacking.formacaoSel.instituicaoFk}"
+					label="#{bundle.lbl_instituicao}"
+					query="instituicoes"
+					size="6" />
+
+				<xcp:text
+					id="txtArea"
+					label="#{bundle.lbl_areaCargo}"
+					rendered="#{funcionariosBacking.formacaoSel.cursoFk.tipo == 1 || funcionariosBacking.formacaoSel.cursoFk.tipo == 3}"
+					value="#{funcionariosBacking.formacaoSel.area}"
+					size="60" />
+
+				<xcp:lov
+					id="lovCursoacad"
+					value="#{funcionariosBacking.formacaoSel.cursoacadFk}"
+					label="#{bundle.lbl_cursoacad}"
+					rendered="#{funcionariosBacking.formacaoSel.cursoFk.tipo == 2}"
+					query="cursoacad"
+					size="5" />
+
+				<xcp:combo
+					id="cboIndRelacaoativ"
+					value="#{funcionariosBacking.formacaoSel.indRelacaoativ}"
+					label="#{bundle.lbl_indRelacaoativ}"
+					itens="#{funcionariosBacking.itensIndSimNaoNull}"
+					rendered="#{funcionariosBacking.renderedIndRelAtiv}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndTrabalhoFinal"
+					value="#{funcionariosBacking.formacaoSel.indTrabalhoFinal}"
+					label="#{bundle.lbl_indTrabalhoFinal}"
+					itens="#{funcionariosBacking.itensIndSimNaoNull}"
+					rendered="#{funcionariosBacking.renderedIndTrabFinal}"
+					required="true" />
+
+				<xcp:date
+					id="txtDtinicio"
+					required="true"
+					value="#{funcionariosBacking.formacaoSel.dtinicio}"
+					label="#{bundle.lbl_dtinicio}" />
+
+				<xcp:date
+					id="txtDtfim"
+					value="#{funcionariosBacking.formacaoSel.dtfim}"
+					label="#{bundle.lbl_dtfim}" />
+
+				<xcp:number
+					id="txtQtdhoras"
+					label="#{bundle.lbl_cargahoraria}"
+					value="#{funcionariosBacking.formacaoSel.qtdhoras}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					rendered="#{funcionariosBacking.renderedPontos}" />
+
+				<xcp:number
+					id="txtPontos"
+					label="#{bundle.lbl_pontos}"
+					value="#{funcionariosBacking.formacaoSel.pontos}"
+					size="5"
+					precision="7"
+					scale="2"
+					maxValue="9999999"
+					rendered="#{funcionariosBacking.renderedPontos}"
+					readonly="#{funcionariosBacking.pontosCalculados}" />
+
+				<xcp:lov
+					id="lovSituacao"
+					value="#{funcionariosBacking.formacaoSel.situacaoFk}"
+					label="#{bundle.lbl_situacaoForma}"
+					required="true"
+					query="formacao_situacao"
+					size="5" />
+
+				<xcp:combo
+					id="cboIndPromovalidado"
+					value="#{funcionariosBacking.formacaoSel.indPromovalidado}"
+					label="#{bundle.lbl_indPromovalidado}"
+					itens="#{funcionariosBacking.itensIndSimNao}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndPromoutilizado"
+					value="#{funcionariosBacking.formacaoSel.indPromoutilizado}"
+					label="#{bundle.lbl_indPromoutilizado}"
+					itens="#{funcionariosBacking.itensIndSimNao}"
+					required="true" />
+
+				<xcp:date
+					id="txtDtregistro"
+					value="#{funcionariosBacking.formacaoSel.dtregistro}"
+					label="#{bundle.lbl_dtregistroo}"
+					readonly="true"
+					rendered="#{not funcionariosBacking.formacaoSel.novo}" />
+					
+				<xcp:combo
+					id="cboIndAqf"
+					value="#{funcionariosBacking.formacaoSel.indAqf}"
+					label="#{bundle.lbl_indAqf}"
+					itens="#{funcionariosBacking.itensIndSimNaoNull}"
+					required="false"
+					rendered="#{funcionariosBacking.renderedAqf}" />
+				
+				<xcp:combo
+					id="cboIndUtilizadoAqf"
+					value="#{funcionariosBacking.formacaoSel.indUtilizadoAqf}"
+					label="#{bundle.lbl_indUtilizadoAqf}"
+					itens="#{funcionariosBacking.itensIndSimNaoNull}"
+					required="false"
+					rendered="#{funcionariosBacking.renderedAqf}" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{funcionariosBacking.formacaoSel.obs}"
+					size="3000"
+					styleClass="funcionario-form-memo" />
+					
+				<xcp:combo
+					id="cboOrigem"
+					value="#{funcionariosBacking.formacaoSel.origem}"
+					label="#{bundle.lbl_origem}"
+					itens="#{funcionariosBacking.itensOrigem}"
+					readonly="true"
+					required="true" />
+
+				<p:spacer width="1" />
+
+				<xcp:complemento
+					vo="#{funcionariosBacking.xcpTabelaColunaFormacaoVO}" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_ok_formacao"
+						disabled="#{funcionariosBacking.disabledGravar}"
+						icon="ui-icon-disk"
+						action="#{funcionariosBacking.actionGravarFormacao}"
+						value="#{bundle.btn_gravar}" />
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

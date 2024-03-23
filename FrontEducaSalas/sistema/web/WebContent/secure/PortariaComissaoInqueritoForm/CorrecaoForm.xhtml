@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:blockUI
+		block="panelSelecaoCorrecao"
+		trigger="btn_buscar">
+		<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+	</p:blockUI>
+	<p:outputPanel id="panelSelecaoCorrecao">
+		<p:fieldset
+			legend="#{bundle.tit_portaria_ferias}"
+			style="width:800px">
+
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovDocumento"
+					value="#{portariaComissaoInqueritoBacking.helper.documentos}"
+					params="#{portariaComissaoInqueritoBacking.paramsDocumentoReficicacao}"
+					selectionListener="#{portariaComissaoInqueritoBacking.selectDocumentos}"
+					label="#{bundle.lbl_documento}"
+					update="btnDownloadDocumentoCorrecao,tblComissaoCorrecao"
+					query="doc_inq_ret_canc"
+					size="20" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<xcp:commandButton
+					id="btnDownloadDocumentoCorrecao"
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					disabled="#{portariaComissaoInqueritoBacking.helper.documentos == null}">
+					<p:fileDownload
+						value="#{documentosBacking.getDownloadDocumento(backing.helper.documentos.registro)}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+			</xcp:panelForm>
+		</p:fieldset>
+
+		<p:fieldset
+			legend="#{bundle.tit_selecionados}"
+			style="width:800px">
+			<p:dataTable
+				id="tblComissaoCorrecao"
+				var="row"
+				rowKey="#{row.PK}"
+				value="#{portariaComissaoInqueritoBacking.helper.listaInquerito}"
+				selection="#{portariaComissaoInqueritoBacking.helper.listaInqueritoSel}"
+				sortMode="multiple"
+				scrollHeight="120"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				scrollable="true">
+
+				<p:column
+					selectionMode="multiple"
+					style="width:1%;text-align:center" />
+
+				<xcp:column
+					headerText="#{bundle.col_codcomissao}"
+					value="#{row.comissao}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.comissao}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inquerito}"
+					value="#{row.seqinq}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.seqinq}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+			</p:dataTable>
+		</p:fieldset>
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_corrigir"
+					icon="ui-icon-gear"
+					action="#{portariaComissaoInqueritoBacking.actionValidaCorrecao}"
+					update=":#{p:component('dlg')}"
+					value="#{bundle.btn_corrigir}" />
+			</f:facet>
+		</p:toolbar>
+	</p:outputPanel>
+</ui:composition>

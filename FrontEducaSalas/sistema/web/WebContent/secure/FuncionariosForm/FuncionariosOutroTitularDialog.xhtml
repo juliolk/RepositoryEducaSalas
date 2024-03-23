@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_outtrotit}"
+		modal="true"
+		id="dlgOutroTit"
+		widgetVar="dlgOutroTit_w"
+		dynamic="true">
+		<xcp:form id="frmOutroTit">
+
+			<xcp:panelForm>
+
+				<xcp:cpf
+					id="txtCpfpagamento"
+					label="#{bundle.lbl_cpfpagamento}"
+					value="#{funcionariosBacking.entity.cpfpagamento}">
+
+					<p:ajax
+						event="change"
+						update="txtNomepagamento :#{p:component('lovBancopgto')} :#{p:component('lovAgenciapgto')} :#{p:component('txtContapgto')} :#{p:component('cboTipocontapgto')}"
+						listener="#{funcionariosBacking.actionChangeCpfPag}" />
+
+				</xcp:cpf>
+
+				<xcp:text
+					id="txtNomepagamento"
+					label="#{bundle.lbl_nomepagamento}"
+					value="#{funcionariosBacking.entity.nomepagamento}"
+					size="60" />
+
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						process="@form"
+						onsuccess="PF('dlgOutroTit_w').hide()"
+						update=":#{p:component('pnlespout')}" />
+
+					<xcp:commandButton
+						id="btn_voltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgOutroTit_w').hide();return false;" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+</ui:composition>

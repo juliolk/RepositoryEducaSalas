@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Diarias"
+			backing="#{diariasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_referencia}"
+					value="#{row.referencia}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nivel}"
+					value="#{row.nivel}"
+					type="String"
+					itens="#{diariasBacking.itensDiariasNiveisNull}"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.nivel}"
+						itens="#{diariasBacking.itensDiariasNiveis}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codlocal}"
+					value="#{row.codlocal}"
+					type="String"
+					itens="#{diariasBacking.itensCodLocalNull}"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.codlocal}"
+						itens="#{diariasBacking.itensCodLocal}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valords}"
+					value="#{row.valords}"
+					type="Number"
+					size="21">
+					<xcp:outputSimpleNumber
+						value="#{row.valords}"
+						precision="18"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valordf}"
+					value="#{row.valordf}"
+					type="Number"
+					size="21">
+					<xcp:outputSimpleNumber
+						value="#{row.valordf}"
+						precision="18"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valordssp}"
+					value="#{row.valordssp}"
+					type="Number"
+					size="21">
+					<xcp:outputSimpleNumber
+						value="#{row.valordssp}"
+						precision="18"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valordfsp}"
+					value="#{row.valordfsp}"
+					type="Number"
+					size="21">
+					<xcp:outputSimpleNumber
+						value="#{row.valordfsp}"
+						precision="18"
+						scale="2" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtReferencia"
+						required="true"
+						value="#{diariasBacking.entity.referencia}"
+						label="#{bundle.lbl_referencia}"
+						size="16"
+						readonly="#{not diariasBacking.entity.novo}" />
+
+					<xcp:combo
+						id="txtNivel"
+						value="#{diariasBacking.entity.nivel}"
+						label="#{bundle.lbl_nivel}"
+						required="true"
+						readonly="#{not diariasBacking.entity.novo}"
+						itens="#{diariasBacking.itensDiariasNiveis}"
+						width="120px" />
+
+					<xcp:combo
+						id="txtCodlocal"
+						value="#{diariasBacking.entity.codlocal}"
+						label="#{bundle.lbl_codlocal}"
+						required="true"
+						itens="#{diariasBacking.itensCodLocal}"
+						readonly="#{not diariasBacking.entity.novo}"
+						width="120px" />
+
+					<xcp:combo
+						id="cboIndValor"
+						value="#{diariasBacking.entity.indValor}"
+						label="#{bundle.lbl_indValor}"
+						required="true"
+						itens="#{diariasBacking.itensIndValor}">
+						<p:ajax
+							update="txtValords txtValords_l txtValordf txtValordf_l txtValordssp txtValordssp_l txtValordfsp txtValordfsp_l lovPadrao lovPadrao_l txtPercentual txtPercentual_l lovVariavel lovVariavel_l" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtValords"
+						label="#{bundle.lbl_valords}"
+						size="21"
+						value="#{diariasBacking.entity.valords}"
+						precision="18"
+						scale="2"
+						rendered="#{diariasBacking.entity.indValor == 1}" />
+
+					<xcp:number
+						id="txtValordf"
+						label="#{bundle.lbl_valordf}"
+						size="21"
+						value="#{diariasBacking.entity.valordf}"
+						precision="18"
+						scale="2"
+						rendered="#{diariasBacking.entity.indValor == 1}" />
+
+					<xcp:number
+						id="txtValordssp"
+						label="#{bundle.lbl_valordssp}"
+						size="21"
+						value="#{diariasBacking.entity.valordssp}"
+						precision="18"
+						scale="2"
+						rendered="#{diariasBacking.entity.indValor == 1}" />
+
+					<xcp:number
+						id="txtValordfsp"
+						label="#{bundle.lbl_valordfsp}"
+						size="21"
+						value="#{diariasBacking.entity.valordfsp}"
+						precision="18"
+						scale="2"
+						rendered="#{diariasBacking.entity.indValor == 1}" />
+
+
+					<xcp:lov
+						id="lovPadrao"
+						value="#{diariasBacking.entity.padraoFk}"
+						label="#{bundle.lbl_padrao}"
+						query="padroes"
+						size="6"
+						required="true"
+						rendered="#{diariasBacking.entity.indValor == 2}" />
+
+					<xcp:number
+						id="txtPercentual"
+						label="#{bundle.lbl_percentual}"
+						size="13"
+						value="#{diariasBacking.entity.percentual}"
+						precision="10"
+						scale="2"
+						rendered="#{diariasBacking.entity.indValor == 2}" />
+
+					<xcp:lov
+						id="lovVariavel"
+						value="#{diariasBacking.entity.variavelFk}"
+						label="#{bundle.lbl_variavel}"
+						query="variaveis"
+						size="10"
+						rendered="#{diariasBacking.entity.indValor == 2}" />
+
+					<xcp:number
+						id="txtValorkm"
+						label="#{bundle.lbl_valorkm}"
+						size="21"
+						value="#{diariasBacking.entity.valorkm}"
+						precision="18"
+						scale="2" />
+
+					<xcp:number
+						id="txtValorajuda"
+						label="#{bundle.lbl_valorajuda}"
+						size="21"
+						value="#{diariasBacking.entity.valorajuda}"
+						precision="18"
+						scale="2" />
+
+					<xcp:number
+						id="txtDiasprazo"
+						label="#{bundle.lbl_diasprazodoc}"
+						size="21"
+						value="#{diariasBacking.entity.diasprazo}" />
+
+					<xcp:number
+						id="txtDiasant"
+						label="#{bundle.lbl_diasant}"
+						value="#{diariasBacking.entity.diasant}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="DiariasForm/DiariasVincForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

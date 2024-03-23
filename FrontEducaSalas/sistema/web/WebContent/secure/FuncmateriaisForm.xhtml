@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Funcmateriais"
+			backing="#{funcmateriaisBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_material}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.materialFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_ca}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.ca}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataval}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataval}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_quantidade}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.quantidade}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_datadev}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datadev}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovMaterial"
+						value="#{funcmateriaisBacking.entity.materialFk}"
+						label="#{bundle.lbl_material}"
+						required="true"
+						query="materiais"
+						size="10"
+						readonly="#{not funcmateriaisBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtCa"
+						required="true"
+						label="#{bundle.lbl_ca}"
+						value="#{funcmateriaisBacking.entity.ca}"
+						size="10" />
+
+					<xcp:date
+						id="txtDataval"
+						required="true"
+						value="#{funcmateriaisBacking.entity.dataval}"
+						label="#{bundle.lbl_dataval}" />
+
+
+					<xcp:number
+						id="txtQuantidade"
+						label="#{bundle.lbl_quantidade}"
+						required="true"
+						size="10"
+						value="#{funcmateriaisBacking.entity.quantidade}"
+						precision="8"
+						scale="2" />
+
+					<xcp:date
+						id="txtDataEntrega"
+						required="true"
+						value="#{funcmateriaisBacking.entity.data}"
+						label="#{bundle.lbl_data_entrega}"
+						readonly="#{not funcmateriaisBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDatadev"
+						value="#{funcmateriaisBacking.entity.datadev}"
+						label="#{bundle.lbl_datadev}" />
+
+					<xcp:lov
+						id="lovGrpMatRequisicao"
+						value="#{funcmateriaisBacking.matIntegracao}"
+						label="#{bundle.lbl_seqMatIntegracao}"
+						required="true"
+						query="grpmatrequisicao"
+						size="10"
+						rendered="#{funcmateriaisBacking.renderedMatIntegracao}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{funcmateriaisBacking.entity.obs}"
+						size="1000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ClimaRegras"
+		backing="#{climaRegrasBacking}"
+		masterId="ClimaSelecao">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_linha}"
+				value="#{row.linha}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.linha}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_orgao}"
+				value="#{row.orgaoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_divisao}"
+				value="#{row.divisaoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.divisaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_setor}"
+				value="#{row.setorFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.setorFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_cargo}"
+				value="#{row.cargoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.cargoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_treinamento}"
+				value="#{row.treinamentoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.treinamentoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vinculo}"
+				value="#{row.vinculoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.vinculoFk.descricao}" />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.col_sexo}"
+				value="#{row.sexo}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.sexo}" itens="#{climaRegrasBacking.itensSexo}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+				<xcp:number
+					id="txtLinha_ClimaRegras"
+					label="#{bundle.lbl_linha}"
+					required="true"
+					value="#{climaRegrasBacking.entity.linha}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					readonly="#{not climaRegrasBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovOrgao_ClimaRegras"
+					value="#{climaRegrasBacking.entity.orgaoFk}"
+					label="#{bundle.lbl_orgao}"
+					selectionListener="#{climaRegrasBacking.selectOrgao}"
+					query="orgaos"
+					update="lovDivisao_ClimaRegras,lovSetor_ClimaRegras"
+					size="5" />
+
+				<xcp:lov
+					id="lovDivisao_ClimaRegras"
+					value="#{climaRegrasBacking.entity.divisaoFk}"
+					label="#{bundle.lbl_divisao}"
+					selectionListener="#{climaRegrasBacking.selectDivisao}"
+					query="divisoes_orgao"
+					params="#{climaRegrasBacking.paramsDivisao}"
+					update="lovSetor_ClimaRegras"
+					size="5" />
+
+				<xcp:lov
+					id="lovSetor_ClimaRegras"
+					value="#{climaRegrasBacking.entity.setorFk}"
+					label="#{bundle.lbl_setor}"
+					params="#{climaRegrasBacking.paramsSetor}"
+					query="set_div_validade"
+					size="5" />
+
+				<xcp:lov
+					id="lovCargo_ClimaRegras"
+					value="#{climaRegrasBacking.entity.cargoFk}"
+					label="#{bundle.lbl_cargo}"
+					query="cargos"
+					size="5" />
+
+				<xcp:lov
+					id="lovTreinamento_ClimaRegras"
+					value="#{climaRegrasBacking.entity.treinamentoFk}"
+					label="#{bundle.lbl_treinamento}"
+					query="treinamento"
+					size="5" />
+
+				<xcp:lov
+					id="lovVinculo_ClimaRegras"
+					value="#{climaRegrasBacking.entity.vinculoFk}"
+					label="#{bundle.lbl_vinculo}"
+					query="vinculos"
+					size="5" />
+					
+				<xcp:combo
+					id="cboSexo"
+					value="#{climaRegrasBacking.entity.sexo}"
+					label="#{bundle.lbl_sexo}"
+					itens="#{climaRegrasBacking.itensSexo}"
+					 />
+					
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

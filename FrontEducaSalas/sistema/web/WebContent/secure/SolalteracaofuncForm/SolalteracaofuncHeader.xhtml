@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:number
+		id="txtSeq_#{id}"
+		label="#{bundle.lbl_seq}"
+		required="true"
+		value="#{solalteracaofuncBacking.entity.seq}"
+		size="18"
+		precision="18"
+		scale="0"
+		maxValue="999999999999999999"
+		readonly="true"
+		rendered="#{not solalteracaofuncBacking.entity.novo}" />
+
+	<xcp:combo
+		id="cboTipo_#{id}"
+		value="#{solalteracaofuncBacking.entity.tipo}"
+		label="#{bundle.lbl_tipo}"
+		required="true"
+		itens="#{solalteracaofuncBacking.itensTipoSemNull}"
+		readonly="#{not solalteracaofuncBacking.entity.novo}">
+		<p:ajax
+			event="change"
+			update="@form"
+			process="@this"
+			listener="#{solalteracaofuncBacking.changeTipo}" />
+	</xcp:combo>
+
+	<xcp:lov
+		id="lovMatricula_#{id}"
+		value="#{solalteracaofuncBacking.entity.matriculaFk}"
+		label="#{bundle.lbl_matricula}"
+		query="funcionariosLov"
+		size="2"
+		required="true"
+		readonly="#{not solalteracaofuncBacking.entity.novo}"
+		selectionListener="#{solalteracaofuncBacking.selectMatricula}" />
+
+	<xcp:combo
+		id="cboSituacao_#{id}"
+		value="#{solalteracaofuncBacking.entity.situacao}"
+		label="#{bundle.lbl_situacao}"
+		required="true"
+		itens="#{solalteracaofuncBacking.itensSituacao}"
+		readonly="true"
+		rendered="#{not solalteracaofuncBacking.entity.novo}" />
+
+	<xcp:date
+		id="txtDtinicio_#{id}"
+		required="true"
+		value="#{solalteracaofuncBacking.entity.dtinicio}"
+		label="#{bundle.lbl_dtinicio}" />
+
+</ui:composition>

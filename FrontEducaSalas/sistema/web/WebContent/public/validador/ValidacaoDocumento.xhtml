@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<style type="text/css">
+.codigo-documento {
+	display: block;
+	margin: 10px 0;
+	word-break: break-all;
+}
+</style>
+
+	<p:outputPanel rendered="#{validadorBacking.execucaoManual == true}">
+		<div class="row documentos-form">
+
+			<div class="col-xs-12">
+				<xcp:panelForm
+					controlsSizeClass="huge-controls centered-controls"
+					noFloat="true"
+					floatingLabel="true">
+
+					<xcp:text
+						id="txtHash"
+						label="#{ bundle.lbl_informe_codigo_documento }"
+						value="#{validadorBacking.hash}"
+						size="35"
+						maxlength="80"
+						required="true" />
+
+					<div
+						class="validador-captcha ui-outputpanel ui-widget input-group no-float">
+						<p:outputLabel
+							value="#{ bundle.lbl_codigo_verificacao }"
+							for="txtCaptcha"
+							rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}" />
+						<p:inputText
+							id="txtCaptcha"
+							label="#{bundle.lbl_verificacao}"
+							required="true"
+							value="#{validadorBacking.desCaptcha}"
+							requiredMessage="#{ bundle.msg_required_codigo_verificacao }"
+							autocomplete="off"
+							rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}" />
+						<hr />
+						<p:message for="txtCaptcha" />
+					</div>
+					<div class="image-captcha">
+						<p:graphicImage
+							id="imgDownloadCaptcha"
+							value="#{xcpCaptchaBacking.imgCaptcha.validador_documentos}"
+							cache="false"
+							rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}" />
+						<xcp:commandButton
+							id="btnRefreshCaptcha"
+							icon="ui-icon-refresh"
+							process="@this"
+							immediate="true"
+							update="imgDownloadCaptcha"
+							action="#{xcpCaptchaBacking.actionTrocarCaptcha('validador_documentos')}"
+							rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}" />
+
+					</div>
+
+					<p:outputPanel
+						id="outputRecaptcha"
+						rendered="#{xcpLoginBacking.tipoAcesso == 2 and xcpCaptchaBacking.tipoCaptcha == 1}">
+						<div
+							id="divCentre"
+							style="margin: 0 auto; width: 304px;">
+							<p:captcha
+								id="reCaptcha"
+								language="pt"
+								requiredMessage="#{bundle.msg_recaptcha_requerido}" />
+						</div>
+					</p:outputPanel>
+
+					<p:defaultCommand target="btn_verifica" />
+
+					<xcp:commandButton
+						id="btn_verifica"
+						value="Verificar"
+						oncomplete="scrollToMessage();"
+						ajax="true"
+						action="#{validadorBacking.verificarManual()}"
+						update="@this messages"
+						styleClass="btn-main-action" />
+
+				</xcp:panelForm>
+			</div>
+		</div>
+	</p:outputPanel>
+
+	<p:outputPanel id="messages">
+
+		<p:outputPanel
+			rendered="#{ validadorBacking.arquivoExistente == true }">
+			<div class="row">
+				<div class="col-sm-offset-1 col-lg-10 alert alert-success">
+					<h3>#{ bundle.tit_documento_encontrado }</h3>
+					<p>
+						#{ bundle.msg_localizado_arquivo_com_codigo } <strong
+							class="codigo-documento">#{validadorBacking.execucao.desHash}</strong>
+						<h:outputText
+							rendered="#{validadorBacking.execucao.objRelatorio != null}"
+							value="#{ bundle.msg_verifique_dados_validacao_arquivo_download }" />
+					</p>
+				</div>
+			</div>
+		</p:outputPanel>
+
+		<p:outputPanel
+			rendered="#{ validadorBacking.arquivoExistente == false }">
+			<div class="row">
+				<div class="col-sm-offset-1 col-lg-10 alert alert-error">
+					<h3>#{ bundle.tit_documento_nao_encontrado }</h3>
+					<p>
+						#{ bundle.msg_nao_localizado_arquivo_com_codigo } <strong
+							class="codigo-documento">#{validadorBacking.hash}</strong> #{
+						bundle.msg_verifique_codigo_informado_corretamente }
+					</p>
+				</div>
+			</div>
+		</p:outputPanel>
+
+
+		<p:outputPanel
+			id="dadosdocumento"
+			rendered="#{ validadorBacking.arquivoExistente == true }">
+			<div class="row">
+				<div class="col-sm-offset-1 col-lg-10">
+					<h2 class="section-title">
+						#{ bundle.tit_documento } <small>#{ bundle.tit_informacoes
+							}</small>
+					</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-offset-1 col-sm-5">
+
+					<div class="documentos-infocontainer">
+						<h2>#{validadorBacking.nomeDocumento}</h2>
+
+						<div class="documentos-infodocumento">
+							<p:outputLabel value="#{ bundle.lbl_criacao_documento }" />
+							<div>
+								<xcp:outputSimpleDate
+									value="#{validadorBacking.execucao.dthExecucao}" />
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-sm-5 floating-label huge-controls">
+					<xcp:commandButton
+						value="Download"
+						ajax="false"
+						rendered="#{validadorBacking.execucao.objRelatorio != null}"
+						styleClass="btn-main-action"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						immediate="true">
+						<p:fileDownload
+							value="#{validadorBacking.getDownloadDocumento(validadorBacking.execucao.desHash)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+				</div>
+
+			</div>
+		</p:outputPanel>
+
+	</p:outputPanel>
+
+</ui:composition>

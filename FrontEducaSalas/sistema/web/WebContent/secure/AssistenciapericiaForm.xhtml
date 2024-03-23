@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.labelWidth {
+	width: 130px;
+}
+
+.labelWidth1 {
+	width: 5px;
+}
+</style>
+
+		<xcp:panelFuncionario
+			id="Assistenciasocial"
+			backing="#{assistenciapericiaBacking}">
+
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<xcp:panelForm>
+
+						<xcp:lov
+							id="lovAssistenciaSelecao"
+							value="#{assistenciapericiaBacking.assistencia}"
+							label="#{bundle.lbl_assistencia_lov}"
+							params="#{assistenciapericiaBacking.paramsAssistenciaFuncao}"
+							selectionListener="#{assistenciapericiaBacking.selectAssistencia}"
+							query="assistencia_pericia"
+							required="true"
+							update="table_Assistenciasocial btnNovo_Assistenciasocial btnPesq_Assistenciasocial"
+							readonly="#{assistenciapericiaBacking.funcionario==null}"
+							size="5" />
+
+					</xcp:panelForm>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtatendimento}"
+					value="#{row.dtatendimento}"
+					type="Date"
+					size="5">
+					<xcp:outputSimpleTimestamp value="#{row.dtatendimento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_atendente}"
+					value="#{row.atendenteFk.nome}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.atendenteFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipoFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+
+					<p:outputLabel value="#{bundle.lbl_dtatendimento}" />
+
+					<h:panelGroup layout="block">
+
+						<xcp:dateTime
+							id="txtData"
+							required="true"
+							value="#{assistenciapericiaBacking.entity.dtatendimento}"
+							label="#{bundle.lbl_dtatendimento}"
+							simple="true"
+							style="float:left;width:200px"
+							readonly="#{not assistenciapericiaBacking.entity.novo}">
+
+							<p:ajax
+								event="change"
+								update="txtQtdLimite,txtQtdLimite_l,txtQtdAtend,txtQtdAtend_l,grpConsulta"
+								listener="#{assistenciapericiaBacking.calculaQtdAAtend}" />
+							<p:ajax
+								event="dateSelect"
+								update="txtQtdLimite,txtQtdLimite_l,txtQtdAtend,txtQtdAtend_l,grpConsulta"
+								listener="#{assistenciapericiaBacking.calculaQtdAAtend}" />
+
+						</xcp:dateTime>
+
+
+						<h:panelGroup id="grpConsulta">
+							<xcp:panelForm labelClass="labelWidth1">
+								<xcp:commandButton
+									id="btn_consultar"
+									icon="icon-pesquisar_azul"
+									immediate="true"
+									action="#{assistenciapericiaBacking.actionAbrirJanela}"
+									rendered="#{assistenciapericiaBacking.entity.dtatendimento != null and assistenciapericiaBacking.entity.atendente != null}"
+									value="#{bundle.btn_consultar}" />
+							</xcp:panelForm>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<xcp:lov
+						id="lovAtendente"
+						value="#{assistenciapericiaBacking.entity.atendenteFk}"
+						params="#{assistenciapericiaBacking.paramsAssistenciaAtend}"
+						label="#{bundle.lbl_atendente}"
+						query="atendente_assist"
+						selectionListener="#{assistenciapericiaBacking.selectAtendente}"
+						size="8"
+						update="txtQtdLimite,txtQtdLimite_l,txtQtdAtend,txtQtdAtend_l,grpConsulta" />
+
+					<xcp:lov
+						id="lovAssistencia"
+						value="#{assistenciapericiaBacking.assistencia}"
+						label="#{bundle.lbl_assistencia_social}"
+						readonly="true"
+						required="true"
+						query="assistencia"
+						size="8" />
+
+					<xcp:combo
+						id="txtSituacao"
+						label="#{bundle.lbl_situacaoAssist}"
+						required="true"
+						value="#{assistenciapericiaBacking.entity.situacao}"
+						itens="#{assistenciapericiaBacking.itensSituacao}" />
+
+
+					<xcp:number
+						id="txtQtdLimite"
+						label="#{bundle.lbl_qtdLimite}"
+						value="#{assistenciapericiaBacking.qtdLimite}"
+						size="10"
+						readonly="true"
+						rendered="#{assistenciapericiaBacking.entity.atendenteFk != null and assistenciapericiaBacking.qtdLimite != null}" />
+
+
+					<xcp:number
+						id="txtQtdAtend"
+						label="#{bundle.lbl_qtdAtend}"
+						value="#{assistenciapericiaBacking.qtdAtend}"
+						size="10"
+						readonly="true"
+						rendered="#{assistenciapericiaBacking.entity.atendenteFk != null and assistenciapericiaBacking.qtdLimite != null}" />
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{assistenciapericiaBacking.entity.tipoFk}"
+						params="#{assistenciapericiaBacking.paramsAssistencia}"
+						label="#{bundle.lbl_tipoAtend}"
+						query="assistenciatipo"
+						required="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{assistenciapericiaBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="8"
+						readonly="true"
+						update="txtFone, txtFone_l" />
+
+					<xcp:fone
+						id="txtFone"
+						label="#{bundle.lbl_fone}"
+						value="#{assistenciapericiaBacking.entity.setorFk.fone}"
+						readonly="true"
+						rendered="#{assistenciapericiaBacking.entity.setorFk != null}" />
+
+					<xcp:lov
+						id="lovResponsavel"
+						value="#{assistenciapericiaBacking.entity.responsavelFk}"
+						label="#{bundle.lbl_responsavel}"
+						query="funcionarios"
+						size="8"
+						readonly="true" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{assistenciapericiaBacking.entity.obs}"
+						size="16000" />
+				</xcp:panelForm>
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcpfunc:anexosButton
+					id="assistenciasocial"
+					entity="#{assistenciapericiaBacking.entity}"
+					funcionarioPK="#{assistenciapericiaBacking.funcionario.PK}" />
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<xcpfunc:anexosDialog />
+
+
+		<p:dialog
+			header="#{bundle.tit_agendas_realizadas}"
+			modal="true"
+			id="dlgAtualiza"
+			width="1100px"
+			widgetVar="dlgAtualiza_w">
+
+			<xcp:form id="frmAtualiza">
+
+				<p:dataTable
+					id="tabAssitencias"
+					value="#{assistenciapericiaBacking.listaAtendimentos}"
+					var="row"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{row}">
+
+					<xcp:column
+						headerText="#{bundle.col_dtatendimento}"
+						value="#{row.dtatendimento}"
+						type="Time"
+						size="14">
+						<xcp:outputSimpleTimestamp value="#{row.dtatendimento}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						value="#{row.matricula}"
+						type="Number"
+						size="10">
+						<xcp:outputSimpleNumber
+							value="#{row.matricula}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{row.responsavelFk.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple value="#{row.responsavelFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.assistenciaFk.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple value="#{row.assistenciaFk.descricao}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							oncomplete="PF('dlgAtualiza_w').hide();"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+				<p:remoteCommand
+					name="rcFormAtualiza"
+					update="frmAtualiza" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

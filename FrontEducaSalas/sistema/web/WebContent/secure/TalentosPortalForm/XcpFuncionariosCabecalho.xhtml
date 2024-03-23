@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags">
+
+
+	<h:panelGrid columns="2" styleClass="panel-fotonome-alteracaocadastral">
+		<p:panel class="panel-nome container-fluid">
+			<div class="row">
+				<div class="col-xs-12">
+					<p:outputLabel 
+						styleClass="nome"
+						value="#{talentosPortalBacking.funcionarioDet.nome}"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<p:outputLabel 
+						value="CPF: #{ talentosPortalBacking.getCpfFuncionario() }" style=""/>
+				</div>
+				<div class="col-xs-6">
+					<p:outputLabel 
+						value="Matrícula: #{talentosPortalBacking.funcionarioDet.matricula}"/>
+				</div>
+			</div>
+		</p:panel>
+		
+	</h:panelGrid>
+
+</ui:composition>

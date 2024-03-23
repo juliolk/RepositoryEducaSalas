@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style type="text/css">
+			.opt-radio-container {
+				display: flex;
+				align-items: center;
+				margin-top: 10px;
+			}
+			
+			.opt-radio-container label {
+				margin-bottom: 0 !important;
+				margin-left: 5px;
+				font-size: 14px
+			}
+			.selecao-intervalo {
+			    background-color: #fafafa;
+			    border-radius: 5px;
+			    padding: 0px 20px 30px;
+   			}
+   			.section-header {
+   				display: flex;
+   				flex-direction: row;
+   			}
+   			.section-info {
+   				padding-top: 15px;
+   			}
+   			.section-info.folha-title {
+   				flex: 0 0 auto;
+   				padding-right: 40px;
+			}   			
+   			.section-info.folha-title h1 {
+   				margin-top: 0;
+   			}
+   			.section-info.folha-msgs {
+   				flex: 1 1 auto;
+   				margin-top: 5px;
+			}   		
+			
+			@media (max-width: 800px){
+	   			.section-header {
+	   				flex-direction: column;
+	   			}
+			}	
+		</style>
+	
+		<xcp:panelContent>
+
+			<p:outputPanel
+				rendered="#{contraChequeWebBacking.itensReferencia.size() == 0}"
+				style="padding: 30px;">
+
+				<div class="alert alert-info" role="alert">
+					<h4>Atenção</h4>
+					#{bundle.lbl_sem_contracheque}
+				</div>
+
+			</p:outputPanel>
+
+			<ui:fragment
+				rendered="#{contraChequeWebBacking.itensReferencia.size() > 0}">
+
+				<p:fieldset legend="Selecione o período - (outras folhas do mês, logo abaixo da folha mensal).">
+
+					<h:panelGroup id="panel-contracheque" layout="block">
+
+						<xcp:panelForm controlsSizeClass="big-controls"
+							floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-lg-2 col-sm-3">
+									
+										<xcp:combo id="cboReferencia" simple="true" label=""
+											value="#{contraChequeWebBacking.referenciaSelecionada}"
+											itens="#{contraChequeWebBacking.itensReferencia}">
+											<p:ajax event="change" update="listaFolhas"
+												listener="#{contraChequeWebBacking.actionChangeReferencia}" />
+										</xcp:combo>
+										
+									</div>
+									<div class="col-lg-2 col-sm-3 col-lg-offset-8 col-sm-offset-6 text-right">
+									
+										<xcp:commandButton id="btn-imprimir"
+											value="#{bundle.btn_imprimir}"
+											styleClass="btn-main-action"
+											ajax="false"
+											action="#{contraChequeWebBacking.imprimir}"
+											rendered="#{not contraChequeWebBacking.impressaoPeriodo}"
+											icon="ui-icon-print">
+										</xcp:commandButton>
+										
+										<xcp:commandButton id="btn-imprimir-periodo"
+											value="#{bundle.btn_imprimir}"
+											styleClass="btn-main-action"
+											rendered="#{contraChequeWebBacking.impressaoPeriodo}"
+											icon="ui-icon-print">
+											
+											<p:ajax
+												update=":frmDlgImpressao"
+												onstart="PF('w_dlgXcpExecStatus').show();"												
+												oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgImpressao_w').show();" />
+											
+										</xcp:commandButton>
+									</div>
+								</div>
+							</div>
+
+						</xcp:panelForm>
+
+					</h:panelGroup>
+
+				</p:fieldset>
+
+				<h:panelGroup id="listaFolhas" layout="block">
+
+					<ui:repeat value="#{contraChequeWebBacking.listaTipofolha}"
+						var="tipofolhaVO">
+
+						<p:outputPanel
+							class="container-fluid section-header shadow-top-inset #{tipofolhaVO.tipofolha.tipofolha == 1 || tipofolhaVO.tipofolha.tipofolha == 2 ? 'info-bgcolor' : 'warn-bgcolor'}">
+							<div class="section-info folha-title">
+								<h1>#{bundle.lbl_tipoFolha}:
+									${tipofolhaVO.tipofolha.descricao}</h1>
+								<p>#{bundle.lbl_referencia_folha}:
+									${contraChequeWebBacking.dateString(tipofolhaVO.referencia)}</p>
+								<p>#{bundle.lbl_datapgto}:
+									${contraChequeWebBacking.dateString(tipofolhaVO.dtPgto)}</p>
+							</div>
+							<ui:fragment rendered="#{ tipofolhaVO.mensagem1 != null or tipofolhaVO.mensagem2 != null or tipofolhaVO.mensagem3 != null }">
+								<div class="section-info folha-msgs">
+									<p class="folha-msg1">#{tipofolhaVO.mensagem1}</p>
+									<p class="folha-msg2">#{tipofolhaVO.mensagem2}</p>
+									<p class="folha-msg3">#{tipofolhaVO.mensagem3}</p>
+								</div>
+							</ui:fragment>
+						</p:outputPanel>
+
+
+						<table
+							class="table material table-inspector table-medium table-noborder table-striped table-hover">
+							<thead>
+								<tr>
+									<th>Denominação</th>
+									<th class="text-right">Ref</th>
+									<th class="text-right">Valor</th>
+								</tr>
+							</thead>
+							<tbody>
+								<ui:repeat
+									value="#{contraChequeWebBacking.filterListaCalculos(tipofolhaVO.tipofolha.tipofolha, tipofolhaVO.referencia, contraChequeWebBacking.PROVENTOS_DESCONTOS)}"
+									var="row">
+									<tr>
+										<td data-title="Denominação"><xcp:outputSimple
+												value="#{fn:substring(('0000').concat(row.conta), ('0000').concat(row.conta).length() - 4, ('0000').concat(row.conta).length())} - #{row.contaFk.descricao}" />
+										</td>
+										<td class="text-right" data-title="Ref"><c:set
+												var="qtd" value="#{contraChequeWebBacking.getQtd(row)}" />
+											<xcp:outputSimple value="#{qtd == null ? '&#160;' : qtd}" />
+										</td>
+										<td class="text-right" data-title="Valor"><xcp:outputSimpleNumber
+												value="#{row.valor}" precision="10" scale="2" />
+											<h:outputText value="&#160;" /><i
+											class="fa fa-fw #{row.contaFk.tipo == 1 ? 'fa-plus-circle positive-color' : 'fa-minus-circle negative-color'}"></i>
+										</td>
+									</tr>
+								</ui:repeat>
+							</tbody>
+						</table>
+
+						<div class="total-container container-fluid">
+							<div class="row row-right-aligned">
+								<ui:repeat
+									value="#{contraChequeWebBacking.filterListaCalculos(tipofolhaVO.tipofolha.tipofolha, tipofolhaVO.referencia, contraChequeWebBacking.BASE_TOTAIS)}"
+									var="row">
+
+									<div class="col-centered center-text">
+										<div
+											class="total-item #{row.contaFk.conta == 9000 ? 'positive-bgcolor' : (row.contaFk.conta == 9001 ? 'negative-bgcolor' : 'default-bgcolor')}">
+											<i
+												class="fa fa-fw #{row.contaFk.conta == 9000 ? 'fa-plus-circle' : (row.contaFk.conta == 9001 ? 'fa-minus-circle' : 'fa-usd')}"></i>
+											<div class="total-title">
+												<xcp:outputSimple value="#{row.contaFk.descricao}" />
+											</div>
+											<div class="total-value">
+												<xcp:outputSimpleNumber value="#{row.valor}" precision="10"
+													scale="2" />
+											</div>
+										</div>
+									</div>
+								</ui:repeat>
+							</div>
+						</div>
+
+					</ui:repeat>
+
+				</h:panelGroup>
+
+				<p:ajaxStatus onstart="PF('w_dlgXcpExecStatus').show()"
+					onsuccess="PF('w_dlgXcpExecStatus').hide()"
+					oncomplete="PF('w_dlgXcpExecStatus').hide()"
+					onerror="PF('w_dlgXcpExecStatus').hide()" />
+
+				<script type="text/javascript">
+				    function showStatus() {
+		                PF('w_dlgXcpExecStatus').show();
+					}
+				    function hideStatus() {
+				    	PF('w_dlgXcpExecStatus').hide();
+					}
+			    </script>
+
+			</ui:fragment>
+		</xcp:panelContent>
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_impressao}"
+			modal="true"
+			id="dlgImpressao"
+			widgetVar="dlgImpressao_w"
+			dynamic="true"
+			closeOnEscape="true"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false"
+			draggable="false"
+			closable="true"
+			onShow="$(this).eachHasValue();">
+			<xcp:form id="frmDlgImpressao">
+			
+				<h:panelGroup id="panel-impressao-modal" layout="block">
+
+					<xcp:panelForm controlsSizeClass="big-controls" floatingLabel="true">
+
+						<div class="container-fluid">
+						
+							<p:selectOneRadio id="optSelecaoImpressaoPeriodo" 
+								value="#{contraChequeWebBacking.optSelecaoImpressaoPeriodo}" 
+								onchange="$('#dlgImpressao').eachHasValue()"
+								layout="custom">
+								<f:selectItem itemLabel="Mês Selecionado" itemValue="0" />
+								<f:selectItem itemLabel="Intevalo de Meses" itemValue="1" />
+								<p:ajax event="change" update="@form" oncomplete="$('#dlgImpressao').eachHasValue()"/>
+							</p:selectOneRadio>
+							
+							<div class="row">
+								<div class="opt-radio-container col-xs-12">
+									<p:radioButton id="optMesSelecionado" for="optSelecaoImpressaoPeriodo" itemIndex="0"/>
+									<h:outputLabel for="optMesSelecionado" value="#{bundle.lbl_mes_selecionado} (#{contraChequeWebBacking.referenciaSelecionada})" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="opt-radio-container col-xs-12">
+									<p:radioButton id="optIntervaloMeses" for="optSelecaoImpressaoPeriodo" itemIndex="1"/>
+									<h:outputLabel for="optIntervaloMeses" value="#{bundle.lbl_intervalo_meses}" />
+								</div>
+							</div>
+							<div class="selecao-intervalo row">
+								<div class="col-xs-12">
+									<xcp:combo id="cboReferenciaInicioModal" 
+										simple="true" 
+										label="#{bundle.lbl_de}"
+										readonly="#{contraChequeWebBacking.optSelecaoImpressaoPeriodo != 1}"
+										value="#{contraChequeWebBacking.referenciaInicioSelecionada}"
+										itens="#{contraChequeWebBacking.itensReferencia}">
+									</xcp:combo>
+								</div>
+								<div class="col-xs-12">
+									<xcp:combo id="cboReferenciaFimModal" 
+										simple="true" 
+										label="#{bundle.lbl_ate}"
+										readonly="#{contraChequeWebBacking.optSelecaoImpressaoPeriodo != 1}"
+										value="#{contraChequeWebBacking.referenciaFimSelecionada}"
+										itens="#{contraChequeWebBacking.itensReferencia}">
+									</xcp:combo>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<xcp:commandButton id="btn-imprimir-modal"
+										value="#{bundle.btn_imprimir}"
+										styleClass="btn-main-action"
+										ajax="false"
+										action="#{contraChequeWebBacking.imprimirPeriodo}"
+										icon="ui-icon-print">
+									</xcp:commandButton>
+								</div>
+							</div>
+						</div>
+
+					</xcp:panelForm>
+
+				</h:panelGroup>
+			
+				<p:remoteCommand
+					name="closeDlgImpressao"
+					oncomplete="PF('dlgImpressao_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+	
+	</ui:define>
+
+</ui:composition>
+

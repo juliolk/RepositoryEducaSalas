@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				legend="#{bundle.lbl_filtros}"
+				style="width: 40%; margin-top: 15px;">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{consultaHierarquiaBacking.orgao}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos"
+						size="6" />
+<!-- 				
+					<xcp:lov
+						id="lovDivisao"
+						value="#{consultaHierarquiaBacking.divisao}"
+						label="#{bundle.lbl_divisao}"
+						query="divisoes"
+						size="6" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{consultaHierarquiaBacking.setor}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="6" />
+-->
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							icon="ui-icon-search"
+							update="tree"
+							value="#{bundle.btn_pesquisar}"
+							action="#{consultaHierarquiaBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:treeTable
+				id="tree"
+				value="#{consultaHierarquiaBacking.root}"
+				var="node"
+				style="width: 90%; margin-left: 10px; margin-top: 20px">
+				<p:column
+					id="columnDescricao"
+					headerText="#{bundle.col_descricao}"
+					sortBy="#{node.descricao}">
+					<h:outputText value="#{node.codigo} - #{node.descricao}" />
+				</p:column>
+				
+			</p:treeTable>
+			<p:outputPanel
+				id="pnlExportar"
+				style="padding-top: 5px;padding-left: 5px;">
+				<xcp:commandButton
+					id="btn_exportar"
+					value="#{bundle.btn_exportar}"
+					icon="ui-icon-arrowthick-1-e"
+					ajax="false"
+					immediate="true"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+					<p:fileDownload
+						value="#{consultaHierarquiaBacking.export}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+			</p:outputPanel>
+
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

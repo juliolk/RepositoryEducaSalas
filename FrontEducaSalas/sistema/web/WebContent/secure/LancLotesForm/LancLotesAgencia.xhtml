@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:lov
+			id="lovBancoDe"
+			value="#{lancLotesBacking.helper.bancoDe}"
+			label="#{bundle.lbl_bancoDe}"
+			query="bancos"
+			required="true"
+			size="4" />
+
+		<xcp:lov
+			id="lovAgeDe"
+			value="#{lancLotesBacking.helper.agenciaDe}"
+			label="#{bundle.lbl_agenciaDe}"
+			query="agencias"
+			required="true"
+			size="4"
+			params="#{lancLotesBacking.paramsAgenciaDe}" />
+
+		<xcp:lov
+			id="lovBancoPara"
+			value="#{lancLotesBacking.helper.bancoPara}"
+			label="#{bundle.lbl_bancoPara}"
+			query="bancos"
+			required="true"
+			size="4" />
+
+		<xcp:lov
+			id="lovAgePara"
+			value="#{lancLotesBacking.helper.agenciaPara}"
+			label="#{bundle.lbl_agenciaPara}"
+			required="true"
+			query="agencias"
+			size="4"
+			params="#{lancLotesBacking.paramsAgenciaPara}" />
+
+	</xcp:panelForm>
+
+</ui:composition>

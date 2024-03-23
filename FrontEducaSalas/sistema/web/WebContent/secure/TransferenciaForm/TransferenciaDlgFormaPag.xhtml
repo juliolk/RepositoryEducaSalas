@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgFormaPag"
+		header="#{bundle.title_formapag}"
+		widgetVar="dlgFormaPag_w"
+		dynamic="true"
+		modal="true"
+		resizable="false">
+
+		<xcp:form id="formdlgFormaPag">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtdtini"
+					required="true"
+					readonly="#{transferenciasBacking.readOnlyDtaInicio}"
+					value="#{transferenciasBacking.helper.transfSel.dtinicio}"
+					label="#{bundle.lbl_dtini}" />
+
+				<xcp:date
+					id="txtdttermino"
+					required="true"
+					readonly="true"
+					rendered="#{transferenciasBacking.helper.transfSel.dttermino!=null}"
+					value="#{transferenciasBacking.helper.transfSel.dttermino}"
+					label="#{bundle.lbl_dttermino}" />
+
+				<xcp:combo
+					id="cboTipSalDe"
+					value="#{transferenciasBacking.helper.transfSel.obs2}"
+					label="#{bundle.lbl_de}"
+					required="true"
+					itens="#{transferenciasBacking.itensTipSalNormal}"
+					readonly="true" />
+
+				<xcp:combo
+					id="cboTipSalPara"
+					value="#{transferenciasBacking.helper.transfSel.obs3}"
+					label="#{bundle.lbl_para}"
+					required="true"
+					rendered="#{transferenciasBacking.renderedParaDialog}"
+					itens="#{transferenciasBacking.itensTipSalIgnore}"
+					readonly="#{transferenciasBacking.readOnlyFields}" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					size="2000"
+					styleClass="scrollarea"
+					value="#{transferenciasBacking.helper.transfSel.obsLivre}" />
+
+			</xcp:panelForm>
+			<h:panelGroup id="panelBotoesAverFgcc">
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							process="@form"
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							disabled="#{transferenciasBacking.disabledGravar}"
+							action="#{transferenciasBacking.actionGravar}" />
+					</f:facet>
+				</p:toolbar>
+			</h:panelGroup>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

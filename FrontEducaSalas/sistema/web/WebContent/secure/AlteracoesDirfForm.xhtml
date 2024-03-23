@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<!-- estilo separa por que nao pode ser formatado -->
+		<ui:include src="AlteracoesDirfForm/AlteracoesDirfFormEstilo.xhtml" />
+
+		<xcp:panelFuncionarioLazy
+			id="Calculos"
+			apresentaIndice="true"
+			backing="#{alteracoesDirfBacking}"
+			scrollable="false"
+			tableStyleClass="#{alteracoesDirfBacking.opcaoListagem}"
+			rowStyleClass="#{alteracoesDirfBacking.getClasseLancamento(row)}">
+			
+			<ui:define name="barraDetalhesDireita">
+				<p:column styleClass="label-column">
+					<p:outputLabel value="#{bundle.lbl_opcaolistagemcalculo}: "></p:outputLabel>
+				</p:column>
+				<p:column>
+					<p:selectOneMenu
+						id="selOpcaoListagem"
+						value="#{alteracoesDirfBacking.opcaoListagem}">
+						<f:selectItems value="#{alteracoesDirfBacking.itensOpcaoListagem}" />
+						<p:ajax
+							event="change"
+							update="table_Calculos"
+							listener="#{alteracoesDirfBacking.actionSelecionaOpcaoListagem}" />
+					</p:selectOneMenu>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="filtros">
+				<div
+					class="tabela_ocorrencia_fixas"
+					style="width: 245px; padding: 10px; padding-left: 25px;">
+					<h:panelGrid id="tblleft">
+						<p:row>
+							<p:column colspan="5">
+								<xcp:combo
+									id="cboTiposFolhas"
+									label="#{bundle.lbl_tipo_folha}"
+									value="#{alteracoesDirfBacking.tipoFolhaSelecionada}"
+									itens="#{alteracoesDirfBacking.itensTipoFoha}"
+									styleClass="combotipofolhas">
+									<p:ajax
+										event="change"
+										update="calReferencia,table_Calculos"
+										listener="#{alteracoesDirfBacking.actionTrocaPeriodo}" />
+								</xcp:combo>
+							</p:column>
+						</p:row>
+						
+						<p:row>
+							<p:column colspan="5">
+								<h:outputLabel
+									value="#{bundle.lbl_referencia_folha}"
+									style="position:relative; top:13px;" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<xcp:commandButton
+									value=" "
+									style="height:24px; width:28px; position:relative; top:7px;"
+									id="btnPeriodoPrimeiro"
+									ajax="true"
+									actionListener="#{alteracoesDirfBacking.buscaPeriodoPrimeiro}"
+									update="btnPesq_Calculos,calReferencia,table_Calculos"
+									icon="ui-icon-seek-first" />
+
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoAnterior"
+									ajax="true"
+									actionListener="#{alteracoesDirfBacking.buscaPeriodoAnterior}"
+									update="btnPesq_Calculos,calReferencia,table_Calculos"
+									icon="ui-icon-seek-prev"
+									style="height:24px; width:28px; position:relative; top:7px;" />
+								<span class="calendar"> <p:calendar
+										id="calReferencia"
+										pattern="dd/MM/yyyy"
+										size="9"
+										navigator="true"
+										value="#{alteracoesDirfBacking.dataSelecao}"
+										readonly="true"
+										showOn="both" /></span>
+								<xcp:commandButton
+									value=""
+									id="btnPeriodoProximo"
+									actionListener="#{alteracoesDirfBacking.buscaPeriodoProximo}"
+									update="btnPesq_Calculos,calReferencia,table_Calculos"
+									ajax="true"
+									icon="ui-icon-seek-next"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoUltimo"
+									ajax="true"
+									actionListener="#{alteracoesDirfBacking.buscaPeriodoUltimo}"
+									update="btnPesq_Calculos,calReferencia,table_Calculos"
+									icon="ui-icon-seek-end"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+							</p:column>
+
+						</p:row>
+					</h:panelGrid>
+				</div>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_conta}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.conta}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_des_conta}"
+					type="String"
+					size="24">
+					<xcp:outputSimple value="#{row.contaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_incidencia}"
+					type="Center"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.incidencia}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtd}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.qtd}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_percentual}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.percentual}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					type="Number"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_deveria}"
+					type="Number"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{alteracoesDirfBacking.valoresDirf.get(row.conta)}"					
+						precision="16"
+						scale="2" />
+				</xcp:column>
+				
+			</ui:define>
+
+			<ui:define name="form">
+			
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovConta"
+						readonly="#{not alteracoesDirfBacking.entity.novo}"
+						required="#{alteracoesDirfBacking.entity.novo}"
+						value="#{alteracoesDirfBacking.entity.contaFk}"
+						label="#{bundle.lbl_conta}"
+						query="contas"
+						size="4"/>
+
+					<xcp:number
+						id="txtIncidencia"
+						readonly="false"
+						required="#{alteracoesDirfBacking.entity.novo}"
+						label="#{bundle.lbl_incidencia}"
+						value="#{alteracoesDirfBacking.entity.incidencia}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtQtd"
+						readonly="false"
+						required="#{alteracoesDirfBacking.entity.novo}"
+						label="#{bundle.lbl_qtd}"
+						size="19"
+						value="#{alteracoesDirfBacking.entity.qtd}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtPercentual"
+						label="#{bundle.lbl_percentual}"
+						size="19"
+						value="#{alteracoesDirfBacking.entity.percentual}"
+						precision="16"
+						readonly="false"
+						scale="2" />
+
+					<xcp:number
+						id="txtValor"
+						readonly="true"
+						label="#{bundle.lbl_valor}"
+						size="19"
+						value="#{alteracoesDirfBacking.entity != null ? alteracoesDirfBacking.entity.valor : 0}"
+						precision="16"
+						scale="2" />
+
+					<xcp:combo
+						id="txtTipolcto"
+						readonly="true"
+						label="#{bundle.lbl_tipolcto}"
+						value="#{alteracoesDirfBacking.entity.tipolcto}"
+						itens="#{alteracoesDirfBacking.itensTipolcto}"
+						size="2" />
+
+					<xcp:memo
+						id="txtObs"
+						readonly="false"
+						label="#{bundle.lbl_obs}"
+						value="#{alteracoesDirfBacking.entity.obs}"
+						size="200" />
+
+					<xcp:number
+						id="txtDeveria"
+						readonly="false"
+						label="#{bundle.col_deveria}"
+						size="19"
+						minValue="-9999999999"
+						value="#{alteracoesDirfBacking.valorDeveria}"
+						precision="16"
+						scale="2"/>
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="PlanejamentoMetas"
+			backing="#{planejamentoMetasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_planejamento}"
+					value="#{row.planejamentoFk.desc}" type="String" size="30">
+					<xcp:outputSimple value="#{row.planejamentoFk.desc}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_dtini}" value="#{row.dtini}"
+					type="Date" size="10">
+					<xcp:outputSimpleDate value="#{row.dtini}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_dtfim}" value="#{row.dtfim}"
+					type="Date" size="10">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_tipo}"
+					itens="#{planejamentoMetasBacking.itensTipo}" type="String"
+					size="20" value="#{row.tipo}">
+					<xcp:outputSimple value="#{row.tipo}"
+						itens="#{planejamentoMetasBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_responsavel}"
+					value="#{row.funcionarioFk.nome}" type="String" size="50">
+					<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_percentualConclusao}"
+					value="#{row.percentualConclusao}" type="Number" size="10">
+					<xcp:outputSimpleNumber value="#{row.percentualConclusao}"
+						precision="3" scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_situacao}"
+					itens="#{planejamentoMetasBacking.itensSituacao}" type="String"
+					size="20" value="#{row.situacao}">
+					<xcp:outputSimple value="#{row.situacao}"
+						itens="#{planejamentoMetasBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov id="lovPlanejamento"
+						value="#{planejamentoMetasBacking.entity.planejamentoFk}"
+						label="#{bundle.lbl_planejamento}" required="true"
+						query="planejamento" size="0" />
+
+					<xcp:date id="txtDtini" required="true"
+						value="#{planejamentoMetasBacking.entity.dtini}"
+						label="#{bundle.lbl_dtini}" />
+
+					<xcp:date id="txtDtfim" required="true"
+						value="#{planejamentoMetasBacking.entity.dtfim}"
+						label="#{bundle.lbl_datafim}" />
+
+					<xcp:combo id="cboTipo"
+						value="#{planejamentoMetasBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}" required="true"
+						itens="#{planejamentoMetasBacking.itensTipo}" />
+
+					<xcp:lov id="lovMatriculaResp"
+						value="#{planejamentoMetasBacking.entity.funcionarioFk}"
+						label="#{bundle.lbl_responsavel}" required="true"
+						query="funcionariosLov" size="0" />
+
+					<xcp:memo id="txtMetas" required="true" size="4000"
+						value="#{planejamentoMetasBacking.entity.metas}"
+						label="#{bundle.lbl_meta}" />
+
+					<xcp:memo id="txtObjetivoEstrategico" required="true" size="4000"
+						value="#{planejamentoMetasBacking.entity.objetivoEstrategico}"
+						label="#{bundle.lbl_objetivoEstrategico}" />
+
+					<xcp:memo id="txtIndicadores" required="true" size="4000"
+						value="#{planejamentoMetasBacking.entity.indicadores}"
+						label="#{bundle.lbl_indicadores}" />
+
+					<xcp:number id="txtPercentualConclusao"
+						label="#{bundle.lbl_percentualConclusao}" size="10"
+						value="#{planejamentoMetasBacking.entity.percentualConclusao}"
+						precision="3" scale="0" />
+
+					<xcp:combo id="cboSituacao"
+						value="#{planejamentoMetasBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}" required="true"
+						itens="#{planejamentoMetasBacking.itensSituacao}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include
+					src="PlanejamentoMetasForm/PlanejamentoMetasAcoesForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

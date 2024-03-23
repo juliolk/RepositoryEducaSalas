@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="CipaInsc"
+		backing="#{cipaInscBacking}"
+		masterId="Cipa">
+
+		<ui:define name="barraListaDet">
+			<xcp:commandButton
+				id="btnApuracao"
+				icon="ui-icon-gear"
+				value="#{bundle.btn_apuracao}"
+				action="#{cipaInscBacking.apuracao}"
+				process="@this"
+				update="table_CipaInsc,table_eleitos" />
+		</ui:define>
+
+		<ui:define name="detalhes">
+			<p:panel styleClass="xcp_pmanut_detalhes">
+				<f:facet name="header">
+					<xcp:panelGrid>
+						<p:row>
+							<p:column styleClass="manut_content_header_title">
+								<h:outputText value="#{bundle.tit_eleitos}" />
+							</p:column>
+						</p:row>
+					</xcp:panelGrid>
+				</f:facet>
+				<xcp:panelGrid>
+					<p:row>
+						<p:column
+							width="30px"
+							style="vertical-align: top; padding-right: 5px;"
+							rendered="#{listaIndice}">
+							<ui:insert name="indice" />
+						</p:column>
+						<p:column style="vertical-align: top;">
+							<p:dataTable
+								id="table_eleitos"
+								var="rowEleitos"
+								resizableColumns="true"
+								value="#{cipaInscBacking.listaEleitos}"
+								rows="#{viewUtil.tableRows}"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								paginator="true"
+								paginatorPosition="bottom">
+
+								<xcp:column
+									headerText="#{bundle.col_matricula}"
+									type="Number"
+									size="8">
+									<xcp:outputSimpleNumber
+										value="#{rowEleitos.matricula}"
+										precision="8"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_nome}"
+									type="String"
+									size="30">
+									<xcp:outputSimple value="#{rowEleitos.matriculaFk.nome}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_dtinsc}"
+									type="Date"
+									size="12">
+									<xcp:outputSimpleDate value="#{rowEleitos.dtinsc}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_cargo}"
+									type="String"
+									size="10">
+									<xcp:outputSimple
+										value="#{rowEleitos.cargo}"
+										itens="#{cipaInscBacking.itensCargo}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_votos}"
+									type="Number"
+									size="3">
+									<xcp:outputSimpleNumber
+										value="#{rowEleitos.votos}"
+										precision="3"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_situacao}"
+									type="String"
+									size="10">
+									<xcp:outputSimple
+										value="#{rowEleitos.situacao}"
+										itens="#{cipaInscBacking.itensIndicacao}" />
+								</xcp:column>
+
+							</p:dataTable>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+			</p:panel>
+		</ui:define>
+
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.matricula}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.matriculaFk.nome}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtinsc}"
+				value="#{row.dtinsc}"
+				type="Date"
+				size="12">
+				<xcp:outputSimpleDate value="#{row.dtinsc}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_cargo}"
+				value="#{row.cargo}"
+				type="String"
+				itens="#{cipaInscBacking.itensCargo}"
+				size="10">
+				<xcp:outputSimple
+					value="#{row.cargo}"
+					itens="#{cipaInscBacking.itensCargo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_votos}"
+				value="#{row.votos}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.votos}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_situacao}"
+				value="#{row.situacao}"
+				itens="#{cipaInscBacking.itensIndicacao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple
+					value="#{row.situacao}"
+					itens="#{cipaInscBacking.itensIndicacao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_deferido}"
+				value="#{row.deferido}"
+				itens="#{cipaInscBacking.itensIndSimNaoNull}"
+				type="String"
+				size="10">
+				<xcp:outputSimple
+					value="#{row.deferido}"
+					itens="#{cipaInscBacking.itensIndSimNaoNull}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovEmpresaFunc_CipaInsc"
+					value="#{cipaInscBacking.entity.empresaFuncFk}"
+					label="#{bundle.lbl_empresa}"
+					required="true"
+					query="empresas"
+					size="3"
+					update="lovMatricula_CipaInsc"
+					selectionListener="#{cipaInscBacking.selectEmpresa}"
+					rendered="#{cipaInscBacking.mestreBacking.entity.tipo == 2}"
+					readonly="#{not cipaInscBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovMatricula_CipaInsc"
+					value="#{cipaInscBacking.entity.matriculaFk}"
+					params="#{cipaInscBacking.paramsEmpresaFunc}"
+					label="#{bundle.lbl_matricula}"
+					required="true"
+					query="funcionarios_cipa"
+					size="8"
+					readonly="#{not cipaInscBacking.entity.novo}" />
+
+				<xcp:date
+					id="txtDtinsc_CipaInsc"
+					required="true"
+					value="#{cipaInscBacking.entity.dtinsc}"
+					label="#{bundle.lbl_dtinsc}" />
+
+				<xcp:combo
+					id="cboCargo_CipaInsc"
+					value="#{cipaInscBacking.entity.cargo}"
+					label="#{bundle.lbl_cargo}"
+					required="true"
+					itens="#{cipaInscBacking.itensCargo}" />
+
+				<xcp:number
+					id="txtVotos_CipaInsc"
+					label="#{bundle.lbl_votos}"
+					value="#{cipaInscBacking.entity.votos}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+				<xcp:combo
+					id="cboSituacao_CipaInsc"
+					value="#{cipaInscBacking.entity.situacao}"
+					label="#{bundle.lbl_situacao}"
+					required="true"
+					itens="#{cipaInscBacking.itensIndicacao}" />
+
+				<xcp:combo
+					id="cboDeferido"
+					required="true"
+					value="#{cipaInscBacking.entity.deferido}"
+					label="#{bundle.lbl_deferido}"
+					itens="#{cipaInscBacking.itensIndSimNaoNull}" />
+
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

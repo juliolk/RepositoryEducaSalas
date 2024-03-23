@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_def}"
+		modal="true"
+		id="dlgDefs"
+		widgetVar="dlgDefs_w"
+		dynamic="true"
+		width="650"
+		minHeight="400">
+		<xcp:form id="frmDefs">
+			<p:dataTable
+				id="tabDefs"
+				var="row"
+				value="#{funcionariosBacking.listaDefs}"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+
+				<p:column
+					headerText="#{bundle.col_deficiencia}"
+					width="30px">
+					<xcp:output
+						id="txtdef"
+						simple="true"
+						value="#{row.deficienteFk.descricao}" />
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.col_congenita}"
+					width="30px">
+					<xcp:outputSimple
+						id="txtcong"
+						value="#{row.congenita}"
+						itens="#{funcionariosBacking.itensIndSimNaoNull}" />
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.col_dtinicio}"
+					width="30px">
+					<xcp:outputSimpleDate
+						id="txtdtinicio"
+						value="#{row.dtinicio}" />
+				</p:column>
+
+				<p:column
+					width="20"
+					rendered="#{funcionariosBacking.renderedAcoesMais}">
+
+					<xcp:commandButton
+						id="btnRemDef"
+						icon="ui-icon-trash"
+						update="tabDefs"
+						immediate="true"
+						action="#{funcionariosBacking.actionRemoveDef(row)}">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</p:column>
+
+				<xcp:column
+					type="String"
+					size="3">
+					<xcp:commandButton
+						id="btnEditDef"
+						icon="icon-editar"
+						immediate="true"
+						rendered="#{not consulta}"
+						disabled="#{funcionariosBacking.bloqueadoEditDep}"
+						update=":frmDef"
+						action="#{funcionariosBacking.actionEditDef(row)}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:spacer height="5" />
+
+			<div style="text-align: center">
+				<xcp:commandButton
+					id="btnNovoDef"
+					value="#{bundle.btn_novo}"
+					action="#{funcionariosBacking.actionNovoDef}"
+					update=":frmDef"
+					icon="ui-icon-document"
+					rendered="#{funcionariosBacking.renderedAcoesMais}" />
+
+				<xcp:commandButton
+					id="btnVoltar"
+					image="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgDefs_w').hide();return false;" />
+
+			</div>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		header="#{bundle.title_def}"
+		modal="true"
+		id="dlgDef"
+		widgetVar="dlgDef_w"
+		dynamic="true">
+		<xcp:form id="frmDef">
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovDeficiencia"
+					value="#{funcionariosBacking.funcionariosDef.deficienteFk}"
+					label="#{bundle.lbl_defic}"
+					required="true"
+					query="deficiencias"
+					size="8" />
+
+				<xcp:combo
+					id="cboCongenita"
+					value="#{funcionariosBacking.funcionariosDef.congenita}"
+					label="#{bundle.lbl_congenita}"
+					required="true"
+					itens="#{funcionariosBacking.itensIndSimNaoNull}" />
+
+				<xcp:date
+					id="txtDtinicio"
+					value="#{funcionariosBacking.funcionariosDef.dtinicio}"
+					label="#{bundle.lbl_dtinicio}" />
+
+				<xcp:memo
+					id="txtNecessidade"
+					label="#{bundle.lbl_necessidade}"
+					value="#{funcionariosBacking.funcionariosDef.necessidade}"
+					size="500" />
+
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						update=":frmDefs"
+						action="#{funcionariosBacking.actionGravarDef}"
+						rendered="#{funcionariosBacking.renderedAcoesMais}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgDef_w').hide();return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+ -
+</ui:composition>

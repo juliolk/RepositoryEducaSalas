@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Grupocontrole"
+			backing="#{grupocontroleBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_grupo}"
+					value="#{row.grupo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.grupo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipocontrole}"
+					value="#{row.tipocontrole}"
+					itens="#{grupocontroleBacking.itensTipocontrole}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipocontrole}"
+						itens="#{grupocontroleBacking.itensTipocontrole}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nrodoc}"
+					value="#{row.nrodoc}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.nrodoc}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_livro}"
+					value="#{row.livro}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.livro}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nropagina}"
+					value="#{row.nropagina}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.nropagina}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_maximopaginas}"
+					value="#{row.maximopaginas}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.maximopaginas}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_tipofolha}"
+					value="#{row.tipofolha}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.tipofolhaFk.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtGrupo"
+						label="#{bundle.lbl_grupo}"
+						required="true"
+						value="#{grupocontroleBacking.entity.grupo}"
+						size="10"
+						maxlength="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not grupocontroleBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{grupocontroleBacking.entity.descricao}"
+						maxlength="100"
+						size="40" />
+
+					<xcp:number
+						id="txtNrodoc"
+						label="#{bundle.lbl_nrodoc}"
+						value="#{grupocontroleBacking.entity.nrodoc}"
+						size="10"
+						precision="10"
+						scale="0"
+						required="true"
+						maxValue="9999999999" />
+
+					<xcp:lov
+						id="lovTipofolha"
+						value="#{grupocontroleBacking.entity.tipofolhaFk}"
+						label="#{bundle.lbl_tipofolha}"
+						query="tipofolha"
+						required="true"
+						size="4" />
+
+					<xcp:combo
+						id="cboTipocontrole"
+						value="#{grupocontroleBacking.entity.tipocontrole}"
+						label="#{bundle.lbl_tipocontrole}"
+						required="true"
+						readonly="#{not grupocontroleBacking.entity.novo}"
+						itens="#{grupocontroleBacking.itensTipocontrole}">
+						<p:ajax
+							event="change"
+							update="txtLivro_l,txtMaximopaginas_l,txtLivro,txtMaximopaginas,txtNropagina,txtNropagina_l" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtLivro"
+						label="#{bundle.lbl_livro}"
+						value="#{grupocontroleBacking.entity.livro}"
+						size="10"
+						required="true"
+						rendered="#{grupocontroleBacking.entity.tipocontrole == 1}"
+						precision="10"
+						scale="0"
+						maxValue="9999999999" />
+
+					<xcp:number
+						id="txtNropagina"
+						label="#{bundle.lbl_nropagina}"
+						required="true"
+						value="#{grupocontroleBacking.entity.nropagina}"
+						rendered="#{grupocontroleBacking.entity.tipocontrole == 1}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999" />
+
+					<xcp:number
+						id="txtMaximopaginas"
+						label="#{bundle.lbl_maximopaginas}"
+						required="true"
+						rendered="#{grupocontroleBacking.entity.tipocontrole == 1}"
+						value="#{grupocontroleBacking.entity.maximopaginas}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

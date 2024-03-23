@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Aso"
+			backing="#{asoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="Number"
+					size="1"
+					itens="#{asoBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						precision="1"
+						scale="0"
+						itens="#{asoBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_medicoEmitente}"
+					value="#{row.medicoEmitenteFk.nome}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.medicoEmitenteFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_medicoPcmso}"
+					value="#{row.medicoPcmsoFk.nome}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.medicoPcmsoFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="Number"
+					size="2"
+					itens="#{asoBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						precision="1"
+						scale="0"
+						itens="#{asoBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{asoBacking.entity.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{asoBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{asoBacking.itensTipo}" />
+
+					<xcp:lov
+						id="lovMedicoEmitente"
+						value="#{asoBacking.entity.medicoEmitenteFk}"
+						label="#{bundle.lbl_medicoEmitente}"
+						required="true"
+						query="lov_medicos"
+						size="8" />
+
+					<xcp:lov
+						id="lovMedicoPcmso"
+						value="#{asoBacking.entity.medicoPcmsoFk}"
+						label="#{bundle.lbl_medicoPcmso}"
+						query="lov_medicos"
+						size="8" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{asoBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{asoBacking.itensSituacao}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{asoBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="AsoForm/AsoExamesForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

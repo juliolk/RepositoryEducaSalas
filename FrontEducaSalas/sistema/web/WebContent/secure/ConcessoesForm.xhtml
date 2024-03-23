@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Concessoes"
+			backing="#{concessoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_concessao}"
+					value="#{row.concessao}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.concessao}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="20"
+					itens="#{concessoesBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{concessoesBacking.itensTipo}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtConcessao"
+						label="#{bundle.lbl_concessao}"
+						required="true"
+						value="#{concessoesBacking.entity.concessao}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not concessoesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{concessoesBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{concessoesBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="#{!concessoesBacking.entity.novo}"
+						itens="#{concessoesBacking.itensTipo}">
+						<p:ajax
+							event="change"
+							update="txtDiasAbono, txtDiasAbono_l, cboIndEstagio, cboIndEstagio_l, cboIndProxaqui, cboIndProxaqui_l" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboTipGozo"
+						value="#{concessoesBacking.entity.tipGozo}"
+						label="#{bundle.lbl_tipGozo}"
+						required="true"
+						itens="#{concessoesBacking.itensTipGozo}" />
+
+					<xcp:number
+						id="txtMeses"
+						label="#{bundle.lbl_meses}"
+						required="true"
+						value="#{concessoesBacking.entity.meses}"
+						size="5"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<xcp:number
+						id="txtDias"
+						label="#{bundle.lbl_dias}"
+						required="true"
+						value="#{concessoesBacking.entity.dias}"
+						size="5"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtPeriodos"
+						value="#{concessoesBacking.entity.periodos}"
+						label="#{bundle.lbl_periodos}"
+						required="true"
+						size="5"
+						precision="2"
+						scale="0" />
+
+					<xcp:number
+						id="txtDiasMinimo"
+						label="#{bundle.lbl_diasMinimo}"
+						required="true"
+						value="#{concessoesBacking.entity.diasMinimo}"
+						size="5"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtDiasMaximo"
+						label="#{bundle.lbl_diasMaximo}"
+						required="true"
+						value="#{concessoesBacking.entity.diasMaximo}"
+						size="5"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtDiasAbono"
+						label="#{bundle.lbl_diasAbono}"
+						value="#{concessoesBacking.entity.diasAbono}"
+						rendered="#{concessoesBacking.entity.tipo == 1}"
+						required="true"
+						size="5"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtMesesMinimos"
+						label="#{bundle.lbl_mesesMinimos}"
+						value="#{concessoesBacking.entity.mesesMinimos}"
+						required="true"
+						size="5"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<!-- <xcp:number
+						id="txtPeriodosAposSuspensao"
+						value="#{concessoesBacking.entity.periodosAposSuspensao}"
+						label="#{bundle.lbl_periodos_apos_suspensao}"
+						required="true"
+						size="5"
+						precision="2"
+						scale="0" /> -->
+
+					<xcp:combo
+						id="cboIndEstagio"
+						required="true"
+						value="#{concessoesBacking.entity.indEstagio}"
+						label="#{bundle.lbl_indEstagioConc}"
+						rendered="#{concessoesBacking.entity.tipo == 1}"
+						itens="#{concessoesBacking.itensIndSimNao}" />
+
+
+					<xcp:combo
+						id="cboIndProxaqui"
+						value="#{concessoesBacking.entity.indProxaqui}"
+						label="#{bundle.lbl_indProxaqui}"
+						required="true"
+						itens="#{concessoesBacking.itensIndSimNao}"
+						rendered="#{concessoesBacking.entity.tipo == 1}" />
+
+					<xcp:text
+						id="txtFuncao"
+						label="#{bundle.lbl_funcao}"
+						value="#{concessoesBacking.entity.funcao}"
+						size="50"
+						maxlength="100" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="ConcessoesForm/ConcessoesMvtoForm.xhtml" />
+
+				<h:panelGroup rendered="#{concessoesBacking.entity.tipo == 1}">
+					<ui:include src="ConcessoesForm/ConcessoesFaixasForm.xhtml" />
+				</h:panelGroup>
+				<ui:include src="ConcessoesForm/ConcessoesPontoForm.xhtml" />
+
+				<ui:include src="ConcessoesForm/ConcessoesFracaoForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelFuncionario
+			id="Afdt"
+			update=":form:btnCopiarData"
+			backing="#{afdtBacking}">
+
+			<!-- 
+			<ui:define name="barraLista">
+				<p:column>
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovCcustos"
+							value="#{afdtBacking.ccustos}"
+							label="#{bundle.lbl_filtro_ccusto}"
+							update=":#{p:component('panelManut_Afdt')}"
+							selectionListener="#{afdtBacking.selectCcusto}"
+							query="ccustos"
+							size="15" />
+					</xcp:panelForm>
+				</p:column>
+			</ui:define>
+-->
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<xcp:commandButton
+						value=" "
+						id="btnPeriodoAnterior"
+						ajax="true"
+						actionListener="#{afdtBacking.buscaAnterior}"
+						update="table_Afdt,dataSelecao"
+						icon="ui-icon-seek-prev"
+						style="height:24px; width:28px; position:relative; top:2px;" />
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:date
+							id="dataSelecao"
+							label="#{bundle.lbl_filtro_data}"
+							value="#{afdtBacking.dataSelecao}">
+							<p:ajax
+								event="change"
+								listener="#{afdtBacking.actionPesquisar('dtaSelecao')}"
+								update="table_Afdt" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{afdtBacking.actionPesquisar('dtaSelecao')}"
+								update="table_Afdt" />
+						</xcp:date>
+					</xcp:panelForm>
+				</p:column>
+				<p:column>
+					<xcp:commandButton
+						value=""
+						id="btnPeriodoProximo"
+						actionListener="#{afdtBacking.buscaProximo}"
+						update="table_Afdt,dataSelecao"
+						ajax="true"
+						icon="ui-icon-seek-next"
+						style="height:24px; width:28px; position:relative; top:2px;" />
+				</p:column>
+				<p:column>
+					<xcp:commandButton
+						id="btn_atualizar_afdt"
+						oncomplete="PF('dlgAtualiza_w').show();"
+						update=":#{p:component('dlgAtualiza')}"
+						value="#{bundle.btn_atualizar}"
+						icon="ui-icon-gear"
+						action="#{afdtBacking.actionOpenAtualiza}" />
+				</p:column>
+
+				<p:column>
+
+					<xcp:commandButton
+						id="btnCopiarData"
+						disabled="#{afdtBacking.funcionario == null || afdtBacking.dataSelecao == null}"
+						immediate="true"
+						action="#{afdtBacking.actionOpenNovaData}"
+						value="#{bundle.btn_copiardata}"
+						update=":frmNovaData" />
+
+					<xcp:commandButton
+						id="btnCopiarDataInterv"
+						disabled="#{afdtBacking.funcionario == null}"
+						immediate="true"
+						action="#{afdtBacking.actionOpenDataInterv}"
+						value="#{bundle.btn_copiardatainter}"
+						update=":frmNovaDataInterv" />
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_nroseq}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.nroseq}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hora}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleTimeNumber value="#{row.hora}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipomanut}"
+					itens="#{afdtBacking.itensTipomanut}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.tipomanut}"
+						itens="#{afdtBacking.itensTipomanut}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					itens="#{afdtBacking.itensTipo}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{afdtBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.motivoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_rep}"
+					type="Number"
+					size="18">
+					<xcp:outputSimpleNumber
+						value="#{row.rep}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<!-- 		<xcp:number
+						id="txtPis"
+						label="#{bundle.lbl_pis}"
+						required="true"
+						value="#{afdtBacking.entity.pis}"
+						size="12"
+						precision="12"
+						scale="0"
+						maxValue="999999999999"
+						readonly="true" />
+ 			-->
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{afdtBacking.entity.data}"
+						label="#{bundle.lbl_data}"
+						readonly="true"
+						size="10" />
+
+					<xcp:timeNumber
+						id="txtHora"
+						label="#{bundle.lbl_hora}"
+						required="true"
+						size="10"
+						value="#{afdtBacking.entity.hora}"
+						precision="6"
+						scale="2"
+						validate="true"
+						readonly="#{not afdtBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovRep"
+						value="#{afdtBacking.entity.repFk}"
+						label="#{bundle.lbl_rep}"
+						query="relogios"
+						size="3" />
+
+					<xcp:combo
+						id="txtTipoIncluido"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						rendered="#{afdtBacking.entity.tipomanut == 'I'}"
+						value="#{afdtBacking.entity.tipo}"
+						itens="#{afdtBacking.itensTipoIncluido}"
+						size="1" />
+
+					<xcp:combo
+						id="txtTipo"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						rendered="#{afdtBacking.entity.tipomanut != 'I'}"
+						value="#{afdtBacking.entity.tipo}"
+						itens="#{afdtBacking.itensTipo}"
+						size="1"
+						width="120px !important;" />
+					<!-- 
+					<xcp:number
+						id="txtNroseq"
+						value="#{afdtBacking.entity.nroseq}"
+						label="#{bundle.lbl_nroseq}"
+						size="2"
+						precision="2"
+						scale="0" />
+ -->
+					<xcp:combo
+						id="txtTipomanut"
+						label="#{bundle.lbl_tipomanut}"
+						readonly="true"
+						value="#{afdtBacking.entity.tipomanut}"
+						itens="#{afdtBacking.itensTipomanut}"
+						size="1"
+						width="120px !important;" />
+
+					<xcp:lov
+						id="lovMotivo"
+						required="true"
+						value="#{afdtBacking.entity.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						query="afdtmotivo"
+						size="3" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_atualizacao_ponto}"
+			modal="true"
+			id="dlgAtualiza"
+			widgetVar="dlgAtualiza_w">
+
+			<xcp:form id="frm">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtDatainicioAtualizacao"
+						required="true"
+						value="#{afdtBacking.dtaIniAtualizacao}"
+						label="#{bundle.lbl_datainicio_atualizacao}">
+						<p:ajax
+							event="change"
+							listener="#{afdtBacking.atualizaData}"
+							update="txtDatafimAtualizacao" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{afdtBacking.atualizaData}"
+							update="txtDatafimAtualizacao" />
+
+					</xcp:date>
+
+					<xcp:date
+						id="txtDatafimAtualizacao"
+						required="true"
+						value="#{afdtBacking.dtaFimAtualizacao}"
+						label="#{bundle.lbl_datafim_atualizacao}" />
+
+					<xcp:lov
+						id="lovFuncionarioAtualizacao"
+						value="#{afdtBacking.funcionarioAtualizacao}"
+						label="#{bundle.lbl_funcionario}"
+						query="funcionariosLov"
+						size="8" />
+
+					<xcp:lov
+						id="lovSetorAtualizacao"
+						value="#{afdtBacking.setorAtualizacao}"
+						label="#{bundle.lbl_setor}"
+						query="set_validade"
+						size="8" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_ok"
+							icon="ui-icon-disk"
+							action="#{afdtBacking.actionAtualizar()}"
+							value="#{bundle.btn_ok}" />
+
+						<xcp:commandButton
+							id="btn_sair"
+							oncomplete="PF('dlgAtualiza_w').hide();"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:blockUI
+					block=":form"
+					trigger="btn_ok">
+					<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+				</p:blockUI>
+
+				<p:blockUI
+					block=":frm"
+					trigger="btn_ok">
+					<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+				</p:blockUI>
+
+
+				<p:remoteCommand
+					name="closeDlg"
+					oncomplete="PF('dlgAtualiza_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_novaData}"
+			modal="true"
+			id="dlgNovaData"
+			widgetVar="dlgNovaData_w">
+
+			<xcp:form id="frmNovaData">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtDatafimAtualizacao"
+						required="true"
+						value="#{afdtBacking.novaData}"
+						label="#{bundle.lbl_data}" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok"
+							icon="ui-icon-disk"
+							action="#{afdtBacking.actionNovaData()}"
+							value="#{bundle.btn_ok}" />
+
+						<xcp:commandButton
+							id="btn_sair"
+							oncomplete="PF('dlgNovaData_w').hide();"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:blockUI
+					block=":form"
+					trigger="btn_ok">
+					<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+				</p:blockUI>
+
+				<p:remoteCommand
+					name="closeDlg"
+					oncomplete="PF('dlgNovaData_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_novaDataInterv}"
+			modal="true"
+			id="dlgNovaDataInterv"
+			widgetVar="dlgNovaDataInterv_w">
+
+			<xcp:form id="frmNovaDataInterv">
+				<xcp:panelForm>
+
+					<xcp:dateRange
+						id="txtDataInterv"
+						required="true"
+						valueStart="#{afdtBacking.novaDataIni}"
+						valueEnd="#{afdtBacking.novaDataFim}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:lov
+						id="lovFuncionarioData"
+						value="#{afdtBacking.funcionarioData}"
+						label="#{bundle.lbl_funcionarioDest}"
+						query="funcionariosLov"
+						required="true"
+						size="8" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok"
+							icon="ui-icon-disk"
+							action="#{afdtBacking.actionNovaDataInterv()}"
+							value="#{bundle.btn_ok}" />
+
+						<xcp:commandButton
+							id="btn_sair"
+							oncomplete="PF('dlgNovaDataInterv_w').hide();"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:blockUI
+					block=":form"
+					trigger="btn_ok">
+					<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+				</p:blockUI>
+
+				<p:remoteCommand
+					name="closeDlg"
+					oncomplete="PF('dlgNovaDataInterv_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+
+
+	</ui:define>
+</ui:composition>

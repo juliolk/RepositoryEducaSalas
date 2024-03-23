@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Variaveis"
+			backing="#{variaveisBacking}">
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_grupo}"
+					value="#{row.grupo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.grupo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_variavel}"
+					value="#{row.variavel}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.variavel}" />
+				</xcp:column>
+ -->
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo_variavel}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{variaveisBacking.itensTipo}"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{variaveisBacking.itensTipo}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtGrupo"
+						label="#{bundle.lbl_grupo}"
+						required="true"
+						value="#{variaveisBacking.entity.grupo}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not variaveisBacking.entity.novo}" />
+
+					<!--
+					<xcp:text
+						id="txtVariavel"
+						label="#{bundle.lbl_variavel}"
+						required="true"
+						value="#{variaveisBacking.entity.variavel}"
+						size="20"
+						readonly="#{not variaveisBacking.entity.novo}" />
+ -->
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{variaveisBacking.entity.descricao}"
+						size="40" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{variaveisBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{variaveisBacking.itensTipo}" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor_variavel}"
+						size="13"
+						value="#{variaveisBacking.entity.valor}"
+						precision="10"
+						scale="2" />
+
+					<xcp:text
+						id="txtCampo1"
+						label="#{bundle.lbl_campo1}"
+						value="#{variaveisBacking.entity.campo1}"
+						size="30" />
+
+					<xcp:lov
+						id="lovLista1"
+						value="#{variaveisBacking.entity.seqParCampo1Fk}"
+						label="#{bundle.lbl_campo}"
+						query="xcp_tipo_campo"
+						size="10"
+						selectionListener="#{variaveisBacking.selectCampo1Fk}" />
+
+					<xcp:text
+						id="txtCampo2"
+						label="#{bundle.lbl_campo2}"
+						value="#{variaveisBacking.entity.campo2}"
+						size="30" />
+
+					<xcp:lov
+						id="lovLista2"
+						value="#{variaveisBacking.entity.seqParCampo2Fk}"
+						label="#{bundle.lbl_campo_2}"
+						query="xcp_tipo_campo_lis_n"
+						size="10"
+						selectionListener="#{variaveisBacking.selectCampo2Fk}" />
+
+					<xcp:text
+						id="txtCampo3"
+						label="#{bundle.lbl_campo3}"
+						value="#{variaveisBacking.entity.campo3}"
+						size="30" />
+
+					<xcp:lov
+						id="lovLista3"
+						value="#{variaveisBacking.entity.seqParCampo3Fk}"
+						label="#{bundle.lbl_campo_3}"
+						query="xcp_tipo_campo"
+						size="10"
+						selectionListener="#{variaveisBacking.selectCampo3Fk}" />
+
+					<xcp:combo
+						id="cboEstavel"
+						value="#{variaveisBacking.entity.estavel}"
+						label="#{bundle.lbl_estavel}"
+						required="true"
+						itens="#{variaveisBacking.itensEstavel}" />
+
+					<xcp:text
+						id="txtFuncRest"
+						label="#{bundle.lbl_funcao_3}"
+						value="#{variaveisBacking.entity.funcao}"
+						size="50"
+						maxlength="100" />
+
+					<xcp:combo
+						id="cboDtfimObr"
+						value="#{variaveisBacking.entity.dtfimObr}"
+						label="#{bundle.lbl_indTermino}"
+						itens="#{variaveisBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboTipoAtualiza"
+						value="#{variaveisBacking.entity.tipoAtualiza}"
+						label="#{bundle.lbl_indAtualiza}"
+						itens="#{variaveisBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndDisponivelPortal"
+						value="#{variaveisBacking.entity.indDisponivelPortal}"
+						label="#{bundle.lbl_indDisponivelPortal}"
+						itens="#{variaveisBacking.itensIndSimNao}" />
+						
+					<xcp:combo
+						id="cboIndAnexoPortObrig"
+						value="#{variaveisBacking.entity.indAnexoPortObrig}"
+						label="#{bundle.lbl_indAnexoPortObrig}"
+						itens="#{variaveisBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndProcjudic"
+						value="#{variaveisBacking.entity.indProcjudic}"
+						label="#{bundle.lbl_indProcjudic}"
+						required="true"
+						itens="#{variaveisBacking.itensIndSimNao}" />
+
+
+					<xcp:combo
+						id="cboIndIncorporaApo"
+						value="#{variaveisBacking.entity.indIncorporaApo}"
+						label="#{bundle.lbl_indIncorporaApo}"
+						required="true"
+						itens="#{variaveisBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndPerportal"
+						value="#{variaveisBacking.entity.indPerportal}"
+						label="#{bundle.lbl_indPerportal}"
+						itens="#{variaveisBacking.itensIndSimNaoNull}" />
+						
+					<xcp:combo
+						id="cboIndPensoesIncid"
+						value="#{variaveisBacking.entity.indPensoesIncid}"
+						label="#{bundle.lbl_indPensoesIncid}"
+						itens="#{variaveisBacking.itensIndSimNao}" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="VariaveisForm/VariaveisRestricoesForm.xhtml" />
+				<ui:include src="VariaveisForm/VariaveisRestricoesCodForm.xhtml" />
+				<ui:include src="VariaveisForm/VariaveisRestricoesQtdForm.xhtml" />
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

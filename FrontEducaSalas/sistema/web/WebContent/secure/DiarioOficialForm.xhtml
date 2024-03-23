@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="diarioOficial"
+			backing="#{diarioOficialBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					value="#{row.diario}"
+					size="6"
+					type="Number"
+					headerText="#{bundle.col_codigo}">
+					<xcp:outputSimple value="#{row.diario}" />
+				</xcp:column>
+
+				<xcp:column
+					value="#{row.data}"
+					size="100"
+					type="Date"
+					headerText="#{bundle.col_data}">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtDiario"
+						size="6"
+						precision="6"
+						label="#{bundle.lbl_codigo}"
+						value="#{diarioOficialBacking.entity.diario}"
+						readonly="#{not diarioOficialBacking.entity.novo}"
+						required="true" />
+
+					<xcp:date
+						id="txtData"
+						size="10"
+						label="#{bundle.lbl_data}"
+						value="#{diarioOficialBacking.entity.data}"
+						required="true" />
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

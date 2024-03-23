@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Processosesoc"
+			backing="#{processosesocBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seqProcesso}"
+					value="#{row.seqProcesso}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.seqProcesso}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codProcesso}"
+					value="#{row.codProcesso}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.codProcesso}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codMateria}"
+					value="#{row.codMateria}"
+					type="Number"
+					size="20">
+					<xcp:outputSimpleNumber
+						value="#{row.codMateria}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desMateria}"
+					value="#{row.codMateriaFk.desMateria}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.codMateriaFk.desMateria}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSeqProcesso"
+						label="#{bundle.lbl_seqProcesso}"
+						required="true"
+						value="#{processosesocBacking.entity.seqProcesso}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						rendered="#{not processosesocBacking.entity.novo}" />
+
+					<xcp:dateRange
+						id="dtesoc"
+						valueStart="#{processosesocBacking.entity.dtiniesoc}"
+						valueEnd="#{processosesocBacking.entity.dtfimesoc}"
+						readonlyStart="true"
+						rendered="#{not processosesocBacking.entity.novo}"
+						label="#{bundle.lbl_dtprocesso}" />
+
+					<xcp:combo
+						id="cboTipProcesso"
+						value="#{processosesocBacking.entity.tipProcesso}"
+						label="#{bundle.lbl_tipProcesso}"
+						required="true"
+						readonly="#{not processosesocBacking.entity.novo}"
+						itens="#{processosesocBacking.itensTipProcesso}" />
+
+					<xcp:text
+						id="txtCodProcesso"
+						label="#{bundle.lbl_codProcesso}"
+						required="true"
+						value="#{processosesocBacking.entity.codProcesso}"
+						size="30" />
+
+					<xcp:lov
+						id="lovCodMateria"
+						value="#{processosesocBacking.entity.codMateriaFk}"
+						label="#{bundle.lbl_codMateria}"
+						required="true"
+						query="materiaprocesso"
+						size="10" />
+
+					<p:outputLabel value="" />
+
+					<p:fieldset
+						legend="#{bundle.title_vara}"
+						style="margin-left: 0px !important">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtIdvara"
+								label="#{bundle.lbl_idvara}"
+								value="#{processosesocBacking.entity.idvara}"
+								size="4"
+								precision="4"
+								scale="0"
+								maxValue="9999" />
+
+							<xcp:lov
+								id="lovUfvara"
+								value="#{processosesocBacking.entity.ufvaraFk}"
+								label="#{bundle.lbl_ufvara}"
+								query="ufs"
+								size="2" />
+
+							<xcp:lov
+								id="lovCidade"
+								value="#{processosesocBacking.entity.cidadeFk}"
+								label="#{bundle.lbl_cidade}"
+								query="cidades"
+								size="8" />
+						</xcp:panelForm>
+
+					</p:fieldset>
+
+
+
+					<xcp:memo
+						id="txtDesObservacao"
+						label="#{bundle.lbl_desObservacao}"
+						value="#{processosesocBacking.entity.desObservacao}"
+						size="255" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<p:outputPanel
+					rendered="#{processosesocBacking.entity.codMateria == 1}">
+					<ui:include src="ProcessosesocForm/ProcessosesocSuspForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

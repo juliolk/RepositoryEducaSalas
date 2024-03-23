@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<center>
+		<xcp:panelForm>
+
+			<xcp:number
+				id="txtOperador"
+				label="#{bundle.lbl_operador}"
+				rendered="#{!operadoresBacking.entity.novo}"
+				value="#{operadoresBacking.entity.operador}"
+				size="15"
+				readonly="true"
+				maxValue="999999999999999" />
+
+			<xcp:lov
+				id="lovFuncionario"
+				value="#{operadoresBacking.entity.funcionarioFk}"
+				label="#{bundle.lbl_matricula}"
+				update="cboAcesso, cboAcesso_l"
+				query="operadores_novos"
+				size="15"
+				maxlength="8" />
+
+			<!-- Nao alterar para blur, da bug com a lov quando procura-se pelo nome (mensagem de required diversas vezes)-->
+			<xcp:text
+				id="txtNome"
+				label="#{bundle.lbl_nome}"
+				required="true"
+				value="#{operadoresBacking.entity.nome}"
+				size="82"
+				maxlength="40">
+				<p:ajax
+					event="change"
+					listener="#{operadoresBacking.validaNome}"
+					update="txtNome,txtNome_l" />
+			</xcp:text>
+			<xcp:date
+				id="txtDtvalidade"
+				value="#{operadoresBacking.entity.dtvalidade}"
+				label="#{bundle.lbl_dtvalidade}"
+				size="15" />
+			<xcp:number
+				id="txtLinhas"
+				label="#{bundle.lbl_linhas}"
+				value="#{operadoresBacking.entity.linhas}"
+				size="15"
+				maxlength="5"
+				maxValue="99999" />
+			<xcp:combo
+				id="cboAcesso"
+				value="#{operadoresBacking.entity.acesso}"
+				label="#{bundle.lbl_acesso}"
+				styleClass="combooperadores"
+				required="true"
+				itens="#{operadoresBacking.itensAcesso}" />
+			<xcp:combo
+				id="cboJanela"
+				value="#{operadoresBacking.entity.janela}"
+				label="#{bundle.lbl_janela}"
+				itens="#{operadoresBacking.itensJanela}" />
+			<xcp:secret
+				id="txtPass"
+				label="#{bundle.lbl_desSenha}"
+				autocomplete="off"
+				rendered="#{not operadoresBacking.entity.novo}"
+				value="#{operadoresBacking.novaSenha}" />
+			<xcp:combo
+				id="cboSituacao"
+				label="#{bundle.lbl_situacao}"
+				styleClass="combooperadores"
+				itens="#{operadoresBacking.itensIndSimNao}"
+				value="#{operadoresBacking.entity.situacao}" />
+
+			<xcp:dateRange
+				id="txtDtaBloqueio"
+				label="#{bundle.lbl_bloqueiotemp}"
+				valueStart="#{operadoresBacking.entity.dtaIniBloqueio}"
+				valueEnd="#{operadoresBacking.entity.dtaFimBloqueio}" />
+
+			<xcp:number
+				id="txtSeqUsuXcpDemandas"
+				label="#{bundle.lbl_seqUsuXcpDemandas}"
+				value="#{operadoresBacking.entity.seqUsuXcpDemandas}"
+				size="10"
+				precision="10"
+				scale="0"
+				maxValue="9999999999" />
+
+			<xcp:combo
+				id="cboIndUsuIntegracao"
+				value="#{operadoresBacking.entity.indUsuIntegracao}"
+				label="#{bundle.lbl_indUsuIntegracao}"
+				itens="#{operadoresBacking.itensIndSimNaoNull}" />
+
+			<xcp:border
+				id="brd_certificado"
+				header="#{bundle.lbl_acesso_certificado}">
+
+				<h:panelGrid
+					columns="4"
+					styleClass="tabela_alinhamento">
+					<xcp:combo
+						id="chkCertificado"
+						label="#{bundle.lbl_certificado}"
+						value="#{operadoresBacking.entity.certificado}"
+						itens="#{operadoresBacking.itensIndSimNao}"
+						styleClass="combooperadores">
+						<p:ajax
+							event="change"
+							update="txtCpf,txtCpf_l"
+							process="@this" />
+					</xcp:combo>
+					<xcp:cpf
+						id="txtCpf"
+						label="#{bundle.lbl_cpf}"
+						required="#{operadoresBacking.entity.indCertificado}"
+						value="#{operadoresBacking.entity.cpf}" />
+				</h:panelGrid>
+
+			</xcp:border>
+
+			<xcp:border
+				id="brd_ldapo"
+				header="#{bundle.lbl_acesso_ldap}">
+
+				<xcp:combo
+					id="cboLdap"
+					label="#{bundle.lbl_ldap}"
+					itens="#{operadoresBacking.itensIndSimNao}"
+					styleClass="combooperadores"
+					value="#{operadoresBacking.entity.ldap}">
+					<p:ajax
+						event="change"
+						update="lovLdap,lovLdap_l"
+						process="@this" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovLdap"
+					value="#{operadoresBacking.entity.codldapFk}"
+					label="#{bundle.lbl_lovldap}"
+					required="#{operadoresBacking.entity.indLdap}"
+					rendered="#{operadoresBacking.entity.indLdap}"
+					query="ldap"
+					size="8" />
+
+			</xcp:border>
+
+		</xcp:panelForm>
+
+	</center>
+</ui:composition>

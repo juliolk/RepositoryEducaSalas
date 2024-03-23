@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="CategoriaTrab"
+			backing="#{categoriaTrabBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_esocial}"
+					value="#{row.codCategFk.codCateg}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.codCategFk.codCateg}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tce}"
+					value="#{row.tce}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.tce}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{categoriaTrabBacking.entity.codigo}"
+						maxlength="3"
+						size="8"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						readonly="#{not categoriaTrabBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{categoriaTrabBacking.entity.descricao}"
+						maxlength="100"
+						size="80" />
+
+					<xcp:lov
+						id="lovCategeSocial"
+						value="#{categoriaTrabBacking.entity.codCategFk}"
+						label="#{bundle.lbl_codigoeSocial}"
+						query="categoriatrabesocial"
+						required="true"
+						size="5" />
+
+					<xcp:text
+						id="txtTce"
+						label="#{bundle.lbl_tce}"
+						value="#{categoriaTrabBacking.entity.tce}"
+						maxlength="10"
+						size="8" />
+
+					<xcp:lov
+						id="lovGrupoMat"
+						value="#{categoriaTrabBacking.entity.grupoMatFk}"
+						label="#{bundle.lbl_grupoMat}"
+						query="grupos_mat"
+						size="5" />
+
+					<h:outputText value="" />
+
+
+					<p:fieldset
+						legend="#{bundle.title_avisos}"
+						style="margin-left: 0px !important">
+						<xcp:panelForm>
+
+							<xcp:lov
+								id="lovTexto"
+								value="#{categoriaTrabBacking.entity.seqTextoFk}"
+								label="#{bundle.lbl_textoAviso}"
+								query="xcp_texto"
+								size="10" />
+
+							<xcp:memo
+								id="txtEmail"
+								label="#{bundle.lbl_emails}"
+								value="#{categoriaTrabBacking.entity.desEmail}" />
+
+						</xcp:panelForm>
+					</p:fieldset>
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

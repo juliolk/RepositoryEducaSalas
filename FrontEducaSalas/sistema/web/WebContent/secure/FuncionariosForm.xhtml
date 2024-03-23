@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="conteudo">
+
+		<h:outputStylesheet
+			name="/font-awesome/css/font-awesome.min.css"
+			library="lib" />
+	
+
+		<style>
+			.label_prop_emp {
+				min-width: 77px;
+				width: 77px;
+			}
+			
+			.label_prop_empl {
+				width: 82px;
+			}
+		</style>
+
+		<xcp:panelManut
+			id="Funcionarios"
+			renderedNovo="false"
+			hideAtualizar="true"
+			backing="#{funcionariosBacking}"
+			lazy="true"
+			dataTableValue="#{funcionariosBacking.listaFuncionariosLazy}">
+
+			<ui:define name="barraListaNovo">
+				<xcp:commandButton
+					icon="ui-icon-document"
+					value="#{bundle.btn_novo}"
+					disabled="#{funcionariosBacking.disabledNovo}"
+					action="#{funcionariosBacking.actionCopiar}"
+					update="@form :focusDefault">
+				</xcp:commandButton>
+			</ui:define>
+
+			<ui:define name="barraFiltro">
+				<xcp:radio
+					id="cboSituacaoFuncionario"
+					value="#{funcionariosBacking.situacaoFuncionario}"
+					label="#{bundle.lbl_situacaoFuncionario}"
+					itens="#{funcionariosBacking.itensSituacaoFuncionario}"
+					simple="true" />
+				<script>
+					$(PrimeFaces.escapeClientId('form:cboSituacaoFuncionario')).find('input').each(function () {
+						this.onclick = function(){$(PrimeFaces.escapeClientId('form:btnAtualizar_Funcionarios')).click();};
+					});
+				</script>
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_numMatricula}"
+					value="#{row.numMatricula}"
+					type="Number"
+					rendered="#{funcionariosBacking.canRender('numMatricula')}"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.numMatricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desNome}"
+					value="#{row.desNome}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desNome')}"
+					size="40">
+					<xcp:outputSimple value="#{row.desNome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaNascimento}"
+					value="#{row.dtaNascimento}"
+					type="Date"
+					rendered="#{backing.canRender('dtaNascimento')}"
+					width="10%">
+					<xcp:outputSimpleDate value="#{row.dtaNascimento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaAdmissao}"
+					value="#{row.dtaAdmissao}"
+					type="Date"
+					rendered="#{funcionariosBacking.canRender('dtaAdmissao')}"
+					size="10">
+					<xcp:outputSimpleDate value="#{row.dtaAdmissao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desFuncao}"
+					value="#{row.desFuncao}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desFuncao')}"
+					size="35">
+					<xcp:outputSimple value="#{row.desFuncao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descccusto}"
+					value="#{row.desCcusto}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desCcusto')}"
+					size="35">
+					<xcp:outputSimple value="#{row.desCcusto}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_desvinculo}"
+					value="#{row.desVinculo}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desVinculo')}"
+					size="35">
+					<xcp:outputSimple value="#{row.desVinculo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desCargo_panelfunc}"
+					value="#{row.desCargo}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desCargo')}"
+					width="25%">
+					<xcp:outputSimple value="#{row.desCargo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipMovimento}"
+					value="#{row.tipMovimento}"
+					type="Center"
+					rendered="#{funcionariosBacking.canRender('tipMovimento')}"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.tipMovimento}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desMovimento}"
+					value="#{row.desMovimento}"
+					type="Center"
+					rendered="#{funcionariosBacking.canRender('desMovimento')}"
+					width="15%">
+					<xcp:outputSimpleNumber
+						value="#{row.desMovimento}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdHoras}"
+					value="#{row.qtdHoras}"
+					type="Center"
+					rendered="#{funcionariosBacking.canRender('qtdHoras')}"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdHoras}"
+						precision="7"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_funcionarios_ncartao}"
+					value="#{row.numCartao}"
+					type="Center"
+					rendered="#{backing.canRender('numCartao')}"
+					width="5%">
+					<xcp:outputSimpleNumber
+						value="#{row.numCartao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numPis}"
+					value="#{row.numPis}"
+					type="Number"
+					rendered="#{funcionariosBacking.canRender('numPis')}"
+					size="12">
+					<xcp:outputSimpleNumber
+						value="#{row.numPis}"
+						precision="12"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_funcionarios_cpf}"
+					value="#{row.numCpf}"
+					type="Number"
+					rendered="#{funcionariosBacking.canRender('numCpf')}"
+					size="11">
+					<xcp:outputSimpleCpf value="#{row.numCpf}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vlrSalario}"
+					value="#{row.vlrSalario}"
+					type="Number"
+					rendered="#{funcionariosBacking.canRender('vlrSalario')}"
+					size="14">
+					<xcp:outputSimpleNumber
+						value="#{row.vlrSalario}"
+						simple="true"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="formCustom">
+				<ui:include src="FuncionariosForm/FuncionariosCopiaForm.xhtml" />
+			</ui:define>
+
+			<ui:define name="form">
+				<c:if
+					test="#{funcionariosBacking.modo == funcionariosBacking.modoForm}">
+
+					<xcp:panelVinculoEval value="#{funcionariosBacking.entity.vinculo}">
+						<table style="width:1245px">
+							<tr>
+								<td><ui:include
+										src="FuncionariosForm/FuncionariosCabecalho.xhtml" /></td>
+							</tr>
+							<tr>
+								<td>
+									<p:tabView
+										id="tabFuncionarios"
+										activeIndex="#{funcionariosBacking.activeIndex}"
+										widgetVar="tabFuncionarios_w">
+										<p:tab
+											id="tabDadosPessoais"
+											title="#{bundle.tit_pessoais}">
+											<ui:include src="FuncionariosForm/FuncionariosPessoal.xhtml" />
+										</p:tab>
+
+										<p:tab
+											id="tabDadosProfissional"
+											title="#{bundle.tit_dados_profissional}">
+											<ui:include
+												src="FuncionariosForm/FuncionariosProfissional.xhtml" />
+										</p:tab>
+
+										<p:tab
+											id="tabDadosFilhacao"
+											title="#{bundle.tit_dados_dependentes}">
+											<ui:include
+												src="FuncionariosForm/FuncionariosDependentes.xhtml" />
+										</p:tab>
+
+										<p:tab
+											id="tabDadosFuncadic"
+											title="#{bundle.tit_dados_funcadic}"
+											rendered="#{funcionariosBacking.renderedFuncadic}">
+											<ui:include src="FuncionariosForm/FuncionariosFuncadic.xhtml" />
+										</p:tab>
+
+										<p:tab
+											id="tabDadosAtuacoes"
+											title="#{bundle.tit_dados_atuacoes}"
+											rendered="#{!funcionariosBacking.entity.novo}">
+											<ui:include src="FuncionariosForm/FuncionariosAtuacoes.xhtml" />
+										</p:tab>
+
+										<p:tab
+											id="tabColunasComplementares"
+											rendered="#{funcionariosBacking.xcpTabelaColunaVO.colunaComplementar}"
+											title="#{bundle.tit_colunas_complementares}">
+											<p:outputPanel id="pnlupcompl">
+												<ui:include src="FuncionariosForm/FuncionariosColunas.xhtml" />
+											</p:outputPanel>
+										</p:tab>
+									</p:tabView></td>
+							</tr>
+						</table>
+					</xcp:panelVinculoEval>
+				</c:if>
+			</ui:define>
+			<!-- 
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btnCopiarTela"
+					value="#{bundle.btn_copiar_funcionario}"
+					action="#{funcionariosBacking.actionCopiar}"
+					update="@form :focusDefault"
+					disabled="#{funcionariosBacking.entity.novo}">
+				</xcp:commandButton>
+			</ui:define>
+ -->
+			<ui:define name="formWizard">
+				<c:if
+					test="#{funcionariosBacking.modo == funcionariosBacking.modoZizard}">
+					<xcp:panelVinculoEval value="#{funcionariosBacking.entity.vinculo}">
+						<table>
+							<tr>
+								<td><ui:include
+										src="FuncionariosForm/FuncionariosCabecalhoInclusao.xhtml" />
+								</td>
+							</tr>
+							<tr>
+								<td width="1500px"><p:remoteCommand
+										name="cmdValidaCabecalho"
+										update="panelGridCabecalhoInclusao"
+										process="panelGridCabecalhoInclusao"
+										onstart="_xcpFuncValidacaoCab = 1;"
+										oncomplete="if (args &amp;&amp; !args.validationFailed) { _xcpFuncValidacaoCab = 2; PF('wWizardInclusao').next(); } else { _xcpFuncValidacaoCab = 1; }" />
+
+									<p:wizard
+										nextLabel="#{bundle.btn_proximo}"
+										backLabel="#{bundle.btn_anterior}"
+										widgetVar="wWizardInclusao"
+										onnext="if(typeof(_xcpFuncValidacaoCab) != 'undefined' &amp;&amp; _xcpFuncValidacaoCab == 2) { _xcpFuncValidacaoCab = 1; return true; } else { _xcpFuncValidacaoCab = 1; cmdValidaCabecalho(); return false;}">
+
+										<p:tab
+											id="tabDadosPessoais"
+											title="#{bundle.tit_pessoais}">
+											<ui:include src="FuncionariosForm/FuncionariosPessoal.xhtml" />
+										</p:tab>
+
+										<p:tab
+											id="tabDadosProfissional"
+											title="#{bundle.tit_dados_profissional}">
+											<ui:include
+												src="FuncionariosForm/FuncionariosProfissional.xhtml" />
+										</p:tab>
+
+										<p:tab
+											id="tabDadosFilhacao"
+											title="#{bundle.tit_dados_dependentes}">
+											<ui:include
+												src="FuncionariosForm/FuncionariosDependentes.xhtml" />
+											<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+												<f:facet name="right">
+													<xcp:commandButton
+														id="btn_finalizar_dependentes"
+														icon="ui-icon-disk"
+														value="#{bundle.btn_finalizar}"
+														action="#{funcionariosBacking.actionGravar('formWizard')}"
+														process="@form"
+														update="@form"
+														disabled="#{funcionariosBacking.disabledGravar}" />
+												</f:facet>
+											</p:toolbar>
+										</p:tab>
+
+										<p:tab
+											rendered="#{funcionariosBacking.xcpTabelaColunaVO.colunaComplementar}"
+											id="tabColunasComplementares"
+											title="#{bundle.tit_colunas_complementares}">
+											<p:outputPanel id="pnlupcompl">
+												<ui:include src="FuncionariosForm/FuncionariosColunas.xhtml" />
+												<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+													<f:facet name="right">
+														<xcp:commandButton
+															id="btn_finalizar_complemento"
+															icon="ui-icon-disk"
+															value="#{bundle.btn_finalizar}"
+															action="#{funcionariosBacking.actionGravar('formWizard')}"
+															process="@form"
+															update="@form"
+															disabled="#{funcionariosBacking.disabledGravar}" />
+													</f:facet>
+												</p:toolbar>
+											</p:outputPanel>
+										</p:tab>
+										<!-- 
+									<p:tab
+										id="tabDadosFinalizacao"
+										title="#{bundle.tit_dados_finalizacao}">
+										<ui:include
+											src="FuncionariosForm/FuncionariosFinalizacao.xhtml" />
+
+										<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+											<f:facet name="right">
+												<xcp:commandButton
+													id="btn_finalizar"
+													icon="ui-icon-disk"
+													value="#{bundle.btn_finalizar}"
+													action="#{funcionariosBacking.actionGravar('formWizard')}"
+													process="@form"
+													update="@form"
+													disabled="#{funcionariosBacking.disabledGravar}" />
+											</f:facet>
+										</p:toolbar>
+									</p:tab>
+									 -->
+									</p:wizard></td>
+							</tr>
+						</table>
+					</xcp:panelVinculoEval>
+				</c:if>
+			</ui:define>
+		</xcp:panelManut>
+
+
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgNovaAd"
+			modal="true"
+			widgetVar="dlgNovaAd_w"
+			dynamic="true"
+			header="#{bundle.title_dlgNovaAd}">
+			<xcp:form id="frmNovaAd">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtNovaAdmissaoAd"
+						required="true"
+						value="#{funcionariosBacking.entity.admissao}"
+						label="#{bundle.lbl_dtadmissao}" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarNovaMatAd"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":form, @form"
+							action="#{funcionariosBacking.actionGravarNovaAd('Funcionarios')}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgFoto"
+			modal="true"
+			widgetVar="dlgFoto_w"
+			header="#{bundle.title_importar_foto}">
+			<xcp:form
+				id="formfoto"
+				multipart="true">
+				<xcp:panelForm>
+					<xcp:inputFile
+						label="#{bundle.lbl_foto}"
+						id="inpFile"
+						value="#{funcionariosBacking.helper.uploadFoto}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_upload"
+							value="#{bundle.btn_upload}"
+							ajax="false"
+							icon="ui-icon-gear"
+							action="#{funcionariosBacking.actionSalvarFoto}" />
+
+						<xcp:commandButton
+							id="btn_rem_foto"
+							value="#{bundle.btn_remover}"
+							icon="ui-icon-trash"
+							immediate="true"
+							onclick="PF('dlgConf').show(); return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:confirmDialog
+			widgetVar="dlgConf"
+			message="#{bundle.msg_confirma_remover}"
+			header="#{bundle.tit_confirma_remover}">
+			<h:form id="formComfirmar">
+
+				<p:commandButton
+					value="#{bundle.btn_sim}"
+					styleClass="ui-confirmdialog-yes"
+					onclick="PF('btnhidw').getJQ().click()"
+					icon="ui-icon-check" />
+
+				<p:commandButton
+					value="#{bundle.btn_nao}"
+					type="button"
+					onclick="PF('dlgConf').hide()"
+					styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+
+
+				<p:commandButton
+					id="btnhid"
+					style="display:none"
+					action="#{funcionariosBacking.actionRemoverFoto}"
+					widgetVar="btnhidw"
+					ajax="false" />
+
+			</h:form>
+		</p:confirmDialog>
+
+		<p:dialog
+			id="dlgNovaMat"
+			modal="true"
+			widgetVar="dlgNovaMat_w"
+			header="#{bundle.title_dlgNovaMat}">
+			<xcp:form id="frmNovaMat">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtNovaMatricula"
+						label="#{bundle.lbl_matricula}"
+						value="#{funcionariosBacking.helper.numNovaMatricula}"
+						size="10"
+						maxValue="9999999999"
+						required="true"
+						rendered="#{funcionariosBacking.renderedNovaMatricula}">
+					</xcp:number>
+
+					<xcp:date
+						id="txtNovaAdmissao"
+						required="true"
+						value="#{funcionariosBacking.helper.dtaNovaAdmissao}"
+						label="#{bundle.lbl_dtadmissao}" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarNovaMat"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":form, @form"
+							action="#{funcionariosBacking.actionGravarNovaMat('Funcionarios')}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgColAnexo"
+			modal="true"
+			widgetVar="dlgColAnexo_w"
+			header="#{bundle.lbl_anexo}">
+			<xcp:form
+				id="formColAnexo"
+				multipart="true">
+				<xcp:panelForm>
+					<xcp:inputFile
+						label="#{bundle.lbl_arquivo}"
+						id="inpColAnexo"
+						value="#{funcionariosBacking.helper.uploadFoto}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_uploadColAnexo"
+							value="#{bundle.btn_upload}"
+							ajax="false"
+							icon="ui-icon-gear"
+							action="#{funcionariosBacking.actionSalvarColAnexo}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+		
+		<p:confirmDialog id="formConfirmRemoverColAnexo" 
+			message="#{bundle.msg_confirma_remover}"
+			header="#{bundle.tit_confirma_remover}" 
+			widgetVar="dlgRemoverColAnexo_w">
+			
+			<xcp:form
+				id="formRemoverColAnexo">
+			 	<xcp:commandButton 
+			 		value="Sim" 
+			 		ajax="false"
+			 		action="#{funcionariosBacking.actionRemoverColAnexo}" 
+			 		oncomplete="PF('dlgRemoverColAnexo_w').hide()" />
+			 		
+			 	<p:commandButton 
+			 		value="Não" 
+			 		onclick="PF('dlgRemoverColAnexo_w').hide();" 
+			 		type="button" />
+		 	</xcp:form>
+		 </p:confirmDialog>
+
+
+		<ui:include src="FuncionariosForm/FuncionariosDependentesDialog.xhtml" />
+		<ui:include
+			src="FuncionariosForm/FuncionariosDependentesAnexoDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosFilhosDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosConjugeDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosAtuacaoDialog.xhtml" />
+		<ui:include
+			src="FuncionariosForm/FuncionariosOutroTitularDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosFonesDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosEmailDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosDefDialog.xhtml" />
+
+	</ui:define>
+</ui:composition>

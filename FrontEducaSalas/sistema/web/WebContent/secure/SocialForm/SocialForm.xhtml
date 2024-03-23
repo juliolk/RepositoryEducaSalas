@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<style>
+.field_tit_caracter_moradia {
+	width: 745px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 175px;
+}
+
+.field_tit_rend {
+	width: 235px;
+	position: absolute;
+	top: 0px;
+	left: 780px;
+	height: 175px;
+}
+
+.field_tit_info_sangue {
+	width: 260px;
+	position: absolute;
+	top: 200px;
+}
+
+.field_tit_plano_saude {
+	width: 455px;
+	position: absolute;
+	top: 200px;
+	left: 300px;
+}
+
+.panel_outras_infos {
+	width: 350px;
+	position: absolute;
+	top: 200px;
+	left: 800px;
+}
+
+.barra_botoes {
+	width: 100%;
+	position: absolute;
+	top: 350px;
+	left: 0px;
+	box-sizing: border-box;
+}
+</style>
+	<h:panelGroup
+		id="panelDadosSocial"
+		layout="block"
+		style="position: relative; height: 390px;">
+
+		<p:fieldset
+			legend="#{bundle.tit_caracter_moradia}"
+			styleClass="field_tit_caracter_moradia">
+			<xcp:panelGrid columns="4">
+				<p:fieldset
+					legend="#{bundle.lbl_aluguel}"
+					style="width: 150px">
+					<xcp:radio
+						id="cboAluguel"
+						value="#{socialBacking.entity.aluguel}"
+						label="#{bundle.lbl_aluguel}"
+						simple="true"
+						required="true"
+						itens="#{socialBacking.itensAluguel}"
+						layout="pageDirection" />
+				</p:fieldset>
+
+				<p:fieldset
+					legend="#{bundle.lbl_tpimovel}"
+					style="width: 150px">
+					<xcp:radio
+						id="radTpimovel"
+						value="#{socialBacking.entity.tpimovel}"
+						label="#{bundle.lbl_tpimovel}"
+						simple="true"
+						required="true"
+						itens="#{socialBacking.itensTpimovel}"
+						layout="pageDirection" />
+				</p:fieldset>
+
+				<p:fieldset
+					legend="#{bundle.lbl_condicoes}"
+					style="width: 150px">
+					<xcp:radio
+						id="radCondicoes"
+						value="#{socialBacking.entity.condicoes}"
+						label="#{bundle.lbl_condicoes}"
+						simple="true"
+						required="true"
+						itens="#{socialBacking.itensCondicoes}"
+						layout="pageDirection" />
+				</p:fieldset>
+
+				<p:fieldset
+					legend="#{bundle.lbl_acesso}"
+					style="width: 150px">
+					<xcp:radio
+						id="radAcesso"
+						value="#{socialBacking.entity.acesso}"
+						label="#{bundle.lbl_acesso}"
+						simple="true"
+						required="true"
+						itens="#{socialBacking.itensAcesso}"
+						layout="pageDirection" />
+				</p:fieldset>
+			</xcp:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset
+			legend="#{bundle.tit_renda}"
+			styleClass="field_tit_rend">
+
+			<p:fieldset
+				legend="#{bundle.tit_outras_fontes}"
+				style="width: 100px;">
+				<xcp:panelForm>
+					<xcp:check
+						id="chkContrenda"
+						value="#{socialBacking.entity.indContrenda}"
+						label="#{bundle.lbl_contrenda}" />
+
+					<xcp:check
+						id="chkContrenda2"
+						value="#{socialBacking.entity.indContrenda2}"
+						label="#{bundle.lbl_contrenda1}" />
+
+					<xcp:check
+						id="chkContrenda3"
+						value="#{socialBacking.entity.indContrenda3}"
+						label="#{bundle.lbl_contrenda2}" />
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<xcp:panelForm>
+				<xcp:number
+					id="txtRenda"
+					label="#{bundle.lbl_renda}"
+					size="15"
+					value="#{socialBacking.entity.renda}"
+					precision="12"
+					scale="2" />
+
+				<xcp:combo
+					id="chkConjuge"
+					value="#{socialBacking.entity.conjuge}"
+					label="#{bundle.lbl_conjuge}"
+					required="true"
+					itens="#{socialBacking.itensIndSimNao}" />
+			</xcp:panelForm>
+
+		</p:fieldset>
+
+		<p:fieldset
+			legend="#{bundle.tit_info_sangue}"
+			styleClass="field_tit_info_sangue">
+
+			<xcp:panelForm>
+				<xcp:combo
+					id="cboTpsangue"
+					value="#{socialBacking.entity.tpsangue}"
+					label="#{bundle.lbl_tpsangue}"
+					itens="#{socialBacking.itensTpsangue}" />
+
+				<xcp:combo
+					id="cboDoador"
+					value="#{socialBacking.entity.doador}"
+					label="#{bundle.lbl_doador}"
+					required="true"
+					itens="#{socialBacking.itensIndSimNao}" />
+
+				<xcp:date
+					id="txtDtdoacao"
+					value="#{socialBacking.entity.dtdoacao}"
+					label="#{bundle.lbl_dtdoacao}" />
+			</xcp:panelForm>
+		</p:fieldset>
+
+		<p:fieldset
+			legend="#{bundle.tit_plano_saude}"
+			styleClass="field_tit_plano_saude">
+			<xcp:panelForm>
+				<xcp:combo
+					id="cboPlanosaude"
+					value="#{socialBacking.entity.planosaude}"
+					label="#{bundle.lbl_planosaude}"
+					required="true"
+					itens="#{socialBacking.itensIndSimNao}" />
+
+				<xcp:text
+					id="txtDescplano"
+					label="#{bundle.lbl_descplano}"
+					value="#{socialBacking.entity.descplano}"
+					size="50" />
+
+				<xcp:number
+					id="txtVlrplano"
+					label="#{bundle.lbl_vlrplano}"
+					size="15"
+					value="#{socialBacking.entity.vlrplano}"
+					precision="12"
+					scale="2" />
+			</xcp:panelForm>
+		</p:fieldset>
+
+		<div class="panel_outras_infos">
+			<xcp:panelForm>
+				<xcp:combo
+					id="cboResposta1"
+					value="#{socialBacking.entity.resposta1}"
+					label="#{bundle.lbl_resposta1}"
+					required="true"
+					itens="#{socialBacking.itensIndSimNao}" />
+
+				<xcp:combo
+					id="cboResposta2"
+					value="#{socialBacking.entity.resposta2}"
+					label="#{bundle.lbl_resposta2}"
+					required="true"
+					itens="#{socialBacking.itensIndSimNao}" />
+
+				<xcp:combo
+					id="cboFumante"
+					value="#{socialBacking.entity.fumante}"
+					label="#{bundle.lbl_fumante}"
+					required="true"
+					itens="#{socialBacking.itensIndSimNao}" />
+
+				<xcp:combo
+					id="cboEstudante"
+					value="#{socialBacking.entity.estudante}"
+					label="#{bundle.lbl_estudante}"
+					required="true"
+					itens="#{socialBacking.itensIndSimNao}" />
+
+				<xcp:text
+					id="txtCurso"
+					label="#{bundle.lbl_curso}"
+					value="#{socialBacking.entity.curso}"
+					size="50" />
+			</xcp:panelForm>
+		</div>
+
+		<p:toolbar styleClass="xcp_pmanut_form_toolbar barra_botoes">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btnGravar"
+					icon="ui-icon-disk"
+					value="#{bundle.btn_gravar}"
+					action="#{socialBacking.actionGravar}"
+					process="@this,panelDadosSocial"
+					disabled="#{socialBacking.disabledGravar}"
+					update="panelDadosSocial">
+					<p:resetInput target="panelDadosSocial" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btnRemover"
+					icon="ui-icon-trash"
+					value="#{bundle.btn_remover}"
+					action="#{socialBacking.actionRemover}"
+					disabled="#{socialBacking.entity.novo or socialBacking.disabledExcluir}"
+					process="@this"
+					update="panelDadosSocial">
+					<p:resetInput target="panelDadosSocial" />
+				</xcp:commandButton>
+			</f:facet>
+		</p:toolbar>
+	</h:panelGroup>
+</ui:composition>

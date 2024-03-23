@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:fieldset legend="#{bundle.tit_filtros_geracao}">
+				<xcp:panelForm>
+
+					<xcp:dateRange
+						id="txtDtaVale"
+						valueStart="#{valeTransporteAtualizacaoBacking.helper.dtaValeIni}"
+						valueEnd="#{valeTransporteAtualizacaoBacking.helper.dtaValeFim}"
+						required="true"
+						label="#{bundle.lbl_dtaVale}" />
+
+					<xcp:dateRange
+						id="txtDtaFerias"
+						valueStart="#{valeTransporteAtualizacaoBacking.helper.dtaFeriasIni}"
+						valueEnd="#{valeTransporteAtualizacaoBacking.helper.dtaFeriasFim}"
+						label="#{bundle.lbl_dtaFerias}" />
+
+					<xcp:dateRange
+						id="txtDtaLicenca"
+						valueStart="#{valeTransporteAtualizacaoBacking.helper.dtaLicencaIni}"
+						valueEnd="#{valeTransporteAtualizacaoBacking.helper.dtaLicencaFim}"
+						label="#{bundle.lbl_dtaLicenca}" />
+
+					<xcp:dateRange
+						id="txtDtaAfast"
+						valueStart="#{valeTransporteAtualizacaoBacking.helper.dtaAfastIni}"
+						valueEnd="#{valeTransporteAtualizacaoBacking.helper.dtaAfastFim}"
+						label="#{bundle.lbl_dtaAfast}" />
+
+					<xcp:dateRange
+						id="txtDtaPonto"
+						valueStart="#{valeTransporteAtualizacaoBacking.helper.dtaPontoIni}"
+						valueEnd="#{valeTransporteAtualizacaoBacking.helper.dtaPontoFim}"
+						label="#{bundle.lbl_dtaPonto}" />
+						
+					<!-- PONTO -->
+					<xcp:lov
+						id="lovTipoponto"
+						label="#{bundle.lbl_faltas}"
+						value="#{valeTransporteAtualizacaoBacking.helper.tipoponto}"
+						query="tipoponto" />
+
+					<p:spacer width="1" />
+
+					<h:panelGroup layout="horizontal">
+						<p:commandButton
+							value="#{bundle.btn_adicionar}"
+							icon="ui-icon-plusthick"
+							action="#{valeTransporteAtualizacaoBacking.actionAddTipoponto}"
+							process="@this table_tipoponto"
+							update="lovTipoponto table_tipoponto" />
+
+						<p:commandButton
+							value="#{bundle.btn_limpar}"
+							action="#{valeTransporteAtualizacaoBacking.actionClearTipoponto}"
+							icon="icon-limpar2"
+							process="@this table_tipoponto"
+							update="table_tipoponto" />
+					</h:panelGroup>
+
+					<p:spacer width="1" />
+
+					<p:dataTable
+						id="table_tipoponto"
+						value="#{valeTransporteAtualizacaoBacking.helper.listTipoponto}"
+						var="row"
+						style="width:500px"
+						scrollHeight="null"
+						scrollRows="400"
+						scrollable="true"
+						rowKey="#{row}"
+						selection="#{valeTransporteAtualizacaoBacking.helper.listTipopontoSel}">
+
+						<p:column
+							selectionMode="multiple"
+							style="width:20px;text-align:center" />
+
+						<p:column headerText="#{bundle.col_descricao}">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_atualiza"
+						value="#{bundle.btn_atualiza}"
+						action="#{valeTransporteAtualizacaoBacking.actionOpenConfirmacao}"
+						icon="ui-icon-gear" />
+				</f:facet>
+			</p:toolbar>
+
+
+
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_confirmacao}"
+			modal="true"
+			id="dlgConfirmacao"
+			widgetVar="dlgConfirmacao_w">
+
+			<xcp:form id="frmNovaDataInterv">
+				<xcp:panelForm>
+
+					<xcp:check
+						id="chkMesAnterior"
+						label="#{bundle.lbl_atuMesAnt}"
+						value="#{valeTransporteAtualizacaoBacking.helper.atualizaAnt}" />
+
+					<xcp:check
+						id="chkMesAtual"
+						label="#{bundle.lbl_atuMesAtual}"
+						value="#{valeTransporteAtualizacaoBacking.helper.atualizaAtu}" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="5" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok"
+							icon="ui-icon-disk"
+							action="#{valeTransporteAtualizacaoBacking.actionAtualiza}"
+							value="#{bundle.btn_ok}" />
+
+						<xcp:commandButton
+							id="btn_sair"
+							action="#{valeTransporteAtualizacaoBacking.actionCloseConfirmacao}"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:remoteCommand
+					name="rcatudlg"
+					update="frmNovaDataInterv"
+					process="@this" />
+
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

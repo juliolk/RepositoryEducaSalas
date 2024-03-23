@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+	  <xcp:panelContent>
+
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtdtIni"
+					required="true"
+					value="#{reajusteParfuncBacking.VO.dtaIni}"
+					label="#{bundle.lbl_data}" />
+
+				<xcp:lov
+					id="lovTiposReajustes"
+					required="true"
+					value="#{reajusteParfuncBacking.VO.tipoReajuste}"
+					label="#{bundle.lbl_tiporeajustes}"
+					query="tiporeajustes"
+					size="3" />
+
+				<xcp:lov
+					id="lovVariavel"
+					required="true"
+					value="#{reajusteParfuncBacking.VO.variavelFk}"
+					label="#{bundle.lbl_variavel}"
+					query="variaveis"
+					size="10" />
+
+				<xcp:number
+					id="txtPerc"
+					label="#{bundle.lbl_numPerc}"
+					required="true"
+					maxValue="999"
+					precision="5"
+					scale="5"
+					value="#{reajusteParfuncBacking.VO.percentual}" />
+				
+				<xcp:lov id="lovVinculo" value="#{reajusteParfuncBacking.vinculo}"
+					label="#{bundle.lbl_vinculos}" query="vinculos"
+					params="#{reajusteParfuncBacking.vinculo}" size="10"
+					update="pnlVinc"
+					selectionListener="#{reajusteParfuncBacking.selectVinculo}" />
+
+				<p:spacer width="0" height="1" />
+
+				<h:panelGrid styleClass="table-itens-multi-selecao" columns="2"
+					id="pnlVinc">
+
+					<p:dataTable id="tblVinc" rows="0" var="it" 
+						value="#{reajusteParfuncBacking.listVinculos}"
+						selection="#{reajusteParfuncBacking.listVinculosSel}"
+						rowKey="#{it}" scrollHeight="null" scrollRows="500"
+						scrollable="true" emptyMessage="#{bundle.msg_sem_resultado}"
+						style="width:500px;float:left"
+						rendered="#{!reajusteParfuncBacking.listVinculos.isEmpty()}">
+
+						<p:column selectionMode="multiple"
+							style="width:20px;text-align:center" />
+
+						<xcp:column headerText="#{label}">
+							<xcp:outputSimple value="#{it.vinculo} - #{it.descricao}" />
+						</xcp:column>
+
+					</p:dataTable>
+
+					<p:commandButton id="btnLimpaVinc" icon="icon-limpar"
+						styleClass="limpar-multi-selecao" process="@this tblVinc"
+						update="pnlVinc"
+						rendered="#{!reajusteParfuncBacking.listVinculos.isEmpty()}"
+						action="#{reajusteParfuncBacking.actionLimpaVinc}" />
+
+				</h:panelGrid>
+				
+				<xcp:lov id="lovFuncionario" value="#{reajusteParfuncBacking.funcionario}"
+					label="#{bundle.lbl_matricula}" query="funcionarios"
+					params="#{reajusteParfuncBacking.funcionario}" size="10"
+					update="pnlFunc"
+					selectionListener="#{reajusteParfuncBacking.selectFuncionario}" />
+				
+				<p:spacer width="0" height="1" />
+				
+				<h:panelGrid styleClass="table-itens-multi-selecao" columns="2"
+					id="pnlFunc">
+
+					<p:dataTable id="tblFunc" rows="0" var="it" 
+						value="#{reajusteParfuncBacking.listFuncionarios}"
+						selection="#{reajusteParfuncBacking.listFuncionariosSel}"
+						rowKey="#{it}" scrollHeight="null" scrollRows="500"
+						scrollable="true" emptyMessage="#{bundle.msg_sem_resultado}"
+						style="width:500px;float:left"
+						rendered="#{!reajusteParfuncBacking.listFuncionarios.isEmpty()}">
+
+						<p:column selectionMode="multiple"
+							style="width:20px;text-align:center" />
+
+						<xcp:column headerText="#{label}">
+							<xcp:outputSimple value="#{it.matricula} - #{it.nome}" />
+						</xcp:column>
+
+					</p:dataTable>
+
+					<p:commandButton id="btnLimpaFunc" icon="icon-limpar"
+						styleClass="limpar-multi-selecao" process="@this tblFunc"
+						update="pnlFunc"
+						rendered="#{!reajusteParfuncBacking.listFuncionarios.isEmpty()}"
+						action="#{reajusteParfuncBacking.actionLimpaFunc}" />
+
+				</h:panelGrid>
+				
+				<xcp:memo
+					id="txtObsLivre"
+					label="#{bundle.lbl_obs}"
+					value="#{reajusteParfuncBacking.VO.obsLivre}"
+					size="4000" />
+				
+				
+				</xcp:panelForm>
+				
+				<p:spacer width="10px" />
+				
+			
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gerar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gerar}"
+						action="#{reajusteParfuncBacking.actionLancar}">
+						<p:confirm
+							header="#{bundle.tit_confirma_gravar}"
+							message="#{bundle.msg_confirma_gravar}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

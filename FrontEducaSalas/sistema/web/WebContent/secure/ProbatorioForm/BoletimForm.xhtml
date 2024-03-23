@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Boletim"
+		backing="#{boletimBacking}"
+		masterId="Probatorio">
+
+		<ui:define name="colunas">
+<!-- 
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.matricula}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+ -->
+			<xcp:column
+				headerText="#{bundle.col_numero}"
+				value="#{row.numero}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.numero}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dataini}"
+				value="#{row.dataini}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dataini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_datafim}"
+				value="#{row.datafim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.datafim}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_avaliacao}"
+				value="#{row.avaliacaoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.avaliacaoFk.descricao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtNumero_Boletim"
+					label="#{bundle.lbl_numero}"
+					required="true"
+					value="#{boletimBacking.entity.numero}"
+					size="8"
+					precision="6"
+					scale="0"
+					maxValue="999999"
+					readonly="#{not boletimBacking.entity.novo}" />
+
+				<xcp:date
+					id="dtaIni"
+					value="#{boletimBacking.entity.dataini}"
+					required="true"
+					label="#{bundle.lbl_dtaini}"
+					size="8">
+
+					<p:ajax
+						event="change"
+						listener="#{boletimBacking.calculaDataFim}"
+						update="dtaFim_Boletim" />
+					<p:ajax
+						event="dateSelect"
+						listener="#{boletimBacking.calculaDataFim}"
+						update="dtaFim_Boletim" />
+
+				</xcp:date>
+
+				<xcp:number
+					id="qtdMeses"
+					label="#{bundle.lbl_qtdmeses}"
+					value="#{boletimBacking.helper.qtdMeses}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999"
+					rendered="#{boletimBacking.entity.novo}">
+					<p:ajax
+						event="change"
+						listener="#{boletimBacking.calculaDataFim}"
+						update="dtaFim_Boletim" />
+				</xcp:number>
+
+				<xcp:date
+					id="dtaFim_Boletim"
+					value="#{boletimBacking.entity.datafim}"
+					required="true"
+					label="#{bundle.lbl_dtafim}"
+					size="8" />
+
+				<xcp:lov
+					id="lovTipodoc_Boletim"
+					value="#{boletimBacking.entity.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodoctipo"
+					params="#{boletimBacking.paramsTipoDoc}"
+					size="5"
+					required="true" />
+
+				<xcp:lov
+					id="lovAvaliacao_Boletim"
+					value="#{boletimBacking.entity.avaliacaoFk}"
+					label="#{bundle.lbl_avaliacao}"
+					required="true"
+					query="avaliacoes"
+					params="#{boletimBacking.paramsAval}"
+					size="5" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

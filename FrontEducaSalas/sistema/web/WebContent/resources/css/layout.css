@@ -1,0 +1,306 @@
+/* tamanho da fonte */
+.ui-widget {
+	font-size: 11px;
+}
+
+/* diminuido o tamanho dos checkbox */
+.ui-chkbox .ui-chkbox-box {
+	width: 13px;
+	height: 13px;
+	position: relative;
+	top: 4px;
+	margin-right: 4px;
+}
+
+/* reposicionado o icone do check */
+.ui-chkbox-box .ui-icon-check {
+	background-position: -66px -146px;
+}
+
+.ui-radiobutton .ui-radiobutton-box {
+	width: 13px;
+	height: 13px;
+}
+
+.ui-radiobutton-box .ui-icon-bullet {
+	background-position: -82px -146px;
+}
+
+.layout_unit_header_content .ui-layout-unit-content {
+	/*background: #acbece url('/rhsysweb/javax.faces.resource/images/default.png.xhtml?ln=primefaces-glass-x') 0 0 repeat-x;*/
+	background: #f5f5f5;
+}
+
+/* cabecalho */
+.xcp.ui-panelgrid.header {
+	width: 100%;
+}
+
+.xcp.ui-panelgrid .ui-panelgrid-cell.header_content {
+	text-align: right;
+	padding-right: 30px;
+	vertical-align: middle;
+	color: #000;
+	font-size: 10px;
+}
+
+/* barra de titulo do content */
+.ui-panelgrid.manut_content_header {
+	width: 100%;
+}
+
+.icone-ajuda {
+	display:block;		
+}
+
+.icone-ajuda:before {
+	content: "";
+    background-image:  url("#{resource['img/ajuda.png']}"); 
+    display: inline-block;
+    background-size: 100% 100%;
+    height: 22px;
+  	width:22px;
+  	top: 3px;
+  	position: relative;
+  	margin-right: 5px;
+}
+
+.manut_content_header_title {
+	width: 100%;
+	font-size: 16px;
+	text-align: left;
+	vertical-align: center;
+	font-weight: normal;
+}
+
+.manut_content_header_title2 {
+	width: 100%;
+	font-size: 16px;
+	text-align: left;
+	vertical-align: center;
+	font-weight: normal;
+	position: relative;
+	top: 10px;
+	left: 0px;
+}
+
+/* menu */
+.menu_left .ui-accordion-content {
+	padding: 0px;
+	overflow: hidden;
+}
+
+.menu_left .ui-menu {
+	width: auto;
+	border: none;
+	margin: 0px;
+}
+
+.menu_left .ui-menu .ui-menuitem-link {
+	border: 1px solid #dddddd;
+}
+
+.xcp_fav_icon {
+	height: 23px;
+	width: 32px;
+	margin-right: 10px;
+}
+
+.xcp_fav_icon2 {
+	margin-right: 5px;
+	position: relative;
+	top: 3px;
+	width: 22px;
+	height: 22px;
+}
+
+.xcp_fav_icon3 {
+	margin-right: 10px;
+}
+
+.form_label {
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
+	padding-right: 3px;
+}
+
+.form_content {
+	text-align: left;
+	color: black;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	vertical-align: top;
+}
+
+.form_label_col2 {
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
+	padding-right: 3px;
+	padding-left: 10px;
+}
+
+
+.exec-obj-lista-campos tbody tr td.form_label {
+	position: relative;
+}
+
+.exec-obj-lista-campos tbody tr td.form_label label.label-multi-selecao-required {
+	position: absolute;
+    top: 12px;
+    right: 3px;
+}
+
+.exec-obj-lista-campos .table-itens-multi-selecao td {
+    vertical-align: top;
+}
+
+.ui-outputlabel .ui-outputlabel-rfi {
+	margin-left: 0.2em;
+}
+
+.xcp.ui-panelgrid .ui-panelgrid-cell.formula_fonte_linha {
+	text-align: right;
+	border-right: 1px solid #000000;
+	padding: 1px 5px 1px 5px;
+}
+
+.xcp.ui-panelgrid .ui-panelgrid-cell.formula_fonte_texto {
+	white-space: pre;
+	font-family: monospace;
+	padding: 1px 1px 1px 10px;
+	text-align: left;
+}
+
+.xcp.ui-panelgrid .ui-panelgrid-cell.formula_fonte_texto.par,.xcp.ui-panelgrid .ui-panelgrid-cell.formula_fonte_linha.par
+	{
+	background-color: #F5F5F5;
+}
+
+.xcp.ui-panelgrid .ui-panelgrid-cell.formula_fonte_texto.sel,.xcp.ui-panelgrid .ui-panelgrid-cell.formula_fonte_linha.sel
+	{
+	background-color: #FF0000;
+	color: #FFFFFF;
+}
+
+.ui-layout-unit {
+	padding: 0;
+}
+
+.ui-layout-unit-content {
+	padding: 0;
+}
+
+.xcp_ico_mensagens_link {
+	text-decoration: none;
+	margin-right: 10px;
+}
+
+.xcp_ico_mensagens_count {
+	font-size: 18px;
+	color: #3498DB;
+}
+
+.xcp_line_red {
+	color: red;
+}
+
+.xcp_line_blue {
+	color: blue;
+}
+
+
+/* Indicacao de selecao de linha no tree da tela Quadro de Lotacao */
+table tbody[id="form:treeLotacao_data"] tr[aria-expanded="true"] {
+	font-weight: bold;
+	background-color: #EEE;
+}
+
+
+div[id^="form:multiCreator"] div.ui-widget-header {
+	border: none !important;
+}
+
+div[id^="form:multiCreator"] div.ui-datatable-scrollable-body {
+	max-height: 180px;
+}
+
+div[id^="formXcpExecObj:multiCreator"] div.ui-widget-header {
+	border: none !important;
+}
+
+div[id^="formXcpExecObj:multiCreator"] div.ui-datatable-scrollable-body {
+	max-height: 180px;
+}
+
+.panel-grid-documentos {
+	width: 100%;
+}
+
+.panel-grid-documentos tr:not(:last-child) {
+	border-bottom: 1px #CCC solid;
+} 	
+.panel-grid-documentos .ui-outputpanel {
+	margin-top: 10px;	
+	margin-bottom: 10px;
+}
+
+.ui-menu.menu-favoritos {
+    width: auto;
+    padding: 5px 10px 5px 5px;	
+}
+
+input.alteracao-cadastral-destaque, 
+div.alteracao-cadastral-destaque input,
+div.alteracao-cadastral-destaque .ui-selectonemenu-label,
+span.alteracao-cadastral-destaque input  {
+	background-color: #d9534f !important;
+	color: #FFF !important;
+}
+
+.alteracao-cadastral-dep-destaque {
+	color: #d9534f !important;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.fieldset-foto-alteracao-cadastral {
+	width: 85px; 
+	height: 110px; 
+	border: 1px solid #cccccc; 
+	margin-bottom: 10px; 
+	text-align: center; 
+	line-height: 110px; 	
+}
+
+.fieldset-foto-alteracao-cadastral-destaque {
+	border:3px solid #d9534f !important; 
+}
+
+.funcionario-col-memo {
+    line-height: 15px;
+    margin: 5px 0px;
+    max-height: 45px;
+    overflow: hidden;
+    word-break: break-word;
+    text-align: justify;
+    background-color: inherit;
+    position:relative;
+    pointer-events:none;
+}	
+
+.funcionario-col-memo::before {
+    content: "...";
+    display: block;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: inherit;
+}	
+   	
+.funcionario-form-memo {
+    height: 90px;
+    resize: both;
+    overflow-y: scroll;
+}

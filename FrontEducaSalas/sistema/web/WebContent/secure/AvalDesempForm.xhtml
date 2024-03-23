@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="AvalDesemp"
+			backing="#{avalDesempBacking}">
+
+			<ui:define name="filtro">
+				<style>
+.vertical-align {
+	vertical-align: top;
+}
+</style>
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+
+					<h:panelGrid
+						columns="3"
+						columnClasses=",,vertical-align">
+						<xcp:panelForm>
+
+							<xcp:numberRange
+								id="txtNrdocFiltro"
+								label="#{bundle.lbl_codigo}"
+								valueStart="#{avalDesempBacking.helper.filtro.numProbIni}"
+								valueEnd="#{avalDesempBacking.helper.filtro.numProbFim}"
+								size="13"
+								maxlength="10" />
+
+							<xcp:text
+								id="txtDescricaoFiltro"
+								label="#{bundle.lbl_descricao}"
+								value="#{avalDesempBacking.helper.filtro.desProb}"
+								maxlength="100"
+								size="75" />
+
+							<xcp:lov
+								id="lovMatriculaFiltro"
+								value="#{avalDesempBacking.helper.filtro.funcionariosLov}"
+								label="#{bundle.lbl_matricula}"
+								query="funcionariosLov"
+								size="6" />
+
+
+						</xcp:panelForm>
+						<p:spacer width="15px" />
+						<xcp:panelForm>
+
+							<xcp:dateRange
+								id="txtDtprobiniFiltro"
+								valueStart="#{avalDesempBacking.helper.filtro.dtaProbIniIni}"
+								valueEnd="#{avalDesempBacking.helper.filtro.dtaProbIniFim}"
+								label="#{bundle.lbl_inicio}"
+								size="13" />
+
+							<xcp:dateRange
+								id="txtDtprobfimFiltro"
+								valueStart="#{avalDesempBacking.helper.filtro.dtaProbFimIni}"
+								valueEnd="#{avalDesempBacking.helper.filtro.dtaProbFimFim}"
+								label="#{bundle.lbl_termino}"
+								size="13" />
+
+						</xcp:panelForm>
+					</h:panelGrid>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_probatorio}"
+					value="#{row.probatorio}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.probatorio}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.inicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.inicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{row.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.termino}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacaoprob}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{avalDesempBacking.itensSituacao}"
+					style="padding-top: 0px !important; border-top:0px !important;">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{avalDesempBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtProbatorio"
+						label="#{bundle.lbl_probatorio}"
+						required="true"
+						value="#{avalDesempBacking.entity.probatorio}"
+						size="8"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999"
+						readonly="true"
+						rendered="#{not avalDesempBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{avalDesempBacking.entity.situacao}"
+						label="#{bundle.lbl_situacaoprob}"
+						required="true"
+						rendered="#{not avalDesempBacking.entity.novo}"
+						readonly="true"
+						itens="#{avalDesempBacking.itensSituacao}"
+						width="92px !important;" />
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{avalDesempBacking.entity.funcionarioFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						readonly="#{not avalDesempBacking.entity.novo}"
+						query="funcionariosLov"
+						size="8" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{avalDesempBacking.entity.descricao}"
+						size="77"
+						readonly="#{avalDesempBacking.readOnlyForm}"
+						maxlength="80" />
+
+					<xcp:lov
+						id="lovComissao"
+						value="#{avalDesempBacking.entity.comissaoFk}"
+						label="#{bundle.lbl_comis}"
+						required="true"
+						query="comissao"
+						size="8"
+						rendered="#{avalDesempBacking.geracaoTipoProbatorio}"
+						readonly="#{not avalDesempBacking.entity.novo and avalDesempBacking.readOnlyForm}" />
+
+					<xcp:lov
+						id="lovComissaoPar"
+						value="#{avalDesempBacking.entity.comissaoparFk}"
+						label="#{bundle.lbl_comisPares}"
+						query="comissao"
+						size="8"
+						rendered="#{avalDesempBacking.geracaoTipoProbatorio and avalDesempBacking.temAvaliacaoPares}"
+						readonly="#{not avalDesempBacking.entity.novo and avalDesempBacking.readOnlyForm}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{avalDesempBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{avalDesempBacking.itensTipo}"
+						readonly="#{avalDesempBacking.entity.registroFk!=null and !avalDesempBacking.entity.novo}"
+						width="92px !important;">
+						<p:ajax
+							event="change"
+							update="lovRegistroProb lovRegistroProb_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovRegistroProb"
+						value="#{avalDesempBacking.entity.registroFk}"
+						label="#{bundle.lbl_documento}"
+						required="true"
+						rendered="#{!avalDesempBacking.renderedBoletim and avalDesempBacking.geracaoTipoProbatorio}"
+						query="documentosfunc"
+						params="#{avalDesempBacking.paramsDoc}"
+						size="8"
+						readonly="#{not avalDesempBacking.entity.novo and avalDesempBacking.readOnlyForm}" />
+
+					<xcp:dateRange
+						id="txtPeriodo"
+						requiredStart="true"
+						valueStart="#{avalDesempBacking.entity.inicio}"
+						valueEnd="#{avalDesempBacking.entity.termino}"
+						label="#{bundle.lbl_inicio}"
+						readonly="#{not avalDesempBacking.entity.novo and avalDesempBacking.readOnlyForm}"
+						margin="6px !important;"
+						size="8" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{avalDesempBacking.entity.obs}"
+						size="4000"
+						cols="79" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="AvalDesempForm/AvalDesempSindicanciaForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

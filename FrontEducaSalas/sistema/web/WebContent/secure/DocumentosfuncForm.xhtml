@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Documentosfunc"
+			backing="#{documentosfuncBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtpublicacao}"
+					type="Date"
+					size="1"
+					value="#{row.data}">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					type="String"
+					size="7"
+					value="#{row.descdoc}">
+					<xcp:outputSimpleNumber value="#{row.descdoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nrdoc}"
+					type="String"
+					size="4"
+					value="#{row.nrdoc}">
+					<xcp:outputSimple value="#{row.nrdoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					type="String"
+					size="15"
+					value="#{row.descdocumento}">
+					<xcp:outputSimple value="#{row.descdocumento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="10"
+					value="#{row.processo}">
+					<xcp:outputSimpleNumber value="#{row.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvalidade}"
+					type="Date"
+					size="5"
+					value="#{row.dtvalidade}">
+					<xcp:outputSimpleDate value="#{row.dtvalidade}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_origem}"
+					itens="#{documentosfuncBacking.itensOrigem}"
+					type="String"
+					size="10"
+					value="#{row.tipodocFk.utilizacao == 8 ? 'Transferências' : row.origem}">
+					<xcp:outputSimple
+						itens="#{documentosfuncBacking.itensOrigem}"
+						value="#{row.tipodocFk.utilizacao == 8 ? 'Transferências' : row.origem}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_acoes}"
+					type="String"
+					size="5">
+					<p:commandButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						action="#{documentosfuncBacking.actionOpendoc(row)}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:combo
+						id="cboOrigem"
+						value="#{documentosfuncBacking.entity.tipodocFk.utilizacao == 8 ? 9 : documentosfuncBacking.entity.origem}"
+						label="#{bundle.lbl_origem}"
+						required="true"
+						itens="#{documentosfuncBacking.itensOrigem}"
+						readonly="true" />
+
+					<!-- CAMPOS DE DOCUMENTOSFUNC -->
+					<xcp:lov
+						id="lovTipo"
+						value="#{documentosfuncBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						query="tipodocumento"
+						selectionListener="#{documentosfuncBacking.selectTipodocumento}"
+						update="lovNrDoc,btnDownloadDocumento"
+						size="6"
+						readonly="#{not documentosfuncBacking.entity.novo}"
+						rendered="#{documentosfuncBacking.entity.tabela == 1}" />
+
+					<xcp:lov
+						id="lovNrDoc"
+						value="#{documentosfuncBacking.entity.registroFk}"
+						params="#{documentosfuncBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_nrdoc}"
+						required="true"
+						query="documentos"
+						size="6"
+						readonly="#{not documentosfuncBacking.entity.novo}"
+						update="btnDownloadDocumento"
+						rendered="#{documentosfuncBacking.entity.tabela == 1}" />
+
+					<xcp:date
+						id="txtDtvalidade"
+						value="#{documentosfuncBacking.entity.dtvalidade}"
+						label="#{bundle.lbl_dtvalidade}"
+						rendered="#{documentosfuncBacking.entity.tabela == 1}" />
+
+					<p:spacer
+						height="1"
+						width="1"
+						rendered="#{documentosfuncBacking.entity.tabela == 1}" />
+
+					<p:panelGrid rendered="#{documentosfuncBacking.entity.tabela == 1}">
+						<p:row>
+							<p:column>
+								<p:commandButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									rendered="#{documentosfuncBacking.entity.tabela == 1}"
+									action="#{documentosfuncBacking.actionOpendoc()}" />
+							</p:column>
+							<p:column>
+								<xcp:commandButton
+									id="btnNewDoc"
+									value="#{bundle.btn_newdoc}"
+									action="#{documentosfuncBacking.newdocmodel.actionOpenNewDoc(trieniosBacking.entity.tipodocFk)}"
+									immediate="true"
+									icon="ui-icon-plusthick"
+									process="@this"
+									disabled="#{not documentosfuncBacking.entity.novo}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<!-- CAMPOS DE DOCUMENTOSPESSOAIS -->
+					<xcp:combo
+						id="cboTipodocpessoal"
+						value="#{documentosfuncBacking.entity.tipodoc}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{documentosfuncBacking.itensTipodocpessoal}"
+						readonly="true"
+						rendered="#{documentosfuncBacking.entity.tabela == 2}" />
+
+					<xcp:date
+						id="txtDtmvto"
+						value="#{documentosfuncBacking.entity.dtvalidade}"
+						label="#{bundle.lbl_dtmvto}"
+						required="true"
+						rendered="#{documentosfuncBacking.entity.tabela == 2}"
+						readonly="true" />
+
+					<p:outputLabel
+						value="#{bundle.lbl_arq}"
+						rendered="#{documentosfuncBacking.entity.tabela == 2}" />
+
+					<p:outputPanel>
+						<p:commandButton
+							id="btnDownloadDocpessoal"
+							value="#{bundle.btn_visualizar}"
+							ajax="false"
+							immediate="true"
+							rendered="#{documentosfuncBacking.entity.tabela == 2}"
+							action="#{documentosfuncBacking.actionOpendoc()}" />
+
+						<xcp:commandButton
+							id="btn_upload"
+							value="#{bundle.btn_upload}"
+							icon="ui-icon-gear"
+							oncomplete="PF('dlgArq_w').show()"
+							rendered="#{documentosfuncBacking.entity.tabela == 2}" />
+
+					</p:outputPanel>
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<ui:include src="DocManual/NewDocDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{documentosfuncBacking.newdocmodel}" />
+		</ui:include>
+
+		<p:dialog
+			id="dlgArq"
+			modal="true"
+			widgetVar="dlgArq_w"
+			header="#{bundle.title_importar_arquivo}">
+			<xcp:form
+				id="formarq"
+				multipart="true">
+				<xcp:panelForm>
+					<xcp:inputFile
+						label="#{bundle.lbl_arq}"
+						id="inpFile"
+						value="#{documentosfuncBacking.uploadedFile}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_upload"
+							value="#{bundle.btn_upload}"
+							ajax="false"
+							icon="ui-icon-gear"
+							action="#{documentosfuncBacking.actionUploadArq}"
+							oncomplete="PF('dlgArq_w').hide()" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

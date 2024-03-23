@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AuxilioPgto"
+		backing="#{auxilioPgtoBacking}"
+		masterId="Auxilio">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_numeroparc}"
+				value="#{row.numero}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.numero}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_referencia}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtentrega}"
+				value="#{row.dtentrega}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtentrega}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.valor}"
+				type="Number"
+				size="12">
+				<xcp:outputSimpleNumber
+					value="#{row.valor}"
+					precision="9"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valorpgto}"
+				value="#{row.valorpgto}"
+				type="Number"
+				size="12">
+				<xcp:outputSimpleNumber
+					value="#{row.valorpgto}"
+					precision="9"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData_AuxilioPgto"
+					value="#{auxilioPgtoBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					required="true" />
+
+				<xcp:combo
+					id="cboTipcomp"
+					value="#{auxilioPgtoBacking.entity.tipcomp}"
+					label="#{bundle.lbl_tipcomp}"
+					required="true"
+					itens="#{auxilioPgtoBacking.itensTipcomp}" />
+
+				<xcp:number
+					id="txtValor_AuxilioPgto"
+					label="#{bundle.lbl_valor}"
+					size="12"
+					required="true"
+					value="#{auxilioPgtoBacking.entity.valor}"
+					precision="9"
+					scale="2" />
+
+				<xcp:number
+					id="txtValorpgto_AuxilioPgto"
+					label="#{bundle.lbl_valorpgto}"
+					size="12"
+					value="#{auxilioPgtoBacking.entity.valorpgto}"
+					precision="9"
+					scale="2" />
+
+				<xcp:number
+					id="txtValorCoop"
+					label="#{bundle.lbl_valorCoop}"
+					size="12"
+					value="#{auxilioPgtoBacking.entity.valorcoop}"
+					precision="9"
+					scale="2"
+					rendered="#{auxilioBacking.entity.tipo == 3}" />
+
+				<xcp:date
+					id="txtDtentrega"
+					value="#{auxilioPgtoBacking.entity.dtentrega}"
+					label="#{bundle.lbl_dtentrega}" />
+
+				<xcp:memo
+					id="txtObs_AuxilioPgto"
+					label="#{bundle.lbl_obs}"
+					value="#{auxilioPgtoBacking.entity.obs}"
+					size="1000" />
+
+				<p:outputLabel value="#{bundle.lbl_documento}#{viewUtil.labelSufix}" />
+
+				<p:toolbar id="toolBarDocumento">
+					<f:facet name="left">
+						<xcp:commandButton
+							onclick="PF('wDlgUploadDocumento').show();"
+							type="button"
+							value="#{bundle.btn_upload}" />
+
+						<xcp:commandButton
+							id="btnDownloadDocumento"
+							value="#{bundle.btn_visualizar}"
+							ajax="false"
+							immediate="true"
+							process="@this"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							disabled="#{auxilioPgtoBacking.entity.arquivo == null}">
+							<p:fileDownload
+								value="#{auxilioPgtoBacking.downloadDocumento}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:panelForm>
+		</ui:define>
+
+		<ui:define name="barraListaDet">
+			<xcp:commandButton
+				id="btn_gerar"
+				icon="ui-icon-gear"
+				value="#{bundle.btn_gerarParcelas}"
+				action="#{auxilioBacking.actionGerarParcelas}"
+				rendered="#{auxilioBacking.renderedGerar}"
+				oncomplete="$(PrimeFaces.escapeClientId('form:btnAtualizar_AuxilioPgto')).click()" />
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

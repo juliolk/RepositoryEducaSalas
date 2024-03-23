@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+	
+		<style type="text/css">
+			.ui-layout-center.ui-layout-pane.ui-layout-pane-center h2 {
+				font-size: 24px !important;
+				margin-top: 40px;
+			}
+		
+			.ui-layout-center.ui-layout-pane.ui-layout-pane-center p {
+				font-size: 14px !important;
+			}
+
+			.alert {
+				margin: 45px auto;
+			}
+			
+			.link-lojas {
+				margin-top: 40px;
+			}
+		</style>
+	
+		<xcp:panelContent>
+		
+				<p:outputPanel
+					class="section-header secondary-bgcolor ui-content-no-space-top ui-content-no-space-bottom">
+					<div class="section-info">
+						<div class="nome-empresa">
+							<h1>PRIMEIRO ACESSO</h1>
+							<small style="text-transform: none">Para acessar a sua conta no aplicativo móvel ADMRH, é preciso informar o Órgão/Empresa que você está vinculado. Faça isso utilizando uma das opções abaixo:</small>
+						</div>
+					</div>
+		
+				</p:outputPanel>
+						
+			<div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-5">
+                    	<h2>LEITURA DO QR-CODE</h2>
+                        <p>Abra o opção de fazer a leitura do QR-Code e aponte a câmera para o código QR abaixo</p>
+                        <div class="">
+		                    <p:graphicImage
+		                        id="imgQRCode"
+		                        value="#{ qRCodeMobileBacking.urlQRCode }"
+		                        cache="false" />
+                        </div>
+					</div>
+                    <div class="col-lg-offset-2 col-lg-5">
+                    	<h2>DIGITAÇÃO DO CÓDIGO</h2>
+                        <p>Na tela de digitação do código do Órgão/Empresa, informe o código abaixo:</p>
+                        <div class="text-center">
+                        	<div class="alert alert-default">
+                        		<h1>#{ qRCodeMobileBacking.codigoOrgaoEmpresa }</h1>
+                        	</div>
+                        </div>
+   					</div>
+				</div>
+                <div class="text-center link-lojas">
+                    <a href="https://play.google.com/store/apps/details?id=br.com.admrh.mobile" target="_blank">
+                        <img  style="width: 200px" alt="Disponível no Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png"/>
+                    </a>
+                    <a href="https://apps.apple.com/br/app/admrh/id1673618483" target="_blank">
+                    	<img  style="width: 180px" alt="Baixar na App Store" src="#{resource['/img/Download_on_the_App_Store_Badge_PTBR_RGB_blk_092917.svg']}"/>
+                    </a>
+
+        		</div>
+			</div>
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

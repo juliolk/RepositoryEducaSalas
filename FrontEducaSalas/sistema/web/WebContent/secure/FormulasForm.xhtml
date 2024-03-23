@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Formulas"
+			backing="#{formulasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_formula}"
+					value="#{row.formula}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.formula}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelGrid>
+					<p:row>
+						<p:column>
+							<xcp:panelForm>
+
+								<xcp:number
+									id="txtFormula"
+									label="#{bundle.lbl_formula}"
+									required="true"
+									value="#{formulasBacking.entity.formula}"
+									size="4"
+									precision="4"
+									scale="0"
+									maxValue="9999"
+									readonly="#{not formulasBacking.entity.novo}" />
+
+								<xcp:text
+									id="txtDescricao"
+									label="#{bundle.lbl_descricao}"
+									required="true"
+									value="#{formulasBacking.entity.descricao}"
+									size="50" />
+
+								<p:outputLabel
+									value="#{bundle.lbl_estado}#{viewUtil.labelSufix}" />
+								<h:outputText
+									value="#{bundle.txt_formula_nao_compilada}"
+									rendered="#{empty formulasBacking.estado}" />
+								<h:outputText
+									value="#{bundle.txt_formula_valida}"
+									rendered="#{formulasBacking.estado == 'VALID'}"
+									style="color:green;" />
+								<h:outputText
+									value="#{bundle.txt_formula_invalida}"
+									rendered="#{formulasBacking.estado == 'INVALID'}"
+									style="color:red;" />
+							</xcp:panelForm>
+						</p:column>
+
+						<p:column
+							rowspan="2"
+							style="vertical-align: bottom; padding-bottom: 4px;">
+							<p:inputTextarea
+								id="txtMemo"
+								value="#{formulasBacking.entity.memo}"
+								label="#{bundle.lbl_memo}"
+								rows="20"
+								cols="100"
+								autoResize="false"
+								style="height:550px; resize:none;font-family: monospace;" />
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column style="vertical-align: top;">
+							<ui:include src="FormulasForm/FormulasFormBiblioteca.xhtml" />
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+			</ui:define>
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_compilar"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_compilar}"
+					action="#{formulasBacking.actionCompilar}"
+					process="@this :#{p:component('grpForm_Formulas')}"
+					update=":#{p:component('formErrosFormula')}"
+					disabled="#{formulasBacking.entity.novo}"
+					onstart="PF('wBlock_Formulas').show();"
+					oncomplete="PF('wBlock_Formulas').hide();" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgErrosFormula"
+			header="#{bundle.tit_dlgErrosFormula}"
+			widgetVar="wDlgErrosFormula"
+			resizable="false"
+			modal="true">
+			<xcp:form id="formErrosFormula">
+				<xcp:panelGrid>
+					<p:row>
+						<p:column>
+							<p:outputPanel id="colFonte">
+								<p:scrollPanel
+									style="height:400px;width:800px;"
+									mode="native">
+									<xcp:panelGrid>
+										<c:forEach
+											items="#{formulasBacking.fonteGerado}"
+											var="row"
+											varStatus="table">
+											<p:row>
+												<p:column
+													styleClass="formula_fonte_linha
+																	    #{table.index % 2 == 0 ? 'impar' : 'par'}
+												              #{formulasBacking.linhaErro == (table.index + 1) ? 'sel' : ''}">
+													<h:outputText value="#{table.index + 1}" />
+												</p:column>
+												<p:column
+													styleClass="formula_fonte_texto 
+												              #{table.index % 2 == 0 ? 'impar' : 'par'}
+												              #{formulasBacking.linhaErro == (table.index + 1) ? 'sel' : ''}">
+													<h:outputText value="#{row}" />
+												</p:column>
+											</p:row>
+										</c:forEach>
+									</xcp:panelGrid>
+								</p:scrollPanel>
+							</p:outputPanel>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column style="padding-top: 10px;">
+							<p:dataTable
+								id="tableError"
+								widgetVar="wTableError"
+								var="row"
+								sortMode="multiple"
+								style="width:800px;"
+								scrollHeight="150"
+								scrollable="true"
+								rowKey="#{row}"
+								selectionMode="single"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								value="#{formulasBacking.listaErros}"
+								selection="#{formulasBacking.erroSelecionado}">
+
+								<p:ajax
+									event="rowSelect"
+									process="@this"
+									update=":#{p:component('colFonte')}" />
+
+								<xcp:column
+									headerText="#{bundle.col_linha}"
+									type="Number"
+									size="10">
+									<h:outputText value="#{row.line}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_texto}"
+									type="String">
+									<h:outputText value="#{row.text}" />
+								</xcp:column>
+
+							</p:dataTable>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column style="text-align:right">
+							<xcp:commandButton
+								id="btn_fechar"
+								value="#{bundle.btn_fechar}"
+								onclick="PF('wDlgErrosFormula').hide();return false;" />
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

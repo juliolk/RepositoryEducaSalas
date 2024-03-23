@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.form_content_adic {
+	text-align: left;
+	color: black;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	vertical-align: middle;
+}
+</style>
+
+		<xcp:panelFuncionarioDet
+			id="Fichamedica"
+			backing="#{fichamedicaBacking}"
+			renderedProfissional="true"
+			renderedDependentes="true">
+			<ui:define name="form">
+				<p:tab
+					id="tabDadosFichaMedica"
+					title="#{bundle.tit_exames}">
+					<h:panelGroup id="telaFichaMedica">
+						<h:panelGroup rendered="#{fichamedicaBacking.status == 1}">
+							<p:toolbar>
+								<f:facet name="left">
+									<xcp:panelGrid>
+										<p:row>
+											<p:column>
+												<xcp:commandButton
+													icon="ui-icon-document"
+													value="#{bundle.btn_novo}"
+													action="#{backing.actionNovo('Ficamedica')}"
+													process="@this"
+													update="telaFichaMedica"
+													disabled="#{fichamedicaBacking.disabledNovo}">
+												</xcp:commandButton>
+											</p:column>
+										</p:row>
+									</xcp:panelGrid>
+								</f:facet>
+							</p:toolbar>
+
+							<p:dataTable
+								id="table_Fichamedica"
+								var="row"
+								value="#{fichamedicaBacking.lista}"
+								filteredValue="#{fichamedicaBacking.listaFiltrados}"
+								rows="#{viewUtil.tableRows}"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								paginator="true"
+								paginatorPosition="bottom"
+								selectionMode="single"
+								resizableColumns="true"
+								selection="#{fichamedicaBacking.selectedEntity}"
+								rowKey="#{row.PK}">
+
+								<p:ajax
+									event="rowSelect"
+									update=":#{p:component('telaFichaMedica')}"
+									listener="#{fichamedicaBacking.onRowSelect}" />
+
+								<xcp:column
+									headerText="#{bundle.col_dtexame}"
+									value="#{row.dtexame}"
+									type="Date"
+									size="7">
+									<xcp:outputSimpleDate value="#{row.dtexame}" />
+								</xcp:column>
+								<xcp:column
+									headerText="#{bundle.col_crm}"
+									value="#{row.crm}"
+									type="Number"
+									size="15">
+									<xcp:outputSimpleNumber
+										value="#{row.crm}"
+										precision="15"
+										scale="0" />
+								</xcp:column>
+								<xcp:column
+									headerText="#{bundle.col_registro_medico}"
+									value="#{row.avaliacao}"
+									type="String"
+									size="60">
+									<xcp:outputSimple value="#{row.registromedico}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_conclusao}"
+									value="#{row.conclusao}"
+									type="String"
+									itens="#{fichamedicaBacking.itensConclusao}"
+									size="10">
+									<xcp:outputSimple
+										value="#{row.conclusao}"
+										itens="#{fichamedicaBacking.itensConclusao}" />
+								</xcp:column>
+							</p:dataTable>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{fichamedicaBacking.status == 2}">
+							<h:panelGrid
+								columns="16"
+								columnClasses="form_label,form_content"
+								styleClass="tabela_alinhamento">
+								<xcp:date
+									id="txtDtexame"
+									required="true"
+									value="#{fichamedicaBacking.entity.dtexame}"
+									label="#{bundle.lbl_dtexame}"
+									readonly="#{not fichamedicaBacking.entity.novo}" />
+
+								<xcp:number
+									id="txtCrm"
+									label="#{bundle.lbl_crm}"
+									value="#{fichamedicaBacking.entity.crm}"
+									size="15"
+									precision="15"
+									scale="0"
+									maxValue="999999999999999" />
+
+								<xcp:number
+									id="txtPeso"
+									label="#{bundle.lbl_peso}"
+									value="#{fichamedicaBacking.entity.peso}"
+									size="4"
+									precision="4"
+									scale="0"
+									maxValue="9999">
+									<p:ajax
+										process="@this"
+										update="txtImc txtImc_l" />
+								</xcp:number>
+
+								<xcp:number
+									id="txtAltura"
+									label="#{bundle.lbl_altura}"
+									size="7"
+									value="#{fichamedicaBacking.entity.altura}"
+									precision="4"
+									scale="2">
+									<p:ajax
+										process="@this"
+										update="txtImc txtImc_l" />
+								</xcp:number>
+
+								<xcp:number
+									id="txtImc"
+									label="#{bundle.lbl_imc}"
+									size="7"
+									value="#{fichamedicaBacking.imc}"
+									precision="4"
+									scale="2"
+									readonly="true" />
+
+								<xcp:text
+									id="txtTa"
+									label="#{bundle.lbl_ta}"
+									value="#{fichamedicaBacking.entity.ta}"
+									size="15" />
+
+								<xcp:text
+									id="txtFr"
+									label="#{bundle.lbl_fr}"
+									value="#{fichamedicaBacking.entity.fr}"
+									size="15" />
+
+								<xcp:text
+									id="txtFc"
+									label="#{bundle.lbl_fc}"
+									value="#{fichamedicaBacking.entity.fc}"
+									size="15" />
+
+								<xcp:combo
+									id="cboSangue"
+									value="#{fichamedicaBacking.entity.sangue}"
+									label="#{bundle.lbl_sangue}"
+									width="100px"
+									itens="#{fichamedicaBacking.itensSangue}" />
+								
+								<xcp:combo
+									id="cboDoador"
+									value="#{fichamedicaBacking.entity.doador}"
+									label="#{bundle.lbl_doador}"
+									width="100px"
+									required="true"
+									itens="#{fichamedicaBacking.itensIndSimNaoNull}" />
+									
+							</h:panelGrid>
+							<p:spacer height="1px" />
+							<h:panelGrid
+								columns="2"
+								styleClass="tabela_alinhamento">
+								<h:panelGroup>
+									<p:tabView
+										id="tabFuncionarios"
+										style="width: 900px; margin-left:10px;">
+										
+										<p:tab
+											id="tabRegistroMedico"
+											title="#{bundle.tit_registro_medico}">
+											
+											<p:fieldset legend="#{bundle.tit_antecedentes_pessoais}">
+												<h:panelGrid
+													columns="4"
+													columnClasses="form_label,form_content_adic"
+													styleClass="tabela_alinhamento">
+													
+													<xcp:combo
+														id="cboHipertensaoArterial"
+														value="#{fichamedicaBacking.entity.indhipertensaoarterial}"
+														label="#{bundle.lbl_hipertensaoarterial}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDeshipertensaoarterial('')}"
+															update="txtDeshipertensaoarterial,txtDeshipertensaoarterial_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDeshipertensaoarterial"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.deshipertensaoarterial}"
+														required="#{fichamedicaBacking.entity.indhipertensaoarterial==1}"
+														readonly="#{fichamedicaBacking.entity.indhipertensaoarterial!=1}"
+														size="100" />
+														
+													<xcp:combo
+														id="cboDiabetes"
+														value="#{fichamedicaBacking.entity.inddiabetes}"
+														label="#{bundle.lbl_diabetes}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDesdiabetes('')}"
+															update="txtDesdiabetes,txtDesdiabetes_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDesdiabetes"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.desdiabetes}"
+														required="#{fichamedicaBacking.entity.inddiabetes==1}"
+														readonly="#{fichamedicaBacking.entity.inddiabetes!=1}"
+														size="100" />
+														
+													<xcp:combo
+														id="cboDepressaoansiedade"
+														value="#{fichamedicaBacking.entity.inddepressaoansiedade}"
+														label="#{bundle.lbl_depressaoansiedade}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDesdepressaoansiedade('')}"
+															update="txtDesdepressaoansiedade,txtDesdepressaoansiedade_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDesdepressaoansiedade"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.desdepressaoansiedade}"
+														required="#{fichamedicaBacking.entity.inddepressaoansiedade==1}"
+														readonly="#{fichamedicaBacking.entity.inddepressaoansiedade!=1}"
+														size="100" />
+														
+													<xcp:combo
+														id="cboCancer"
+														value="#{fichamedicaBacking.entity.indcancer}"
+														label="#{bundle.lbl_cancer}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDescancer('')}"
+															update="txtDescancer,txtDescancer_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDescancer"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.descancer}"
+														required="#{fichamedicaBacking.entity.indcancer==1}"
+														readonly="#{fichamedicaBacking.entity.indcancer!=1}"
+														size="100" />
+													
+													<xcp:combo
+														id="cboAlergia"
+														value="#{fichamedicaBacking.entity.indalergia}"
+														label="#{bundle.lbl_alergia}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDesalergia('')}"
+															update="txtDesalergia,txtDesalergia_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDesalergia"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.desalergia}"
+														required="#{fichamedicaBacking.entity.indalergia==1}"
+														readonly="#{fichamedicaBacking.entity.indalergia!=1}"
+														size="100" />
+												
+													<xcp:combo
+														id="cboOutros"
+														value="#{fichamedicaBacking.entity.indoutros}"
+														label="#{bundle.lbl_outros}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDesoutros('')}"
+															update="txtDesoutros,txtDesoutros_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDesoutros"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.desoutros}"
+														required="#{fichamedicaBacking.entity.indoutros==1}"
+														readonly="#{fichamedicaBacking.entity.indoutros!=1}"
+														size="100" />
+															
+												</h:panelGrid>
+											</p:fieldset>
+
+											<p:fieldset legend="#{bundle.tit_registro_medico}">
+												<xcp:panelForm>
+													<xcp:memo id="txtRegistroMedico"
+														label="#{bundle.lbl_registro_medico}" cols="94" rows="10"
+														value="#{fichamedicaBacking.entity.registromedico}"
+														size="4000" />
+
+												</xcp:panelForm>
+											</p:fieldset>
+
+											<p:fieldset legend="#{bundle.tit_conduta}">
+												<h:panelGrid
+													columns="4"
+													columnClasses="form_label,form_content_adic"
+													styleClass="tabela_alinhamento">
+													
+													<xcp:combo
+														id="cboConsulta"
+														value="#{fichamedicaBacking.entity.indconsulta}"
+														label="#{bundle.lbl_consulta}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDesconsulta('')}"
+															update="txtDesconsulta,txtDesconsulta_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDesconsulta"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.desconsulta}"
+														required="#{fichamedicaBacking.entity.indconsulta==1}"
+														readonly="#{fichamedicaBacking.entity.indconsulta!=1}"
+														size="100" />
+												
+													<xcp:combo
+														id="cboMedicacao"
+														value="#{fichamedicaBacking.entity.indmedicacao}"
+														label="#{bundle.lbl_medicacao}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDesmedicacao('')}"
+															update="txtDesmedicacao,txtDesmedicacao_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDesmedicacao"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.desmedicacao}"
+														required="#{fichamedicaBacking.entity.indmedicacao==1}"
+														readonly="#{fichamedicaBacking.entity.indmedicacao!=1}"
+														size="100" />
+												
+													<xcp:combo
+														id="cboEncaminhamento"
+														value="#{fichamedicaBacking.entity.indencaminhamento}"
+														label="#{bundle.lbl_encaminhamento}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setDesencaminhamento('')}"
+															update="txtDesencaminhamento,txtDesencaminhamento_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtDesencaminhamento"
+														label="#{bundle.lbl_descricao}"
+														value="#{fichamedicaBacking.entity.desencaminhamento}"
+														required="#{fichamedicaBacking.entity.indencaminhamento==1}"
+														readonly="#{fichamedicaBacking.entity.indencaminhamento!=1}"
+														size="100" />
+														
+												</h:panelGrid>
+											</p:fieldset>
+
+											<p:fieldset legend="#{bundle.tit_inf_adicionais}">
+												<h:panelGrid
+													columns="4"
+													columnClasses="form_label,form_content_adic"
+													styleClass="tabela_alinhamento">
+													<xcp:combo
+														id="cboAlergico"
+														value="#{fichamedicaBacking.entity.alergico}"
+														label="#{bundle.lbl_alergico}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensIndSimNao}">
+														<p:ajax
+															event="change"
+															listener="#{fichamedicaBacking.entity.setEspalergia('')}"
+															update="txtEspalergia,txtEspalergia_l">
+														</p:ajax>
+													</xcp:combo>
+
+													<xcp:memo
+														id="txtEspalergia"
+														label="#{bundle.lbl_espalergia}"
+														value="#{fichamedicaBacking.entity.espalergia}"
+														required="#{fichamedicaBacking.entity.alergico==1}"
+														readonly="#{fichamedicaBacking.entity.alergico!=1}"
+														size="100" />
+
+													<xcp:combo
+														id="cboConclusao"
+														value="#{fichamedicaBacking.entity.conclusao}"
+														label="#{bundle.lbl_conclusao}"
+														width="100px"
+														required="true"
+														itens="#{fichamedicaBacking.itensConclusao}" />
+
+													<xcp:memo
+														id="txtConclusaoesp"
+														label="#{bundle.lbl_conclusaoesp}"
+														value="#{fichamedicaBacking.entity.conclusaoesp}"
+														size="100" />
+
+												</h:panelGrid>
+											</p:fieldset>
+										</p:tab>
+
+										<p:tab
+											id="tabCabecaPescoco"
+											title="#{bundle.tit_cabeca_pescoco}">
+											<xcp:panelForm>
+
+												<xcp:text
+													id="txtCabeca"
+													label="#{bundle.lbl_cabeca}"
+													value="#{fichamedicaBacking.entity.cabeca}"
+													size="100" />
+
+												<xcp:text
+													id="txtOroscopia"
+													label="#{bundle.lbl_oroscopia}"
+													value="#{fichamedicaBacking.entity.oroscopia}"
+													size="100" />
+
+												<xcp:text
+													id="txtOtoscopia"
+													label="#{bundle.lbl_otoscopia}"
+													value="#{fichamedicaBacking.entity.otoscopia}"
+													size="100" />
+
+												<xcp:text
+													id="txtCabecapalp"
+													label="#{bundle.lbl_cabecapalp}"
+													value="#{fichamedicaBacking.entity.cabecapalp}"
+													size="100" />
+											</xcp:panelForm>
+
+										</p:tab>
+										<p:tab
+											id="tabTorax"
+											title="#{bundle.tit_torax}">
+											<xcp:panelForm>
+												<xcp:text
+													id="txtTorax"
+													label="#{bundle.lbl_torax}"
+													value="#{fichamedicaBacking.entity.torax}"
+													size="100" />
+
+												<xcp:text
+													id="txtToraxpalp"
+													label="#{bundle.lbl_toraxpalp}"
+													value="#{fichamedicaBacking.entity.toraxpalp}"
+													size="100" />
+
+												<xcp:text
+													id="txtCardiaca"
+													label="#{bundle.lbl_cardiaca}"
+													value="#{fichamedicaBacking.entity.cardiaca}"
+													size="100" />
+
+												<xcp:text
+													id="txtRespiratoria"
+													label="#{bundle.lbl_respiratoria}"
+													value="#{fichamedicaBacking.entity.respiratoria}"
+													size="100" />
+											</xcp:panelForm>
+										</p:tab>
+
+										<p:tab
+											id="tabAbdomen"
+											title="#{bundle.tit_abdomen}">
+											<xcp:panelForm>
+												<xcp:text
+													id="txtAbdomen"
+													label="#{bundle.lbl_abdomen}"
+													value="#{fichamedicaBacking.entity.abdomen}"
+													size="100" />
+
+												<xcp:text
+													id="txtAbdomenpalp"
+													label="#{bundle.lbl_abdomenpalp}"
+													value="#{fichamedicaBacking.entity.abdomenpalp}"
+													size="100" />
+
+												<xcp:text
+													id="txtPercussao"
+													label="#{bundle.lbl_percussao}"
+													value="#{fichamedicaBacking.entity.percussao}"
+													size="100" />
+
+											</xcp:panelForm>
+										</p:tab>
+										<p:tab
+											id="tabIngnais"
+											title="#{bundle.tit_ingnais}">
+											<xcp:panelForm>
+												<xcp:combo
+													id="cboAdenopatias"
+													value="#{fichamedicaBacking.entity.adenopatias}"
+													label="#{bundle.lbl_adenopatias}"
+													width="100px"
+													required="true"
+													itens="#{fichamedicaBacking.itensIndSimNao}" />
+
+												<xcp:combo
+													id="cboHernias"
+													value="#{fichamedicaBacking.entity.hernias}"
+													label="#{bundle.lbl_hernias}"
+													required="true"
+													width="100px"
+													itens="#{fichamedicaBacking.itensIndSimNao}">
+													<p:ajax
+														event="change"
+														listener="#{fichamedicaBacking.entity.setInguinais('')}"
+														update="txtInguinais,txtInguinais_l">
+													</p:ajax>
+												</xcp:combo>
+												<xcp:memo
+													id="txtInguinais"
+													label="#{bundle.lbl_inguinais}"
+													value="#{fichamedicaBacking.entity.inguinais}"
+													required="#{fichamedicaBacking.entity.hernias==1}"
+													readonly="#{fichamedicaBacking.entity.hernias!=1}"
+													size="100" />
+											</xcp:panelForm>
+										</p:tab>
+
+										<p:tab
+											id="tabMembosInferiores"
+											title="#{bundle.tit_inferiores}">
+											<xcp:panelForm>
+												<xcp:combo
+													id="cboInferiores"
+													value="#{fichamedicaBacking.entity.inferiores}"
+													width="100px"
+													label="#{bundle.lbl_inferiores}"
+													itens="#{fichamedicaBacking.itensIndSimNao}">
+													<p:ajax
+														event="change"
+														listener="#{fichamedicaBacking.entity.setInferioresesp('')}"
+														update="txtInferioresesp,txtInferioresesp_l">
+													</p:ajax>
+												</xcp:combo>
+
+												<xcp:memo
+													id="txtInferioresesp"
+													label="#{bundle.lbl_inferioresesp}"
+													required="#{fichamedicaBacking.entity.inferiores==1}"
+													readonly="#{fichamedicaBacking.entity.inferiores!=1}"
+													value="#{fichamedicaBacking.entity.inferioresesp}"
+													size="100" />
+											</xcp:panelForm>
+										</p:tab>
+
+										<p:tab
+											id="tabMembosSuperiores"
+											title="#{bundle.tit_superiores}">
+											<xcp:panelForm>
+												<xcp:combo
+													id="cboSuperiores"
+													value="#{fichamedicaBacking.entity.superiores}"
+													width="100px"
+													label="#{bundle.lbl_superiores}"
+													itens="#{fichamedicaBacking.itensIndSimNao}">
+													<p:ajax
+														event="change"
+														listener="#{fichamedicaBacking.entity.setSuperioresesp('')}"
+														update="txtSuperioresesp,txtSuperioresesp_l">
+													</p:ajax>
+												</xcp:combo>
+
+												<xcp:memo
+													id="txtSuperioresesp"
+													label="#{bundle.lbl_superioresesp}"
+													value="#{fichamedicaBacking.entity.superioresesp}"
+													required="#{fichamedicaBacking.entity.superiores==1}"
+													readonly="#{fichamedicaBacking.entity.superiores!=1}"
+													size="100" />
+											</xcp:panelForm>
+										</p:tab>										
+
+										<p:tab
+											id="tabCompl"
+											title="#{bundle.tit_colunas_complementares}"
+											rendered="#{fichamedicaBacking.xcpTabelaColunaVO.colunaComplementar}">
+											<xcp:complemento vo="#{fichamedicaBacking.xcpTabelaColunaVO}" />
+										</p:tab>
+									</p:tabView>
+
+								</h:panelGroup>
+							</h:panelGrid>
+
+							<p:outputPanel
+								id="btnsForm_Fichamedica"
+								rendered="#{backing.modo == backing.modoForm}">
+								<p:toolbar
+									styleClass="xcp_pmanut_form_toolbar"
+									rendered="#{not fichamedicaBacking.detailsEdit}">
+									<f:facet name="left">
+
+										<xcp:commandButton
+											id="btnGravar"
+											icon="ui-icon-disk"
+											value="#{bundle.btn_gravar}"
+											action="#{fichamedicaBacking.actionGravar}"
+											process="@this,telaFichaMedica"
+											rendered="#{(empty renderedGravar) or renderedGravar}"
+											disabled="#{fichamedicaBacking.disabledGravar}"
+											update="telaFichaMedica">
+											<p:resetInput target="telaFichaMedica" />
+										</xcp:commandButton>
+
+										<xcp:commandButton
+											id="btnRemover"
+											icon="ui-icon-trash"
+											value="#{bundle.btn_remover}"
+											action="#{fichamedicaBacking.actionRemover}"
+											disabled="#{fichamedicaBacking.entity.novo or fichamedicaBacking.disabledExcluir}"
+											rendered="#{(empty renderedRemover) or renderedRemover}"
+											process="@this"
+											update="telaFichaMedica">
+											<p:resetInput target="telaFichaMedica" />
+										</xcp:commandButton>
+
+										<xcp:commandButton
+											id="btnVoltar"
+											icon="ui-icon-arrowreturnthick-1-w"
+											value="#{bundle.btn_voltar}"
+											action="#{fichamedicaBacking.actionVoltarListagem}"
+											process="@this"
+											update="telaFichaMedica">
+										</xcp:commandButton>
+
+										<xcpfunc:anexosButton
+											id="fichamedica"
+											entity="#{fichamedicaBacking.entity}"
+											funcionarioPK="#{fichamedicaBacking.funcionario.PK}" />
+
+									</f:facet>
+								</p:toolbar>
+							</p:outputPanel>
+						</h:panelGroup>
+					</h:panelGroup>
+				</p:tab>				
+				<p:tab
+					id="tabFichaOdontologica"
+					title="#{bundle.tit_fichaodontologica}">
+					<ui:include src="FichamedicaForm/FichamedicaOdontologicaForm.xhtml" />
+				</p:tab>
+				<p:tab
+					id="tabDadosExames"
+					title="#{bundle.tit_exames_ficha}">
+					<ui:include src="FichamedicaForm/FichamedicaExamesForm.xhtml" />
+				</p:tab>
+				<p:tab
+					id="tabDadosAtestados"
+					title="#{bundle.tit_atestados}">
+					<ui:include src="FichamedicaForm/FichamedicaAtestadosForm.xhtml" />
+				</p:tab>
+
+				<p:tab
+					id="tabDadosPesquisaServidor"
+					title="#{bundle.tit_questionario_medico_servidor}">
+					<ui:include
+						src="FichamedicaForm/FichamedicaQuestionarioServidorForm.xhtml" />
+				</p:tab>
+
+				<p:tab
+					id="tabDadosPesquisaMedico"
+					title="#{bundle.tit_questionario_medico_medico}">
+					<ui:include
+						src="FichamedicaForm/FichamedicaQuestionarioMedicoForm.xhtml" />
+				</p:tab>
+
+			</ui:define>
+
+		</xcp:panelFuncionarioDet>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<xcpfunc:anexosDialog />
+		
+		<ui:include src="FichamedicaForm/FichamedicaOdontologicaDialog.xhtml" />
+
+		<p:dialog
+			header="#{bundle.tit_dlgUploadDocumento}"
+			widgetVar="wDlgUploadDocumento"
+			modal="true">
+			<xcp:form
+				id="formUpload"
+				multipart="true">
+				<p:fileUpload
+					id="uploadDocumento"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{fichamedicaDocBacking.actionUploadDocumento}" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

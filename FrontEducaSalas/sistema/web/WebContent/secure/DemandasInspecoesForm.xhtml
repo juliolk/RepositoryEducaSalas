@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="DemandasInspecoes"
+			backing="#{demandasInspecoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.demanda}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.demanda}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_demanda}"
+					value="#{row.demandaFk.necessidade}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.demandaFk.necessidade}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numero}"
+					value="#{row.numero}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.numero}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inspecao}"
+					value="#{row.inspecao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.inspecao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_realizacao}"
+					value="#{row.realizacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.realizacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_responsavel}"
+					value="#{row.responsavel}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.responsavel}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovDemanda"
+						value="#{demandasInspecoesBacking.entity.demandaFk}"
+						label="#{bundle.lbl_demanda}"
+						required="true"
+						query="demandas"
+						size="5"
+						readonly="#{not demandasInspecoesBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtNumero"
+						label="#{bundle.lbl_numero}"
+						required="true"
+						value="#{demandasInspecoesBacking.entity.numero}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not demandasInspecoesBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtInspecao"
+						label="#{bundle.lbl_inspecao}"
+						required="true"
+						value="#{demandasInspecoesBacking.entity.inspecao}"
+						size="4000" />
+
+					<xcp:date
+						id="txtRealizacao"
+						required="true"
+						value="#{demandasInspecoesBacking.entity.realizacao}"
+						label="#{bundle.lbl_realizacao}" />
+
+					<xcp:lov
+						id="lovResponsavelInsp"
+						value="#{demandasInspecoesBacking.entity.responsavelFk}"
+						label="#{bundle.lbl_responsavelInspec}"
+						query="funcionariosLov"
+						size="10" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{demandasInspecoesBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					oncomplete="PF('w_anexos').show()" />
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="DemandasInspecoesForm/DemandasAcoesForm.xhtml" />
+
+				<ui:include src="DemandasInspecoesForm/DemandasEpiForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<ui:include
+			src="DemandasInspecoesForm/DemandasAcompanhamentosDlg.xhtml" />
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{demandasInspecoesBacking.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{demandasInspecoesBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{demandasInspecoesBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo"
+							action="#{demandasInspecoesBacking.actionEditarAnexo(rowAnex)}">
+
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update="tblAnex :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{demandasInspecoesBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{demandasInspecoesBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{demandasInspecoesBacking.anexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{demandasInspecoesBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{demandasInspecoesBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+
+</ui:composition>

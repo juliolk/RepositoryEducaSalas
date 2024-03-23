@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelSelecaoIndividual">
+		<p:fieldset
+			legend="#{bundle.tit_individual}"
+			style="width:800px">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovComissaoInd"
+					required="true"
+					value="#{portariaComissaoInqueritoBacking.helper.comissao}"
+					label="#{bundle.lbl_comissao}"
+					query="comissao_all"
+					update="lovComissaoInq"
+					size="8"
+					selectionListener="#{portariaComissaoInqueritoBacking.selectComissao}" />
+
+				<xcp:lov
+					id="lovComissaoInq"
+					required="true"
+					value="#{portariaComissaoInqueritoBacking.helper.inquerito}"
+					label="#{bundle.lbl_inquerito}"
+					params="#{portariaComissaoInqueritoBacking.paramsInquerito}"
+					query="comissao_inq_all"
+					size="8" />
+
+			</xcp:panelForm>
+		</p:fieldset>
+
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_gerar_individual"
+					icon="ui-icon-gear"
+					action="#{portariaComissaoInqueritoBacking.actionValidaPortariaIndividual}"
+					update=":#{p:component('dlg')}"
+					value="#{bundle.btn_gerar_individual}" />
+			</f:facet>
+		</p:toolbar>
+	</p:outputPanel>
+</ui:composition>

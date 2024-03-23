@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:tabView id="tblinfcompl">
+		<p:tab
+			id="tabDadosTrabManual"
+			title="#{bundle.tit_trab_manual}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabTrabManual"
+					value="#{talentosBacking.helper.listTrabManual}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_tipo}"
+						value="#{row.codigoFk.codigo}"
+						type="Number"
+						size="3">
+						<xcp:outputSimpleNumber
+							value="#{row.codigoFk.codigo}"
+							precision="3"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.codigoFk.descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.codigoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_mater}"
+						value="#{row.material}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.material}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmTrabManual"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgTrabManual_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.functrabmanual}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverTrabManual(row)}"
+								update=":form:tabFuncionarios:tblinfcompl:tabTrabManual"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+
+				<xcp:commandButton
+					id="btn_adicionar_man"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgTrabManual_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmTrabManual">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.functrabmanual}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosTrabVol"
+			title="#{bundle.tit_trab_volunt}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabTrabVol"
+					value="#{talentosBacking.helper.listTrabVolunt}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_entidade}"
+						value="#{row.entidade}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.entidade}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_datainicio}"
+						value="#{row.datainicio}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.datainicio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_datafim}"
+						value="#{row.datafim}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.datafim}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmTrabVol"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgTrabVol_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.functrabvolunt}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverTrabVolunt(row)}"
+								update=":form:tabFuncionarios:tblinfcompl:tabTrabVol"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_vol"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgTrabVol_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmTrabVol">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.functrabvolunt}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosFuncLazer"
+			title="#{bundle.tit_func_lazer}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabFuncLazer"
+					value="#{talentosBacking.helper.listFuncLazer}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_lazer}"
+						value="#{row.codigoFk.descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.codigoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_horas}"
+						value="#{row.tempo}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.tempo}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_frequencia}"
+						value="#{row.frequencia}"
+						type="String"
+						size="10"
+						itens="#{talentosBacking.itensFrequencia}">
+						<xcp:outputSimple
+							value="#{row.frequencia}"
+							itens="#{talentosBacking.itensFrequencia}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmFuncLazer"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgFuncLazer_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.funclazer}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverFuncLazer(row)}"
+								update=":form:tabFuncionarios:tblinfcompl:tabFuncLazer"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+
+				<xcp:commandButton
+					id="btn_adicionar_laz"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgFuncLazer_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmFuncLazer">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.funclazer}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosFuncViagens"
+			title="#{bundle.tit_func_viagens}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabFuncViagens"
+					value="#{talentosBacking.helper.listFuncViagens}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						value="#{row.data}"
+						type="Date"
+						size="10">
+						<xcp:outputSimple value="#{row.data}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_cidade}"
+						value="#{row.cidadeFk.descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.cidadeFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmFuncViagens"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgFuncViagens_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.funcviagens}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverFuncViagens(row)}"
+								update=":form:tabFuncionarios:tblinfcompl:tabFuncViagens"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_vig"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgFuncViagens_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmFuncViagens">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.funcviagens}"
+						value="#{null}" />
+				</xcp:commandButton>
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosFuncAtivFisica"
+			title="#{bundle.tit_func_ativfisica}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabFuncAtivFisica"
+					value="#{talentosBacking.helper.listFuncAtivFisica}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_tipo}"
+						value="#{row.tipoFk.descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_modalidade}"
+						value="#{row.modalidade}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.modalidade}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tempo}"
+						value="#{row.tempo}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.tempo}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_frequencia}"
+						value="#{row.frequencia}"
+						type="String"
+						size="10"
+						itens="#{talentosBacking.itensFrequencia}">
+						<xcp:outputSimple
+							value="#{row.frequencia}"
+							itens="#{talentosBacking.itensFrequencia}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmFuncAtivFisica"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgFuncAtivFisica_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.funcativfisica}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverFuncAtivFisica(row)}"
+								update=":form:tabFuncionarios:tblinfcompl:tabFuncAtivFisica"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_fis"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgFuncAtivFisica_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmFuncAtivFisica">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.funcativfisica}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosFuncObras"
+			title="#{bundle.tit_func_obras}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabFuncObras"
+					value="#{talentosBacking.helper.listFuncObras}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						value="#{row.data}"
+						type="Date"
+						size="10">
+						<xcp:outputSimple value="#{row.data}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_obra}"
+						value="#{row.codigoFk.descricao}"
+						type="String"
+						size="20">
+						<xcp:outputSimple value="#{row.codigoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_titulo}"
+						value="#{row.titulo}"
+						type="String"
+						size="20">
+						<xcp:outputSimple value="#{row.titulo}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmFuncObras"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgFuncObras_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.funcobras}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverFuncObras(row)}"
+								update=":form:tabFuncionarios:tblinfcompl:tabFuncObras"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_obr"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgFuncObras_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmFuncObras">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.funcobras}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+
+			</h:panelGroup>
+		</p:tab>
+
+	</p:tabView>
+
+</ui:composition>

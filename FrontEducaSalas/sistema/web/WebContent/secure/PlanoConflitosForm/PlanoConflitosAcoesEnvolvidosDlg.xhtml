@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+		<p:dialog
+			modal="true"
+			id="dlgEnvolvidosAcao"
+			header="#{bundle.tit_adicionar_envolvido_acao}"
+			widgetVar="dlgEnvolvidosAcao_w">
+			<xcp:form id="frmEnvolvidoAcao">
+				<xcp:panelForm>
+					<xcp:lov id="lovMatricula_PlanoConflitosAcoesEnvolvidos"
+						value="#{planoConflitosAcoesBacking.envolvidoAcao.funcionarioFk}"
+						label="#{bundle.lbl_matricula}" required="true"
+						query="funcionarios" size="10" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							update="@form"
+							value="#{bundle.btn_gravar}"
+							action="#{planoConflitosAcoesBacking.actionGravarEnvolvidosAcao}" />
+			
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgEnvolvidosAcao_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>			
+			</xcp:form>
+		</p:dialog>
+
+</ui:composition>

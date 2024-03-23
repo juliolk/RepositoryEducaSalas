@@ -1,0 +1,1492 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.section-info {
+	display: flex;
+}
+
+.section-info-icon {
+	font-size: 50px;
+	padding: 10px 15px 10px 0px;
+}
+
+.print-button {
+	text-align: right;
+}
+
+.full-page-dialog.ui-dialog.ui-widget-content .ui-dialog-titlebar {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.full-page-dialog.ui-dialog.ui-widget-content .ui-dialog-titlebar .ui-dialog-title
+	{
+	margin: 0 5px 0 0;
+	flex: 1 1 auto;
+}
+
+.ui-overlaypanel.ui-widget.ui-widget-content.ui-corner-all.ui-shadow.ui-overlay-visible
+	{
+	z-index: 8000 !important;
+}
+
+.ui-datatable tbody td {
+	border: none !important;
+}
+
+.ui-button-icon-left.ui-icon.ui-c.ui-icon-download {
+	height: 13px;
+	width: 10px;
+}
+
+.hora-batida {
+	display: inline-flex;
+	margin: auto;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.hora-batida .hora-incluida {
+	margin-left: 5px;
+}
+
+.list-dialog {
+	width: 75% !important;
+	min-width: 320px;
+}
+
+.list-dialog .ui-datatable-tablewrapper table {
+	margin: 0 !important;
+	table-layout: auto !important;
+}
+
+.dia-listagem {
+	display: flex;
+	margin-bottom: 20px;
+}
+
+.dia-listagem i.fa {
+	font-size: 50px;
+	color: var(- -primary-color);
+}
+
+.dia-listagem-data {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	margin-left: 8px;
+}
+
+.dia-listagem-dia-mes {
+	font-size: 22px;
+	font-weight: bolder;
+}
+
+.table-action-buttons {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.table-action-buttons a {
+	font-size: 18px !important;
+	color: var(- -primary-color-darker);
+	padding: 2px;
+}
+
+.table-action-buttons a:hover {
+	text-decoration: none;
+}
+
+.ui-dialog-content .ui-toolbar {
+	margin: 0 !important;
+	border: none !important;
+	padding: 40px 20px 20px !important;
+}
+
+#dlgXcpExecStatus {
+	z-index: 3000 !important;
+	left: calc(50% - 165px/ 2) !important;
+	top: calc(50% - 155px/ 2) !important;
+}
+
+#dlgFormAfdt,#dlgFormPonto,#dlgListaAnxPonto {
+	z-index: 2006 !important;
+}
+
+#dlgFormAfdt_modal,#dlgFormPonto_modal,#dlgListaAnxPonto_modal {
+	z-index: 2005 !important;
+}
+
+#dlgAnxPonto {
+	z-index: 2008 !important;
+}
+
+#dlgAnxPonto_modal {
+	z-index: 2007 !important;
+}
+
+#dlgFormAfdt,#dlgFormPonto,#dlgAnxPonto {
+	width: 100%;
+	min-width: 320px;
+	max-width: 640px;
+}
+
+.floating-label .ui-selectonemenu .ui-selectonemenu-label {
+	height: auto !important;
+	margin-top: 0 !important;
+	width: calc(100% - 1.5em) !important;
+	text-overflow: ellipsis;
+}
+
+@media ( max-width : 640px) {
+	.list-dialog {
+		max-width: none !important;
+		width: 100% !important;
+	}
+}
+</style>
+		<xcp:panelContent>
+
+			<p:outputPanel
+				rendered="#{espelhoPontoWebBacking.itensReferencia.size() == 0}"
+				style="padding: 30px;">
+
+				<div
+					class="alert alert-info"
+					role="alert">
+					<h4>Atenção</h4>
+					Nenhum #{bundle.lbl_dtaPonto} disponível.
+				</div>
+
+			</p:outputPanel>
+
+			<ui:fragment
+				rendered="#{not empty espelhoPontoWebBacking.itensReferencia}">
+
+				<xcp:panelForm
+					controlsSizeClass="big-controls"
+					floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+
+					<p:fieldset legend="Selecione o #{bundle.lbl_periodo}">
+						<div class="row">
+							<div class="col-lg-2 col-sm-3">
+								<xcp:combo
+									id="cboReferencia"
+									simple="true"
+									label=""
+									value="#{espelhoPontoWebBacking.dataReferenciaSelecionada}"
+									itens="#{espelhoPontoWebBacking.itensReferencia}">
+									<p:ajax
+										event="change"
+										update="dadosReferencia, tableHorastrab"
+										listener="#{espelhoPontoWebBacking.actionChangeReferencia}" />
+								</xcp:combo>
+							</div>
+
+							<div class="col-lg-offset-5 col-lg-5 col-sm-offset-1 col-sm-8">
+								<div class="row">
+									<div class="col-lg-7 col-sm-8">
+										<xcp:combo
+											id="rdModelo"
+											simple="true"
+											label="Relatório"
+											value="#{espelhoPontoWebBacking.modeloSelecionado}"
+											itens="#{espelhoPontoWebBacking.itensModelos}">
+										</xcp:combo>
+									</div>
+									<div class="col-lg-5 col-sm-4 print-button">
+										<xcp:commandButton
+											id="btn_imprimir"
+											value="#{bundle.btn_imprimir}"
+											styleClass="btn-main-action"
+											ajax="false"
+											action="#{espelhoPontoWebBacking.imprimir}"
+											icon="ui-icon-print">
+										</xcp:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</p:fieldset>
+
+					<p:outputPanel
+						class="section-header shadow-top-inset secondary-bgcolor"
+						id="dadosReferencia">
+						<div class="section-info">
+							<div class="section-info-icon">
+								<i class="fa fa-fw fa-calendar"></i>
+							</div>
+							<div class="section-info-content">
+								<h1>#{bundle.lbl_dtaPonto}</h1>
+								<p>De #{espelhoPontoWebBacking.dtInicioReferencia} a
+									#{espelhoPontoWebBacking.dtFimReferencia}</p>
+							</div>
+						</div>
+					</p:outputPanel>
+
+
+					<p:outputPanel id="tableHorastrab">
+						<div class="table-responsive">
+							<table
+								class="table material table-inspector table-medium table-noborder table-striped">
+								<thead>
+									<tr>
+										<th class="text-center">#{bundle.col_diaSemana}</th>
+										<th class="text-center">#{bundle.col_datah}</th>
+										<th class="text-center">#{bundle.col_hinicio}</th>
+										<th class="text-center">#{bundle.col_hfim}</th>
+										<th class="text-center">#{bundle.col_hinicio2}</th>
+										<th class="text-center">#{bundle.col_hfim2}</th>
+										<th class="text-center">#{bundle.col_hinicio3}</th>
+										<th class="text-center">#{bundle.col_hfim3}</th>
+										<ui:fragment
+											rendered="#{espelhoPontoWebBacking.indRenderedPar6 == 1}">
+											<th class="text-center">#{bundle.col_total}</th>
+										</ui:fragment>										
+										<th class="text-center">#{bundle.col_sit}</th>
+										<th class="text-center"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<ui:repeat
+										value="#{espelhoPontoWebBacking.listaHorasTrab}"
+										var="row">
+										<tr style="#{row.indPendencia == 1 ? 'color:red' : ''}">
+											<td
+												data-title="#{bundle.col_diaSemana}"
+												class="text-center"><xcp:outputSimple
+													value="#{bundle['tip_dia_semana_'.concat(row.diaSemana)]}"></xcp:outputSimple>
+											</td>
+											<td
+												data-title="#{bundle.col_datah}"
+												class="text-center"><xcp:outputSimpleDate
+													value="#{row.datah}"></xcp:outputSimpleDate></td>
+											<td
+												data-title="#{bundle.col_hinicio}"
+												class="text-center"><span class="hora-batida"> <xcp:outputSimpleTimeNumber
+														value="#{row.hinicio}" /> #{row.hinicio == null ?
+													'&#160;' : ''} <ui:fragment
+														rendered="#{espelhoPontoWebBacking.isAfdtIncluido(row.datah, row.hinicio)}">
+														<span
+															class="hora-incluida"
+															title="#{espelhoPontoWebBacking.getMotivoAfdtIncluido(row.datah, row.hinicio)}">
+															<i class="fa fa-exclamation-circle"></i>
+														</span>
+													</ui:fragment>
+											</span></td>
+											<td
+												data-title="#{bundle.col_hfim}"
+												class="text-center"><span class="hora-batida"> <xcp:outputSimpleTimeNumber
+														value="#{row.hfim}" /> #{row.hfim == null ? '&#160;' :
+													''} <ui:fragment
+														rendered="#{espelhoPontoWebBacking.isAfdtIncluido(row.datah, row.hfim)}">
+														<span
+															class="hora-incluida"
+															title="#{espelhoPontoWebBacking.getMotivoAfdtIncluido(row.datah, row.hfim)}">
+															<i class="fa fa-exclamation-circle"></i>
+														</span>
+													</ui:fragment>
+											</span></td>
+											<td
+												data-title="#{bundle.col_hinicio2}"
+												class="text-center"><span class="hora-batida"> <xcp:outputSimpleTimeNumber
+														value="#{row.hinicio2}" /> #{row.hinicio2 == null ?
+													'&#160;' : ''} <ui:fragment
+														rendered="#{espelhoPontoWebBacking.isAfdtIncluido(row.datah, row.hinicio2)}">
+														<span
+															class="hora-incluida"
+															title="#{espelhoPontoWebBacking.getMotivoAfdtIncluido(row.datah, row.hinicio2)}">
+															<i class="fa fa-exclamation-circle"></i>
+														</span>
+													</ui:fragment>
+											</span></td>
+											<td
+												data-title="#{bundle.col_hfim2}"
+												class="text-center"><span class="hora-batida"> <xcp:outputSimpleTimeNumber
+														value="#{row.hfim2}" /> #{row.hfim2 == null ? '&#160;' :
+													''} <ui:fragment
+														rendered="#{espelhoPontoWebBacking.isAfdtIncluido(row.datah, row.hfim2)}">
+														<span
+															class="hora-incluida"
+															title="#{espelhoPontoWebBacking.getMotivoAfdtIncluido(row.datah, row.hfim2)}">
+															<i class="fa fa-exclamation-circle"></i>
+														</span>
+													</ui:fragment>
+											</span></td>
+											<td
+												data-title="#{bundle.col_hinicio3}"
+												class="text-center"><span class="hora-batida"> <xcp:outputSimpleTimeNumber
+														value="#{row.hinicio3}" /> #{row.hinicio3 == null ?
+													'&#160;' : ''} <ui:fragment
+														rendered="#{espelhoPontoWebBacking.isAfdtIncluido(row.datah, row.hinicio3)}">
+														<span
+															class="hora-incluida"
+															title="#{espelhoPontoWebBacking.getMotivoAfdtIncluido(row.datah, row.hinicio3)}">
+															<i class="fa fa-exclamation-circle"></i>
+														</span>
+													</ui:fragment>
+											</span></td>
+											<td
+												data-title="#{bundle.col_hfim3}"
+												class="text-center"><span class="hora-batida"> <xcp:outputSimpleTimeNumber
+														value="#{row.hfim3}" /> #{row.hfim3 == null ? '&#160;' :
+													''} <ui:fragment
+														rendered="#{espelhoPontoWebBacking.isAfdtIncluido(row.datah, row.hfim3)}">
+														<span
+															class="hora-incluida"
+															title="#{espelhoPontoWebBacking.getMotivoAfdtIncluido(row.datah, row.hfim3)}">
+															<i class="fa fa-exclamation-circle"></i>
+														</span>
+													</ui:fragment>
+											</span></td>
+											<ui:fragment
+												rendered="#{espelhoPontoWebBacking.indRenderedPar6 == 1}">
+												<td
+													data-title="#{bundle.col_total}"
+													class="text-center"><xcp:outputSimpleTimeNumber
+														value="#{row.qtdTotalHoras}"></xcp:outputSimpleTimeNumber>
+													#{row.hfim3 == null ? '&#160;' : ''}</td>
+											</ui:fragment>
+											<td
+												data-title="#{bundle.col_sit}"
+												class="text-center"><xcp:outputSimple
+													value="#{row.desSituacao}"></xcp:outputSimple>
+											</td>
+											<td class="text-center">
+												<div class="table-action-buttons">
+													<xcp:commandLink
+														id="btn_afdt"
+														immediate="true"
+														action="#{espelhoPontoWebBacking.actionOpenAfdtDialog(row)}"
+														update=":frmListaAfdt"
+														rendered="#{espelhoPontoWebBacking.indRenderedPar1 == 1}"
+														title="#{bundle.hint_esp_afdt}"
+														style="#{row.temJustAfdt ? 'color: springgreen;' : ''}">
+														<i
+															class="fa fa-fw fa-clock-o"
+															style="font-size: 18px;"></i>
+													</xcp:commandLink>
+													<xcp:commandLink
+														id="btn_ocor"
+														immediate="true"
+														action="#{espelhoPontoWebBacking.actionOpenPontoDialog(row)}"
+														update=":frmListaPonto"
+														rendered="#{espelhoPontoWebBacking.indRenderedPar2 == 1}"
+														title="#{bundle.hint_esp_ocor}"
+														style="#{row.temJustPonto ? 'color: springgreen;' : ''}">
+														<i
+															class="fa fa-fw fa-edit"
+															style="font-size: 18px;"></i>
+													</xcp:commandLink>
+
+													<xcp:commandLink
+														id="btn_ponto"
+														immediate="true"
+														action="#{espelhoPontoWebBacking.actionOpenPonto(row)}"
+														update=":frmPonto"
+														rendered="#{espelhoPontoWebBacking.indRenderedPar3 == 1}"
+														title="#{bundle.hint_esp_ponto}">
+														<i
+															class="fa fa-fw fa-search"
+															style="font-size: 18px;"></i>
+													</xcp:commandLink>
+												</div>
+											</td>
+										</tr>
+									</ui:repeat>
+								</tbody>
+							</table>
+						</div>
+						<ui:fragment
+							rendered="#{empty espelhoPontoWebBacking.listaHorasTrab}">
+							<div class="list-message">#{bundle.msg_sem_resultado}</div>
+						</ui:fragment>
+
+						<div class="total-container container-fluid">
+							<div class="row row-right-aligned">
+								<ui:repeat
+									value="#{espelhoPontoWebBacking.listaTotalizadores}"
+									var="rowTot">
+
+									<div class="col-centered center-text">
+										<div class="total-item positive-bgcolor">
+											<i class="fa fa-fw fa-clock-o"></i>
+											<div class="total-title">
+												<xcp:outputSimple value="#{rowTot.desLabel}"></xcp:outputSimple>
+											</div>
+											<div class="total-value">
+												<xcp:outputSimpleTimeNumber
+													value="#{rowTot.qtdHoras}"
+													rendered="#{rowTot.tipQtd != 2}"
+													simple="true" />
+												<xcp:outputSimpleNumber
+													value="#{rowTot.qtdHoras}"
+													precision="4"
+													scale="2"
+													rendered="#{rowTot.tipQtd == 2}" />
+											</div>
+										</div>
+									</div>
+								</ui:repeat>
+							</div>
+						</div>
+
+					</p:outputPanel>
+
+				</xcp:panelForm>
+
+				<p:ajaxStatus
+					onstart="PF('w_dlgXcpExecStatus').show()"
+					onsuccess="PF('w_dlgXcpExecStatus').hide()"
+					oncomplete="PF('w_dlgXcpExecStatus').hide()"
+					onerror="PF('w_dlgXcpExecStatus').hide()" />
+
+				<script type="text/javascript">
+				    function showStatus() {
+		                PF('w_dlgXcpExecStatus').show();
+					}
+				    function hideStatus() {
+				    	PF('w_dlgXcpExecStatus').hide();
+					}
+			    </script>
+
+			</ui:fragment>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_listaafdt}"
+			modal="true"
+			id="dlgListaAfdt"
+			widgetVar="dlgListaAfdt_w"
+			dynamic="true"
+			closeOnEscape="true"
+			styleClass="full-page-dialog rightside-dialog list-dialog"
+			resizable="false"
+			draggable="false">
+			<xcp:form id="frmListaAfdt">
+
+				<div class="dia-listagem">
+					<i class="fa fa-fw fa-calendar-o"></i>
+					<div class="dia-listagem-data">
+						<div class="dia-listagem-dia-mes">
+							<xcp:outputSimpleDate
+								id="diaListagem"
+								value="#{espelhoPontoWebBacking.horastrabSel.getDatah()}" />
+						</div>
+						<div class="dia-listagem-dia-semana">
+							<xcp:outputSimple
+								id="diaListagemSemana"
+								value="#{bundle['tip_dia_semana_'.concat(espelhoPontoWebBacking.horastrabSel.getDiaSemana())]}" />
+						</div>
+					</div>
+					<div class="dia-listagem-actions">
+						<xcp:commandButton
+							id="btn_add_afdt"
+							styleClass="btn-main-action"
+							value="#{bundle.btn_adicionar}"
+							action="#{espelhoPontoWebBacking.actionOpenAfdtFormDialog(null)}"
+							icon="ui-icon-plusthick"
+							update=":frmFormAfdt" />
+					</div>
+				</div>
+
+				<p:outputPanel
+					class="section-header shadow-top-inset secondary-bgcolor"
+					id="dadosAfdtAval">
+					<div class="section-info">
+						<div class="section-info-content">
+							<h1>#{bundle.lbl_esp_batidas}</h1>
+						</div>
+					</div>
+				</p:outputPanel>
+
+				<div class="table-responsive">
+					<p:dataTable
+						id="tblAfdt"
+						var="row"
+						value="#{espelhoPontoWebBacking.listAfdtAval}"
+						rows="#{viewUtil.tableRows}"
+						rowKey="#{row}"
+						paginator="false"
+						tableStyleClass="table material table-medium table-noborder table-striped"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginatorPosition="bottom">
+
+						<xcp:column
+							headerText="#{bundle.col_hora}"
+							type="Center"
+							size="4">
+							<xcp:outputSimpleTimeNumber value="#{row.hora}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							itens="#{espelhoPontoWebBacking.itensTipo}"
+							type="Center"
+							size="10">
+							<xcp:outputSimple
+								value="#{row.tipo}"
+								itens="#{espelhoPontoWebBacking.itensTipo}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_motivo}"
+							size="30">
+							<xcp:outputSimple value="#{row.motivoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_situacao}"
+							itens="#{espelhoPontoWebBacking.itensSituacaoAvaliacaoAfdt}"
+							type="Center"
+							size="5">
+							<xcp:outputSimple
+								value="#{row.situacao}"
+								itens="#{espelhoPontoWebBacking.itensSituacaoAvaliacaoAfdt}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtavaliacao}"
+							type="Date"
+							size="5">
+							<xcp:outputSimpleDate value="#{row.dtavaliacao}" />
+						</xcp:column>
+
+						<xcp:column size="5">
+							<div class="table-action-buttons">
+
+								<xcp:commandLink
+									id="btn_edit_afdt"
+									immediate="true"
+									rendered="#{row.situacao == 0}"
+									action="#{espelhoPontoWebBacking.actionOpenAfdtFormDialog(row)}"
+									update=":frmFormAfdt"
+									oncomplete="PF('dlgFormAfdt_w').show();">
+									<i class="fa fa-fw fa-pencil"></i>
+								</xcp:commandLink>
+
+
+								<xcp:commandLink
+									id="btn_rem_afdt"
+									immediate="true"
+									rendered="#{row.situacao == 0}"
+									action="#{espelhoPontoWebBacking.actionRemoverAfdt(row)}"
+									update="tblAfdt">
+									<i class="fa fa-fw fa-trash"></i>
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+								</xcp:commandLink>
+
+								<p:commandLink
+									id="btninstafdt"
+									href="javascript:void"
+									rendered="#{not empty row.txtPendencia}">
+									<i class="fa fa-fw fa-exclamation-circle"></i>
+								</p:commandLink>
+
+								<xcp:commandLink
+									id="btn_desconsidera_afdt"
+									immediate="true"
+									rendered="#{(row.situacao == null or row.situacao == 1) and row.tipo != 'D'}"
+									action="#{espelhoPontoWebBacking.actionOpenAfdtDesconsideracaoFormDialog(row)}"
+									update=":frmFormAfdt"
+									title="#{bundle.hint_esp_desconsiderar}">
+									<i
+										class="fa fa-fw fa-ban"
+										style="font-size: 18px;"></i>
+								</xcp:commandLink>
+
+								<p:overlayPanel
+									id="myoverlay"
+									for="btninstafdt"
+									style="max-width:600px;text-align: left;">
+									<h:outputText
+										value="#{row.txtPendenciaFormatado}"
+										escape="false" />
+								</p:overlayPanel>
+
+							</div>
+						</xcp:column>
+					</p:dataTable>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_formafdt}"
+			modal="true"
+			id="dlgFormAfdt"
+			widgetVar="dlgFormAfdt_w"
+			dynamic="true"
+			closeOnEscape="true"
+			resizable="false"
+			draggable="false"
+			onShow="$(this).eachHasValue();">
+
+			<xcp:form id="frmFormAfdt">
+
+				<xcp:panelForm floatingLabel="true">
+					<xcp:timeNumber
+						id="txtHora"
+						label="#{bundle.lbl_hora}"
+						required="true"
+						size="10"
+						value="#{espelhoPontoWebBacking.afdtAval.hora}"
+						precision="6"
+						scale="2"
+						validate="true"
+						readonly="#{not espelhoPontoWebBacking.afdtAval.novo or espelhoPontoWebBacking.desconsideracaoBatida}" />
+
+					<xcp:combo
+						id="txtTipoIncluido"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						noFloat="true"
+						value="#{espelhoPontoWebBacking.afdtAval.tipo}"
+						itens="#{espelhoPontoWebBacking.itensTipoIncluido}"
+						readonly="#{espelhoPontoWebBacking.desconsideracaoBatida}"
+						size="1" />
+
+					<xcp:combo
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						noFloat="true"
+						value="#{espelhoPontoWebBacking.afdtAval.motivo}"
+						itens="#{espelhoPontoWebBacking.listMotivosAfdt}"
+						size="1" />
+						
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{espelhoPontoWebBacking.afdtAval.obs}"
+						size="300" />
+					
+					<xcp:text
+						id="txtAnexo"
+						readonly="true"
+						label="#{bundle.lbl_anexo}"
+						size="80" 
+						value="#{espelhoPontoWebBacking.afdtAvaliacaoAnexo.nome}" />
+						
+					<p:fileUpload
+						mode="advanced"
+						auto="true"
+						label="#{bundle.btn_upload}"
+						update="frmFormAfdt"
+						fileUploadListener="#{espelhoPontoWebBacking.actionAfdtAnexoUpload}" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarAfdt"
+							value="#{bundle.btn_gravar}"
+							action="#{espelhoPontoWebBacking.actionGravarAfdt}"
+							update=":frmListaAfdt:tblAfdt" />
+
+						<xcp:commandButton
+							id="btnVoltarAfdt"
+							value="#{bundle.btn_cancelar}"
+							onclick="PF('dlgFormAfdt_w').hide();return false;" />
+
+						<xcp:commandButton
+							id="btnRemoverAnexo"
+							value="#{bundle.btn_remover_anexo}"
+							rendered="#{espelhoPontoWebBacking.afdtAvaliacaoAnexo.seq != null}"
+							action="#{espelhoPontoWebBacking.actionRemoverAfdtAvaliAnexo}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_listaponto}"
+			modal="true"
+			id="dlgListaPonto"
+			widgetVar="dlgListaPonto_w"
+			dynamic="true"
+			closeOnEscape="true"
+			styleClass="full-page-dialog rightside-dialog list-dialog"
+			resizable="false"
+			draggable="false">
+			<xcp:form
+				id="frmListaPonto"
+				styleClass="floating-label">
+
+				<div class="dia-listagem">
+					<i class="fa fa-fw fa-calendar-o"></i>
+					<div class="dia-listagem-data">
+						<div class="dia-listagem-dia-mes">
+							<xcp:outputSimpleDate
+								value="#{espelhoPontoWebBacking.horastrabSel.getDatah()}" />
+						</div>
+						<div class="dia-listagem-dia-semana">
+							<xcp:outputSimple
+								value="#{bundle['tip_dia_semana_'.concat(espelhoPontoWebBacking.horastrabSel.getDiaSemana())]}" />
+						</div>
+					</div>
+					<div class="dia-listagem-actions">
+						<xcp:commandButton
+							id="btn_add_ponto"
+							styleClass="btn-main-action"
+							value="#{bundle.btn_adicionar}"
+							action="#{espelhoPontoWebBacking.actionOpenPontoFormDialog}"
+							update=":frmFormPonto"
+							resetValues="true"
+							icon="ui-icon-plusthick" />
+					</div>
+				</div>
+
+				<p:fieldset
+					legend="#{bundle.title_jornadas}"
+					rendered="#{espelhoPontoWebBacking.renderedTipoPontoOrig}">
+
+					<div class="table-responsive">
+						<p:dataTable
+							id="tblJornadas"
+							var="row"
+							value="#{espelhoPontoWebBacking.listJornadas}"
+							rowKey="#{row}"
+							tableStyleClass="table material table-medium table-noborder table-striped"
+							emptyMessage="#{bundle.msg_sem_resultado}">
+							<xcp:column
+								headerText="#{bundle.col_hrinicio}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrinicio}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hrfim}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrfim}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hrinicio2}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrinicio2}" />
+							</xcp:column>
+							<xcp:column
+								headerText="#{bundle.col_hrfim2}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrfim2}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hrinicio3}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrinicio3}" />
+							</xcp:column>
+							<xcp:column
+								headerText="#{bundle.col_hrfim3}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrfim3}" />
+							</xcp:column>
+						</p:dataTable>
+					</div>
+				</p:fieldset>
+
+				<p:fieldset
+					legend="#{bundle.title_horastrab}	"
+					rendered="#{espelhoPontoWebBacking.renderedTipoPontoOrig}">
+					<div class="table-responsive">
+						<p:dataTable
+							id="tblHorasTrab"
+							var="row"
+							value="#{espelhoPontoWebBacking.listHorastrab}"
+							rowKey="#{row}"
+							expandedRow="true"
+							tableStyleClass="table material table-medium table-noborder table-striped"
+							emptyMessage="#{bundle.msg_sem_resultado}">
+
+							<xcp:column
+								headerText="#{bundle.col_hinicio}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hinicio}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hfim}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hfim}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hinicio2}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hinicio2}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hfim2}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hfim2}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hinicio3}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hinicio3}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hfim3}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hfim3}" />
+							</xcp:column>
+
+							<p:rowExpansion>
+								<p:dataTable
+									id="tblPontoRow"
+									var="pto"
+									value="#{espelhoPontoWebBacking.listPonto}"
+									rendered="#{espelhoPontoWebBacking.listPonto.size() > 0 }"
+									rowKey="#{pto}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<xcp:column
+										headerText="#{bundle.col_tipoponto}"
+										type="Center"
+										size="4">
+										<span style="color: red"> <xcp:outputSimpleNumber
+												value="#{pto.tipoponto}"
+												precision="4"
+												scale="0" />
+										</span>
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_tipoponto_descricao}"
+										type="Center"
+										size="30">
+										<span style="color: red"> <xcp:outputSimple
+												value="#{pto.tipopontoFk.descricao}" />
+										</span>
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_data}"
+										type="Date"
+										size="7">
+										<span style="color: red"> <xcp:outputSimpleDate
+												value="#{pto.data}" />
+										</span>
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_qtd_horas}"
+										type="Center"
+										size="10">
+										<span style="color: red"> <xcp:outputSimpleTimeNumber
+												value="#{pto.horas}"
+												rendered="#{pto.tipopontoFk.tipoqtd == 1 or pto.tipopontoFk.tipoqtd == 3}"
+												precision="7"
+												scale="2" /> <xcp:outputSimpleNumber
+												value="#{pto.horas}"
+												rendered="#{pto.tipopontoFk.tipoqtd == 2}"
+												precision="7"
+												scale="0" />
+										</span>
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_tip_qtd}"
+										type="Center"
+										size="5">
+										<span style="color: red"> <xcp:outputSimpleTimeNumber
+												value="#{bundle.lbl_horas}"
+												rendered="#{pto.tipopontoFk.tipoqtd == 1}" /> <xcp:outputSimple
+												value="#{bundle.lbl_dias}"
+												rendered="#{pto.tipopontoFk.tipoqtd == 2}" />
+										</span>
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_tipolcto}"
+										type="Center"
+										size="3">
+										<span style="color: red"> <xcp:outputSimple
+												value="#{pto.tipolcto}" />
+										</span>
+									</xcp:column>
+
+								</p:dataTable>
+
+							</p:rowExpansion>
+
+						</p:dataTable>
+					</div>
+				</p:fieldset>
+
+				<p:fieldset legend="#{bundle.title_justificativa}">
+					<div class="table-responsive">
+						<p:dataTable
+							id="tblPonto"
+							var="row"
+							value="#{espelhoPontoWebBacking.listPontoAval}"
+							rows="#{viewUtil.tableRows}"
+							rowKey="#{row}"
+							tableStyleClass="table material table-medium table-noborder table-striped"
+							emptyMessage="#{bundle.msg_sem_resultado}">
+
+							<xcp:column
+								headerText="#{bundle.col_origem}"
+								type="Date"
+								size="20"
+								rendered="#{espelhoPontoWebBacking.renderedTipoPontoOrig}">
+								<span style="color: red"> <xcp:outputSimple
+										value="#{row.tipopontoOrig} - #{row.tipopontoOrigFk.descricao}" />
+								</span>
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_tipoponto}"
+								type="Date"
+								size="20">
+								<xcp:outputSimple
+									value="#{row.tipoponto} - #{row.tipopontoFk.descricao}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_qtd_horas}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber
+									value="#{row.horas}"
+									rendered="#{row.tipopontoFk.tipoqtd == 1 or row.tipopontoFk.tipoqtd == 3}"
+									precision="7"
+									scale="2" />
+								<xcp:outputSimpleNumber
+									value="#{row.horas}"
+									rendered="#{row.tipopontoFk.tipoqtd == 2}"
+									precision="7"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_tip_qtd}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber
+									value="#{bundle.lbl_horas}"
+									rendered="#{row.tipopontoFk.tipoqtd == 1}" />
+								<xcp:outputSimple
+									value="#{bundle.lbl_dias}"
+									rendered="#{row.tipopontoFk.tipoqtd == 2}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_situacao}"
+								itens="#{espelhoPontoWebBacking.itensSituacaoAvaliacaoPonto}"
+								type="Date"
+								size="5">
+								<xcp:outputSimple
+									value="#{row.situacao}"
+									itens="#{espelhoPontoWebBacking.itensSituacaoAvaliacaoPonto}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_dtavaliacao}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleDate value="#{row.dtavaliacao}" />
+							</xcp:column>
+
+							<xcp:column size="10">
+								<div class="table-action-buttons">
+
+									<xcp:commandLink
+										id="btn_edit_ponto"
+										immediate="true"
+										update=":frmFormPonto"
+										rendered="#{row.situacao == 0}"
+										oncomplete=""
+										action="#{espelhoPontoWebBacking.actionEditPontoFormDialog(row)}">
+										<i class="fa fa-fw fa-pencil"></i>
+									</xcp:commandLink>
+
+									<xcp:commandLink
+										id="btn_rem_ponto"
+										immediate="true"
+										rendered="#{row.situacao == 0}"
+										action="#{espelhoPontoWebBacking.actionRemoverPonto(row)}"
+										update="tblPonto">
+										<i class="fa fa-fw fa-trash"></i>
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink>
+
+									<xcp:commandLink
+										id="btn_add_anx"
+										immediate="true"
+										rendered="#{row.situacao == 0}"
+										action="#{espelhoPontoWebBacking.actionOpenDialogListaAnexos(row)}"
+										update=":frmListaAnx">
+										<i class="fa fa-fw fa-paperclip"></i>
+									</xcp:commandLink>
+
+									<p:commandLink
+										id="btninst"
+										type="button"
+										rendered="#{not empty row.txtPendencia}">
+										<i class="fa fa-fw fa-exclamation-circle"></i>
+									</p:commandLink>
+
+									<p:overlayPanel
+										id="myoverlay"
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{row.txtPendenciaFormatado}"
+											escape="false" />
+									</p:overlayPanel>
+
+								</div>
+							</xcp:column>
+						</p:dataTable>
+					</div>
+				</p:fieldset>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_formponto}"
+			modal="true"
+			id="dlgFormPonto"
+			widgetVar="dlgFormPonto_w"
+			dynamic="true"
+			closeOnEscape="true"
+			resizable="false"
+			draggable="false"
+			onShow="$(this).eachHasValue();">
+
+			<xcp:form id="frmFormPonto">
+				<xcp:panelForm
+					floatingLabel="true"
+					id="pnl1">
+
+					<xcp:combo
+						id="cmbtTipoPontoOrig"
+						label="#{bundle.lbl_tipopontoorig}"
+						required="true"
+						value="#{espelhoPontoWebBacking.pontoAval.tipopontoOrig}"
+						itens="#{espelhoPontoWebBacking.listTipoPontoOrig}"
+						readonly="#{not espelhoPontoWebBacking.pontoAval.novo}"
+						rendered="#{espelhoPontoWebBacking.renderedTipoPontoOrig}">
+
+						<p:ajax
+							event="change"
+							update="cmbtTipoPonto,txtHoras,txtQtd,txtObs,txtHoraini,txtHorafim"
+							listener="#{espelhoPontoWebBacking.actionChangeTipoPontoOrigem}" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cmbtTipoPonto"
+						label="#{bundle.lbl_tipoponto}"
+						required="true"
+						value="#{espelhoPontoWebBacking.pontoAval.tipoponto}"
+						itens="#{espelhoPontoWebBacking.listTipoPonto}"
+						readonly="#{not espelhoPontoWebBacking.pontoAval.novo}">
+						<p:ajax
+							event="change"
+							update="frmFormPonto:pnl2"
+							listener="#{espelhoPontoWebBacking.actionChangeTipoPonto}"
+							oncomplete="if ($('#frmFormPonto\\:txtQtd').length){$('#frmFormPonto\\:txtQtd').addClass('input-has-value')}" />
+					</xcp:combo>
+				</xcp:panelForm>
+
+				<xcp:panelForm
+					floatingLabel="true"
+					id="pnl2">
+					<xcp:text
+						id="txtNomefamiliar"
+						label="#{bundle.lbl_nomefamiliar}"
+						value="#{espelhoPontoWebBacking.pontoAval.nomefamiliar}"
+						size="50"
+						required="true"
+						rendered="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.indFamiliar == 1}" />
+
+					<xcp:combo
+						id="cmbtTipoFamiliar"
+						label="#{bundle.lbl_parentesco}"
+						required="true"
+						value="#{espelhoPontoWebBacking.pontoAval.grau}"
+						itens="#{espelhoPontoWebBacking.listParentesco}"
+						rendered="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.indFamiliar == 1}" />
+
+					<xcp:timeNumber
+						id="txtHoraini"
+						label="#{bundle.lbl_txtHoraini}"
+						required="true"
+						rendered="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.tipoqtd==3}"
+						size="10"
+						value="#{espelhoPontoWebBacking.pontoAval.horaini}"
+						precision="7"
+						scale="2">
+						<p:ajax
+							event="change"
+							listener="#{espelhoPontoWebBacking.calculaHoras}"
+							update="txtHorafim,txtHoras" />
+					</xcp:timeNumber>
+
+					<xcp:timeNumber
+						id="txtHorafim"
+						label="#{bundle.lbl_txtHorafim}"
+						required="true"
+						rendered="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.tipoqtd==3}"
+						size="10"
+						value="#{espelhoPontoWebBacking.pontoAval.horafim}"
+						precision="7"
+						scale="2">
+						<p:ajax
+							event="change"
+							listener="#{espelhoPontoWebBacking.calculaHoras}"
+							update="@this,txtHoras" />
+					</xcp:timeNumber>
+
+					<xcp:timeNumber
+						id="txtHoras"
+						label="#{bundle.lbl_horas}"
+						required="true"
+						rendered="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.tipoqtd==1 or espelhoPontoWebBacking.pontoAval.tipopontoFk.tipoqtd==3}"
+						readonly="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.tipoqtd==3}"
+						size="10"
+						value="#{espelhoPontoWebBacking.pontoAval.horas}"
+						precision="7"
+						scale="2" />
+
+					<xcp:number
+						id="txtQtd"
+						label="#{bundle.lbl_qtde}"
+						required="true"
+						rendered="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.tipoqtd==2}"
+						size="10"
+						value="#{espelhoPontoWebBacking.pontoAval.horas}"
+						precision="7"
+						scale="0" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						required="#{espelhoPontoWebBacking.pontoAval.tipopontoFk.indObs==1}"
+						value="#{espelhoPontoWebBacking.pontoAval.obs}"
+						size="300" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarPontoAval"
+							value="#{bundle.btn_gravar}"
+							action="#{espelhoPontoWebBacking.actionGravarPonto}"
+							update=":frmListaPonto:tblPonto" />
+
+						<xcp:commandButton
+							id="btnVoltarPontoAval"
+							value="#{bundle.btn_cancelar}"
+							onclick="PF('dlgFormPonto_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_formponto}"
+			modal="true"
+			id="dlgPonto"
+			widgetVar="dlgPonto_w"
+			dynamic="true"
+			closeOnEscape="true"
+			styleClass="full-page-dialog rightside-dialog list-dialog"
+			resizable="false"
+			draggable="false">
+			<style>
+.redline {
+	background-color: red;
+}
+
+.redtext {
+	color: red !important;
+}
+
+.textcenter {
+	text-align: center !important;
+}
+</style>
+			<xcp:form id="frmPonto">
+
+				<div class="dia-listagem">
+					<i class="fa fa-fw fa-calendar-o"></i>
+					<div class="dia-listagem-data">
+						<div class="dia-listagem-dia-mes">
+							<xcp:outputSimpleDate
+								value="#{espelhoPontoWebBacking.horastrabSel.getDatah()}" />
+						</div>
+						<div class="dia-listagem-dia-semana">
+							<xcp:outputSimple
+								value="#{bundle['tip_dia_semana_'.concat(espelhoPontoWebBacking.horastrabSel.getDiaSemana())]}" />
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<p:dataTable
+						id="tblPonto"
+						var="row"
+						value="#{espelhoPontoWebBacking.listPonto}"
+						rows="#{viewUtil.tableRows}"
+						rowKey="#{row}"
+						paginator="false"
+						tableStyleClass="table material table-medium table-noborder table-striped"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+
+						<xcp:column
+							headerText="#{bundle.col_tipoponto}"
+							type="Center"
+							size="4">
+							<xcp:outputSimpleNumber
+								class="#{row.tipopontoFk.indGeraPendPort == 1 ? 'redtext' : ''}"
+								value="#{row.tipoponto}"
+								precision="4"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_tipoponto_descricao}"
+							type="Center"
+							size="30">
+							<xcp:outputSimple
+								class="#{row.tipopontoFk.indGeraPendPort == 1 ? 'redtext' : ''}"
+								value="#{row.tipopontoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_data}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_qtd_horas}"
+							type="Center"
+							size="10">
+							<xcp:outputSimpleTimeNumber
+								value="#{row.horas}"
+								rendered="#{row.tipopontoFk.tipoqtd == 1 or row.tipopontoFk.tipoqtd == 3}"
+								precision="7"
+								scale="2" />
+							<xcp:outputSimpleNumber
+								value="#{row.horas}"
+								rendered="#{row.tipopontoFk.tipoqtd == 2}"
+								precision="7"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_tip_qtd}"
+							type="Center"
+							size="5">
+							<xcp:outputSimpleTimeNumber
+								value="#{bundle.lbl_horas}"
+								rendered="#{row.tipopontoFk.tipoqtd == 1}" />
+							<xcp:outputSimple
+								value="#{bundle.lbl_dias}"
+								rendered="#{row.tipopontoFk.tipoqtd == 2}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_tipolcto}"
+							type="Center"
+							size="3">
+							<xcp:outputSimple value="#{row.tipolcto}" />
+						</xcp:column>
+
+					</p:dataTable>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_listaanexo}"
+			modal="true"
+			id="dlgListaAnxPonto"
+			widgetVar="dlgListaAnxPonto_w"
+			dynamic="true"
+			closeOnEscape="true"
+			styleClass="full-page-dialog rightside-dialog list-dialog"
+			resizable="false"
+			draggable="false">
+
+			<xcp:form
+				id="frmListaAnx"
+				styleClass="floating-label">
+
+				<div class="dia-listagem">
+					<i class="fa fa-fw fa-calendar-o"></i>
+					<div class="dia-listagem-data">
+						<div class="dia-listagem-dia-mes">
+							<xcp:outputSimpleDate
+								value="#{espelhoPontoWebBacking.horastrabSel.getDatah()}" />
+						</div>
+						<div class="dia-listagem-dia-semana">
+							<xcp:outputSimple
+								value="#{bundle['tip_dia_semana_'.concat(espelhoPontoWebBacking.horastrabSel.getDiaSemana())]}" />
+						</div>
+					</div>
+					<div class="dia-listagem-actions">
+						<xcp:commandButton
+							id="btn_novo_anexo"
+							process="@this"
+							update=":frmAnx"
+							styleClass="btn-main-action"
+							icon="ui-icon-plusthick"
+							value="#{bundle.btn_novo}"
+							action="#{espelhoPontoWebBacking.actionOpenDialogFormAnexos}" />
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<p:dataTable
+						id="tblComp"
+						var="row"
+						value="#{espelhoPontoWebBacking.listAnexos}"
+						rowKey="#{row}"
+						tableStyleClass="table material table-medium table-noborder table-striped"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+						<xcp:column
+							headerText="#{bundle.col_nome}"
+							type="String">
+							<xcp:outputSimpleDate value="#{row.nome}" />
+						</xcp:column>
+						<xcp:column
+							headerText="#{bundle.col_descricao}"
+							type="String">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</xcp:column>
+						<xcp:column
+							headerText="#{bundle.col_data}"
+							type="Date">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</xcp:column>
+						<xcp:column>
+							<div class="table-action-buttons">
+
+								<p:commandLink
+									immediate="true"
+									id="btn_download_anex"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									ajax="false">
+									<i class="fa fa-fw fa-download"></i>
+									<p:fileDownload
+										value="#{espelhoPontoWebBacking.getAnexo(row)}"
+										contentDisposition="attachment" />
+								</p:commandLink>
+
+								<p:commandLink
+									action="#{espelhoPontoWebBacking.actionExcluirAnexo(row)}"
+									update="tblComp">
+									<i class="fa fa-fw fa-trash"></i>
+								</p:commandLink>
+							</div>
+						</xcp:column>
+					</p:dataTable>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_anexo}"
+			modal="true"
+			id="dlgAnxPonto"
+			widgetVar="dlgAnxPonto_w"
+			dynamic="true"
+			closeOnEscape="true"
+			resizable="false"
+			draggable="false"
+			onShow="$(this).eachHasValue();">
+
+			<style>
+.ui-fileupload {
+	margin-top: 20px;
+}
+</style>
+
+			<xcp:form id="frmAnx">
+				<xcp:panelForm floatingLabel="true">
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{espelhoPontoWebBacking.anexo.descricao}"
+						size="100" />
+				</xcp:panelForm>
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{espelhoPontoWebBacking.actionFileUpload}" />
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							action="#{espelhoPontoWebBacking.actionGravarAnexo}"
+							update=":frmListaAnx:tblComp"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							value="#{bundle.btn_cancelar}"
+							oncomplete="PF('dlgAnxPonto_w').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

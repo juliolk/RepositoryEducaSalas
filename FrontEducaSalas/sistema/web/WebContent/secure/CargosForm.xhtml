@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelCargo {
+	width: 120px;
+}
+
+.labelCargo2 {
+	width: 100px;
+}
+</style>
+
+		<xcp:panelManut
+			id="Cargos"
+			backing="#{cargosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_cargo}"
+					value="#{row.cargo}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.cargo}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipoFk.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{cargosBacking.itensSituacaoFull}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{cargosBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelGrid>
+					<p:row>
+						<p:column colspan="2">
+							<xcp:panelForm labelClass="labelCargo">
+								<xcp:number
+									id="txtCargo"
+									label="#{bundle.lbl_cargo}"
+									required="true"
+									value="#{cargosBacking.entity.cargo}"
+									size="6"
+									maxValue="999999"
+									readonly="#{not cargosBacking.entity.novo}" />
+
+								<xcp:text
+									id="txtDescricao"
+									label="#{bundle.lbl_descricao}"
+									required="true"
+									value="#{cargosBacking.entity.descricao}"
+									maxlength="80"
+									size="70" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelCargo">
+								<xcp:lov
+									id="lovPadrao"
+									value="#{cargosBacking.entity.padraoFk}"
+									label="#{bundle.lbl_padrao}"
+									query="cargos_padroes_tab"
+									params="#{cargosBacking.parCargo}"
+									size="7" />
+
+								<xcp:lov
+									id="lovGrupo"
+									value="#{cargosBacking.entity.grupoFk}"
+									label="#{bundle.lbl_grupo}"
+									query="grupofunc"
+									required="true"
+									size="7" />
+
+								<xcp:lov
+									id="lovCbo"
+									value="#{cargosBacking.entity.cboFk}"
+									label="#{bundle.lbl_cbo}"
+									required="true"
+									query="cbo"
+									size="7" />
+
+								<xcp:lov
+									id="lovTipo"
+									value="#{cargosBacking.entity.tipoFk}"
+									label="#{bundle.lbl_tipo}"
+									required="true"
+									query="tipocargos_nao_grat"
+									size="7"
+									update=":form,tabDetalhes" />
+								
+								<xcp:combo
+									id="cboIndChefia"
+									value="#{cargosBacking.entity.indChefia}"
+									label="#{bundle.lbl_chefia}"
+									itens="#{cargosBacking.itensIndSimNao}"
+									rendered="#{cargosBacking.entity.tipo == 2}">
+								</xcp:combo>	
+
+								<xcp:lov
+									id="lovTipodoc"
+									value="#{cargosBacking.entity.tipodocFk}"
+									size="7"
+									label="#{bundle.lbl_tipodoc}"
+									params="#{cargosBacking.paramsTipoDoc}"
+									update="lovDocumento"
+									query="tipodocumento_cargos" />
+									
+								<xcp:lov
+									id="lovDocumento"
+									value="#{cargosBacking.entity.registroFk}"
+									params="#{cargosBacking.paramsTipodocumento}"
+									label="#{bundle.lbl_documento}"
+									query="documentosman"
+									size="10" />								
+
+								<xcp:combo
+									id="cboTempoEspecial"
+									value="#{cargosBacking.entity.tempoEspecial}"
+									label="#{bundle.lbl_tempoEspecial}"
+									itens="#{cargosBacking.itensTempoEspecial}">
+								</xcp:combo>
+
+								<xcp:text
+									id="txtEstrutura"
+									label="#{bundle.lbl_estrutura}"
+									value="#{cargosBacking.entity.estrutura}"
+									size="20" />
+
+								<xcp:combo
+									id="cboDedExclusiva"
+									required="true"
+									value="#{cargosBacking.entity.dedExclusiva}"
+									label="#{bundle.lbl_dedExclusiva}"
+									itens="#{cargosBacking.itensIndSimNaoNull}" />
+									
+								<xcp:combo
+									id="cboEntrancia"
+									value="#{cargosBacking.entity.entrancia}"
+									label="#{bundle.lbl_entrancia}"
+									itens="#{cargosBacking.itensEntrancia}"
+									rendered="#{cargosBacking.tribunal}" />	
+
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelCargo2">
+							
+								<xcp:number
+									id="txtSalbase"
+									label="#{bundle.lbl_salbase}"
+									size="12"
+									value="#{cargosBacking.entity.salbase}"
+									precision="16"
+									scale="2" />
+									
+									
+								<xcp:number
+									id="txtChmensal"
+									label="#{bundle.lbl_chmensal}"
+									size="6"
+									value="#{cargosBacking.entity.chmensal}"
+									precision="6"
+									scale="2">
+									<p:ajax
+										event="change"
+										listener="#{cargosBacking.actionChangeHrMensal}"
+										update="txtChsemanal" />
+								</xcp:number>
+
+								<xcp:number
+									id="txtChsemanal"
+									label="#{bundle.lbl_chsemanal}"
+									size="6"
+									value="#{cargosBacking.entity.chsemanal}"
+									precision="6"
+									readonly="true"
+									scale="2" />
+
+								<xcp:text
+									id="txtClasse"
+									label="#{bundle.lbl_classe}"
+									value="#{cargosBacking.entity.classe}"
+									size="6" />
+
+								<xcp:combo
+									id="cboSituacao"
+									value="#{cargosBacking.entity.situacao}"
+									label="#{bundle.lbl_situacao}"
+									required="true"
+									itens="#{cargosBacking.itensSituacao}">
+								</xcp:combo>
+
+								<xcp:panelEsoc backing="#{cargosBacking}" />
+
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+
+				<p:fieldset
+					legend="#{bundle.lbl_brdLotacao}"
+					id="brdLotacao">
+					<h:panelGrid
+						columns="6"
+						styleClass="tabela_alinhamento"
+						columnClasses="form_label,form_content">
+						<xcp:text
+							id="txtTotVag"
+							label="#{bundle.lbl_totVagas}"
+							value="#{cargosBacking.helper.qtdTotVagas}"
+							size="6"
+							readonly="true"
+							rendered="#{not cargosBacking.entity.novo}" />
+
+						<xcp:number
+							id="txtTotVagOcup"
+							label="#{bundle.lbl_totVagOcup}"
+							size="6"
+							value="#{cargosBacking.helper.qtdTotVagasOcup}"
+							rendered="#{not cargosBacking.entity.novo}"
+							precision="6"
+							readonly="true"
+							scale="0" />
+
+						<xcp:combo
+							id="cboLotacao"
+							value="#{cargosBacking.entity.lotacao}"
+							label="#{bundle.lbl_nivel_lotacao}"
+							required="true"
+							itens="#{cargosBacking.itensLotacao}"
+							readonly="#{not empty cargosLotacaoBacking.lista}">
+							<p:ajax
+								event="change"
+								update="tabDetalhes" />
+						</xcp:combo>
+
+					</h:panelGrid>
+				</p:fieldset>
+
+
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<p:tabView id="tabDetalhes">
+					<p:tab title="#{bundle.lbl_titulo_CargosHistorico}">
+						<ui:include src="CargosForm/CargosHistoricoForm.xhtml" />
+					</p:tab>
+
+					<p:tab title="#{bundle.lbl_titulo_CargosPadroes}">
+						<ui:include src="CargosForm/CargosPadroesForm.xhtml" />
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_CargosLotacao}"
+						disabled="#{cargosBacking.entity.lotacao == 4}">
+						<ui:include src="CargosForm/CargosLotacaoForm.xhtml" />
+					</p:tab>
+
+					<p:tab title="#{bundle.lbl_titulo_CargosNom}">
+						<ui:include src="CargosForm/CargosNomForm.xhtml" />
+					</p:tab>
+
+					<p:tab title="#{bundle.lbl_titulo_CargoTransf}">
+						<ui:include src="CargosForm/CargosTransformacaoForm.xhtml" />
+					</p:tab>
+
+					<p:tab title="#{bundle.lbl_titulo_CargosGratificacao}">
+						<ui:include src="CargosForm/CargosGratificacaoForm.xhtml" />
+					</p:tab>
+
+				</p:tabView>
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgErros"
+			header="#{bundle.tit_dlgErrosMat}"
+			widgetVar="w_erros"
+			width="610"
+			resizable="true"
+			modal="true">
+
+			<h:panelGroup
+				id="mypanel"
+				layout="block"
+				style="padding-bottom: 10px;font-weight: bold;">
+				<h:outputText value="#{bundle.tit_sol_nao_processada_set}" />
+			</h:panelGroup>
+
+			<xcp:form id="formErros">
+				<p:inputTextarea
+					value="#{cargosLotacaoBacking.desErros}"
+					cols="80"
+					autoResize="false"
+					rows="20" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_voltar_data"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_erros').hide();" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgData"
+			widgetVar="w_data"
+			header="#{bundle.tit_dlgcarreglot}"
+			modal="true">
+			<xcp:form id="frmLotacao">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtDtaLotacao"
+						value="#{cargosLotacaoBacking.dtaLotacao}"
+						label="#{bundle.lbl_datalot}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok_data"
+							icon="ui-icon-disk"
+							action="#{cargosLotacaoBacking.actionLotacao}"
+							value="#{bundle.btn_gravar}"
+							update=":formErros,:form:tabDetalhes" />
+
+						<xcp:commandButton
+							id="btn_voltar_data"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_data').hide();" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgRest"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgRest_w">
+			<xcp:form id="frmRest">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovVinculo"
+						value="#{cargosGratificacaoBacking.restricao.vinculoFk}"
+						label="#{bundle.lbl_vinculo}"
+						query="vinculos"
+						size="6"
+						required="true" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+
+						<xcp:commandButton
+							id="btnGravar"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}"
+							update=":form:tabDetalhes:tabRest"
+							action="#{cargosGratificacaoBacking.actionGravarRestricao}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgRest_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgAnexo"
+			header="#{bundle.title_anexo}"
+			widgetVar="dlgAnexo_w">
+			<xcp:form
+				id="frmAnexo"
+				multipart="true">
+				<xcp:panelForm>
+
+					<p:outputLabel value="#{bundle.lbl_anexo}:" />
+
+					<p:outputPanel
+						id="pnldownload"
+						style="display: flex;justify-content: center;align-items: center;">
+						<xcp:commandLink
+							id="btnDownloadDocumento"
+							value="#{cargosHistoricoBacking.entity.nomeanexo}"
+							immediate="true"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							rendered="#{not empty cargosHistoricoBacking.entity.nomeanexo}"
+							style="float:left;margin-right:5px">
+							<p:fileDownload value="#{cargosHistoricoBacking.arquivoAnexo}" />
+						</xcp:commandLink>
+
+						<xcp:commandLink
+							id="btn_removeranx"
+							immediate="true"
+							ajax="false"
+							rendered="#{not empty cargosHistoricoBacking.entity.nomeanexo}"
+							action="#{cargosHistoricoBacking.actionRemoveAnexo}"
+							style="float:left;margin-right:5px"
+							update=":form">
+							<h:graphicImage
+								title="#{bundle.hint_remover}"
+								value="/resources/img/remover.png"
+								style="margin-top:3px;" />
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandLink>
+
+						<p:fileUpload
+							mode="advanced"
+							auto="true"
+							label="#{bundle.btn_upload}"
+							fileUploadListener="#{cargosHistoricoBacking.actionUploadAnexo}"
+							invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+							requiredMessage='#{ empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+							validator="xcpInputFileValidator"
+							update=":form"
+							oncomplete="PF('dlgAnexo_w').hide()"
+							style="float:left" />
+
+					</p:outputPanel>
+
+				</xcp:panelForm>
+
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							process="@this"
+							onclick="PF('dlgAnexo_w').hide();" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

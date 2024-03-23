@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:fieldset legend="#{bundle.tit_dados_atuacoes}">
+
+		<p:dataTable
+			id="tabAtuacoes"
+			value="#{funcionariosBacking.listaAtuacoes}"
+			var="atu"
+			paginator="true"
+			paginatorPosition="bottom"
+			rows="14"
+			emptyMessage="#{bundle.msg_sem_resultado}">
+
+			<xcp:column
+				headerText="#{bundle.col_setor}"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{atu.setor}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+			
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				size="15">
+				<xcp:outputSimple value="#{atu.setorFk.descricao}" />
+			</xcp:column>			
+			
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				size="15">
+				<xcp:outputSimple value="#{atu.tipoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtinicio}"
+				size="5">
+				<xcp:outputSimpleDate value="#{atu.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dttermino}"
+				size="5">
+				<xcp:outputSimpleDate value="#{atu.dttermino}" />
+			</xcp:column>
+
+			<xcp:column
+				size="2"
+				rendered="#{!funcionariosBacking.disabledExcluir}">
+				<xcp:commandButton
+					immediate="true"
+					icon="ui-icon-trash"
+					id="btn_remove_prova"
+					update="tabAtuacoes"
+					action="#{funcionariosBacking.actionExcluirAtuacao(atu)}">
+					<!-- 	<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" /> -->
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</xcp:column>
+
+			<xcp:column
+				size="2"
+				rendered="#{!funcionariosBacking.disabledGravar}">
+				<xcp:commandButton
+					id="btn_edita_dependente"
+					icon="icon-editar"
+					immediate="true"
+					update=":frmAtuacao"
+					oncomplete="PF('dlgAtuacao_w').show();">
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.atuacao}"
+						value="#{atu}" />
+				</xcp:commandButton>
+			</xcp:column>
+
+
+		</p:dataTable>
+
+
+		<xcp:commandButton
+			id="btn_adicionar_atu"
+			value="#{bundle.btn_novo}"
+			update=":frmAtuacao"
+			oncomplete="PF('dlgAtuacao_w').show();"
+			icon="ui-icon-document">
+			<f:setPropertyActionListener
+				target="#{funcionariosBacking.atuacao}"
+				value="#{null}" />
+		</xcp:commandButton>
+
+	</p:fieldset>
+
+</ui:composition>

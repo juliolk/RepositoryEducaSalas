@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Depplanosaude"
+			backing="#{depplanosaudeBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_plano}"
+					value="#{row.plano}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.plano}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desplano}"
+					value="#{row.planoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.planoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datainicio}"
+					value="#{row.datainicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datainicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datatermino}"
+					value="#{row.datatermino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datatermino}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{depplanosaudeBacking.itensTipo}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{depplanosaudeBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dep}"
+					value="#{row.dependentesFk.nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.dependentesFk.nome}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovPlano"
+						value="#{depplanosaudeBacking.entity.planoFk}"
+						label="#{bundle.lbl_plano}"
+						required="true"
+						readonly="#{not depplanosaudeBacking.entity.novo}"
+						query="planosaude"
+						size="5" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{depplanosaudeBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="#{not depplanosaudeBacking.entity.novo}"
+						itens="#{depplanosaudeBacking.itensTipo}">
+						<p:ajax
+							event="change"
+							update="lovSequencia,lovSequencia_l,cboGrau,cboGrau_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovSequencia"
+						value="#{depplanosaudeBacking.entity.dependentesFk}"
+						readonly="#{not depplanosaudeBacking.entity.novo}"
+						rendered="#{depplanosaudeBacking.entity.tipo==2}"
+						required="true"
+						params="#{depplanosaudeBacking.paramsMatricula}"
+						label="#{bundle.lbl_sequencia}"
+						query="dependentes"
+						size="4"
+						update=":form:cboGrau,:form:cboGrau_l,:form:txtIdade,:form:txtIdade_l" />
+
+					<xcp:combo
+						id="cboGrau"
+						value="#{depplanosaudeBacking.entity.dependentesFk.grau}"
+						itens="#{depplanosaudeBacking.itensParentesco}"
+						label="#{bundle.lbl_grau}"
+						rendered="#{depplanosaudeBacking.entity.dependentesFk != null}"
+						readonly="true" />
+
+					<xcp:number
+						id="txtIdade"
+						value="#{depplanosaudeBacking.idade}"
+						readonly="true"
+						label="#{bundle.lbl_idadeatu}"
+						rendered="#{depplanosaudeBacking.idade != null}"
+						size="5" />
+
+					<xcp:date
+						id="txtDatainicio"
+						required="true"
+						value="#{depplanosaudeBacking.entity.datainicio}"
+						label="#{bundle.lbl_datainicio}"
+						size="9" />
+
+					<xcp:date
+						id="txtDatatermino"
+						value="#{depplanosaudeBacking.entity.datatermino}"
+						label="#{bundle.lbl_datatermino}"
+						size="9" />			
+
+					<xcp:number
+						id="txtCodexterno"
+						label="#{bundle.col_codexterno}"
+						value="#{depplanosaudeBacking.entity.codexterno}"
+						size="8"
+						scale="0"
+						maxValue="99999999" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

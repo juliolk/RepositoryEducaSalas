@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="CargosPadroes"
+		backing="#{cargosPadroesBacking}"
+		masterId="Cargos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_padrao}"
+				value="#{row.padrao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.padrao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_pontos}"
+				value="#{row.pontos}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.pontos}"
+					precision="7"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vagas}"
+				value="#{row.vagas}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.vagas}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovPadrao_CargosPadroes"
+					value="#{cargosPadroesBacking.entity.padraoFk}"
+					label="#{bundle.lbl_padrao}"
+					required="true"
+					query="padroes"
+					size="4"
+					readonly="#{not cargosPadroesBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtPontos_CargosPadroes"
+					label="#{bundle.lbl_pontos}"
+					size="4"
+					value="#{cargosPadroesBacking.entity.pontos}"
+					precision="7"
+					scale="2" />
+
+				<xcp:number
+					id="txtVagas_CargosPadroes"
+					label="#{bundle.lbl_vagas}"
+					value="#{cargosPadroesBacking.entity.vagas}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

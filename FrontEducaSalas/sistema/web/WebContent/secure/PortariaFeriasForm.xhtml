@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:panelGrid id="panelPortaria">
+				<p:row>
+					<p:column>
+						<p:fieldset
+							legend="#{bundle.tit_tipo_documento}"
+							style="width:800px">
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovTipodoc"
+									value="#{portariaFeriasBacking.helper.tipodoc}"
+									selectionListener="#{portariaFeriasBacking.selectTipodocumento}"
+									size="8"
+									update="txtDataPeriodo,panelGeral,txtDataPag,txtDataPag_l,lovProcesso,lovProcesso_l"
+									label="#{bundle.lbl_doc_port}"
+									params="#{portariaFeriasBacking.paramsTipoDoc}"
+									query="tipodocumento_ferias" />
+
+								<xcp:dateRange
+									id="txtDataPeriodo"
+									valueStart="#{portariaFeriasBacking.helper.dtaIni}"
+									readonly="true"
+									valueEnd="#{portariaFeriasBacking.helper.dtaFim}"
+									label="#{bundle.lbl_data_ferias}" />
+
+								<xcp:dateRange
+									id="txtDataPag"
+									rendered="#{portariaFeriasBacking.renderedDtPag}"
+									valueStart="#{portariaFeriasBacking.helper.dtPagIni}"
+									valueEnd="#{portariaFeriasBacking.helper.dtPagFim}"
+									label="#{bundle.lbl_datapgto}" />
+
+								<xcp:lov
+									id="lovProcesso"
+									value="#{portariaFeriasBacking.helper.processoFk}"
+									label="#{bundle.lbl_processo}"
+									query="processos"
+									size="25"
+									selectionListener="#{portariaFeriasBacking.selectProcesso}"
+									rendered="#{portariaFeriasBacking.renderedProc}"
+									update="panelGeral" />
+
+
+							</xcp:panelForm>
+						</p:fieldset>
+						<p:outputPanel id="panelGeral">
+							<ui:include src="PortariaForm/PanelGeralForm.xhtml">
+								<ui:param
+									name="backing"
+									value="#{portariaFeriasBacking}" />
+								<ui:param
+									name="lov"
+									value="doc_fer_ret_canc" />
+								<ui:param
+									name="lovFunc"
+									value="funcionariosLovPorFe" />
+							</ui:include>
+
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{portariaFeriasBacking}" />
+		</ui:include>
+	</ui:define>
+</ui:composition>

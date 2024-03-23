@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dataTable
+		id="tabAtestados"
+		var="rowAtestado"
+		value="#{fichamedicaBacking.listaAtestados}"
+		rowKey="#{rowAtestado.PK}"
+		filteredValue="#{fichamedicaBacking.listaFiltrados1}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="#{viewUtil.tableRows}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		style="margin-bottom:0;">
+		<f:facet name="header">#{bundle.tit_atestados}</f:facet>
+		<p:column style="width:16px">
+			<p:rowToggler />
+		</p:column>
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{rowAtestado.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_crm}"
+			type="Number"
+			size="10">
+			<xcp:outputSimpleNumber
+				value="#{rowAtestado.crm}"
+				precision="12"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_duracao}"
+			type="Number"
+			size="9">
+			<xcp:outputSimpleNumber
+				value="#{rowAtestado.duracao}"
+				precision="6"
+				scale="2" />
+		</xcp:column>
+		<!-- 
+				<xcp:column
+					headerText="#{bundle.col_hora}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{rowAtestado.hora}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+ -->
+
+		<xcp:column
+			headerText="#{bundle.col_diagnostico}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{rowAtestado.diagnostico}" />
+		</xcp:column>
+
+
+		<!-- 
+		<xcp:column
+			headerText="#{bundle.col_caracteristica}"
+			type="String"
+			size="10">
+			<xcp:outputSimple
+				value="#{rowAtestado.caracteristica}"
+				itens="#{fichamedicaBacking.itensCaracteristica}" />
+
+		</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_dataentrega}"
+					value="#{rowAtestado.dataentrega}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{rowAtestado.dataentrega}" />
+				</xcp:column>
+ -->
+		<p:rowExpansion>
+			<p:dataTable
+				id="tabCid"
+				var="rowCid"
+				value="#{rowAtestado.atestadosCid}"
+				rowKey="#{rowCid.PK}"
+				paginator="true"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				style="margin-bottom:0;">
+				<f:facet name="header">#{bundle.tit_cid}</f:facet>
+				<xcp:column
+					headerText="#{bundle.col_cid}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{rowCid.cid}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descid}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{rowCid.cidFk.descricao}" />
+				</xcp:column>
+			</p:dataTable>
+		</p:rowExpansion>
+	</p:dataTable>
+
+</ui:composition>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="pnlUpdFuncao">
+		<p:outputPanel rendered="#{setoresInspBacking.telaFuncoesLista}">
+
+			<p:dataTable
+				id="tableFuncao"
+				var="rowFunc"
+				rowKey="#{rowFunc.uuid}"
+				value="#{setoresInspBacking.entity.listFuncoes}"
+				filteredValue="#{setoresInspBacking.entity.listFuncoesFilter}"
+				sortMode="multiple"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				selection="#{setoresInspBacking.helper.funcoesSel}"
+				selectionMode="single"
+				rows="#{viewUtil.tableRows}">
+
+				<p:ajax
+					event="rowSelect"
+					listener="#{setoresInspBacking.onRowSelectFuncao}"
+					update=":form:tabView:pnlUpdFuncao" />
+
+				<xcp:column
+					headerText="#{bundle.col_funcao}"
+					value="#{rowFunc.funcao}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{rowFunc.funcao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{rowFunc.funcaoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{rowFunc.funcaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{rowFunc.matricula}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{rowFunc.matricula}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{rowFunc.funcionarioFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{rowFunc.funcionarioFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{rowFunc.data}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{rowFunc.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_emissao}"
+					value="#{rowFunc.emissao}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{rowFunc.emissao}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+
+			<xcp:commandButton
+				id="btn_novo_cargo"
+				style="margin-top:5px"
+				update=":form:tabView:pnlUpdFuncao"
+				process="@this"
+				action="#{setoresInspBacking.actionNovoFuncao}"
+				value="#{bundle.btn_novo}"
+				icon="ui-icon-plusthick" />
+
+		</p:outputPanel>
+
+
+		<p:outputPanel rendered="#{setoresInspBacking.telaFuncoesForm}">
+
+			<p:outputPanel style="margin:10px">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovFuncao"
+						value="#{setoresInspBacking.helper.funcoesSel.funcaoFk}"
+						label="#{bundle.lbl_funcao}"
+						required="true"
+						readonly="#{not setoresInspBacking.helper.funcoesSel.novo}"
+						query="funcoes_setor"
+						params="#{setoresInspBacking.paramsFuncSet}"
+						size="8" />
+
+					<xcp:lov
+						id="txtMatricula"
+						value="#{setoresInspBacking.helper.funcoesSel.funcionarioFk}"
+						label="#{bundle.lbl_matricula}"
+						params="#{setoresInspBacking.paramsFunc}"
+						query="funcionariosInspLov"
+						size="8" />
+
+					<h:outputLabel value="#{bundle.lbl_dataCar}" />
+
+					<h:panelGroup
+						layout="block"
+						style="width: 500px;">
+
+						<xcp:date
+							id="txtData"
+							value="#{setoresInspBacking.helper.funcoesSel.data}"
+							label="#{bundle.lbl_dataCar}"
+							simple="true"
+							style="float:left" />
+
+						<h:panelGrid
+							columns="2"
+							style="float:left;margin-left:10px">
+
+							<xcp:date
+								id="txtEmissao"
+								value="#{setoresInspBacking.helper.funcoesSel.emissao}"
+								label="#{bundle.lbl_emissao}" />
+
+						</h:panelGrid>
+
+					</h:panelGroup>
+
+
+					<xcp:date
+						id="txtValidade"
+						value="#{setoresInspBacking.helper.funcoesSel.validade}"
+						label="#{bundle.lbl_validadecar}" />
+
+
+					<xcp:lov
+						id="lovAgenteCar"
+						value="#{setoresInspBacking.helper.funcoesSel.agenteFk}"
+						label="#{bundle.lbl_agenteDeter}"
+						rendered="#{not setoresInspBacking.helper.funcoesSel.novo}"
+						params="#{setoresInspBacking.paramsAgSetFuncao}"
+						query="agentes_setag"
+						size="8" />
+
+					<h:outputLabel value="#{bundle.lbl_periculosidade}" />
+
+					<h:panelGroup layout="block">
+
+						<xcp:combo
+							id="optPericulosidade"
+							simple="true"
+							style="float:left"
+							label="#{bundle.lbl_periculosidade}"
+							value="#{setoresInspBacking.helper.funcoesSel.periculosidade}"
+							itens="#{setoresInspBacking.itensIndSimNao}" />
+
+						<h:panelGrid
+							columns="2"
+							style="float:left;margin-left:10px">
+
+							<xcp:combo
+								id="cboTipoInsalubridade"
+								value="#{setoresInspBacking.helper.funcoesSel.tipoInsalubridade}"
+								label="#{bundle.lbl_tipoInsalubridade}"
+								itens="#{setoresInspBacking.itensTipoInsalubridade}" />
+
+
+						</h:panelGrid>
+					</h:panelGroup>
+
+					<xcp:memo
+						id="txtConclusaoCar"
+						label="#{bundle.lbl_conclusao}"
+						value="#{setoresInspBacking.helper.funcoesSel.conclusao}"
+						size="4000" />
+
+					<xcp:memo
+						id="txtObsCar"
+						size="4000"
+						label="#{bundle.lbl_obs}"
+						value="#{setoresInspBacking.helper.funcoesSel.obs}" />
+
+					<h:outputLabel
+						value="#{bundle.lbl_anexo}:"
+						rendered="#{!setoresInspBacking.helper.funcoesSel.novo}" />
+
+					<p:fieldset
+						style="margin-left: 0px !important"
+						rendered="#{!setoresInspBacking.helper.funcoesSel.novo}">
+						<h:panelGrid columns="3">
+
+							<p:commandButton
+								value="#{bundle.btn_upload}"
+								oncomplete="PF('w_anexofunc').show()" />
+
+							<p:commandLink
+								id="lnkAnexo"
+								rendered="#{setoresInspBacking.helper.funcoesSel.anexo != null}"
+								style="padding-left:5px"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								ajax="false">
+								<h:outputText
+									value="#{setoresInspBacking.helper.funcoesSel.anexo.nome}" />
+								<p:fileDownload
+									value="#{setoresInspBacking.getAnexoFuncao()}"
+									contentDisposition="attachment" />
+							</p:commandLink>
+
+							<p:commandLink
+								id="lnkRem"
+								rendered="#{setoresInspBacking.helper.funcoesSel.anexo != null}"
+								style="padding-left:5px"
+								action="#{setoresInspBacking.actionRemoveAnexoFuncao}"
+								process="@this"
+								update="@form">
+								<h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" />
+							</p:commandLink>
+						</h:panelGrid>
+					</p:fieldset>
+
+				</xcp:panelForm>
+
+				<ui:include src="SetoresInspEpi.xhtml" />
+				
+				<ui:include src="SetoresInspAgentes.xhtml" />
+
+				<p:toolbar style="margin-top:5px">
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_ok_car"
+							icon="ui-icon-disk"
+							process=":form:tabView:pnlUpdFuncao"
+							update=":form:tabView:pnlUpdFuncao"
+							action="#{setoresInspBacking.actionSalvarFuncao}"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_excluir_car"
+							icon="ui-icon-trash"
+							update=":form:tabView:pnlUpdFuncao"
+							value="#{bundle.btn_remover}"
+							rendered="#{not setoresInspBacking.helper.funcoesSel.novo}"
+							action="#{setoresInspBacking.actionRemoveFuncoes}"
+							process="@this">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btn_voltar_car"
+							immediate="true"
+							update=":form:tabView:pnlUpdFuncao"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							action="#{setoresInspBacking.actionVoltarFuncao}" />
+
+						<xcp:commandButton
+							id="btn_copiar"
+							value="#{bundle.btn_copyNewFunction}"
+							update=":dlgCopyFuncao"
+							rendered="#{not setoresInspBacking.helper.funcoesSel.novo}"
+							action="#{setoresInspBacking.actionOpenCopiarFuncao}" />
+					</f:facet>
+				</p:toolbar>
+
+
+			</p:outputPanel>
+		</p:outputPanel>
+	</p:outputPanel>
+
+</ui:composition>

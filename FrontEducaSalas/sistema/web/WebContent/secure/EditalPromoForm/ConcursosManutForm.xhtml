@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:panelGroup id="formConcurso">
+		<xcp:panelForm>
+
+			<xcp:lov
+				id="lovNumSeqVaga"
+				value="#{editalPromoBacking.concursoManut.numSeqVagaFk}"
+				label="#{bundle.lbl_numSeqVaga}"
+				query="cargos_vagas_con_res"
+				size="18"
+				required="true"
+				params="#{editalPromoBacking.paramsVagas}" />
+
+		</xcp:panelForm>
+		<p:toolbar
+			styleClass="xcp_pmanut_form_toolbar"
+			rendered="#{not editalPromoBacking.detailsEdit}">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btnGravar_Concurso"
+					icon="ui-icon-disk"
+					value="#{bundle.btn_gravar}"
+					action="#{editalPromoBacking.actionGravarConcurso}"
+					disabled="#{editalPromoBacking.disabledGravar}" />
+
+				<xcp:commandButton
+					id="btnVoltar_Concurso"
+					immediate="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgConcurso_w').hide();" />
+			</f:facet>
+		</p:toolbar>
+	</h:panelGroup>
+</ui:composition>

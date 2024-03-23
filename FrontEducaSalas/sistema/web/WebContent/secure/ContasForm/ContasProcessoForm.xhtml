@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ContasProcesso"
+		backing="#{contasProcessoBacking}"
+		masterId="Contas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_conta}"
+				value="#{row.conta}"
+				type="String"
+				size="2">
+				<xcp:outputSimple value="#{row.contaFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_processo}"
+				value="#{row.processoFk.codProcesso}"
+				type="String"
+				size="5">
+				<xcp:outputSimple value="#{row.processoFk.codProcesso}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="String"
+				size="10"
+				itens="#{contasProcessoBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{contasProcessoBacking.itensTipo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_decisao}"
+				value="#{row.decisao}"
+				type="String"
+				size="10"
+				itens="#{contasProcessoBacking.itensDecisao}">
+				<xcp:outputSimple
+					value="#{row.decisao}"
+					itens="#{contasProcessoBacking.itensDecisao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovProcesso_ContasProcesso"
+					value="#{contasProcessoBacking.entity.processoFk}"
+					label="#{bundle.lbl_processo}"
+					required="true"
+					query="processoesoc"
+					size="25" />
+
+				<xcp:combo
+					id="cboTipo_ContasProcesso"
+					value="#{contasProcessoBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{contasProcessoBacking.itensTipo}">
+					<p:ajax
+						update="cboDecisao cboDecisao_l"
+						process="@this" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboDecisao"
+					value="#{contasProcessoBacking.entity.decisao}"
+					label="#{bundle.lbl_decisao}"
+					required="true"
+					itens="#{contasProcessoBacking.itensDecisao}"
+					rendered="#{contasProcessoBacking.entity.tipo == 1}" />
+
+				<xcp:memo
+					id="txtObs_ContasProcesso"
+					label="#{bundle.lbl_obs}"
+					value="#{contasProcessoBacking.entity.obs}"
+					size="1000" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

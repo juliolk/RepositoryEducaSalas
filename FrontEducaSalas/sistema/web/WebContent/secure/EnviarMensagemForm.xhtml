@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent backing="#{enviarMensagemBacking}">
+			<p:fieldset>
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtAssunto"
+						label="#{bundle.lbl_desAssunto}"
+						required="true"
+						value="#{enviarMensagemBacking.helper.desAssunto}"
+						size="50"
+						maxlength="70" />
+
+					<xcp:radio
+						id="optTipoEnvio"
+						value="#{enviarMensagemBacking.helper.tipEnvio}"
+						itens="#{enviarMensagemBacking.itensTipEnvio}"
+						label="#{bundle.lbl_tipoEnvioMsg}">
+						<p:ajax
+							event="change"
+							update="anx toolbarmsg" />
+					</xcp:radio>
+
+					<xcp:radio
+						id="optTipoTexto"
+						value="#{enviarMensagemBacking.helper.tipTexto}"
+						itens="#{enviarMensagemBacking.itensTipTexto}"
+						label="#{bundle.lbl_tipText}">
+						<p:ajax
+							event="change"
+							update="lovTexto lovTexto_l txtTexto txtTexto_l" />
+					</xcp:radio>
+
+					<xcp:lov
+						id="lovTexto"
+						value="#{enviarMensagemBacking.helper.xcpTexto}"
+						label="#{bundle.lbl_xcpTexto}"
+						required="true"
+						query="xcp_texto"
+						size="10"
+						rendered="#{enviarMensagemBacking.helper.tipTexto == 1}" />
+
+					<xcp:memo
+						id="txtTexto"
+						label="#{bundle.lbl_desTexto}"
+						required="true"
+						value="#{enviarMensagemBacking.helper.desTexto}"
+						size="2000"
+						rendered="#{enviarMensagemBacking.helper.tipTexto == 2}" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{enviarMensagemBacking.helper.orgao}"
+						selectionListener="#{enviarMensagemBacking.selectOrgao}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos"
+						size="10"
+						update="lovDivisao lovSetor" />
+
+					<xcp:lov
+						id="lovDivisao"
+						value="#{enviarMensagemBacking.helper.divisao}"
+						selectionListener="#{enviarMensagemBacking.selectDivisao}"
+						label="#{bundle.lbl_divisao}"
+						query="divisoes"
+						size="10"
+						update="lovSetor" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{enviarMensagemBacking.helper.setor}"
+						label="#{bundle.lbl_setor}"
+						query="#{enviarMensagemBacking.querySetor}"
+						size="10" />
+
+					<xcp:lov
+						id="lovConsignacoes"
+						value="#{enviarMensagemBacking.helper.consignacao}"
+						label="#{bundle.lbl_codconvenio}"
+						query="consignacoes_tipo"
+						size="10" />
+
+					<xcp:lov
+						id="lovMat"
+						value="#{enviarMensagemBacking.helper.func}"
+						label="#{bundle.lbl_servidor}"
+						query="funcionario_operador"
+						size="10"
+						update="pnlMat"
+						selectionListener="#{enviarMensagemBacking.selectMatricula}" />
+
+					<p:spacer
+						width="0"
+						height="1" />
+
+					<h:panelGrid
+						styleClass="table-itens-multi-selecao"
+						columns="2"
+						id="pnlMat">
+
+						<p:dataTable
+							id="tblMat"
+							rows="0"
+							var="it"
+							value="#{enviarMensagemBacking.helper.listFunc}"
+							selection="#{enviarMensagemBacking.helper.listFuncSel}"
+							rowKey="#{it}"
+							scrollHeight="null"
+							scrollRows="400"
+							scrollable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							style="width:400px;float:left"
+							rendered="#{!enviarMensagemBacking.helper.listFunc.isEmpty()}">
+
+							<p:column
+								selectionMode="multiple"
+								style="width:20px;text-align:center" />
+
+							<xcp:column headerText="#{label}">
+								<xcp:outputSimple value="#{it.matricula} - #{it.nome}" />
+							</xcp:column>
+
+						</p:dataTable>
+
+						<p:commandButton
+							id="btnLimpaMat"
+							icon="icon-limpar"
+							styleClass="limpar-multi-selecao"
+							process="@this tblMat"
+							update="pnlMat"
+							rendered="#{!enviarMensagemBacking.helper.listFunc.isEmpty()}"
+							action="#{enviarMensagemBacking.actionLimpaMat}" />
+
+					</h:panelGrid>
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{enviarMensagemBacking.helper.cargo}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="10"
+						update="pnlCargo"
+						selectionListener="#{enviarMensagemBacking.selectCargo}" />
+
+					<p:spacer
+						width="0"
+						height="1" />
+
+					<h:panelGrid
+						styleClass="table-itens-multi-selecao"
+						columns="2"
+						id="pnlCargo">
+
+						<p:dataTable
+							id="tblCargo"
+							rows="0"
+							var="it"
+							value="#{enviarMensagemBacking.helper.listCargos}"
+							selection="#{enviarMensagemBacking.helper.listCargosSel}"
+							rowKey="#{it}"
+							scrollHeight="null"
+							scrollRows="400"
+							scrollable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							style="width:400px;float:left"
+							rendered="#{!enviarMensagemBacking.helper.listCargos.isEmpty()}">
+
+							<p:column
+								selectionMode="multiple"
+								style="width:20px;text-align:center" />
+
+							<xcp:column headerText="#{label}">
+								<xcp:outputSimple value="#{it.cargo} - #{it.descricao}" />
+							</xcp:column>
+
+						</p:dataTable>
+
+						<p:commandButton
+							id="btnLimpaCargo"
+							icon="icon-limpar"
+							styleClass="limpar-multi-selecao"
+							process="@this tblCargo"
+							update="pnlCargo"
+							rendered="#{!enviarMensagemBacking.helper.listCargos.isEmpty()}"
+							action="#{enviarMensagemBacking.actionLimpaCargo}" />
+
+					</h:panelGrid>
+
+
+					<xcp:lov
+						id="lovTipmov"
+						value="#{enviarMensagemBacking.helper.tipmov}"
+						label="#{bundle.lbl_situacao}"
+						query="tipomovtos"
+						size="10"
+						update="pnlTipmov"
+						selectionListener="#{enviarMensagemBacking.selectTipmov}" />
+
+					<p:spacer
+						width="0"
+						height="1" />
+
+					<h:panelGrid
+						styleClass="table-itens-multi-selecao"
+						columns="2"
+						id="pnlTipmov">
+
+						<p:dataTable
+							id="tblTipmov"
+							rows="0"
+							var="it"
+							value="#{enviarMensagemBacking.helper.listSituacoes}"
+							selection="#{enviarMensagemBacking.helper.listSituacoesSel}"
+							rowKey="#{it}"
+							scrollHeight="null"
+							scrollRows="400"
+							scrollable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							style="width:400px;float:left"
+							rendered="#{!enviarMensagemBacking.helper.listSituacoes.isEmpty()}">
+
+							<p:column
+								selectionMode="multiple"
+								style="width:20px;text-align:center" />
+
+							<xcp:column headerText="#{label}">
+								<xcp:outputSimple value="#{it.tipmov} - #{it.descricao}" />
+							</xcp:column>
+
+						</p:dataTable>
+
+						<p:commandButton
+							id="btnLimpaTipmov"
+							icon="icon-limpar"
+							styleClass="limpar-multi-selecao"
+							process="@this tblTipmov"
+							update="pnlTipmov"
+							rendered="#{!enviarMensagemBacking.helper.listSituacoes.isEmpty()}"
+							action="#{enviarMensagemBacking.actionLimpaSituacao}" />
+
+					</h:panelGrid>
+
+					<xcp:lov
+						id="lovVinculo"
+						value="#{enviarMensagemBacking.helper.vinculo}"
+						label="#{bundle.lbl_vinculo}"
+						query="vinculos"
+						size="10"
+						update="pnlVinculo"
+						selectionListener="#{enviarMensagemBacking.selectVinculo}" />
+
+					<p:spacer
+						width="0"
+						height="1" />
+
+					<h:panelGrid
+						styleClass="table-itens-multi-selecao"
+						columns="2"
+						id="pnlVinculo">
+
+						<p:dataTable
+							id="tblVinculo"
+							rows="0"
+							var="it"
+							value="#{enviarMensagemBacking.helper.listVinculo}"
+							selection="#{enviarMensagemBacking.helper.listVinculoSel}"
+							rowKey="#{it}"
+							scrollHeight="null"
+							scrollRows="400"
+							scrollable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							style="width:400px;float:left"
+							rendered="#{!enviarMensagemBacking.helper.listVinculo.isEmpty()}">
+
+							<p:column
+								selectionMode="multiple"
+								style="width:20px;text-align:center" />
+
+							<xcp:column headerText="#{label}">
+								<xcp:outputSimple value="#{it.vinculo} - #{it.descricao}" />
+							</xcp:column>
+
+						</p:dataTable>
+
+						<p:commandButton
+							id="btnLimpaVin"
+							icon="icon-limpar"
+							styleClass="limpar-multi-selecao"
+							process="@this tblVinculo"
+							update="pnlVinculo"
+							rendered="#{!enviarMensagemBacking.helper.listVinculo.isEmpty()}"
+							action="#{enviarMensagemBacking.actionLimpaVinculo}" />
+
+					</h:panelGrid>
+
+					<xcp:dateRange
+						id="txtDt_AssinaturasDoc"
+						label="#{bundle.lbl_dtadmissao}"
+						valueStart="#{enviarMensagemBacking.helper.dtadmissaoini}"
+						valueEnd="#{enviarMensagemBacking.helper.dtadmissaofim}" />
+
+					<xcp:dateRange
+						id="txtDtNascimento"
+						label="#{bundle.lbl_dtnascimento}"
+						valueStart="#{enviarMensagemBacking.helper.dtNascini}"
+						valueEnd="#{enviarMensagemBacking.helper.dtNascfim}" />
+
+					<p:spacer
+						id="lblanx"
+						width="0"
+						height="1" />
+
+					<h:panelGrid
+						id="anx"
+						styleClass="table-itens-multi-selecao"
+						columns="2">
+
+						<p:dataTable
+							id="tblAnexos"
+							rows="0"
+							var="it"
+							value="#{enviarMensagemBacking.helper.listAnexos}"
+							selection="#{enviarMensagemBacking.helper.listAnexosSel}"
+							rowKey="#{it}"
+							scrollHeight="null"
+							scrollRows="400"
+							scrollable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							style="width:400px;float:left"
+							rendered="#{!enviarMensagemBacking.helper.listAnexos.isEmpty() and enviarMensagemBacking.helper.tipEnvio == 2}">
+
+							<p:column
+								selectionMode="multiple"
+								style="width:20px;text-align:center" />
+
+							<xcp:column headerText="#{label}">
+								<xcp:outputSimple
+									value="#{enviarMensagemBacking.getDesNomeArq(it)}" />
+							</xcp:column>
+
+						</p:dataTable>
+
+						<p:commandButton
+							id="btnLimpaAnx"
+							icon="icon-limpar"
+							styleClass="limpar-multi-selecao"
+							process="@this tblAnexos"
+							update="anx"
+							rendered="#{!enviarMensagemBacking.helper.listAnexos.isEmpty()}"
+							action="#{enviarMensagemBacking.actionLimpaAnexo}" />
+
+
+						<p:commandButton
+							id="btnAddAnexo"
+							value="#{bundle.btn_anexo}"
+							process="@this"
+							update=":frmDlgAnexos"
+							oncomplete="PF('dlgAnexos_w').show()"
+							rendered="#{enviarMensagemBacking.helper.tipEnvio == 2}" />
+
+					</h:panelGrid>
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:toolbar id="toolbarmsg">
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_enviar_msg"
+						icon="ui-icon-disk"
+						update="@form"
+						value="#{bundle.btn_enviar}"
+						action="#{enviarMensagemBacking.actionEnviarMensagem}"
+						rendered="#{enviarMensagemBacking.helper.tipEnvio == 1}" />
+
+					<xcp:commandButton
+						id="btn_enviar_email"
+						icon="ui-icon-disk"
+						update="@form"
+						value="#{bundle.btn_enviar}"
+						action="#{enviarMensagemBacking.actionEnviarMensagem}"
+						rendered="#{enviarMensagemBacking.helper.tipEnvio == 2}">
+						<p:confirm
+							header="#{bundle.tit_confirma_envmsg}"
+							message="#{bundle.msg_envmsg}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_anexos}"
+			modal="true"
+			id="dlgAnexos"
+			widgetVar="dlgAnexos_w"
+			dynamic="true">
+			<xcp:form id="frmDlgAnexos">
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{enviarMensagemBacking.actionUploadAnexo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					requiredMessage='#{empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+					validator="xcpInputFileValidator"
+					update=":form:anx"
+					multiple="true" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_concluir"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('dlgAnexos_w').hide();" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

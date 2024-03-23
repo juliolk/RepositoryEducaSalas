@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Restricoes"
+		backing="#{contasrestricoesBacking}"
+		masterId="Contas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_seq}"
+				value="#{row.seq}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.seq}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_cargo}"
+				value="#{row.cargoFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.cargoFk.descricao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_orgao}"
+				value="#{row.orgaoFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_divisao}"
+				value="#{row.divisaoFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.divisaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_setor}"
+				value="#{row.setorFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.setorFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vinculo}"
+				value="#{row.vinculoFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.vinculoFk.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovOrgao_Restricoes"
+					value="#{contasrestricoesBacking.entity.orgaoFk}"
+					label="#{bundle.lbl_orgao}"
+					query="orgaos"
+					size="10"
+					selectionListener="#{contasrestricoesBacking.selectOrgao}"
+					update="lovDivisao_Restricoes lovSetor_Restricoes" />
+
+				<xcp:lov
+					id="lovDivisao_Restricoes"
+					value="#{contasrestricoesBacking.entity.divisaoFk}"
+					params="#{contasrestricoesBacking.paramsDivisao}"
+					label="#{bundle.lbl_divisao}"
+					query="divisoes_orgao"
+					size="10"
+					selectionListener="#{contasrestricoesBacking.selectDivisao}"
+					update="lovSetor_Restricoes" />
+
+				<xcp:lov
+					id="lovSetor_Restricoes"
+					value="#{contasrestricoesBacking.entity.setorFk}"
+					label="#{bundle.lbl_setor}"
+					query="set_div_validade"
+					params="#{contasrestricoesBacking.paramsSetor}"
+					size="10" />
+
+				<xcp:lov
+					id="lovCargo_Restricoes"
+					value="#{contasrestricoesBacking.entity.cargoFk}"
+					label="#{bundle.lbl_cargo}"
+					query="cargos"
+					size="10" />
+
+				<xcp:lov
+					id="lovVinculo_Vinc"
+					value="#{contasrestricoesBacking.entity.vinculoFk}"
+					label="#{bundle.lbl_vinculo}"
+					query="vinculos"
+					size="10" />
+
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

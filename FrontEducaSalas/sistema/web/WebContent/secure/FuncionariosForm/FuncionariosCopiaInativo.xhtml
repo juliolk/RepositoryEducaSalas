@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:panel
+		id="panelCopiaInativo"
+		header="#{bundle.tit_CopiaInativo}">
+		<xcp:panelForm>
+
+			<xcp:lov
+				id="lovCpEmpresaIn"
+				value="#{funcionariosCopiaFormBacking.empresaOrigem}"
+				size="8"
+				label="#{bundle.lbl_empresa}"
+				required="true"
+				query="empresas_out"
+				update=":form" />
+
+			<xcp:lov
+				id="lovCpMatriculaIn"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat}"
+				size="8"
+				params="#{funcionariosCopiaFormBacking.lovFuncInativosParams}"
+				label="#{bundle.lbl_matricula}"
+				required="true"
+				query="funcionarioscopiaIna"
+				selectionListener="#{funcionariosCopiaFormBacking.selectFuncionarioInativo}"
+				update=":form" />
+
+			<xcp:number
+				id="txtCpMatriculaDestinoFuncIn"
+				size="8"
+				value="#{funcionariosCopiaFormBacking.matriculaDestino}"
+				label="#{bundle.lbl_matriculaDestino}"
+				required="true"
+				rendered="#{funcionariosCopiaFormBacking.matriculaInformada}">
+				<p:ajax
+					event="change"
+					listener="#{funcionariosCopiaFormBacking.validaMatricula}"
+					update="@this" />
+			</xcp:number>
+
+			<xcp:date
+				id="txtAdmissaoCopIn"
+				required="true"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat.admissao}"
+				label="#{bundle.lbl_dtadmissao}">
+				<p:ajax
+					event="change"
+					listener="#{funcionariosCopiaFormBacking.changeDtaAdmissao}" />
+				<p:ajax
+					event="dateSelect"
+					listener="#{funcionariosCopiaFormBacking.changeDtaAdmissao}" />
+			</xcp:date>
+
+			<xcp:lov
+				id="lovCpCargoIn"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat.cargoFk}"
+				label="#{bundle.lbl_cargo}"
+				required="true"
+				query="cargos"
+				size="8"
+				selectionListener="#{funcionariosCopiaFormBacking.selectCargo}"
+				update="lovCpPadraoIn,lovNivelIn" />
+
+			<xcp:lov
+				id="lovCpPadraoIn"
+				value="#{funcionariosCopiaFormBacking.cargosPadroesLov}"
+				label="#{bundle.lbl_padrao}"
+				required="true"
+				query="cargos_padroes"
+				size="8"
+				params="#{funcionariosCopiaFormBacking.parEspPadraoInat}"
+				selectionListener="#{funcionariosCopiaFormBacking.selectPadrao}"
+				update="lovNivelIn" />
+
+			<xcp:lov
+				id="lovNivelIn"
+				value="#{funcionariosCopiaFormBacking.padroesNiveis}"
+				label="#{bundle.lbl_nivel}"
+				required="true"
+				query="padroesniveis_padrao"
+				params="#{funcionariosCopiaFormBacking.parEspNivel}"
+				size="8" />
+
+			<xcp:lov
+				id="lovCpHorarioIn"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat.horarioFk}"
+				label="#{bundle.lbl_horario}"
+				required="true"
+				query="horarios"
+				size="8" />
+
+			<xcp:lov
+				id="lovCpSetorIn"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat.setorFk}"
+				label="#{bundle.lbl_setor}"
+				required="true"
+				query="set_validade"
+				size="8" />
+
+			<xcp:lov
+				id="lovCpFuncaoIn"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat.funcaoFk}"
+				label="#{bundle.lbl_funcao}"
+				required="true"
+				query="funcoes"
+				size="8" />
+
+			<xcp:lov
+				id="lovCpCcustoIn"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat.ccustoFk}"
+				label="#{bundle.lbl_ccusto}"
+				required="true"
+				query="ccustos"
+				size="8" />
+
+			<xcp:lov
+				id="lovCpVinculoIn"
+				value="#{funcionariosCopiaFormBacking.funcOrigemInat.vinculoFk}"
+				label="#{bundle.lbl_vinculo}"
+				required="true"
+				query="vinculos"
+				size="7" />
+		</xcp:panelForm>
+	</p:panel>
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_confirma_copia_funcIn"
+				value="#{bundle.btn_confirma_copia_func}"
+				update="@form"
+				process="@this panelCopiaInativo"
+				action="#{funcionariosCopiaFormBacking.actionGravarCopiaInativo}" />
+		</f:facet>
+	</p:toolbar>
+
+</ui:composition>

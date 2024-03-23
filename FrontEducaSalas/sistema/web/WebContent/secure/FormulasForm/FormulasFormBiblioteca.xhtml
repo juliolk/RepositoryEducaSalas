@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:fieldset
+		legend="#{bundle.tit_biblioteca}"
+		style="margin-top: 10px; margin-bottom: 5px; margin-right:10px;">
+
+		<p:tabView
+			id="tabBiblioteca"
+			dynamic="true">
+
+			<p:tab title="#{bundle.tit_comandos}">
+				<p:dataTable
+					id="tblComandos"
+					value="#{formulasBacking.listaComandos}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="comando"
+					scrollable="true"
+					scrollHeight="350">
+					<p:column headerText="#{bundle.col_comando}">
+						<xcp:commandLink
+							id="btn_insere_comando"
+							value="#{comando.descricao}"
+							onclick="insere_formula('\\n#{comando.comando}');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_funcoes}">
+				<p:dataTable
+					id="tblFuncoes"
+					value="#{formulasBacking.listaFuncoes}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="funcao"
+					scrollable="true"
+					scrollHeight="350">
+					<p:column headerText="#{bundle.col_funcao}">
+						<xcp:commandLink
+							id="btn_insere_funcao"
+							value="#{funcao.descricao}"
+							onclick="insere_formula('\\n#{funcao.comando}');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_operadores}">
+				<p:dataTable
+					id="tblOperadores"
+					value="#{formulasBacking.listaOperadores}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="operador"
+					scrollable="true"
+					scrollHeight="350">
+					<p:column headerText="#{bundle.col_operador}">
+						<xcp:commandLink
+							id="btn_insere_operador"
+							value="#{operador.descricao}"
+							onclick="insere_formula('#{operador.comando}');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_bases_calculo}">
+				<p:dataTable
+					id="tblBaseCalculo"
+					value="#{formulasBacking.listaContaincid}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="conta"
+					scrollable="true"
+					scrollHeight="350">
+					<p:column headerText="#{bundle.col_base_calculo}">
+						<xcp:commandLink
+							id="btn_insere_base"
+							value="#{conta.descricao}"
+							onclick="insere_formula(' SOMABASE(#{conta.tipoincidencia}) ');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_indicadores}">
+				<p:dataTable
+					id="tblIndicadores"
+					value="#{formulasBacking.listaIndicadores}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="indicador"
+					scrollable="true"
+					scrollHeight="350">
+					<p:column headerText="#{bundle.col_indicador}">
+						<xcp:commandLink
+							id="btn_insere_indicadores"
+							value="#{indicador.descricao}"
+							onclick="insere_formula(' BUSCA_INDIC(#{indicador.indicador}, SISEMP.DATAINICIOFOLHA) ');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_ponto}">
+				<p:dataTable
+					id="tblPontos"
+					value="#{formulasBacking.listaTipoponto}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="ponto"
+					scrollable="true"
+					scrollHeight="350">
+					<p:column headerText="#{bundle.col_ponto}">
+						<xcp:commandLink
+							id="btn_insere_tipo_ponto"
+							value="#{ponto.descricao}"
+							onclick="insere_formula(' CALC_PONTO(SISEMP.DATAINICIOFOLHA,SISEMP.DATAFIMFOLHA, #{ponto.tipoponto}) ');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_variaveis_banco}">
+				<p:dataTable
+					id="tblCampos"
+					value="#{formulasBacking.listaCampos}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="campo"
+					scrollable="True"
+					scrollHeight="350">
+					<p:column
+						width="30%"
+						headerText="#{bundle.col_campo}">
+						<xcp:commandLink
+							id="btn_insere_campo"
+							value="#{campo.columnName}"
+							onclick="insere_campo('#{campo.tableName}', '#{campo.columnName}');return false;" />
+					</p:column>
+					<p:column
+						width="70%"
+						headerText="#{bundle.col_descricao}">
+						<xcp:commandLink
+							id="btn_insere_campo_descricao"
+							value="#{campo.comments}"
+							onclick="insere_campo('#{campo.tableName}', '#{campo.columnName}');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_variaveis_ponto}">
+				<p:dataTable
+					id="tblCamposPonto"
+					value="#{formulasBacking.listaCamposPonto}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="campo"
+					scrollable="True"
+					scrollHeight="350">
+					<p:column
+						width="30%"
+						headerText="#{bundle.col_campo}">
+						<xcp:commandLink
+							id="btn_insere_campo_ponto"
+							value="#{campo.campo}"
+							onclick="insere_formula('#{campo.campo}');return false;" />
+					</p:column>
+					<p:column
+						width="70%"
+						headerText="#{bundle.col_descricao}">
+						<xcp:commandLink
+							id="btn_insere_campo_ponto_descricao"
+							value="#{campo.descricao}"
+							onclick="insere_formula('#{campo.campo}');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+			<p:tab title="#{bundle.tit_comandos_ponto}">
+				<p:dataTable
+					id="tblComandosPonto"
+					value="#{formulasBacking.listaComandosPonto}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="comando"
+					scrollable="true"
+					scrollHeight="350">
+					<p:column headerText="#{bundle.col_comando}">
+						<xcp:commandLink
+							id="btn_insere_comando_ponto"
+							value="#{comando.descricao}"
+							onclick="insere_formula('\\n#{comando.comando}');return false;" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+		</p:tabView>
+	</p:fieldset>
+
+	<script type="text/JavaScript">
+			function insere_formula(valor) {
+				var txtMemo = $('#form\\:txtMemo');
+				var posIni = txtMemo.prop('selectionStart');
+				var posFim = txtMemo.prop('selectionEnd');
+				var texto = txtMemo.val();
+				var novo_texto = texto.substring(0, posIni) + valor + texto.substring(posFim, texto.length);
+				var texto = txtMemo.val(novo_texto);
+				txtMemo.prop('selectionStart', posIni + valor.length);
+				txtMemo.prop('selectionEnd', posIni + valor.length);
+			}
+			
+			function insere_campo(tabela, valor) {
+				var txtMemo = $('#form\\:txtMemo');
+				var posIni = txtMemo.prop('selectionStart');
+				var posFim = txtMemo.prop('selectionEnd');
+				var texto = txtMemo.val();
+				if (tabela == 'UNIAO'){
+					tabela = 'FUNCIONARIO';
+				}
+				else if (tabela == 'VARSYSEMP'){
+					tabela = 'SISEMP';
+				}
+				else if (tabela == 'VARSYSFUNC'){
+						tabela = 'SISFUNC';
+				}
+				else if (tabela == 'FERIASCALC'){
+						tabela = 'FER';
+				}
+				else if (tabela == 'FERIASRESC'){
+						tabela = 'FERRESC';
+				}
+				valor = ' ' + tabela + '.' + valor + ' ';
+				var novo_texto = texto.substring(0, posIni) +  valor  + texto.substring(posFim, texto.length);
+				var texto = txtMemo.val(novo_texto);
+				txtMemo.prop('selectionStart', posIni + valor.length);
+				txtMemo.prop('selectionEnd', posIni + valor.length);
+			}
+		</script>
+
+</ui:composition>

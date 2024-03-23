@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				id="fsPes"
+				legend="#{bundle.title_pesquisar}">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipofolha"
+						value="#{expCredContaBacking.helperVO.tipofolhaFk}"
+						label="#{bundle.lbl_tipofolha}"
+						required="true"
+						query="tipofolha"
+						size="4" />
+
+					<xcp:lov
+						id="lovBanco"
+						value="#{expCredContaBacking.helperVO.banco}"
+						label="#{bundle.lbl_banco}"
+						query="bancos"
+						required="true"
+						size="4" />
+
+
+					<h:outputLabel value="#{bundle.lbl_dataRef}" />
+					<h:panelGrid columns="3">
+						<xcp:date
+							id="dtaRef"
+							required="true"
+							simple="true"
+							value="#{expCredContaBacking.helperVO.dtaRef}"
+							label="#{bundle.lbl_dataRef}" />
+
+						<xcp:date
+							id="dtaPgto"
+							required="true"
+							value="#{expCredContaBacking.helperVO.dtaPgto}"
+							label="#{bundle.lbl_dataPgto}" />
+					</h:panelGrid>
+
+					<h:outputLabel value="#{bundle.lbl_desContaConvenio}" />
+					<h:panelGrid columns="3">
+						<xcp:text
+							id="desConv"
+							required="true"
+							simple="true"
+							size="8"
+							value="#{expCredContaBacking.helperVO.desContaConv}"
+							label="#{bundle.lbl_desContaConv}" />
+
+						<xcp:text
+							id="desAgencia"
+							required="true"
+							size="8"
+							value="#{expCredContaBacking.helperVO.desAgencia}"
+							label="#{bundle.lbl_desAgencia}" />
+					</h:panelGrid>
+
+					<h:outputLabel value="#{bundle.lbl_desCodConvenio}" />
+					<h:panelGrid columns="3">
+						<xcp:text
+							id="desCodConv"
+							required="true"
+							size="8"
+							simple="true"
+							value="#{expCredContaBacking.helperVO.desCodConv}"
+							label="#{bundle.lbl_desCodConv}" />
+
+						<xcp:number
+							id="numLote"
+							size="8"
+							required="true"
+							value="#{expCredContaBacking.helperVO.numLote}"
+							label="#{bundle.lbl_numLote}" />
+					</h:panelGrid>
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{expCredContaBacking.helperVO.tipo}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{expCredContaBacking.itensTipo}" />
+
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{expCredContaBacking.helperVO.cargo}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="6" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{expCredContaBacking.helperVO.orgao}"
+						label="#{bundle.lbl_orgao}"
+						required="true"
+						query="orgaos"
+						size="15"
+						maxlength="8" />
+
+					<h:outputLabel
+						value="#{bundle.lbl_vinculos}"
+						for="tblVinculos" />
+
+					<p:dataTable
+						id="tblVinculos"
+						var="row"
+						value="#{expCredContaBacking.helperVO.listVinculos}"
+						selection="#{expCredContaBacking.helperVO.listVinculosSel}"
+						rowKey="#{row.PK}"
+						scrollHeight="212"
+						scrollWidth="330"
+						scrollable="true">
+
+						<p:column
+							selectionMode="multiple"
+							style="text-align:right;" />
+
+						<p:column
+							headerText="#{bundle.col_vinculo}"
+							style="width:436px;text-align:left;">
+							<h:outputText value="#{row.descricao}" />
+						</p:column>
+					</p:dataTable>
+
+
+				</xcp:panelForm>
+
+
+			</p:fieldset>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

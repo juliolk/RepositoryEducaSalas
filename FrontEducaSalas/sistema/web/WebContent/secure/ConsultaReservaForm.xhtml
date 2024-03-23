@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent multipart="true">
+
+			<p:fieldset legend="#{bundle.title_filtro}">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovMatricula"
+						value="#{consultaReservaBacking.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						query="funcionariosLov"
+						size="8"
+						required="true" />
+
+				</xcp:panelForm>
+
+			</p:fieldset>
+
+			<p:spacer height="2" />
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_pesquisar"
+						icon="ui-icon-refresh"
+						value="#{bundle.btn_pesquisar}"
+						update="tbl"
+						action="#{consultaReservaBacking.actionPesquisar}" />
+				</f:facet>
+			</p:toolbar>
+
+			<p:dataTable
+				id="tbl"
+				var="row"
+				value="#{consultaReservaBacking.list}"
+				rows="#{viewUtil.tableRows}"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+
+				<xcp:column
+					headerText="#{bundle.col_referencia}"
+					type="Date"
+					value="#{row.valor}">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_consig}"
+					type="String"
+					value="#{row.consigFk.nome}">
+					<xcp:outputSimple value="#{row.consigFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					type="String"
+					value="#{row.valor}">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+			</p:dataTable>
+
+		</xcp:panelContent>
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.top_align {
+	vertical-align: top;
+}
+</style>
+		<xcp:panelContent>
+
+			<p:outputPanel
+				rendered="#{esocFechamentoPeriodicoBacking.secundaria}">
+
+				<p:fieldset
+					legend="#{bundle.title_info}"
+					style="margin-left: 0px !important;margin-bottom: 10px;font-size: 12px">
+					<h:outputText value="#{bundle.msg_secundaria}" />
+				</p:fieldset>
+
+			</p:outputPanel>
+			<p:outputPanel
+				rendered="#{not esocFechamentoPeriodicoBacking.secundaria}">
+				<p:panelGrid>
+					<p:row>
+						<p:column
+							styleClass="alinhatopo"
+							style="width:500px">
+
+							<p:fieldset
+								legend="#{bundle.title_info}"
+								style="margin-left: 0px !important;margin-bottom: 10px;">
+								<xcp:panelForm>
+									<xcp:output
+										id="txtbase"
+										label="Base principal:"
+										value="#{esocFechamentoPeriodicoBacking.basePrincipal ? bundle.opt_sim : bundle.opt_nao}" />
+								</xcp:panelForm>
+							</p:fieldset>
+
+							<p:dataTable
+								id="tblComp"
+								var="row"
+								value="#{esocFechamentoPeriodicoBacking.listComp}"
+								selection="#{esocFechamentoPeriodicoBacking.selComp}"
+								rowKey="#{row}"
+								selectionMode="single"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								paginator="true"
+								rows="10">
+
+								<f:facet name="header">#{bundle.title_competencias}</f:facet>
+
+								<p:ajax
+									event="rowSelect"
+									update=":form:pnlPer :form:pnlAcao :form:pnlRet"
+									listener="#{esocFechamentoPeriodicoBacking.actionSelectComp(true)}" />
+
+								<xcp:column
+									headerText="#{bundle.col_competencia}"
+									type="String"
+									size="7">
+									<xcp:outputSimple value="#{row.desCompetencia}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desSituacaoFolha}"
+									type="String"
+									size="7">
+									<xcp:outputSimple value="#{row.desSituacaoFolha}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desSituacaoEsocial}"
+									type="String"
+									size="7">
+									<xcp:outputSimple value="#{row.desSituacaoEsocial}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desApuracao}"
+									type="String"
+									size="7">
+									<xcp:outputSimple value="#{row.desApuracao}" />
+								</xcp:column>
+
+							</p:dataTable>
+						</p:column>
+						<p:column
+							styleClass="alinhatopo"
+							style="vertical-align: middle">
+							<p:outputPanel id="pnlPer">
+								<p:dataTable
+									id="tblPer"
+									var="row"
+									value="#{esocFechamentoPeriodicoBacking.listPer}"
+									filteredValue="#{esocFechamentoPeriodicoBacking.listPerFiltrado}"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									paginator="true"
+									rows="10"
+									widgetVar="tblPer_w">
+									<f:facet name="header">#{bundle.title_periodos}</f:facet>
+									<xcp:column
+										headerText="#{bundle.col_referencia}"
+										value="#{row.referencia}"
+										type="Date"
+										size="3">
+										<xcp:outputSimpleDate value="#{row.referencia}" />
+									</xcp:column>
+									<xcp:column
+										headerText="#{bundle.col_tipoFolha}"
+										value="#{row.tipofolha}"
+										type="Number"
+										size="2">
+										<xcp:outputSimpleNumber
+											value="#{row.tipofolha}"
+											scale="0" />
+									</xcp:column>
+									<xcp:column
+										headerText="#{bundle.col_descricao}"
+										value="#{row.descTipoFolha}"
+										type="String"
+										size="7">
+										<xcp:outputSimple value="#{row.descTipoFolha}" />
+									</xcp:column>
+									<xcp:column
+										headerText="#{bundle.col_retificacao}"
+										value="#{row.reabertura}"
+										type="Date"
+										size="3">
+										<xcp:outputSimpleDate value="#{row.reabertura}" />
+									</xcp:column>
+								</p:dataTable>
+
+							</p:outputPanel>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputPanel
+								id="pnlAcao"
+								style="text-align: right">
+								<xcp:commandButton
+									value="#{bundle.btn_enviar}"
+									action="#{esocFechamentoPeriodicoBacking.actionEnviar}"
+									rendered="#{esocFechamentoPeriodicoBacking.selComp.renderedEnviar}"
+									icon="ui-icon-gear"
+									update=":formopcoes">
+									<p:confirm
+										header="#{bundle.tit_confirma_envio}"
+										message="#{bundle.msg_confirma_envio_esoc}"
+										icon="ui-icon-alert" />
+								</xcp:commandButton>
+
+								<xcp:commandButton
+									value="#{bundle.btn_reabrir}"
+									action="#{esocFechamentoPeriodicoBacking.actionReabrir}"
+									rendered="#{esocFechamentoPeriodicoBacking.selComp.renderedReabrir}"
+									icon="ui-icon-gear"
+									update="@form">
+									<p:confirm
+										header="#{bundle.tit_confirma_reabertura}"
+										message="#{bundle.msg_confirma_reabertura}"
+										icon="ui-icon-alert" />
+								</xcp:commandButton>
+							</p:outputPanel>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:spacer width="1" />
+						</p:column>
+						<p:column>
+							<p:outputPanel
+								id="pnlRet"
+								style="text-align: right">
+								<p:dataTable
+									id="tblRetornos"
+									var="row"
+									value="#{esocFechamentoPeriodicoBacking.listRetorno}"
+									filteredValue="#{esocFechamentoPeriodicoBacking.listRetornoFiltrado}"
+									rowKey="#{row}"
+									paginator="true"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									rows="10"
+									widgetVar="tblRetornos_w">
+
+									<f:facet name="header">#{bundle.title_retornos}</f:facet>
+
+									<xcp:column
+										headerText="#{bundle.col_cpf}"
+										value="#{row.desCpf}"
+										type="Number"
+										size="2">
+										<xcp:outputSimpleNumber value="#{row.desCpf}" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_evento}"
+										value="#{row.codEvento}"
+										type="String"
+										size="2">
+										<xcp:outputSimple value="#{row.codEvento}" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desEvento}"
+										value="#{row.desEvento}"
+										type="String"
+										size="7">
+										<xcp:outputSimple value="#{row.desEvento}" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_acoes}"
+										type="String"
+										size="1">
+										<xcp:commandButton
+											label="#{bundle.btn_evento}"
+											value="#{bundle.btn_evento}"
+											action="#{esocFechamentoPeriodicoBacking.actionOpenEvento(row.seqEvento)}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:outputPanel>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:outputPanel>
+		</xcp:panelContent>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			id="dlgOpcoes"
+			modal="true"
+			widgetVar="dlgOpcoes_w"
+			header="#{bundle.title_processamento}">
+			<xcp:form id="formopcoes">
+				<h:outputText
+					value="#{bundle.msg_pag_mes_atual}"
+					style="margin-bottom:10px;display:block" />
+
+				<xcp:panelForm>
+
+					<p:outputLabel
+						value="#{bundle.lbl_tipFechamento}: "
+						for="tipproc" />
+
+					<p:selectOneRadio
+						id="tipfec"
+						columns="1"
+						label="#{bundle.lbl_tipFechamento}"
+						value="#{esocFechamentoPeriodicoBacking.helper.tipFechamento}">
+						<p:ajax update="@form" />
+						<f:selectItems
+							value="#{esocFechamentoPeriodicoBacking.itensTipFechamento}" />
+					</p:selectOneRadio>
+
+					<p:outputLabel
+						value="#{bundle.lbl_tipProcessamento}: "
+						for="tipproc"
+						rendered="#{esocFechamentoPeriodicoBacking.helper.tipFechamento == 1}" />
+
+					<p:selectOneRadio
+						id="tipproc"
+						layout="grid"
+						columns="1"
+						rendered="#{esocFechamentoPeriodicoBacking.helper.tipFechamento == 1}"
+						label="#{bundle.lbl_tipProcessamento}"
+						value="#{esocFechamentoPeriodicoBacking.helper.tipProcessamento}">
+						<p:ajax update="lovMat lovMat_l pnlSel" />
+						<f:selectItems
+							value="#{esocFechamentoPeriodicoBacking.itensTipProcessamento}" />
+					</p:selectOneRadio>
+
+					<xcp:lov
+						id="lovMat"
+						value="#{esocFechamentoPeriodicoBacking.helper.funcionariosLov}"
+						rendered="#{esocFechamentoPeriodicoBacking.helper.tipProcessamento == 3 and esocFechamentoPeriodicoBacking.helper.tipFechamento == 1}"
+						label="#{bundle.lbl_cpf}"
+						query="func_cpf_view"
+						size="10"
+						selectionListener="#{esocFechamentoPeriodicoBacking.selectMatricula}"
+						update="tblSel lovMat" />
+
+					<p:spacer />
+
+					<p:outputPanel id="pnlSel">
+
+						<h:panelGrid
+							id="panelTbl"
+							columns="2"
+							columnClasses=",top_align"
+							rendered="#{esocFechamentoPeriodicoBacking.helper.tipFechamento == 1}">
+							<p:dataTable
+								id="tblSel"
+								value="#{esocFechamentoPeriodicoBacking.helper.listProcessar}"
+								rendered="#{esocFechamentoPeriodicoBacking.helper.tipProcessamento == 3}"
+								var="row"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								style="width:500px;float:left"
+								rows="10"
+								paginator="true"
+								paginatorPosition="bottom"
+								selection="#{esocFechamentoPeriodicoBacking.helper.listProcessarSel}"
+								rowKey="#{row}">
+
+								<p:column
+									selectionMode="multiple"
+									style="width:15px;text-align:center" />
+
+								<p:column
+									headerText="#{bundle.col_cpf}"
+									width="80">
+									<xcp:outputSimple value="#{row.desCpf}" />
+								</p:column>
+								<p:column headerText="#{bundle.col_nome}">
+									<xcp:outputSimple value="#{row.nome}" />
+								</p:column>
+							</p:dataTable>
+							<p:commandButton
+								id="limparSelecao"
+								rendered="#{esocFechamentoPeriodicoBacking.helper.tipProcessamento == 3}"
+								action="#{esocFechamentoPeriodicoBacking.actionLimparSelecao}"
+								icon="icon-limpar"
+								update="tblSel" />
+						</h:panelGrid>
+					</p:outputPanel>
+				</xcp:panelForm>
+				<p:spacer height="1" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_exec"
+							value="#{bundle.btn_executar}"
+							action="#{esocFechamentoPeriodicoBacking.actionEnviarDialog}"
+							icon="ui-icon-gear"
+							update=":form" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+
+</ui:composition>

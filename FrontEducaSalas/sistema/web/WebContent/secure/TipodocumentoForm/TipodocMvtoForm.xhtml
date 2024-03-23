@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="TipodocMvto"
+		backing="#{tipoDocMvtoBacking}"
+		masterId="Tipodocumento">
+
+		<ui:define name="colunas">
+			<xcp:column
+				headerText="#{bundle.col_tipmovcod}"
+				value="#{row.tipmovFk.tipmov}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.tipmovFk.tipmov}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipmovdesc}"
+				value="#{row.tipmovFk.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.tipmovFk.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipmov"
+					value="#{tipoDocMvtoBacking.entity.tipmovFk}"
+					label="#{bundle.lbl_tipmov}"
+					required="true"
+					query="tipomvtoprob"
+					size="5"
+					readonly="#{not tipoDocMvtoBacking.entity.novo}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+		<ui:define name="headerTitle">
+
+			<h:outputText
+				value="#{bundle[detailTitle]}"
+				rendered="#{tipodocumentoBacking.probatorio}" />
+
+			<h:outputText
+				value="#{bundle.title_mov_desc}"
+				rendered="#{tipodocumentoBacking.avalDesempenho}" />
+
+			<h:outputText
+				value="#{bundle.title_mov_desc_exp}"
+				rendered="#{tipodocumentoBacking.avalExperiencia}" />
+
+			<h:outputText
+				value="#{bundle.title_mov_desc_teletrabalho}"
+				rendered="#{tipodocumentoBacking.teletrabalho}" />
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

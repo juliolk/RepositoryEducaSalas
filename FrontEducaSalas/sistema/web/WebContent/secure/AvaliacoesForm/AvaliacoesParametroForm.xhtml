@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AvaliacoesParametro"
+		backing="#{avaliacoesParametroBacking}"
+		masterId="Avaliacoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_numero}"
+				value="#{row.numero}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.numero}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_percDe}"
+				value="#{row.percDe}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.percDe}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_percAte}"
+				value="#{row.percAte}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.percAte}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_variavel}"
+				value="#{row.variavelFk.variavel}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.grupo}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.variavelFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.variavelFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.valor}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.valor}"
+					precision="5"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtNumero_AvaliacoesParametro"
+					label="#{bundle.lbl_numero}"
+					required="true"
+					value="#{avaliacoesParametroBacking.entity.numero}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					readonly="true"
+					rendered="#{not avaliacoesParametroBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtPercDe_AvaliacoesParametro"
+					label="#{bundle.lbl_percDe}"
+					required="true"
+					value="#{avaliacoesParametroBacking.entity.percDe}"
+					size="3"
+					precision="3"
+					scale="0"
+					minValue="0"
+					maxValue="100" />
+
+				<xcp:number
+					id="txtPercAte_AvaliacoesParametro"
+					label="#{bundle.lbl_percAte}"
+					required="true"
+					value="#{avaliacoesParametroBacking.entity.percAte}"
+					size="3"
+					precision="3"
+					scale="0"
+					minValue="0"
+					maxValue="100" />
+
+				<xcp:lov
+					id="lovGrupo_AvaliacoesParametro"
+					value="#{avaliacoesParametroBacking.entity.variavelFk}"
+					label="#{bundle.lbl_variavel}"
+					required="true"
+					query="variaveis"
+					size="4" />
+
+				<xcp:memo
+					id="txtObs_AvaliacoesParametro"
+					label="#{bundle.lbl_obs}"
+					required="true"
+					value="#{avaliacoesParametroBacking.entity.obs}"
+					size="4000" />
+
+				<xcp:number
+					id="txtValor_AvaliacoesParametro"
+					label="#{bundle.lbl_valor}"
+					size="8"
+					required="true"
+					value="#{avaliacoesParametroBacking.entity.valor}"
+					precision="5"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

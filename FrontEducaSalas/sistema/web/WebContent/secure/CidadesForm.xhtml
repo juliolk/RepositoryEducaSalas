@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Cidades"
+			backing="#{cidadesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_cidade}"
+					value="#{row.cidade}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.cidade}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_uf}"
+					value="#{row.uf}"
+					type="String"
+					size="2"
+					style="text-align:center;">
+					<xcp:outputSimple value="#{row.uf}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codmunicipio}"
+					value="#{row.codmunicipio}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.codmunicipio}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_calendario}"
+					value="#{row.calendarioFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.calendarioFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					size="5"
+					type="Center"
+					headerText="#{bundle.col_status}">
+					<xcp:check
+						id="chk_col_indStatus"
+						simple="true"
+						readonly="true"
+						value="#{row.indStatus}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCidade"
+						label="#{bundle.lbl_cidade}"
+						required="true"
+						value="#{cidadesBacking.entity.cidade}"
+						size="8"
+						maxlength="8"
+						maxValue="99999999"
+						readonly="#{not cidadesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{cidadesBacking.entity.descricao}"
+						size="73" />
+
+					<xcp:lov
+						id="lovUf"
+						value="#{cidadesBacking.entity.ufFk}"
+						label="#{bundle.lbl_uf}"
+						required="true"
+						query="ufs"
+						size="4" />
+
+					<xcp:number
+						id="txtCodmunicipio"
+						label="#{bundle.lbl_codmunicipio}"
+						value="#{cidadesBacking.entity.codmunicipio}"
+						size="8"
+						maxValue="99999999" />
+
+					<xcp:lov
+						id="lovCalendario"
+						value="#{cidadesBacking.entity.calendarioFk}"
+						label="#{bundle.lbl_calendario}"
+						query="calendarios"
+						size="4" />
+
+					<xcp:check
+						id="chk_indStatus"
+						label="#{bundle.lbl_status}"
+						value="#{cidadesBacking.entity.indStatus}" />
+
+					<xcp:number
+						id="txtIdh"
+						label="#{bundle.lbl_idh}"
+						size="6"
+						value="#{cidadesBacking.entity.idh}"
+						precision="4"
+						scale="3" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="CidadesForm/BairroForm.xhtml" />
+
+				<ui:include src="CidadesForm/LogradouroForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

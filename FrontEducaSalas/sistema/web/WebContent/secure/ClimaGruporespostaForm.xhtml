@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="ClimaGruporesposta"
+			backing="#{climaGruporespostaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_grupo}"
+					value="#{row.grupo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.grupo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					itens="#{climaGruporespostaBacking.itensTipo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{climaGruporespostaBacking.itensTipo}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtGrupo"
+						label="#{bundle.lbl_grupo}"
+						required="true"
+						value="#{climaGruporespostaBacking.entity.grupo}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not climaGruporespostaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{climaGruporespostaBacking.entity.descricao}"
+						maxlength="300"
+						size="50" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{climaGruporespostaBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{climaGruporespostaBacking.itensTipo}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="ClimaGruporespostaForm/ClimaAlternativasForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

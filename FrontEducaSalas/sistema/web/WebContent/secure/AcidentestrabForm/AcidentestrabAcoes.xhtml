@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:dataTable
+		id="tabAcoes"
+		value="#{acidentestrabBacking.listaAcoes}"
+		var="row"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		styleClass="tabeladependentes"
+		selection="#{acidentestrabBacking.listaSelAcoes}"
+		rowKey="#{row}">
+
+		<p:column
+			selectionMode="multiple"
+			style="width:3%;text-align:center" />
+
+		<xcp:column
+			headerText="#{bundle.col_acao}"
+			value="#{row.acao}"
+			type="Number"
+			size="7">
+			<xcp:outputSimpleNumber
+				value="#{row.acao}"
+				precision="3"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_descricao}"
+			value="#{row.acaoFk.descricao}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{row.acaoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_nome}"
+			value="#{row.nome}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{row.nome}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_limite}"
+			value="#{row.limite}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.limite}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_concluido}"
+			value="#{row.concluido}"
+			type="Date"
+			size="9">
+			<xcp:outputSimpleDate value="#{row.concluido}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_obs}"
+			value="#{row.obs}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{row.obs}" />
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="2">
+			<xcp:commandButton
+				id="btn_edita_acao"
+				icon="icon-editar"
+				update=":frmAcoes"
+				oncomplete="PF('dlgAcoes_w').show();">
+				<f:setPropertyActionListener
+					target="#{acidentestrabBacking.acoesManut}"
+					value="#{row}" />
+			</xcp:commandButton>
+		</xcp:column>
+
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adicionar"
+		value="#{bundle.btn_adicionar}"
+		update=":frmAcoes"
+		oncomplete="PF('dlgAcoes_w').show();"
+		icon="ui-icon-plusthick">
+		<f:setPropertyActionListener
+			target="#{acidentestrabBacking.acoesManut}"
+			value="#{null}" />
+	</xcp:commandButton>
+
+	<xcp:commandButton
+		id="btn_removerSel"
+		value="#{bundle.btn_removerSel}"
+		action="#{acidentestrabBacking.actionRemoverSel}"
+		update="tabAcoes"
+		icon="ui-icon-trash">
+
+		<p:confirm
+			header="#{bundle.tit_confirma_remover}"
+			message="#{bundle.msg_confirma_remover}"
+			icon="ui-icon-alert" />
+
+	</xcp:commandButton>
+
+	<p:remoteCommand
+		name="rcTabAcoes"
+		update="tabAcoes" />
+
+</ui:composition>

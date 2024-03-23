@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="PortaltranspConsultaObj"
+		backing="#{portaltranspConsultaObjBacking}"
+		masterId="PortaltranspConsulta">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.lbl_portaltransp_codObjeto}"
+				value="#{row.codObjeto}" type="String" size="50">
+				<xcp:outputSimple value="#{row.codObjeto}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.lbl_portaltransp_tipoVisualizacao}"
+				value="#{row.tipoVisualizacao}" type="String" size="100">
+				<xcp:outputSimple value="#{row.tipoVisualizacao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov id="lovCodObjeto_PortaltranspConsultaObj"
+					value="#{portaltranspConsultaObjBacking.entity.codObjetoFk}"
+					label="#{bundle.lbl_portaltransp_codObjeto}" required="true" query="xcp_objeto"
+					size="50" />
+
+				<xcp:combo id="txtTipoVisualizacao_PortaltranspConsultaObj"
+					label="#{bundle.lbl_portaltransp_tipoVisualizacao}" required="true"
+					value="#{portaltranspConsultaObjBacking.entity.tipoVisualizacao}"
+					itens="#{portaltranspConsultaObjBacking.itensTipoVisualizacao}"
+					size="100" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

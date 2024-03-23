@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:fieldset legend="#{bundle.tit_filhacao}">
+		<p:dataTable
+			id="tabDependentes"
+			value="#{funcionariosBacking.listaFilhacao}"
+			var="filhacao"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			styleClass="tabeladependentes">
+
+			<xcp:column style="width:30px;">
+				<h:outputText
+					value="#{funcionariosBacking.getLabelDepend(filhacao.grau)}:"
+					style="text-align:right; float:left;" />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.lbl_nome}"
+				style="width:195px;">
+				<h:outputText
+					value="#{filhacao.nome}"
+					style="float:left; " />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.col_dtnasc}"
+				style="width:90px;">
+				<xcp:outputSimpleDate
+					id="outDtn"
+					value="#{filhacao.dtn}" />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.lbl_dependenteir}"
+				style="width:50px;">
+				<xcp:outputSimple
+					id="outDependenteir"
+					value="#{filhacao.dependenteir}"
+					itens="#{funcionariosBacking.itensDependentesIRRF}" />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.lbl_cpf}"
+				style="width:82px;">
+				<xcp:outputCpf
+					id="outCpf"
+					simple="true"
+					value="#{filhacao.cpf}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_processo}"
+				style="width:150px;">
+
+				<xcp:outputSimple
+					id="outBenPrev"
+					value="#{filhacao.processo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_obs}"
+				style="text-align: justify;">
+				<xcp:outputSimple
+					id="outObs"
+					value="#{funcionariosBacking.getTruncatedText(filhacao.obs)}" />
+			</xcp:column>
+
+			<xcp:column style="width:20px;">
+				<xcp:commandButton
+					id="btn_depfiliacao_anexos"
+					immediate="true"
+					rendered="true"
+					update=":frmDepAnex"
+					icon="#{funcionariosBacking.getFolderIcon(filhacao)}"
+					title="#{bundle.hint_anexos}">
+					<p:ajax
+						listener="#{funcionariosBacking.carregaDepAnexos(filhacao)}"
+						update=":dlgDepAnex :frmDepAnex"
+						oncomplete="PF('dlgDepAnexo_w').show();" />
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.dependente}"
+						value="#{filhacao}" />
+				</xcp:commandButton>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="3"
+				rendered="#{!funcionariosBacking.disabledGravar}">
+				<xcp:commandButton
+					id="btn_edita_dependente"
+					icon="icon-editar"
+					immediate="true"
+					rendered="#{not consulta}"
+					update=":frmDependente"
+					oncomplete="PF('dlgDependente_w').show();"
+					action="#{funcionariosBacking.actionEditaDependente}"
+					process="@this">
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.dependente}"
+						value="#{filhacao}" />
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.helper.tipTelaDependente}"
+						value="#{1}" />
+				</xcp:commandButton>
+			</xcp:column>
+		</p:dataTable>
+
+	</p:fieldset>
+
+	<p:fieldset legend="#{bundle.tit_dependentes}">
+		<p:dataTable
+			id="tabOutrosDependentes"
+			value="#{funcionariosBacking.listaOutrosDependentes}"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			editable="false"
+			rowIndexVar="idx"
+			var="outrosDep">
+
+			<p:column style="width:16px">
+				<p:rowToggler />
+			</p:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_nro_depend}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					id="outSeq"
+					value="#{outrosDep.sequencia}"
+					precision="2"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_nome}"
+				type="String"
+				size="30">
+				<xcp:outputSimple
+					id="outNome"
+					value="#{outrosDep.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtnasc}"
+				style="width:65px;">
+				<xcp:outputSimpleDate
+					id="outDtn"
+					value="#{outrosDep.dtn}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_grau}"
+				style="width:78px;">
+				<xcp:outputSimple
+					id="outDependenteir"
+					simple="true"
+					value="#{outrosDep.grau}"
+					itens="#{funcionariosBacking.itensParentesco}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_dependenteir}"
+				style="width:46px;">
+				<xcp:outputSimple
+					id="outDependenteir"
+					value="#{outrosDep.dependenteir}"
+					itens="#{funcionariosBacking.itensDependentesIRRF}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_beneficiario}"
+				style="width:50px;">
+				<xcp:outputSimple
+					id="outBeneficiario"
+					value="#{outrosDep.beneficiario}"
+					itens="#{funcionariosBacking.itensDependentesIRRF}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_benprev}"
+				style="width:50px;">
+				<xcp:outputSimple
+					id="outBeneficiario"
+					value="#{outrosDep.beneficiarioprev}"
+					itens="#{funcionariosBacking.itensBeneficiarioPrev}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_cpf}"
+				style="width:80px;">
+				<xcp:outputCpf
+					id="outCpf"
+					simple="true"
+					value="#{outrosDep.cpf}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.lbl_obs}"
+				style="width:150px;text-align: justify;">
+				<xcp:outputSimple
+					id="outObs"
+					value="#{funcionariosBacking.getTruncatedText(outrosDep.obs)}" />
+			</xcp:column>
+
+			<xcp:column style="width:20px;">
+				<xcp:commandButton
+					id="btn_outrosdep_anexos"
+					immediate="true"
+					rendered="true"
+					update=":frmDepAnex"
+					icon="#{funcionariosBacking.getFolderIcon(outrosDep)}"
+					title="#{bundle.hint_anexos}">
+					<p:ajax
+						listener="#{funcionariosBacking.carregaDepAnexos(outrosDep)}"
+						update=":dlgDepAnex :frmDepAnex"
+						oncomplete="PF('dlgDepAnexo_w').show();" />
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.dependente}"
+						value="#{outrosDep}" />
+				</xcp:commandButton>
+			</xcp:column>
+
+			<xcp:column style="width:20px;">
+				<xcp:commandButton
+					id="btn_remove_dependente"
+					icon="ui-icon-trash"
+					update="tabOutrosDependentes,:#{p:component('tabFilhos')}"
+					immediate="true"
+					disabled="#{funcionariosBacking.bloqueadoRemDep}"
+					rendered="#{outrosDep.nome!=null and not consulta}"
+					action="#{funcionariosBacking.actionRemoveOutroDependente(outrosDep)}">
+					<!-- <h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" /> -->
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="3">
+				<xcp:commandButton
+					id="btn_edita_dependente"
+					icon="icon-editar"
+					immediate="true"
+					rendered="#{not consulta}"
+					disabled="#{funcionariosBacking.bloqueadoEditDep}"
+					update=":frmDependente"
+					oncomplete="PF('dlgDependente_w').show();"
+					action="#{funcionariosBacking.actionEditaDependente}"
+					process="@this">
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.dependente}"
+						value="#{outrosDep}" />
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.helper.tipTelaDependente}"
+						value="#{2}" />
+				</xcp:commandButton>
+			</xcp:column>
+
+			<p:rowExpansion>
+				<p:fieldset
+					legend="#{bundle.title_filiacao}"
+					style="width:720px">
+					<xcp:panelGrid>
+						<p:row>
+							<p:column style="width:50px;vertical-align:middle;">
+								<p:outputLabel value="#{bundle.lbl_mae}" />
+							</p:column>
+							<p:column style="text-align: left;">
+								<xcp:text
+									id="txtDesMae"
+									label="#{bundle.lbl_mae}"
+									value="#{outrosDep.depFilMae.nome}"
+									simple="true"
+									maxlength="70"
+									size="40" />
+							</p:column>
+							<p:column style="width:50px;vertical-align:middle;">
+								<p:outputLabel value="#{bundle.lbl_pai}" />
+							</p:column>
+							<p:column style="text-align: left;">
+								<xcp:text
+									id="txtDesPai"
+									label="#{bundle.lbl_pai}"
+									value="#{outrosDep.depFilPai.nome}"
+									simple="true"
+									maxlength="70"
+									size="40" />
+							</p:column>
+						</p:row>
+					</xcp:panelGrid>
+				</p:fieldset>
+			</p:rowExpansion>
+
+		</p:dataTable>
+
+		<xcp:commandButton
+			id="btn_adicionar"
+			value="#{bundle.btn_novo_dependente}"
+			action="#{funcionariosBacking.actionNovoDependente}"
+			update=":frmDependente"
+			rendered="#{not consulta}"
+			disabled="#{funcionariosBacking.bloqueadoNovoDep}"
+			oncomplete="PF('dlgDependente_w').show();"
+			icon="ui-icon-document"
+			process="@this">
+			<f:setPropertyActionListener
+				target="#{funcionariosBacking.dependente}"
+				value="#{null}" />
+			<f:setPropertyActionListener
+				target="#{funcionariosBacking.helper.tipTelaDependente}"
+				value="#{2}" />
+		</xcp:commandButton>
+
+		<p:fieldset
+			legend="#{bundle.tit_filhos}"
+			style="margin-left: 0px !important">
+			<p:dataTable
+				id="tabFilhos"
+				value="#{funcionariosBacking.listaFilhos}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowIndexVar="idx"
+				var="filho">
+
+				<xcp:column
+					headerText="#{bundle.lbl_nro_depend}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						id="outSeqfilho"
+						value="#{filho.sequencia}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_nome}"
+					type="String"
+					size="32">
+
+					<xcp:outputSimple
+						id="outNome"
+						value="#{filho.dependenteFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_sexo}"
+					type="String"
+					size="7">
+					<xcp:outputSimple
+						id="outFolha"
+						itens="#{funcionariosBacking.itensSexo}"
+						value="#{filho.sexo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_cidade}"
+					type="String"
+					size="28">
+					<xcp:outputSimple
+						id="outCidade"
+						value="#{filho.cidadeFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_cartorio}"
+					type="String"
+					size="12">
+
+					<xcp:outputSimple
+						id="outCartorio"
+						value="#{filho.cartorio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_livro}"
+					type="String"
+					size="6">
+
+					<xcp:outputSimple
+						id="outLivro"
+						value="#{filho.livro}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_nfolha}"
+					type="String"
+					size="6">
+					<xcp:outputSimple
+						id="outFolha"
+						value="#{filho.nfolha}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_nregistro}"
+					type="Number"
+					size="6">
+					<xcp:outputSimple
+						id="outNregistro"
+						value="#{filho.nregistro}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_dta_creche}"
+					type="Date"
+					size="10">
+					<xcp:outputSimpleDate
+						id="outCreche"
+						value="#{filho.dtcreche}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="3"
+					rendered="#{!funcionariosBacking.disabledGravar}">
+					<xcp:commandButton
+						id="btn_edita_filho"
+						icon="icon-editar"
+						update=":frmFilho"
+						process="@this"
+						rendered="#{not consulta}"
+						oncomplete="PF('dlgFilho_w').show();">
+						<f:setPropertyActionListener
+							target="#{funcionariosBacking.filho}"
+							value="#{filho}" />
+					</xcp:commandButton>
+				</xcp:column>
+			</p:dataTable>
+		</p:fieldset>
+
+		<p:fieldset
+			legend="#{bundle.tit_histconjuges}"
+			style="margin-left: 0px !important">
+
+			<p:dataTable
+				id="tabConjuges"
+				value="#{funcionariosBacking.listaConjuges}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				var="conj">
+
+				<xcp:column
+					headerText="#{bundle.col_dtaini}"
+					type="Date"
+					size="4">
+					<xcp:outputSimpleDate value="#{conj.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					type="Date"
+					size="4">
+					<xcp:outputSimpleDate value="#{conj.dtafim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{conj.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_grau}"
+					type="String"
+					size="4">
+					<xcp:outputSimple
+						value="#{conj.grau}"
+						itens="#{funcionariosBacking.itensGrauParentesco}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtn}"
+					type="Date"
+					size="6">
+					<xcp:outputSimpleDate value="#{conj.dtn}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dependenteir}"
+					type="Number"
+					size="2">
+					<xcp:outputSimple
+						id="outDependenteirConj"
+						value="#{conj.dependenteir}"
+						itens="#{funcionariosBacking.itensDependentesIRRF}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cpf}"
+					type="Number"
+					size="10">
+					<xcp:outputCpf
+						id="outCpf"
+						simple="true"
+						value="#{conj.cpf}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					style="width:1px">
+					<xcp:commandButton
+						id="btn_remove_dependente"
+						icon="ui-icon-trash"
+						update="tabConjuges"
+						immediate="true"
+						rendered="#{not consulta and not conj.novo}"
+						action="#{funcionariosBacking.actionRemoveConjuge(conj)}">
+						<!-- <h:graphicImage
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" /> -->
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					style="width:5px">
+					<xcp:commandButton
+						id="btn_edita_conj"
+						icon="icon-editar"
+						update=":frmConj"
+						rendered="#{not consulta and not conj.novo}"
+						oncomplete="PF('dlgConj_w').show();">
+						<f:setPropertyActionListener
+							target="#{funcionariosBacking.conjuge}"
+							value="#{conj}" />
+					</xcp:commandButton>
+				</xcp:column>
+			</p:dataTable>
+		</p:fieldset>
+
+
+	</p:fieldset>
+
+	<p:remoteCommand
+		name="rcTabFil"
+		ignoreAutoUpdate="true"
+		update="tabDependentes" />
+
+	<p:remoteCommand
+		name="rcTabDependentes"
+		ignoreAutoUpdate="true"
+		update="tabOutrosDependentes" />
+
+	<p:remoteCommand
+		name="rcTabFilhos"
+		ignoreAutoUpdate="true"
+		update="tabFilhos" />
+
+	<p:remoteCommand
+		name="rcTabConj"
+		ignoreAutoUpdate="true"
+		update="tabConjuges" />
+
+</ui:composition>

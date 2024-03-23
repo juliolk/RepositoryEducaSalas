@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.ui-selectonemenu.cmb_aval {
+	width: 98% !important;
+}
+
+.ui-selectonemenu-label.cmb_aval {
+	width: 99% !important;
+}
+</style>
+		<xcp:panelFuncionario
+			id="BoletimEdicao"
+			backing="#{avalDesempTeleEdicaoBacking}"
+			renderedNovo="false"
+			scrollable="false"
+			renderedGravar="#{avalDesempTeleEdicaoBacking.entity.dtresposta == null}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_probatorio}"
+					value="#{row.probatorio}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.probatorio}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numero}"
+					value="#{row.numero}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.numero}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataini}"
+					value="#{row.dataini}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datafim}"
+					value="#{row.datafim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datafim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataenvio}"
+					value="#{row.envio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.envio}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_dataresp}"
+					value="#{row.dtresposta}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtresposta}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_aceite}"
+					value="#{row.aceite}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.aceite}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_avaliacao}"
+					value="#{row.avaliacaoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.avaliacaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_info}"
+					type="String"
+					size="5">
+					<xcp:commandButton
+						update=":dlgMvto"
+						action="#{avalDesempTeleEdicaoBacking.actionBuscarMovimentacoes}"
+						icon="ui-icon-search">
+
+						<f:setPropertyActionListener
+							target="#{avalDesempTeleEdicaoBacking.helper.boletimSel}"
+							value="#{row}" />
+
+					</xcp:commandButton>
+
+					<xcp:commandButton
+						update=":dlgTransf"
+						action="#{avalDesempTeleEdicaoBacking.actionBuscarTransferencias}"
+						icon="ui-icon-calendar">
+
+						<f:setPropertyActionListener
+							target="#{avalDesempTeleEdicaoBacking.helper.boletimSel}"
+							value="#{row}" />
+
+					</xcp:commandButton>
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovProbatorio"
+						value="#{avalDesempTeleEdicaoBacking.entity.probatorioFk}"
+						label="#{bundle.lbl_processo_probatorio}"
+						required="true"
+						query="probatorio"
+						readonly="#{not avalDesempTeleEdicaoBacking.entity.novo}"
+						size="8" />
+
+					<xcp:number
+						id="txtNumero_Boletim"
+						label="#{bundle.lbl_numero}"
+						required="true"
+						value="#{avalDesempTeleEdicaoBacking.entity.numero}"
+						size="8"
+						precision="6"
+						scale="0"
+						maxValue="999999"
+						readonly="#{not avalDesempTeleEdicaoBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovMatricula_Boletim"
+						value="#{avalDesempTeleEdicaoBacking.entity.funcionarioFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="funcionarios"
+						size="8"
+						readonly="#{not avalDesempTeleEdicaoBacking.entity.novo}" />
+
+					<xcp:date
+						id="dtaIni"
+						value="#{avalDesempTeleEdicaoBacking.entity.dataini}"
+						required="true"
+						label="#{bundle.lbl_dtaini}"
+						readonly="#{not avalDesempTeleEdicaoBacking.entity.novo}" />
+
+					<xcp:date
+						id="dtaFim_Boletim"
+						value="#{avalDesempTeleEdicaoBacking.entity.datafim}"
+						required="true"
+						label="#{bundle.lbl_dtafim}"
+						readonly="true" />
+
+					<xcp:date
+						id="aceite_Boletim"
+						value="#{avalDesempTeleEdicaoBacking.entity.aceite}"
+						label="#{bundle.lbl_aceite}" />
+
+					<xcp:lov
+						id="lovTipodoc_Boletim"
+						value="#{avalDesempTeleEdicaoBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodoctipo"
+						params="#{avalDesempTeleEdicaoBacking.paramsTipoDoc}"
+						size="8"
+						required="true"
+						readonly="#{avalDesempTeleEdicaoBacking.entity.aceite != null}" />
+
+					<!--  Alterado para readonly para evitar que bagunce na hora de copiar as repostas-->
+					<xcp:lov
+						id="lovAvaliacao_Boletim"
+						value="#{avalDesempTeleEdicaoBacking.entity.avaliacaoFk}"
+						label="#{bundle.lbl_avaliacao}"
+						required="true"
+						query="avaliacoes"
+						params="#{avalDesempTeleEdicaoBacking.paramsAval}"
+						size="8"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovComissao"
+						value="#{avalDesempTeleEdicaoBacking.entity.comissaoFk}"
+						label="#{bundle.lbl_comis}"
+						required="true"
+						query="comissao_esta_prob_t"
+						params="#{avalDesempTeleEdicaoBacking.paramsCom}"
+						readonly="#{avalDesempTeleEdicaoBacking.entity.aceite != null}"
+						size="8" />
+
+					<xcp:date
+						id="dtaEnc"
+						value="#{avalDesempTeleEdicaoBacking.entity.dtencerramento}"
+						readonly="true"
+						label="#{bundle.lbl_dtencerramento}"
+						rendered="#{avalDesempTeleEdicaoBacking.entity.dtencerramento != null}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+
+				<p:fieldset legend="#{bundle.title_etapas}">
+
+					<xcp:commandButton
+						icon="ui-icon-document"
+						value="#{bundle.btn_novo}"
+						update=":dlgEtapa"
+						action="#{avalDesempTeleEdicaoBacking.actionNovaEtapa}" />
+
+					<p:dataTable
+						id="tblEtapas"
+						var="row"
+						value="#{avalDesempTeleEdicaoBacking.helper.listEtapas}"
+						rowKey="#{row.PK}"
+						rowIndexVar="idx"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="true"
+						paginatorPosition="bottom"
+						filteredValue="#{avalDesempTeleEdicaoBacking.helper.listEtapasFiltradas}"
+						rows="#{viewUtil.tableRows}"
+						selectionMode="single"
+						selection="#{avalDesempTeleEdicaoBacking.helper.etapaSel}">
+						<p:ajax
+							event="rowSelect"
+							update=":#{p:component('tblNotas')}"
+							resetValues="true"
+							listener="#{avalDesempTeleEdicaoBacking.selectEtapa}" />
+
+						<xcp:column
+							headerText="#{bundle.col_seqetapa}"
+							type="Number"
+							size="5">
+							<xcp:outputSimpleNumber
+								value="#{row.seqEtapa}"
+								precision="8"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							size="10">
+							<xcp:outputSimple
+								value="#{row.tipo}"
+								itens="#{avalDesempTeleEdicaoBacking.itensTipo}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dataini}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtini}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_datafim}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtfim}" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="1">
+							<xcp:commandLink
+								oncomplete="PF('dlgEtapa_w').show();"
+								update=":dlgEtapa">
+
+								<h:graphicImage
+									value="/resources/img/procurar.png"
+									style="margin-top:3px;" />
+
+								<f:setPropertyActionListener
+									target="#{avalDesempTeleEdicaoBacking.helper.etapaSel}"
+									value="#{row}" />
+
+							</xcp:commandLink>
+
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="1">
+							<xcp:commandLink
+								immediate="true"
+								id="btn_remover"
+								rendered="#{idx == 0 and avalDesempTeleEdicaoBacking.moreThanOneTask}"
+								update="tblEtapas :form:tblNotas"
+								action="#{avalDesempTeleEdicaoBacking.actionExcluirEtapa(row)}">
+								<h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" />
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandLink>
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="1">
+
+							<xcp:commandLink
+								immediate="true"
+								id="btn_copia"
+								rendered="#{avalDesempTeleEdicaoBacking.renderedCopiaAuto(row)}"
+								update="tblEtapas :form:tblNotas"
+								action="#{avalDesempTeleEdicaoBacking.actionCopiarAvalAnt(row)}">
+								<h:graphicImage
+									title="#{bundle.hint_copiar}"
+									value="/resources/img/copiar2.png"
+									style="margin-top:3px;" />
+								<p:confirm
+									header="#{bundle.tit_confirmacao}"
+									message="#{bundle.msg_confirma_copiar_auto}"
+									icon="ui-icon-alert" />
+							</xcp:commandLink>
+						</xcp:column>
+
+					</p:dataTable>
+
+					<p:spacer height="5" />
+
+					<p:fieldset legend="#{bundle.title_notas}">
+						<p:dataTable
+							id="tblNotas"
+							value="#{avalDesempTeleEdicaoBacking.helper.listNotas}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							var="row"
+							paginator="false">
+
+							<xcp:column
+								type="String"
+								size="1"
+								headerText="#{bundle.col_editar}"
+								rendered="#{avalDesempTeleEdicaoBacking.renderedDefesa}">
+								<p:selectBooleanCheckbox value="#{row.selected}" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="30"
+								headerText="#{bundle.col_conhecimento}">
+								<h:outputText
+									value="#{row.descricao}"
+									escape="false" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="40"
+								headerText="#{bundle.col_respostas}">
+								<p:selectOneMenu
+									label="#{row.boletimNota.conhecimentoFk.descricao}"
+									styleClass="cmb_aval"
+									value="#{row.boletimNota.nota}"
+									rendered="#{row.tipResposta == 2}"
+									required="#{row.boletimNota.conhecimentoFk.obrigatorio == 1}">
+									<f:selectItems
+										value="#{row.listaNotas}"
+										var="it"
+										itemValue="#{it.nota}"
+										itemLabel="#{it.descricao}" />
+								</p:selectOneMenu>
+								<xcp:memo
+									id="txtDescritiva"
+									label="#{row.boletimNota.conhecimentoFk.descricao}"
+									required="#{row.boletimNota.conhecimentoFk.obrigatorio == 1}"
+									simple="true"
+									rendered="#{row.tipResposta != 2}"
+									value="#{row.boletimNota.obs}"
+									size="4000" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="40"
+								headerText="#{avalDesempTeleEdicaoBacking.labelEtapa}"
+								rendered="#{avalDesempTeleEdicaoBacking.renderedDefesa}">
+								<xcp:memo
+									id="txtDefesa"
+									simple="true"
+									value="#{row.boletimNota.defesa}"
+									size="4000" />
+							</xcp:column>
+
+						</p:dataTable>
+					</p:fieldset>
+
+				</p:fieldset>
+
+				<p:remoteCommand
+					name="rcBolEdit"
+					update="tblEtapas tblNotas" />
+
+				<p:spacer height="3" />
+
+				<p:fieldset legend="#{bundle.title_acoes}">
+
+					<xcp:panelForm>
+
+						<xcp:memo
+							id="txtPontoforte"
+							label="#{bundle.lbl_pontoforte}"
+							value="#{avalDesempTeleEdicaoBacking.entity.pontoforte}"
+							size="4000" />
+
+						<xcp:memo
+							id="txtPontomelhoria"
+							label="#{bundle.lbl_pontomelhoria}"
+							value="#{avalDesempTeleEdicaoBacking.entity.pontomelhoria}"
+							size="4000" />
+
+						<xcp:memo
+							id="txtJustificativa"
+							label="#{bundle.lbl_justificativa}"
+							value="#{avalDesempTeleEdicaoBacking.entity.justificativa}"
+							size="4000" />
+
+					</xcp:panelForm>
+
+					<p:fieldset
+						legend="#{bundle.title_itens}"
+						style="text-align: center;">
+
+						<p:dataTable
+							id="tblItens"
+							value="#{avalDesempTeleEdicaoBacking.helper.listItens}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							var="row"
+							paginator="false">
+
+							<xcp:column
+								headerText="#{bundle.col_numero}"
+								type="Number"
+								size="10">
+								<xcp:outputSimpleNumber
+									value="#{row.item}"
+									precision="3"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_tipoItemAval}"
+								type="String"
+								size="10">
+								<xcp:outputSimple
+									value="#{row.tipo}"
+									itens="#{avalDesempTeleEdicaoBacking.itensTipoItem}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_descricao}"
+								type="String"
+								size="20">
+								<xcp:outputSimple
+									value="#{row.tipo == 1 ? row.descricao : row.detalhe}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_prazo}"
+								type="Number"
+								size="10">
+								<xcp:outputSimpleNumber
+									value="#{row.prazo}"
+									precision="3"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_tipoPrazo}"
+								type="String"
+								size="10">
+								<xcp:outputSimple
+									value="#{row.tipoPrazo}"
+									itens="#{avalDesempTeleEdicaoBacking.itensPrazo}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_prioridade}"
+								type="Number"
+								size="10">
+								<xcp:outputSimpleNumber
+									value="#{row.prioridade}"
+									precision="3"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="1">
+								<xcp:commandLink
+									oncomplete="PF('dlgItem_w').show();"
+									update=":dlgItem">
+
+									<h:graphicImage
+										value="/resources/img/procurar.png"
+										style="margin-top:3px;" />
+
+									<f:setPropertyActionListener
+										target="#{avalDesempTeleEdicaoBacking.helper.itemSel}"
+										value="#{row}" />
+								</xcp:commandLink>
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="1">
+								<xcp:commandLink
+									immediate="true"
+									update="tblItens"
+									action="#{avalDesempTeleEdicaoBacking.actionExcluirItem(row)}">
+									<h:graphicImage
+										title="#{bundle.hint_remover}"
+										value="/resources/img/remover.png"
+										style="margin-top:3px;" />
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+								</xcp:commandLink>
+							</xcp:column>
+
+						</p:dataTable>
+
+						<xcp:commandButton
+							id="btn_add_item"
+							value="#{bundle.btn_novo}"
+							style="margin-top: 5px"
+							update=":frmDlgItem"
+							icon="ui-icon-document"
+							oncomplete="PF('dlgItem_w').show()"
+							process="@this"
+							rendered="#{avalDesempTeleEdicaoBacking.entity.dtresposta==null}">
+							<f:setPropertyActionListener
+								value="#{null}"
+								target="#{avalDesempTeleEdicaoBacking.helper.itemSel}" />
+						</xcp:commandButton>
+					</p:fieldset>
+
+				</p:fieldset>
+
+				<p:fieldset
+					legend="#{bundle.title_geral}"
+					style="text-align: center;">
+					<xcp:panelForm>
+						<xcp:memo
+							id="txtObs"
+							label="#{bundle.lbl_observacoes}"
+							value="#{avalDesempTeleEdicaoBacking.entity.obs}"
+							size="4000" />
+					</xcp:panelForm>
+				</p:fieldset>
+
+				<p:remoteCommand
+					name="rcBolItem"
+					update="tblItens" />
+
+				<p:spacer height="3" />
+
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_etapas}"
+			modal="true"
+			id="dlgEtapa"
+			widgetVar="dlgEtapa_w">
+			<xcp:form id="frm">
+				<xcp:panelForm>
+
+					<xcp:combo
+						id="cboTipoFull"
+						value="#{avalDesempTeleEdicaoBacking.helper.etapaSel.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="true"
+						rendered="#{!avalDesempTeleEdicaoBacking.helper.etapaSel.novo}"
+						itens="#{avalDesempTeleEdicaoBacking.itensTipo}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{avalDesempTeleEdicaoBacking.helper.etapaSel.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						rendered="#{avalDesempTeleEdicaoBacking.helper.etapaSel.novo}"
+						itens="#{avalDesempTeleEdicaoBacking.itensTipoManut}" />
+
+					<xcp:dateRange
+						id="txtDtini"
+						required="true"
+						valueStart="#{avalDesempTeleEdicaoBacking.helper.etapaSel.dtini}"
+						valueEnd="#{avalDesempTeleEdicaoBacking.helper.etapaSel.dtfim}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{avalDesempTeleEdicaoBacking.helper.etapaSel.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							icon="ui-icon-document"
+							value="#{bundle.btn_gravar}"
+							action="#{avalDesempTeleEdicaoBacking.actionGravarEtapa}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgEtapa_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_mvtos}"
+			modal="true"
+			id="dlgMvto"
+			widgetVar="dlgMvto_w"
+			width="800"
+			height="500">
+			<xcp:form id="frmMvto">
+
+				<p:dataTable
+					id="tblMvtos"
+					var="row"
+					value="#{avalDesempTeleEdicaoBacking.helper.listMovimentacoes}"
+					rowKey="#{row.rowid}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					filteredValue="#{avalDesempTeleEdicaoBacking.helper.listMovimentacoesFiltradas}"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_tipmov}"
+						value="#{row.descricao}"
+						type="String"
+						size="15">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtinicio}"
+						value="#{row.dataIni}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dataIni}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dttermino}"
+						value="#{row.dataFim}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dataFim}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dias}"
+						value="#{row.qtdDiasDif}"
+						type="Number"
+						size="10">
+						<xcp:outputSimple value="#{row.qtdDiasDif}" />
+					</xcp:column>
+
+				</p:dataTable>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgMvto_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_transfSet}"
+			modal="true"
+			id="dlgTransf"
+			widgetVar="dlgTransf_w"
+			width="1100"
+			height="500">
+			<xcp:form id="frmTransf">
+
+				<p:dataTable
+					id="tblTransf"
+					var="row"
+					value="#{avalDesempTeleEdicaoBacking.helper.listTransf}"
+					rowKey="#{row.PK}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					filteredValue="#{avalDesempTeleEdicaoBacking.helper.listTransfFiltradas}"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_codigo}"
+						value="#{row.setor}"
+						type="Number"
+						size="6">
+						<xcp:outputSimpleNumber
+							value="#{row.setor}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_setor}"
+						value="#{row.setorDeFk.descricao}"
+						type="String"
+						size="15">
+						<xcp:outputSimple value="#{row.setorDeFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_inicio}"
+						value="#{row.dtinicio}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtinicio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_termino}"
+						value="#{row.dttermino}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dttermino}" />
+					</xcp:column>
+					<xcp:column
+						headerText="#{bundle.col_dias}"
+						value="teste"
+						type="Number"
+						size="4">
+						<xcp:outputSimple value="#{row.qtdDiasDif}" />
+					</xcp:column>
+				</p:dataTable>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgTransf_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			header="#{bundle.title_item}"
+			modal="true"
+			id="dlgItem"
+			widgetVar="dlgItem_w">
+			<xcp:form id="frmDlgItem">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtItem"
+						label="#{bundle.lbl_numero}"
+						required="true"
+						value="#{avalDesempTeleEdicaoBacking.helper.itemSel.item}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						rendered="#{not avalDesempTeleEdicaoBacking.helper.itemSel.novo}"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboTipoItem"
+						value="#{avalDesempTeleEdicaoBacking.helper.itemSel.tipo}"
+						label="#{bundle.lbl_tipoitem}"
+						required="true"
+						itens="#{avalDesempTeleEdicaoBacking.itensTipoItem}">
+						<p:ajax update="@form" />
+					</xcp:combo>
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{avalDesempTeleEdicaoBacking.helper.itemSel.descricao}"
+						size="80"
+						maxlength="200"
+						rendered="#{avalDesempTeleEdicaoBacking.tipoItemGeral}" />
+
+					<xcp:number
+						id="txtPrioridade"
+						label="#{bundle.lbl_prioridadeitem}"
+						value="#{avalDesempTeleEdicaoBacking.helper.itemSel.prioridade}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						rendered="#{avalDesempTeleEdicaoBacking.tipoItemGeral}" />
+
+					<xcp:memo
+						id="txtDetalhe"
+						label="#{bundle.lbl_detalhe}"
+						value="#{avalDesempTeleEdicaoBacking.helper.itemSel.detalhe}"
+						size="1000" />
+
+					<xcp:number
+						id="txtPrazo"
+						label="#{bundle.lbl_prazo}"
+						value="#{avalDesempTeleEdicaoBacking.helper.itemSel.prazo}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						rendered="#{avalDesempTeleEdicaoBacking.tipoItemGeral}" />
+
+					<xcp:combo
+						id="cboTipoPrazo"
+						value="#{avalDesempTeleEdicaoBacking.helper.itemSel.tipoPrazo}"
+						label="#{bundle.lbl_unidade}"
+						required="true"
+						itens="#{avalDesempTeleEdicaoBacking.itensPrazo}"
+						rendered="#{avalDesempTeleEdicaoBacking.tipoItemGeral}" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							icon="ui-icon-document"
+							value="#{bundle.btn_gravar}"
+							action="#{avalDesempTeleEdicaoBacking.actionGravarItem}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgItem_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

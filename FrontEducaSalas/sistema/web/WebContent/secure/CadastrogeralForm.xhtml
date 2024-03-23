@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Cadastrogeral"
+			backing="#{cadastrogeralBacking}"
+			consulta="true">
+
+			<ui:define name="colunas">
+
+
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cpf}"
+					value="#{row.cpf}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleCpf value="#{row.cpf}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtnascimento}"
+					value="#{row.dtnascimento}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtnascimento}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<h:outputText value="" />
+				<p:fieldset
+					legend="#{bundle.tit_dados_pessoais}"
+					style="margin-left: 0px !important;">
+					<xcp:panelForm>
+						<xcp:cpf
+							id="txtCpfInc"
+							label="#{bundle.lbl_cpf}"
+							value="#{cadastrogeralBacking.entity.cpf}"
+							size="26"
+							readonly="true"
+							style="margin-left: 5px;" />
+
+						<xcp:text
+							id="txtNome"
+							label="#{bundle.lbl_nome}"
+							value="#{cadastrogeralBacking.entity.nome}"
+							size="70"
+							readonly="true" />
+
+						<xcp:combo
+							id="cboSexo"
+							value="#{cadastrogeralBacking.entity.sexo}"
+							label="#{bundle.lbl_sexo}"
+							itens="#{cadastrogeralBacking.itensSexo}"
+							readonly="true" />
+
+						<xcp:lov
+							id="lovNatural"
+							value="#{cadastrogeralBacking.entity.naturalFk}"
+							label="#{bundle.lbl_natural}"
+							query="cidades"
+							size="7"
+							readonly="true" />
+
+						<xcp:date
+							id="txtDtnascimento"
+							value="#{cadastrogeralBacking.entity.dtnascimento}"
+							label="#{bundle.lbl_dtnascimento}"
+							readonly="true" />
+
+						<xcp:text
+							id="txtReservista"
+							label="#{bundle.lbl_reservista}"
+							value="#{cadastrogeralBacking.entity.reservista}"
+							size="14"
+							readonly="true" />
+
+						<xcp:number
+							id="txtReservistacat"
+							label="#{bundle.lbl_reservistacat}"
+							value="#{cadastrogeralBacking.entity.reservistacat}"
+							maxlength="2"
+							maxValue="99"
+							readonly="true" />
+
+						<xcp:combo
+							id="cboCor"
+							value="#{cadastrogeralBacking.entity.cor}"
+							label="#{bundle.lbl_cor}"
+							itens="#{cadastrogeralBacking.itensCorNull}"
+							readonly="true" />
+
+						<xcp:combo
+							id="cboDeficiencias"
+							value="#{cadastrogeralBacking.entity.deficiente}"
+							label="#{bundle.lbl_deficiencias}"
+							itens="#{cadastrogeralBacking.itensDeficienciasNull}"
+							readonly="true" />
+
+					</xcp:panelForm>
+				</p:fieldset>
+
+				<h:outputText value="" />
+				<p:fieldset
+					legend="#{bundle.tit_dados_carteira_prof}"
+					style="margin-left: 0px !important;">
+					<h:panelGrid columns="4">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtCpnumero"
+								label="#{bundle.lbl_cpnumero}"
+								value="#{cadastrogeralBacking.entity.cpnumero}"
+								size="10"
+								precision="8"
+								scale="0"
+								maxValue="99999999"
+								readonly="true" />
+						</xcp:panelForm>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:combo
+									id="cboCpuf"
+									value="#{cadastrogeralBacking.entity.cpuf}"
+									label="#{bundle.lbl_cpuf}"
+									itens="#{cadastrogeralBacking.itensUfNull}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:text
+									id="txtCpserie"
+									label="#{bundle.lbl_cpserie}"
+									value="#{cadastrogeralBacking.entity.cpserie}"
+									size="15"
+									maxlength="20"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:date
+									id="txtCpdtemissao"
+									value="#{cadastrogeralBacking.entity.cpdtemissao}"
+									label="#{bundle.lbl_data}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:outputText value="" />
+				<p:fieldset
+					legend="#{bundle.tit_cnh}"
+					style="margin-left: 0px !important;">
+					<h:panelGrid columns="4">
+						<xcp:panelForm>
+							<xcp:cnh
+								id="txtCnh"
+								label="#{bundle.lbl_cnh}"
+								value="#{cadastrogeralBacking.entity.cnh}"
+								size="10"
+								readonly="true" />
+						</xcp:panelForm>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:date
+									id="txtDtvenccnh"
+									value="#{cadastrogeralBacking.entity.dtvenccnh}"
+									label="#{bundle.lbl_dtvenccnh}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:text
+									id="txtCategoriacnh"
+									label="#{bundle.lbl_categoriacnh}"
+									value="#{cadastrogeralBacking.entity.categoriacnh}"
+									size="3"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:combo
+									id="cboCnhuf"
+									value="#{cadastrogeralBacking.entity.cnhuf}"
+									label="#{bundle.lbl_cnhuf}"
+									itens="#{funcionariosBacking.itensUfNull}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:outputText value="" />
+				<p:fieldset
+					legend="#{bundle.tit_dados_pis}"
+					style="margin-left: 0px !important;">
+					<h:panelGrid columns="2">
+						<xcp:panelForm>
+							<xcp:pis
+								id="txtPis"
+								label="#{bundle.lbl_pis}"
+								value="#{cadastrogeralBacking.entity.pis}"
+								readonly="true"
+								size="12" />
+						</xcp:panelForm>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:date
+									id="txtDtcadpis"
+									value="#{cadastrogeralBacking.entity.dtcadpis}"
+									label="#{bundle.lbl_dtcadpis}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:outputText value="" />
+				<p:fieldset
+					legend="#{bundle.tit_dados_titulo}"
+					style="margin-left: 0px !important;">
+					<h:panelGrid columns="4">
+						<xcp:panelForm>
+							<xcp:titulo
+								id="txtTitulo"
+								label="#{bundle.lbl_titulo}"
+								value="#{cadastrogeralBacking.entity.titulo}"
+								readonly="true" />
+						</xcp:panelForm>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:number
+									id="txtZona"
+									label="#{bundle.lbl_zona}"
+									value="#{cadastrogeralBacking.entity.zona}"
+									size="3"
+									maxValue="999"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:text
+									id="txtSessao"
+									label="#{bundle.lbl_sessao}"
+									value="#{cadastrogeralBacking.entity.sessao}"
+									size="5"
+									maxValue="99999"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:combo
+									id="cboTitulouf"
+									value="#{cadastrogeralBacking.entity.titulouf}"
+									label="#{bundle.lbl_titulouf}"
+									itens="#{cadastrogeralBacking.itensUfNull}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:outputText value="" />
+				<p:fieldset
+					legend="#{bundle.tit_dados_identidade}"
+					style="margin-left: 0px !important;">
+					<h:panelGrid columns="4">
+						<xcp:panelForm>
+							<xcp:text
+								id="txtIdentidade"
+								label="#{bundle.lbl_identidade}"
+								value="#{cadastrogeralBacking.entity.identidade}"
+								size="15"
+								readonly="true" />
+
+						</xcp:panelForm>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:date
+									id="txtDtidentidade"
+									value="#{cadastrogeralBacking.entity.dtidentidade}"
+									label="#{bundle.lbl_data}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:text
+									id="txtOrgaoexp"
+									label="#{bundle.lbl_orgaoexp}"
+									value="#{cadastrogeralBacking.entity.orgaoexp}"
+									size="13"
+									maxlength="16"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+						<p:outputPanel style="padding-left:2px">
+							<xcp:panelForm>
+								<xcp:combo
+									id="cboIdentidadeuf"
+									value="#{cadastrogeralBacking.entity.identidadeuf}"
+									label="#{bundle.lbl_identidadeuf}"
+									itens="#{funcionariosBacking.itensUfNull}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:fieldset>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

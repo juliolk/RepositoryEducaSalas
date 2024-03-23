@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:outputScript
+		name="highlight.pack.js"
+		library="js" />
+
+
+	<h:outputStylesheet
+		name="default.css"
+		library="css" />
+
+
+	<style type="text/css">
+pre {
+	font-size: 12px;
+	height: auto;
+	max-height: 600px;
+	overflow: auto;
+	background-color: #eeeeee;
+	word-break: normal !important;
+	word-wrap: normal !important;
+	white-space: pre !important;
+}
+</style>
+	<xcp:panelManut
+		id="EsocEvento"
+		backing="#{backing}"
+		consulta="true">
+
+		<ui:define name="filtro">
+			<p:fieldset
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+				<xcp:panelForm>
+
+					<xcp:numberRange
+						id="txtSeqPesq"
+						label="#{bundle.lbl_seq}"
+						size="10"
+						valueStart="#{backing.helper.seqIniPesq}"
+						valueEnd="#{backing.helper.seqFimPesq}"
+						precision="18"
+						scale="0" />
+
+					<xcp:numberRange
+						id="txtLotePesq"
+						label="#{bundle.lbl_lote}"
+						size="10"
+						valueStart="#{backing.helper.seqLoteIniPesq}"
+						valueEnd="#{backing.helper.seqLoteFimPesq}"
+						precision="18"
+						scale="0" />
+
+					<xcp:dateRange
+						id="txtDataPesq"
+						valueStart="#{backing.helper.dtCriacaoIniPesq}"
+						valueEnd="#{backing.helper.dtCriacaoFimPesq}"
+						label="#{bundle.lbl_intervalo}"
+						size="8" />
+
+				</xcp:panelForm>
+			</p:fieldset>
+		</ui:define>
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_seq}"
+				value="#{row.seq}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					value="#{row.seq}"
+					precision="18"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtcriacao}"
+				value="#{row.dtcriacao}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleTimestamp value="#{row.dtcriacao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipoFk.evento}"
+				type="String"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.tipoFk.evento}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.tipoFk.descricao}"
+				type="String"
+				size="8">
+				<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_lote}"
+				value="#{row.lote}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.lote}"
+					precision="18"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_id}"
+				value="#{row.id}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.id}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_situacao}"
+				value="#{row.desStatus}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.desStatus}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_oper}"
+				value="#{row.operadorFk.nome}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.operadorFk.nome}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtSeq"
+					label="#{bundle.lbl_seq}"
+					required="true"
+					value="#{backing.entity.seq}"
+					size="18"
+					precision="18"
+					scale="0"
+					maxValue="999999999999999999"
+					readonly="true" />
+
+				<xcp:dateTime
+					id="txtDtcriacao"
+					value="#{backing.entity.dtcriacao}"
+					label="#{bundle.lbl_dtcriacao}"
+					readonly="true" />
+
+				<xcp:lov
+					id="lovTipo"
+					value="#{backing.entity.tipoFk}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					query="esoc_tipo"
+					size="3"
+					readonly="true" />
+
+				<p:outputLabel
+					value="#{bundle.lbl_situacao}:"
+					rendered="#{backing.desSituacaoEsoc != null}" />
+				<h:outputText
+					value="#{backing.desSituacaoEsoc}"
+					rendered="#{backing.desSituacaoEsoc != null}"
+					style="font-size: 12px;display:block;margin-top:1px;" />
+
+				<p:outputLabel value="#{bundle.lbl_stat}:" />
+				<h:outputText
+					value="#{backing.desStatus}"
+					style="font-size: 12px;display:block;margin-top:1px;" />
+
+				<xcp:number
+					id="txtLote"
+					label="#{bundle.lbl_lote}"
+					value="#{backing.entity.lote}"
+					size="18"
+					precision="18"
+					scale="0"
+					maxValue="999999999999999999"
+					readonly="true" />
+
+				<xcp:number
+					id="txtQtdTentativas"
+					label="#{bundle.lbl_tentativa}"
+					value="#{backing.entity.loteFk.qtdconsulta}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="100"
+					readonly="true"
+					rendered="#{backing.entity.indConsultado == 0}" />
+
+				<xcp:dateTime
+					id="txtProxConsulta"
+					value="#{backing.entity.loteFk.proxconsulta}"
+					label="#{bundle.lbl_proxConsulta}"
+					pattern="dd/MM/yyyy HH:mm:ss"
+					readonly="true" />
+
+				<xcp:text
+					id="txtId"
+					label="#{bundle.lbl_id}"
+					value="#{backing.entity.id}"
+					size="100"
+					readonly="true" />
+
+				<xcp:text
+					id="txtHash"
+					label="#{bundle.lbl_hash}"
+					value="#{backing.entity.hash}"
+					size="100"
+					readonly="true" />
+
+				<xcp:text
+					id="txtRecibo"
+					label="#{bundle.lbl_recibo}"
+					value="#{backing.entity.recibo}"
+					size="100"
+					readonly="true" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+		<ui:define name="barraForm">
+			<xcp:commandButton
+				action="#{backing.actionBuscaOcorrencias}"
+				rendered="#{backing.helper.hasOcorrencias}"
+				value="#{bundle.btn_ocorrencias}"
+				update=":dlgOcor" />
+
+			<xcp:commandButton
+				action="#{backing.actionBuscaXml}"
+				update=":frmXml"
+				value="#{bundle.btn_xml}" />
+
+			<xcp:commandButton
+				update=":frmFor"
+				value="#{bundle.btn_erro}"
+				oncomplete="PF('wErro').show()"
+				rendered="#{backing.entity.indErro == 1}" />
+		</ui:define>
+
+	</xcp:panelManut>
+
+
+</ui:composition>

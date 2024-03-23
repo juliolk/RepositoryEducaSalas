@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Limitelicenca"
+			backing="#{limitelicencaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seqregra}"
+					value="#{row.seqregra}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.seqregra}"
+						precision="20"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{limitelicencaBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtini}"
+					value="#{row.dtini}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSeqregra"
+						label="#{bundle.lbl_seqregra}"
+						required="true"
+						value="#{limitelicencaBacking.entity.seqregra}"
+						size="11"
+						precision="20"
+						scale="0"
+						maxValue="99999999999999999999"
+						readonly="#{not limitelicencaBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{limitelicencaBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{limitelicencaBacking.itensTipo}">
+						<p:ajax
+							update="lovOrgao,lovOrgao_l,lovDivisao,lovDivisao_l,lovSetor,lovSetor_l,txtQtdmaximaoutros,txtQtdmaximaoutros_l" />
+					</xcp:combo>
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{limitelicencaBacking.entity.descricao}"
+						size="73" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{limitelicencaBacking.entity.obs}"
+						size="4000"
+						cols="75" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{limitelicencaBacking.entity.orgaoFk}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos"
+						size="5"
+						selectionListener="#{limitelicencaBacking.selectOrgao}"
+						update="lovDivisao,lovSetor" />
+
+					<xcp:lov
+						id="lovDivisao"
+						value="#{limitelicencaBacking.entity.divisaoFk}"
+						label="#{bundle.lbl_divisao}"
+						query="divisoes_orgao"
+						size="5"
+						rendered="#{limitelicencaBacking.entity.tipo == 2}"
+						selectionListener="#{limitelicencaBacking.selectDivisao}"
+						update="lovSetor"
+						params="#{limitelicencaBacking.paramsDivisao}"
+						readonly="#{limitelicencaBacking.entity.orgaoFk == null}" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{limitelicencaBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="set_div_validade"
+						size="5"
+						rendered="#{limitelicencaBacking.entity.tipo == 2}"
+						params="#{limitelicencaBacking.paramsSetor}"
+						readonly="#{limitelicencaBacking.entity.divisaoFk == null}" />
+
+					<xcp:date
+						id="txtDtini"
+						required="true"
+						value="#{limitelicencaBacking.entity.dtini}"
+						label="#{bundle.lbl_dtini}" />
+
+					<xcp:date
+						id="txtDtfim"
+						value="#{limitelicencaBacking.entity.dtfim}"
+						label="#{bundle.lbl_dtfim}" />
+
+					<xcp:number
+						id="txtQtdmaxima"
+						label="#{bundle.lbl_qtdmaxima}"
+						required="true"
+						value="#{limitelicencaBacking.entity.qtdmaxima}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999" />
+
+					<xcp:number
+						id="txtQtdmaximaoutros"
+						label="#{bundle.lbl_qtdmaximaoutros}"
+						value="#{limitelicencaBacking.entity.qtdmaximaoutros}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						rendered="#{limitelicencaBacking.entity.tipo == 1}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

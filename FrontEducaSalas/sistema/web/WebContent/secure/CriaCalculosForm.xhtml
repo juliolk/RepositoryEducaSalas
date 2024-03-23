@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:blockUI
+				block="panelCalculo"
+				trigger="btn_gravar,btn_compilar">
+				<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+			</p:blockUI>
+			<p:outputPanel id="panelCalculo">
+				<h:panelGrid columns="2">
+
+					<xcp:combo
+						id="cboTipoFolha"
+						label="#{bundle.lbl_tipoFolha}"
+						value="#{criaCalculosBacking.tipofolhaSel}"
+						itens="#{criaCalculosBacking.listaTipofolha}">
+						<f:converter converterId="xcpConverterComboEntityInteger" />
+						<p:ajax
+							event="change"
+							listener="#{criaCalculosBacking.changeTipoFolha}"
+							update="tblCalc" />
+
+					</xcp:combo>
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:dataTable
+						id="tblCalc"
+						value="#{criaCalculosBacking.listaCalcular}"
+						selection="#{criaCalculosBacking.listaSelCalcular}"
+						rowKey="#{row.PK}"
+						scrollable="true"
+						scrollHeight="400"
+						var="row"
+						draggableRows="true">
+						<p:column
+							selectionMode="multiple"
+							style="width:3%;text-align:center" />
+						<xcp:column
+							headerText="#{bundle.col_formula}"
+							type="Number"
+							size="12">
+							<h:outputText value="#{row.formula}" />
+						</xcp:column>
+						<xcp:column
+							headerText="#{bundle.col_desFormula}"
+							type="String">
+							<h:outputText value="#{row.formulaFk.descricao}" />
+						</xcp:column>
+					</p:dataTable>
+					<h:panelGrid columns="1">
+						<xcp:commandButton
+							id="btnUp"
+							icon="ui-icon ui-icon-arrow-1-n"
+							update="tblCalc"
+							action="#{criaCalculosBacking.actionUp}" />
+						<xcp:commandButton
+							id="btnDown"
+							icon="ui-icon-arrow-1-s"
+							update="tblCalc"
+							action="#{criaCalculosBacking.actionDown}" />
+					</h:panelGrid>
+				</h:panelGrid>
+				<center>
+					<xcp:commandButton
+						id="btn_adicionar"
+						value="#{bundle.btn_adicionar}"
+						update=":frmFormul:lovFormula"
+						action="#{criaCalculosBacking.actionCleanForm}"
+						oncomplete="PF('w_dlgAdicForm').show();"
+						icon="ui-icon-plusthick" />
+
+					<xcp:commandButton
+						id="btn_removerSel"
+						value="#{bundle.btn_removerSel}"
+						action="#{criaCalculosBacking.actionRemoverSel}"
+						update="tblCalc"
+						icon="ui-icon-trash">
+
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+
+					</xcp:commandButton>
+
+				</center>
+
+				<p:spacer height="10" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}"
+							action="#{criaCalculosBacking.actionGravar}" />
+
+						<xcp:commandButton
+							id="btn_compilar"
+							icon="ui-icon-gear"
+							value="#{bundle.btn_compilar}"
+							action="#{criaCalculosBacking.actionCompilar}" />
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgAdicFormula"
+			modal="true"
+			widgetVar="w_dlgAdicForm"
+			header="#{bundle.title_adicFormula}"
+			resizable="false"
+			styleClass="disable-scroll"
+			height="100"
+			width="560"
+			closeOnEscape="true">
+			<xcp:form id="frmFormul">
+				<xcp:panelForm>
+					<xcp:lov
+						label="#{bundle.lbl_formula}"
+						query="formulas"
+						id="lovFormula"
+						value="#{criaCalculosBacking.formulaSel}" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_adicionar_formula"
+							value="#{bundle.btn_adicionar_formula}"
+							update=":form:tblCalc"
+							oncomplete="PF('w_dlgAdicForm').hide();"
+							action="#{criaCalculosBacking.actionNovaFormula}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

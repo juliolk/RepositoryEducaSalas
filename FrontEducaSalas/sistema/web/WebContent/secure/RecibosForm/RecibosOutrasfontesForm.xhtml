@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="RecibosOutrasfontes"
+		backing="#{recibosOutrasfontesBacking}" masterId="Recibos">
+
+		<ui:define name="colunas">
+		
+			<xcp:column headerText="#{bundle.col_pessoa}" value="#{row.pessoa}"
+				type="String" size="3">
+				<xcp:outputSimple value="#{row.pessoa}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_autonomos_nome}" value="#{row.recibosFk.pessoaFk.nome}"
+				type="String" size="14">
+				<xcp:outputSimpleNumber value="#{row.recibosFk.pessoaFk.nome}" precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_recibo}" value="#{row.recibo}"
+				type="String" size="3">
+				<xcp:outputSimple value="#{row.recibo}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_datalcto}"
+				value="#{row.datalcto}" type="Date" size="7">
+				<xcp:outputSimpleDate value="#{row.datalcto}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_tipRemunemp}"
+				value="#{row.tipRemunemp}" type="Number" size="14">
+				<xcp:outputSimpleNumber value="#{row.tipRemunemp}" precision="1"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_cnpj}" value="#{row.cnpj}"
+				type="Number" size="7">
+				<xcp:outputSimpleNumber value="#{row.cnpj}" precision="14" scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_categoria}"
+				value="#{row.categoriaFk.descricao}" type="String" size="20">
+				<xcp:outputSimpleNumber value="#{row.categoriaFk.descricao}" precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_baseinss}"
+				value="#{row.baseinss}" type="Number" size="7">
+				<xcp:outputSimpleNumber value="#{row.baseinss}" precision="16"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:combo id="cboTipRemunemp_RecibosOutrasfontes"
+					value="#{recibosOutrasfontesBacking.entity.tipRemunemp}"
+					label="#{bundle.lbl_tipRemunemp}" required="true"
+					itens="#{recibosOutrasfontesBacking.itensTipRemunemp}" />
+
+				<xcp:number id="txtCnpj_RecibosOutrasfontes"
+					label="#{bundle.lbl_cnpj}" required="true"
+					value="#{recibosOutrasfontesBacking.entity.cnpj}" size="14"
+					precision="14" scale="0" maxValue="99999999999999" />
+
+				<xcp:lov
+					id="lovCategoriaOut"
+					value="#{recibosOutrasfontesBacking.entity.categoriaFk}"
+					label="#{bundle.lbl_categoria}"
+					query="categoriatrabesocial"
+					size="3"
+					required="true" />
+
+				<xcp:number id="txtBaseinss_RecibosOutrasfontes"
+					label="#{bundle.lbl_baseinss}" required="true" size="19"
+					value="#{recibosOutrasfontesBacking.entity.baseinss}"
+					precision="16" scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

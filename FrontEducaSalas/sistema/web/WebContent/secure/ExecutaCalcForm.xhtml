@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<!--  <p:blockUI
+				block="panelCalculo"
+				trigger=":#{p:component('tblRegras')},btn_retornaExcedente,btn_importarRecisoes,btn_apagarRecisoes,btn_importarAtestados,btn_calcular,btn_descalcular">
+				<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+			</p:blockUI>-->
+
+			<xcp:panelGrid id="panelCalculo">
+				<p:row>
+					<p:column style="padding:0px 0px 10px 10px;">
+						<h:panelGrid
+							columns="6"
+							columnClasses="form_label,form_content,,form_label,form_content"
+							cellpadding="0"
+							cellspacing="0"
+							border="0">
+							<xcp:combo
+								id="cboTipoFolha"
+								label="#{bundle.lbl_tipoFolha}"
+								value="#{executaCalcBacking.tiposFolhaSel}"
+								itens="#{executaCalcBacking.listaTiposFolha}">
+								<f:converter converterId="xcpConverterComboEntityInteger" />
+								<p:ajax
+									event="change"
+									listener="#{executaCalcBacking.changeTipoFolha}"
+									update="txtSelecao,dtaReferencia,btnLog" />
+							</xcp:combo>
+
+							<p:spacer width="10" />
+
+							<xcp:date
+								id="dtaReferencia"
+								label="#{bundle.lbl_dtaReferencia}"
+								value="#{executaCalcBacking.dtaReferencia}" 
+								readonly="true"/>
+							<h:panelGroup id="btnLog">
+								<xcp:commandButton
+									id="btn_log_erro"
+									rendered="#{executaCalcBacking.helper.logErro}"
+									oncomplete="PF('dlgLog_w').show();"
+									update=":frmLog"
+									value="#{bundle.btn_log_erro}" />
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:column>
+
+					<p:column
+						rowspan="2"
+						style="text-align: center;">
+						<xcp:commandButton
+							id="btn_limparSelecao"
+							value="#{bundle.btn_limparSelecao}"
+							update="txtSelecao"
+							style="width:150px; float:left;  margin-top:33px; margin-left:5px;">
+							<f:setPropertyActionListener
+								value="#{null}"
+								target="#{executaCalcBacking.txtSelecao}" />
+						</xcp:commandButton>
+						<div style="clear: both"></div>
+						<xcp:commandButton
+							id="btn_retornaExcedente"
+							value="#{bundle.btn_retornaExcedente}"
+							actionListener="#{executaCalcBacking.actionRetornarExcedente}"
+							style="width:150px; float:left; margin-top:5px; margin-left:5px;" />
+						<div style="clear: both"></div>
+						<xcp:commandButton
+							id="btn_importarRecisoes"
+							value="#{bundle.btn_importarRecisoes}"
+							actionListener="#{executaCalcBacking.actionImportarRescisoes}"
+							style="width:150px; float:left; margin-top:5px; margin-left:5px;" />
+						<div style="clear: both"></div>
+						<xcp:commandButton
+							id="btn_apagarRecisoes"
+							value="#{bundle.btn_apagarRecisoes}"
+							actionListener="#{executaCalcBacking.actionApagarRescisoes}"
+							style="width:150px; float:left;  margin-top:5px; margin-left:5px;" />
+						<div style="clear: both"></div>
+						<xcp:commandButton
+							id="btn_importarAtestados"
+							value="#{bundle.btn_importarAtestados}"
+							actionListener="#{executaCalcBacking.actionImportarAtestados}"
+							style="width:150px; float:left; margin-top:5px; margin-left:5px;" />
+					</p:column>
+
+				</p:row>
+				<p:row>
+					<p:column style="padding: 0px 10px 10px 10px;">
+						<p:inputTextarea
+							id="txtSelecao"
+							value="#{executaCalcBacking.txtSelecao}"
+							label="#{bundle.lbl_memo}"
+							rows="8"
+							cols="100"
+							maxlength="4000"
+							autoResize="false"
+							style="width:550px; height:139px; margin-top:-5px; float:left; resize:none;font-family: monospace;" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column style="padding-left: 10px;">
+						<div style="width: 560px; margin-top: 10px;">
+							<p:tabView
+								id="tabBiblioteca"
+								dynamic="true">
+
+								<p:tab title="#{bundle.tit_operadores}">
+									<p:dataTable
+										id="tblOperadores"
+										value="#{executaCalcBacking.listaOperadores}"
+										emptyMessage="#{bundle.msg_sem_resultado}"
+										var="operador"
+										scrollable="true"
+										scrollHeight="350">
+										<p:column headerText="#{bundle.col_operador}">
+											<xcp:commandLink
+												id="btn_adiciona_formula"
+												value="#{operador.descricao}"
+												onclick="insere_formula('#{operador.comando}');return false;" />
+										</p:column>
+									</p:dataTable>
+								</p:tab>
+
+								<p:tab title="#{bundle.tit_variaveis_banco}">
+									<p:dataTable
+										id="tblCampos"
+										value="#{executaCalcBacking.listaCampos}"
+										emptyMessage="#{bundle.msg_sem_resultado}"
+										var="campo"
+										scrollable="true"
+										scrollHeight="350">
+										<p:column
+											width="30%"
+											headerText="#{bundle.col_campo}">
+											<xcp:commandLink
+												id="btn_adiciona_variaveis"
+												value="#{campo.columnName}"
+												onclick="insere_campo('#{campo.tableName}', '#{campo.columnName}');return false;" />
+										</p:column>
+										<p:column
+											width="70%"
+											headerText="#{bundle.col_descricao}">
+											<xcp:commandLink
+												id="btn_adiciona_variaveis_descricao"
+												value="#{campo.comments}"
+												onclick="insere_campo('#{campo.tableName}', '#{campo.columnName}');return false;" />
+										</p:column>
+									</p:dataTable>
+								</p:tab>
+
+<!-- 								<p:tab title="#{bundle.tit_regras_calculo}"> -->
+
+<!-- 									<p:dataTable -->
+<!-- 										id="tblRegras" -->
+<!-- 										value="#{executaCalcBacking.listaRegras}" -->
+<!-- 										rowKey="#{regra}" -->
+<!-- 										selectionMode="single" -->
+<!-- 										scrollable="true" -->
+<!-- 										scrollHeight="350" -->
+<!-- 										var="regra" -->
+<!-- 										selection="#{executaCalcBacking.regraSel}" -->
+<!-- 										emptyMessage="#{bundle.msg_sem_resultado}"> -->
+
+<!-- 										<p:ajax -->
+<!-- 											event="rowSelect" -->
+<!-- 											listener="#{executaCalcBacking.compilarRegraCalculo}" /> -->
+
+<!-- 										<p:column headerText="#{bundle.col_descricao}"> -->
+<!-- 											<h:outputText value="#{regra.descricao}" /> -->
+<!-- 										</p:column> -->
+
+<!-- 									</p:dataTable> -->
+<!-- 								</p:tab> -->
+
+							</p:tabView>
+						</div>
+					</p:column>
+
+					<p:column style="padding: 10px;">
+						<div style="width: 200px; margin-left: -15px; margin-top: -13px;">
+							<p:fieldset legend="#{bundle.tit_calculo_folha}">
+								<!-- 
+								<xcp:commandButton
+									id="btn_calcular_old"
+									value="#{bundle.btn_calcular}"
+									update="btnLog"
+									action="#{executaCalcBacking.actionCalcularFolha}"
+									style="width:150px; margin-top:10px;" />
+ -->
+								<xcp:commandButton
+									id="btn_calcular"
+									value="#{bundle.btn_calcular}"
+									update="btnLog"
+									action="#{executaCalcBacking.actionExecutaCalculo}"
+									style="width:150px; margin-top:10px;" />
+
+								<xcp:commandButton
+									id="btn_calcular_agenda"
+									value="#{bundle.btn_calcular_agenda}"
+									update="btnLog"
+									action="#{executaCalcBacking.actionAgendaCalculo}"
+									style="width:150px; margin-top:10px;" />
+
+								<xcp:commandButton
+									id="btn_descalcular"
+									value="#{bundle.btn_descalcular}"
+									widgetVar="descalc"
+									actionListener="#{executaCalcBacking.actionDescalcularFolha}"
+									style="width:150px; margin-top:10px;" />
+
+							</p:fieldset>
+						</div>
+					</p:column>
+				</p:row>
+			</xcp:panelGrid>
+
+
+		</xcp:panelContent>
+
+	</ui:define>
+
+
+	<script type="text/JavaScript">
+			function insere_formula(valor) {
+				var txtSelecao = $('#form\\:txtSelecao');
+				var posIni = txtSelecao.prop('selectionStart');
+				var posFim = txtSelecao.prop('selectionEnd');
+				var texto = txtSelecao.val();
+				var novo_texto = texto.substring(0, posIni) + valor + texto.substring(posFim, texto.length);
+				var texto = txtSelecao.val(novo_texto);
+				txtSelecao.prop('selectionStart', posIni + valor.length);
+				txtSelecao.prop('selectionEnd', posIni + valor.length);
+			}
+			
+			function insere_campo(tabela, valor) {
+				var txtSelecao = $('#form\\:txtSelecao');
+				var posIni = txtSelecao.prop('selectionStart');
+				var posFim = txtSelecao.prop('selectionEnd');
+				var texto = txtSelecao.val();
+				if (tabela == 'UNIAO'){
+					tabela = 'FUNCIONARIO';
+				}
+				else if (tabela == 'VARSYSEMP'){
+					tabela = 'SISEMP';
+				}
+				else if (tabela == 'VARSYSFUNC'){
+						tabela = 'SISFUNC';
+				}
+				else if (tabela == 'FERIASCALC'){
+						tabela = 'FER';
+				}
+				else if (tabela == 'FERIASRESC'){
+						tabela = 'FERRESC';
+				}
+				valor = ' ' + tabela + '.' + valor + ' ';
+				var novo_texto = texto.substring(0, posIni) +  valor  + texto.substring(posFim, texto.length);
+				var texto = txtSelecao.val(novo_texto);
+				txtSelecao.prop('selectionStart', posIni + valor.length);
+				txtSelecao.prop('selectionEnd', posIni + valor.length);
+			}
+		</script>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgLog"
+			widgetVar="dlgLog_w">
+			<xcp:form id="frmLog">
+				<ui:include src="ExecutaCalcForm/ExecutaCalcLogForm.xhtml" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:panelGroup id="formConcurso">
+		<xcp:panelForm>
+
+			<xcp:lov
+				id="lovOrgao"
+				value="#{editalRemBacking.concursoManut.orgaoFk}"
+				label="#{bundle.lbl_orgao}"
+				required="true"
+				query="orgaos"
+				size="8"
+				update="lovFuncao lovNumSeqVaga"
+				selectionListener="#{editalRemBacking.selectOrgao}" />
+
+			<xcp:lov
+				id="lovFuncao"
+				value="#{editalRemBacking.concursoManut.funcaoFk}"
+				label="#{bundle.lbl_cargo}"
+				required="true"
+				query="#{editalRemBacking.queryFuncao}"
+				size="8"
+				params="#{editalRemBacking.paramsFuncao}" 
+				update="lovNumSeqVaga"
+				selectionListener="#{editalRemBacking.selectFuncao}"/>
+
+			<xcp:number
+				id="txtVagas"
+				label="#{bundle.lbl_vagas}"
+				value="#{editalRemBacking.concursoManut.vagas}"
+				size="10"
+				required="true"
+				precision="4"
+				scale="0"
+				maxValue="9999"
+				rendered="#{not editalRemBacking.vagaIndividual}" />
+
+			<xcp:lov
+				id="lovNumSeqVaga"
+				value="#{editalRemBacking.concursoManut.numSeqVagaFk}"
+				label="#{bundle.lbl_numSeqVaga}"
+				query="cargos_vagas_rem"
+				size="18"
+				required="true"
+				params="#{editalRemBacking.paramsVagas}"
+				rendered="#{editalRemBacking.vagaIndividual}" />
+
+
+		</xcp:panelForm>
+		<p:toolbar
+			styleClass="xcp_pmanut_form_toolbar"
+			rendered="#{not editalRemBacking.detailsEdit}">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btnGravar_Concurso"
+					icon="ui-icon-disk"
+					value="#{bundle.btn_gravar}"
+					action="#{editalRemBacking.actionGravarConcurso}"
+					disabled="#{editalRemBacking.disabledGravar}" />
+
+				<xcp:commandButton
+					id="btnVoltar_Concurso"
+					immediate="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgConcurso_w').hide();" />
+			</f:facet>
+		</p:toolbar>
+	</h:panelGroup>
+</ui:composition>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+
+						<p:fieldset legend="#{bundle.tit_filtros_padroes}" style="height:270px">
+
+							<p:dataTable
+								id="padroes"
+								var="rowMult"
+								value="#{estornoReajustePadroesBacking.listaPadroes}"
+								selection="#{estornoReajustePadroesBacking.listaPadroesSel}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="200"
+								scrollable="true"			
+								rowSelectMode="checkbox"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+								
+								<p:ajax
+								    event="toggleSelect"
+								    update=":form"
+								    listener="#{estornoReajustePadroesBacking.actionAtualizaLista}" />
+								    
+								<p:ajax
+								    event="rowSelectCheckbox"
+								    update=":form"
+								    listener="#{estornoReajustePadroesBacking.actionAtualizaLista}" />
+								    
+								<p:ajax
+								    event="rowUnselectCheckbox"
+								    update=":form"
+								    listener="#{estornoReajustePadroesBacking.actionAtualizaLista}" />
+								
+								
+								<p:column
+									selectionMode="multiple" 
+									style="width:20px;text-align:center" />
+
+								<xcp:column 
+									headerText="#{bundle.col_padrao}"
+									type="String"
+									size="25"
+									filterBy="#{rowMult.padrao}"
+									sortBy="#{rowMult.padrao}">
+									<xcp:outputSimple value="#{rowMult.padrao}" />
+								</xcp:column>
+								
+								<xcp:column
+									headerText="#{bundle.col_categoria}"
+									type="String"
+									size="25"
+									filterBy="#{rowMult.categoriaFk.descricao}"
+									sortBy="#{rowMult.categoria}">
+									<xcp:outputSimple value="#{rowMult.categoriaFk}" />
+								</xcp:column>
+								
+							</p:dataTable>
+						</p:fieldset>
+
+						
+					</p:column>
+
+				</p:row>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+						<p:fieldset
+							legend="#{bundle.tit_padroes_estorno}" style="height:350px">
+							  
+							<p:dataTable
+								id="funcReajuste"
+								var="rowMult"
+								value="#{estornoReajustePadroesBacking.listaPadroesHist}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="270"
+								scrollable="true"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+
+								<xcp:column
+									headerText="#{bundle.col_data}"
+									type="Date"
+									size="10" >
+									<xcp:outputSimpleDate value="#{rowMult.data}"  />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_padrao}"
+									type="String"
+									size="25">
+									<xcp:outputSimple value="#{rowMult.padrao}" />
+								</xcp:column>
+								
+								<xcp:column
+									headerText="#{bundle.col_classe}"
+									type="String"
+									size="25">
+									<xcp:outputSimple value="#{rowMult.classe}" />
+								</xcp:column>
+								
+								<xcp:column
+									headerText="#{bundle.col_valor_atual}"	
+									size="8"								
+									>
+									<xcp:outputSimpleNumber 
+										precision="10"
+								    	scale="2"
+								    	value="#{rowMult.valorAtual}" />
+								</xcp:column>
+								
+								
+								<xcp:column
+									headerText="#{bundle.col_valor_retornar}"
+									size="8" >
+									<xcp:outputSimpleNumber
+										precision="10"
+								    	scale="2"
+								    	value="#{rowMult.valorRetornar}" />
+								</xcp:column>
+
+							</p:dataTable>
+							
+							<p></p>
+							
+							<xcp:commandButton
+								id="btn_atualiza_serv"
+								value="#{bundle.btn_desfazer_reajuste_padroes}"
+								action="#{estornoReajustePadroesBacking.actionDesfazerReajustes}"
+								icon="ui-icon-gear"
+								update=":form" />
+									
+						</p:fieldset>
+						
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

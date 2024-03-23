@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+		<xcp:lov
+			id="lovAcordo"
+			value="#{funchorasBacking.helper.funcDocSelecionada.acordoFk}"
+			label="#{bundle.lbl_acordo}"
+			required="true"
+			query="bancohoras"
+			size="5"
+			readonly="true" />
+
+		<xcp:date
+			id="txtDtinicio"
+			required="true"
+			value="#{funchorasBacking.helper.funcDocSelecionada.dtinicio}"
+			label="#{bundle.lbl_dtinicio}"
+			readonly="true" />
+
+		<xcp:date
+			id="txtDtfim"
+			value="#{funchorasBacking.helper.funcDocSelecionada.dtfim}"
+			label="#{bundle.lbl_dtfim}"
+			readonly="true" />
+
+		<xcp:number
+			id="txtQtdtrab"
+			label="#{bundle.lbl_qtdtrab}"
+			required="true"
+			size="10"
+			value="#{funchorasBacking.helper.funcDocSelecionada.qtdtrab}"
+			precision="8"
+			scale="2"
+			readonly="true" />
+
+		<xcp:number
+			id="txtQtdfolga"
+			label="#{bundle.lbl_qtdfolga}"
+			required="true"
+			size="10"
+			value="#{funchorasBacking.helper.funcDocSelecionada.qtdfolga}"
+			precision="8"
+			scale="2"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovTipodoc"
+			value="#{funchorasBacking.helper.funcDocSelecionada.tipodocFk}"
+			selectionListener="#{funchorasBacking.selectTipodocumento}"
+			size="5"
+			update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento"
+			label="#{bundle.lbl_tipodoc}"
+			query="tipodocumento"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovDocumento"
+			value="#{funchorasBacking.helper.funcDocSelecionada.registroFk}"
+			params="#{funchorasBacking.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			query="documentos"
+			size="5"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovProcesso"
+			value="#{funchorasBacking.helper.funcDocSelecionada.processoFk}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			size="25"
+			readonly="true" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+
+		<p:panelGrid>
+			<p:row>
+				<p:column>
+					<p:splitButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{funchorasBacking.helper.funcDocSelecionada.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(funchorasBacking.helper.funcDocSelecionada.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{funchorasBacking.model.actionOpenVisDialog(funchorasBacking.helper.funcDocSelecionada.registro)}"
+							process="@this" />
+
+					</p:splitButton>
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:dateTime
+							id="txtRetificacao"
+							value="#{funchorasBacking.helper.funcDocSelecionada.retificacao}"
+							label="#{bundle.lbl_retificacao}"
+							rendered="#{funchorasBacking.helper.funcDocSelecionada.retificacao!=null}"
+							readonly="true" />
+					</xcp:panelForm>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+	</xcp:panelForm>
+</ui:composition>

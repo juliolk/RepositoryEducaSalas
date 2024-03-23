@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="table_Acidentestrabag"
+		var="row"
+		resizableColumns="true"
+		value="#{acidentestrabagBacking.lista}"
+		filteredValue="#{acidentestrabagBacking.listaFiltrados}"
+		rows="#{viewUtil.tableRows}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		paginator="true"
+		paginatorPosition="bottom"
+		selection="#{acidentestrabagBacking.listaSelAg}"
+		rowKey="#{row.PK}">
+
+		<p:column
+			selectionMode="multiple"
+			style="width:1%;text-align:center" />
+
+		<xcp:column
+			headerText="#{bundle.col_agcausa}"
+			value="#{row.fontegeradora}"
+			type="String"
+			size="20">
+			<xcp:outputSimple value="#{row.fontegeradoraFk.descricao}" />
+		</xcp:column>
+
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adicionar_Acidentestrabag"
+		value="#{bundle.btn_adicionar}"
+		update=":frmAcidentestrabag"
+		oncomplete="PF('dlgAcidentestrabag_w').show();"
+		icon="ui-icon-plusthick"
+		action="#{acidentestrabagBacking.actionNovo('Acidentestrabag')}" />
+
+	<xcp:commandButton
+		id="btn_removerSel_Acidentestrabag"
+		value="#{bundle.btn_removerSel}"
+		action="#{acidentestrabagBacking.actionRemoverSel}"
+		update="table_Acidentestrabag"
+		icon="ui-icon-trash">
+
+		<p:confirm
+			header="#{bundle.tit_confirma_remover}"
+			message="#{bundle.msg_confirma_remover}"
+			icon="ui-icon-alert" />
+
+	</xcp:commandButton>
+
+
+</ui:composition>

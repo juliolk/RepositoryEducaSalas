@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelCargo {
+	width: 100px;
+}
+
+.labelCargo2 {
+	width: 100px;
+}
+</style>
+
+		<xcp:panelManut
+			id="Cargos"
+			backing="#{cargosGratBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_cargo}"
+					value="#{row.cargo}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.cargo}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="78">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{cargosBacking.itensSituacaoFullGrat}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{cargosBacking.itensSituacaoGrat}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelGrid>
+					<p:row>
+						<p:column colspan="2">
+							<xcp:panelForm labelClass="labelCargo">
+								<xcp:number
+									id="txtCargo"
+									label="#{bundle.lbl_cargo}"
+									required="true"
+									value="#{cargosGratBacking.entity.cargo}"
+									size="6"
+									maxValue="999999"
+									readonly="#{not cargosGratBacking.entity.novo}" />
+
+								<xcp:text
+									id="txtDescricao"
+									label="#{bundle.lbl_descricao}"
+									required="true"
+									value="#{cargosGratBacking.entity.descricao}"
+									maxlength="80"
+									size="70" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelCargo">
+								<xcp:lov
+									id="lovPadrao"
+									value="#{cargosGratBacking.entity.padraoFk}"
+									label="#{bundle.lbl_padrao}"
+									query="padroes"
+									size="6" />
+
+								<xcp:lov
+									id="lovGrupo"
+									value="#{cargosGratBacking.entity.grupoFk}"
+									label="#{bundle.lbl_grupo}"
+									query="grupofunc"
+									size="6" />
+
+								<xcp:lov
+									id="lovCbo"
+									value="#{cargosGratBacking.entity.cboFk}"
+									label="#{bundle.lbl_cbo}"
+									required="true"
+									query="cbo"
+									size="6" />
+
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelCargo2">
+
+								<xcp:combo
+									id="cboSituacao"
+									value="#{cargosGratBacking.entity.situacao}"
+									label="#{bundle.lbl_situacao}"
+									required="true"
+									itens="#{cargosGratBacking.itensSituacaoGrat}" />
+
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+
+				<p:fieldset
+					legend="#{bundle.lbl_brdLotacao}"
+					id="brdLotacao">
+					<h:panelGrid
+						columns="6"
+						styleClass="tabela_alinhamento"
+						columnClasses="form_label,form_content">
+						<xcp:text
+							id="txtTotVag"
+							label="#{bundle.lbl_totVagas}"
+							value="#{cargosGratBacking.helper.qtdTotVagas}"
+							size="6"
+							readonly="true"
+							rendered="#{not cargosGratBacking.entity.novo}" />
+
+						<xcp:number
+							id="txtTotVagOcup"
+							label="#{bundle.lbl_totVagOcup}"
+							size="6"
+							value="#{cargosGratBacking.helper.qtdTotVagasOcup}"
+							rendered="#{not cargosGratBacking.entity.novo}"
+							precision="6"
+							readonly="true"
+							scale="0" />
+
+						<xcp:combo
+							id="cboLotacao"
+							value="#{cargosGratBacking.entity.lotacao}"
+							label="#{bundle.lbl_nivel_lotacao}"
+							required="true"
+							itens="#{cargosGratBacking.itensLotacao}"
+							readonly="#{not empty cargosLotacaoBacking.lista}">
+							<p:ajax
+								event="change"
+								update="tabDetalhes" />
+						</xcp:combo>
+
+
+					</h:panelGrid>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<p:tabView id="tabDetalhes">
+					<p:tab title="#{bundle.lbl_titulo_CargosHistorico}">
+						<ui:include src="CargosGratForm/CargosHistoricoForm.xhtml" />
+					</p:tab>
+
+					<p:tab title="#{bundle.lbl_titulo_CargosPadroes}">
+						<ui:include src="CargosGratForm/CargosPadroesForm.xhtml" />
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_CargosLotacao}"
+						disabled="#{cargosGratBacking.entity.lotacao == 4}">
+						<ui:include src="CargosGratForm/CargosLotacaoForm.xhtml" />
+					</p:tab>
+				</p:tabView>
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

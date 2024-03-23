@@ -1,0 +1,162 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags" >
+
+		<style type="text/css">
+		.ui-layout-center.ui-layout-pane.ui-layout-pane-center {
+			display: none !important;
+		}
+		
+		#dashboard {
+			display: flex;
+		}
+		
+		#dashboard .painel-servidor-section {
+			flex: 0 0 40%;
+		}
+		
+		#dashboard .rotinas-menu-section {
+			flex: 1 1 auto;
+		}
+
+		#dashboard h1 {
+		    font-size: 20px;
+		    text-transform: uppercase;
+		    color: #999;
+		    margin-top: 0;
+		    margin-bottom: 30px;
+		}
+		
+		#dashboard .card {
+		    align-items: center;
+			display: flex;
+		    flex-direction: row;
+			background-color: var(--secondary-color);
+		    border-radius: 0px;
+		    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+			color: var(--secondary-color-text);
+		    min-height: 120px;
+		    margin-bottom: 20px;
+		    padding: 0;
+		    position: relative;
+		    transition: all 0.1s ease-in-out;
+		}
+		
+		#dashboard .card:hover, #dashboard .card:focus {
+			text-decoration: none;
+		    transition: box-shadow, background-color 0.1s ease-in-out;
+		    color: var(--secondary-color-text);
+			background-color: var(--secondary-color-darker);
+			box-shadow: 4px 4px 4px rgba(0,0,0,0.4), 5px 5px 8px rgba(0,0,0,0.2);
+		}
+		
+		#dashboard .card i.fa {
+			flex: 0 0 auto;
+    		margin: 0 10px;
+		    font-size: 60px;
+		    transition: background-color 0.1s ease-in-out, width 0s linear 0.1s;
+		}
+		
+		#dashboard .card:hover i.fa {
+		    transition: background-color 0.1s ease-in-out;
+		}		
+		
+		#dashboard a:hover {
+		    text-decoration: none;
+		}
+		
+		#dashboard .card .title {
+		    font-size: 24px;
+		    font-weight: 100;
+		    max-height: 120px;
+		    letter-spacing: 0.6px;
+			flex: 1 1 auto;
+    		margin-right: 10px;
+   		}
+
+		#dashboard .aviso-rotina {
+			position: absolute;
+		    top: 15px;
+		    right: auto;
+		    left: 55px;
+		    color: #fff;
+		    background-color: #ff0000;
+		    font-size: 24px;
+		    font-weight: 600;
+		    font-family: sans-serif;
+		    padding: 6px 12px;
+		    line-height: 24px;
+		    border-radius: 100%;
+		    text-align: center;
+		    box-shadow: 0px 0px 5px rgba(0,0,0,0.5), 2px 2px 3px rgba(0,0,0,0.2);
+		}
+		
+		@media (min-width: 1200px){
+			.col-lg-4 {
+			    width: 33.3332%;
+			}
+		}
+
+	</style>
+
+	<div id="dashboard">
+		<DIV class='row'>
+			<ui:fragment rendered="#{ painelServidorBacking.exibePainelServidor() }">
+			
+				<div class='col-lg-4 col-md-6 col_sm-12' style='margin-bottom: 30px;'>
+					<section class="painel-servidor-section" >
+							<ui:include src="DashboardPortalForm/DashboardPainelServidorForm.xhtml"/>
+					</section>
+				</div>
+			</ui:fragment>
+			<div class="#{ painelServidorBacking.exibePainelServidor() ?  'col-lg-8 col-md-6 col_sm-12' : ''}">
+				<section class="rotinas-menu-section">
+					<ui:repeat value="#{xcpLoginBacking.list}" var="menuGroup">
+						<h1>#{menuGroup.desLabel}</h1>
+						<h:form id="form-rotinas">
+							<div class="rotinas-menu-container">
+								<div class="row">
+								<ui:repeat value="#{menuGroup.submenu.elements}" var="menuItem">
+									
+									<!-- Não rendereizar o item do painel do servidor -->
+									<ui:fragment rendered='#{ menuItem.getParams().get("codigoRotina")[0].toString() != "5000" }'>
+									
+										<div class="#{ painelServidorBacking.exibePainelServidor() ?  'col-lg-6' : 'col-lg-4 col-md-6'  } ">
+		
+												<a
+													href="#"
+													class="card"
+													onclick="#{menuItem.onclick}"
+													data-rotina='#{menuItem.getParams().get("codigoRotina")[0].toString()}'
+													title='#{xcpLayoutAppBacking.getAvisoRotina(menuItem.getParams().get("codigoRotina")[0]).conteudoAviso}'>
+													<i
+													class='#{menuItem.getParams().get("iconeRotina")[0].toString() == "" ? "fa fa-fw fa-file-o" : menuItem.getParams().get("iconeRotina")[0].toString()}'>
+														<h:outputText
+															styleClass="aviso-rotina"
+															style="white-space: nowrap;"
+															value='#{xcpLayoutAppBacking.getAvisoRotina(menuItem.getParams().get("codigoRotina")[0]).destaqueAviso}'
+															rendered='#{xcpLayoutAppBacking.hasAvisoRotina(menuItem.getParams().get("codigoRotina")[0])}' />
+												</i>
+													<div class="title">#{menuItem.value}</div>
+												</a>
+		
+											</div>
+										</ui:fragment>
+									</ui:repeat>
+								</div>
+							</div>
+						</h:form>
+					</ui:repeat>
+				</section>
+			</div>
+			#{xcpLayoutAppBacking.verificaMensagens}
+		</DIV>
+		
+	</div>
+
+</ui:composition>

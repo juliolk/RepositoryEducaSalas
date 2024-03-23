@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<!-- estilo separa por que nao pode ser formatado -->
+		<ui:include src="PlanoSaudeDirfForm/PlanoSaudeDirfFormEstilo.xhtml" />
+
+		<xcp:panelFuncionarioLazy
+			id="PlanoSaudeDirf"
+			apresentaIndice="true"
+			backing="#{planoSaudeDirfBacking}"
+			scrollable="false">
+
+			<ui:define name="barraLista">
+				<p:column>
+					<!-- desabilitado pois nao se sabia o porque foi criado. (flavio e maicon) -->
+					<xcp:commandButton
+						id="btn_inserir_calc"
+						value="#{bundle.btn_inserirCalculo}"
+						action="#{planoSaudeDirfBacking.actionInserirCalculo}"
+						icon="ui-icon-gear"
+						style="margin-left: 3px;"
+						rendered="false"
+						disabled="#{planoSaudeDirfBacking.readOnly}">
+						<p:confirm
+							header="#{bundle.tit_confirmacao}"
+							message="#{bundle.msg_plano_saude_dirf}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="filtros">
+				<div
+					class="tabela_ocorrencia_fixas"
+					style="width: 245px; padding: 10px; padding-left: 25px;">
+					<h:panelGrid>
+						<p:row>
+							<p:column colspan="5">
+								<xcp:combo
+									id="cboTiposFolhas"
+									label="#{bundle.lbl_tipo_folha}"
+									value="#{planoSaudeDirfBacking.tipoFolhaSelecionada}"
+									itens="#{planoSaudeDirfBacking.itensTipoFoha}"
+									styleClass="combotipofolhas">
+									<p:ajax
+										event="change"
+										update="calReferencia,table_PlanoSaudeDirf,table_calc"
+										listener="#{planoSaudeDirfBacking.actionTrocaPeriodo}" />
+								</xcp:combo>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="5">
+								<h:outputLabel
+									value="#{bundle.lbl_referencia_folha}"
+									style="position:relative; top:13px;" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<xcp:commandButton
+									value=" "
+									style="height:24px; width:28px; position:relative; top:7px;"
+									id="btnPeriodoPrimeiro"
+									ajax="true"
+									actionListener="#{planoSaudeDirfBacking.buscaPeriodoPrimeiro}"
+									update="btnPesq_PlanoSaudeDirf,btnNovo_PlanoSaudeDirf,calReferencia,table_PlanoSaudeDirf,btn_inserir_calc,table_calc"
+									icon="ui-icon-seek-first" />
+
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoAnterior"
+									ajax="true"
+									actionListener="#{planoSaudeDirfBacking.buscaPeriodoAnterior}"
+									update="btnPesq_PlanoSaudeDirf,btnNovo_PlanoSaudeDirf,calReferencia,table_PlanoSaudeDirf,btn_inserir_calc,table_calc"
+									icon="ui-icon-seek-prev"
+									style="height:24px; width:28px; position:relative; top:7px;" />
+								<span class="calendar"> <p:calendar
+										id="calReferencia"
+										pattern="dd/MM/yyyy"
+										size="9"
+										navigator="true"
+										readonlyInput="true"
+										value="#{planoSaudeDirfBacking.dataSelecao}"
+										showOn="both">
+										<p:ajax
+											event="dateSelect"
+											update="btnPesq_PlanoSaudeDirf,btnNovo_PlanoSaudeDirf,calReferencia,table_PlanoSaudeDirf,btn_inserir_calc,table_calc"
+											listener="#{planoSaudeDirfBacking.actionSelectData}" />
+									</p:calendar></span>
+								<xcp:commandButton
+									value=""
+									id="btnPeriodoProximo"
+									actionListener="#{planoSaudeDirfBacking.buscaPeriodoProximo}"
+									update="btnPesq_PlanoSaudeDirf,btnNovo_PlanoSaudeDirf,calReferencia,table_PlanoSaudeDirf,btn_inserir_calc,table_calc"
+									ajax="true"
+									icon="ui-icon-seek-next"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoUltimo"
+									ajax="true"
+									actionListener="#{planoSaudeDirfBacking.buscaPeriodoUltimo}"
+									update="btnPesq_PlanoSaudeDirf,btnNovo_PlanoSaudeDirf,calReferencia,table_PlanoSaudeDirf,btn_inserir_calc,table_calc"
+									icon="ui-icon-seek-end"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+							</p:column>
+
+						</p:row>
+					</h:panelGrid>
+				</div>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<f:facet name="header">
+					<h:outputLabel value="#{bundle.title_regPlanoSaude}" />
+				</f:facet>
+
+				<xcp:column
+					headerText="#{bundle.col_dependente}"
+					value="#{row.numdepFk.descFk.nome}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.numdepFk.descFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_plano}"
+					value="#{row.numdepFk.planoFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.numdepFk.planoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_contas_conta}"
+					value="#{row.contaFk.conta}"
+					type="Number"
+					size="2">
+					<xcp:outputSimple value="#{row.contaFk.conta}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.contaFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.contaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					value="#{row.valor}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="listaFooter">
+
+				<p:spacer height="20" />
+
+				<p:dataTable
+					id="table_calc"
+					var="row"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					value="#{planoSaudeDirfBacking.listCalc}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="8">
+
+					<f:facet name="header">
+						<h:outputLabel value="#{bundle.title_regFolhaPag}" />
+					</f:facet>
+
+					<xcp:column
+						headerText="#{bundle.col_conta}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.conta}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_des_conta}"
+						type="String"
+						size="30">
+						<xcp:outputSimple value="#{row.contaFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_incidencia}"
+						type="Center"
+						size="3">
+						<xcp:outputSimpleNumber
+							value="#{row.incidencia}"
+							precision="3"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_qtd}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.qtd}"
+							precision="16"
+							scale="2" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_percentual}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.percentual}"
+							precision="16"
+							scale="2" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_valor}"
+						type="Number"
+						size="8">
+						<xcp:outputSimpleNumber
+							value="#{row.valor}"
+							precision="16"
+							scale="2" />
+					</xcp:column>
+				</p:dataTable>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovNumdep"
+						value="#{planoSaudeDirfBacking.entity.numdepFk}"
+						label="#{bundle.lbl_dependente}"
+						query="depplanosaudedirf"
+						size="10"
+						required="true"
+						params="#{planoSaudeDirfBacking.paramsDep}"
+						readonly="#{not planoSaudeDirfBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovConta"
+						value="#{planoSaudeDirfBacking.entity.contaFk}"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						query="contasplanodirf"
+						size="5"
+						params="#{planoSaudeDirfBacking.paramsConta}" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						size="9"
+						value="#{planoSaudeDirfBacking.entity.valor}"
+						precision="6"
+						scale="2" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{planoSaudeDirfBacking.entity.obs}"
+						size="1000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+</ui:composition>

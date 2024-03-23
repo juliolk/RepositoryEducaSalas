@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 130px;
+}
+
+.labelWidth2 {
+	width: 50px;
+}
+
+.labelWidth3 {
+	width: 80px;
+}
+</style>
+
+		<xcp:panelFuncionario
+			id="Atestados"
+			backing="#{atestadosBacking}">
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_dataini}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtretorno}"
+					value="#{row.dtretorno}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtretorno}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_duracao}"
+					value="#{row.duracao}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.duracao}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.assistenciaFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.assistenciaFk.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_crm}"
+					value="#{row.crm}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.crm}"
+						precision="12"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cids}"
+					size="5"
+					type="String"
+					value="#{row.cids}"
+					rendered="#{atestadosBacking.renderedCids}">
+					<xcp:outputSimple value="#{row.cids}" />
+				</xcp:column>
+
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_diagnostico}"
+					value="#{row.diagnostico}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.diagnostico}" />
+				</xcp:column>
+ -->
+
+			</ui:define>
+
+			<ui:define name="form">
+				<p:panelGrid>
+					<p:row>
+						<p:column colspan="3">
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:lov
+									id="lovAssistenciaSelecao"
+									value="#{atestadosBacking.entity.assistenciaFk}"
+									label="#{bundle.lbl_assistencia_lov}"
+									params="#{atestadosBacking.paramsAssistenciaFuncao}"
+									selectionListener="#{atestadosBacking.selectTipoMovtos}"
+									query="assistencia_afast"
+									required="true"
+									update=":form:lovDependente_l,:form:lovDependente,:form:outfield,:form:lovAfastamento_l,:form:lovAfastamento,:form:txtDataentrega,form:txtDataentrega_l,:form:cboAtraso,form:cboAtraso_l,:form:lovProcesso,:form:lovProcesso_l,:form:txtDuracao,:form:txtDuracao_l,:form:cboReenc,:form:cboReenc_l,:form:txtData,:form:txtData_l,:form:txtDataHora,:form:txtDataHora_l,:form:txtDataretorno,:form:txtDataretorno_l,:form:txtDataretornoHora,:form:txtDataretornoHora_l,cboIndMesmoafast,cboIndMesmoafast_l"
+									readonly="#{atestadosBacking.readOnlyCat}"
+									size="5" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="3">
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:text
+									id="txtCrm"
+									label="#{bundle.lbl_crm}"
+									value="#{atestadosBacking.entity.crm}"
+									size="20">
+									<p:ajax
+										event="change"
+										update="lovMedico @this"
+										listener="#{atestadosBacking.actionChangeCrm}" />
+								</xcp:text>
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+
+								<!-- CAMPO DE DATA PODE SER DATA OU DATA HORA -->
+								<xcp:date
+									id="txtData"
+									required="true"
+									value="#{atestadosBacking.entity.data}"
+									label="#{bundle.lbl_data}"
+									rendered="#{atestadosBacking.entity.assistenciaFk == null or atestadosBacking.entity.assistenciaFk.tipUnid == 1}"
+									readonly="#{not atestadosBacking.entity.novo}"
+									size="12">
+									<p:ajax
+										event="change"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+									<p:ajax
+										event="dateSelect"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+								</xcp:date>
+
+								<xcp:dateTime
+									id="txtDataHora"
+									required="true"
+									value="#{atestadosBacking.entity.data}"
+									label="#{bundle.lbl_data}"
+									rendered="#{atestadosBacking.entity.assistenciaFk.tipUnid == 2}"
+									readonly="#{not atestadosBacking.entity.novo}"
+									size="12">
+									<p:ajax
+										event="change"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+									<p:ajax
+										event="dateSelect"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+								</xcp:dateTime>
+
+								<!-- DATA DE RETORNO PODE SER DATA OU DATA HORA -->
+								<xcp:date
+									id="txtDataretorno"
+									label="#{bundle.lbl_dataretorno}"
+									value="#{atestadosBacking.entity.dtretorno}"
+									required="#{atestadosBacking.entity.assistenciaFk.indDtfim == 1}"
+									rendered="#{atestadosBacking.entity.assistenciaFk == null or atestadosBacking.entity.assistenciaFk.tipUnid == 1}"
+									size="12">
+									<p:ajax
+										event="change"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+									<p:ajax
+										event="dateSelect"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+								</xcp:date>
+
+								<xcp:dateTime
+									id="txtDataretornoHora"
+									label="#{bundle.lbl_dataretorno}"
+									value="#{atestadosBacking.entity.dtretorno}"
+									required="#{atestadosBacking.entity.assistenciaFk.indDtfim == 1}"
+									rendered="#{atestadosBacking.entity.assistenciaFk.tipUnid == 2}"
+									size="12">
+									<p:ajax
+										event="change"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+									<p:ajax
+										event="dateSelect"
+										listener="#{atestadosBacking.calculaDias}"
+										update="txtDuracao" />
+								</xcp:dateTime>
+
+								<xcp:date
+									id="txtDataentrega"
+									label="#{bundle.lbl_dataentrega}"
+									value="#{atestadosBacking.entity.dataentrega}"
+									size="12" />
+							</xcp:panelForm>
+						</p:column>
+
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth2">
+
+								<xcp:timeNumber
+									id="txtHora"
+									required="true"
+									label="#{bundle.lbl_hora}"
+									size="9"
+									value="#{atestadosBacking.entity.hora}"
+									precision="6"
+									scale="2"
+									readonly="#{not atestadosBacking.entity.novo}" />
+
+								<xcp:combo
+									id="cboOrigem"
+									required="true"
+									value="#{atestadosBacking.entity.origem}"
+									label="#{bundle.lbl_origem}"
+									itens="#{atestadosBacking.itensOrigem}" />
+
+								<xcp:combo
+									id="cboAtraso"
+									required="true"
+									value="#{atestadosBacking.entity.atraso}"
+									label="#{bundle.lbl_atraso}"
+									rendered="#{atestadosBacking.renderedEntrega}"
+									itens="#{atestadosBacking.itensAtraso}">
+									<p:ajax
+										event="change"
+										listener="#{atestadosBacking.selectAtraso}"
+										update="lovProcesso,lovProcesso_l" />
+								</xcp:combo>
+
+							</xcp:panelForm>
+						</p:column>
+
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth3">
+								<xcp:number
+									id="txtDuracao"
+									label="#{bundle.lbl_duracao}"
+									size="8"
+									required="#{atestadosBacking.entity.assistenciaFk.indDtfim == 1}"
+									value="#{atestadosBacking.entity.duracao}"
+									precision="6"
+									scale="2">
+									<p:ajax
+										event="change"
+										listener="#{atestadosBacking.calculaData}"
+										update="txtDataretorno,txtDataretornoHora" />
+								</xcp:number>
+
+								<xcp:combo
+									id="cboInternacao"
+									value="#{atestadosBacking.entity.internacao}"
+									required="true"
+									label="#{bundle.lbl_internacao}"
+									itens="#{atestadosBacking.itensInternacao}" />
+
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="3">
+							<xcp:panelForm labelClass="labelWidth">
+
+								<xcp:lov
+									id="lovProcesso"
+									value="#{atestadosBacking.entity.processoFk}"
+									label="#{bundle.lbl_processo}"
+									query="processos"
+									rendered="#{atestadosBacking.entity.atraso == 1 || atestadosBacking.entity.assistenciaFk.processo == 1}"
+									size="12" />
+
+								<xcp:combo
+									id="cboReenc"
+									required="#{atestadosBacking.renderedReenc}"
+									value="#{atestadosBacking.entity.reencaminhamento}"
+									label="#{bundle.lbl_reencaminhamento}"
+									rendered="#{atestadosBacking.renderedReenc}"
+									itens="#{atestadosBacking.itensIndSimNao}" />
+
+
+								<xcp:lov
+									id="lovMedico"
+									value="#{atestadosBacking.entity.medicoFk}"
+									selectionListener="#{atestadosBacking.selectMedico}"
+									label="#{bundle.lbl_medico}"
+									query="lov_medicos"
+									required="true"
+									update="txtCrm"
+									size="12" />
+
+								<xcp:lov
+									id="lovAfastamento"
+									value="#{atestadosBacking.entity.afastamentoFk}"
+									label="#{bundle.lbl_afastamento}"
+									query="tipomovtos"
+									required="#{atestadosBacking.entity.assistenciaFk.afastamento == 1}"
+									size="12"
+									rendered="#{atestadosBacking.entity.assistenciaFk == null or atestadosBacking.entity.assistenciaFk.tipUnid == 1}"
+									update="cboIndMesmoafast,cboIndMesmoafast_l" />
+
+								<xcp:lov
+									id="lovDependente"
+									value="#{atestadosBacking.entity.dependenteFk}"
+									label="#{bundle.lbl_dependenteFK}"
+									query="dependentes"
+									params="#{atestadosBacking.paramsMatricula}"
+									required="false"
+									rendered="#{atestadosBacking.renderedDependente}"
+									size="12" />
+
+								<xcp:combo
+									id="cboIndMesmoafast"
+									value="#{atestadosBacking.entity.indMesmoafast}"
+									label="#{bundle.lbl_indMesmoafast}"
+									itens="#{atestadosBacking.itensIndSimNaoNull}"
+									rendered="#{atestadosBacking.entity.afastamentoFk != null}" />
+
+								<xcp:text
+									id="txtDescricao"
+									label="#{bundle.lbl_descricao}"
+									size="81"
+									required="false"
+									maxlength="400"
+									value="#{atestadosBacking.entity.descricao}" />
+
+								<xcp:memo
+									id="txtDiagnostico"
+									label="#{bundle.lbl_diagnostico}"
+									rows="3"
+									cols="83"
+									value="#{atestadosBacking.entity.diagnostico}"
+									size="1000" />
+
+								<xcp:memo
+									id="txtObs"
+									label="#{bundle.lbl_obs}"
+									value="#{atestadosBacking.entity.obs}"
+									size="500"
+									cols="83"
+									rows="3" />
+
+
+								<xcp:date
+									id="txtDtlancamento"
+									value="#{atestadosBacking.entity.dtlancamento}"
+									label="#{bundle.lbl_dtlancamento}" />
+
+								<xcp:lov
+									id="lovTipodoc"
+									value="#{atestadosBacking.entity.tipodocFk}"
+									label="#{bundle.lbl_tipodoc}"
+									query="tipodocumento_ates"
+									params="#{atestadosBacking.paramsTipoDoc}"
+									rendered="#{atestadosBacking.renderedCamposAdic}"
+									update="lovRegistro,lovProcessoport,lovProcessoport_l,btnDownloadDocumento"
+									size="5"
+									selectionListener="#{atestadosBacking.selectTipodocumento}"
+									readonly="#{atestadosBacking.readOnlyTipdoc}" />
+
+								<xcp:lov
+									id="lovRegistro"
+									value="#{atestadosBacking.entity.registroFk}"
+									label="#{bundle.lbl_registro}"
+									query="documentos"
+									params="#{atestadosBacking.paramsDocumento}"
+									rendered="#{atestadosBacking.renderedCamposAdic}"
+									update="lovProcessoport,lovProcessoport_l,btnDownloadDocumento"
+									readonly="#{atestadosBacking.readOnlyDoc}"
+									size="18" />
+
+								<xcp:lov
+									id="lovProcessoport"
+									value="#{atestadosBacking.entity.processoportFk}"
+									label="#{bundle.lbl_processoport}"
+									query="processos"
+									readonly="#{atestadosBacking.readOnlyProc}"
+									rendered="#{atestadosBacking.renderedCamposAdic}"
+									size="25" />
+
+								<p:spacer
+									height="1"
+									width="1"
+									rendered="#{atestadosBacking.renderedCamposAdic}" />
+
+
+								<xcp:commandButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									rendered="#{atestadosBacking.renderedCamposAdic}"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{atestadosBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(atestadosBacking.entity.registro)}"
+										contentDisposition="attachment" />
+								</xcp:commandButton>
+
+								<xcp:combo
+									id="cboJudicial"
+									value="#{atestadosBacking.entity.judicial}"
+									label="#{bundle.lbl_judicial}"
+									itens="#{atestadosBacking.itensIndSimNao}"
+									rendered="#{atestadosBacking.renderedCamposAdic}" />
+
+
+								<xcp:combo
+									id="cboDeferimento"
+									value="#{atestadosBacking.entity.deferimento}"
+									label="#{bundle.lbl_deferimento}"
+									itens="#{atestadosBacking.itensDeferimento}"
+									rendered="#{atestadosBacking.renderedCamposAdic}" />
+
+								<p:outputLabel
+									value="#{bundle.lbl_lancvinculos}"
+									rendered="#{atestadosBacking.renderedCheckVinc}" />
+
+								<h:panelGroup
+									layout="block"
+									rendered="#{atestadosBacking.renderedCheckVinc}">
+
+									<xcp:check
+										simple="true"
+										style="float:left"
+										id="chk_duplovinc"
+										label="#{bundle.lbl_lancvinculos}"
+										value="#{atestadosBacking.lancVinculos}" />
+
+									<p:outputLabel
+										value="#{atestadosBacking.matsDuploVinc}"
+										style="display: table-cell;vertical-align: middle;height:20px;" />
+
+								</h:panelGroup>
+
+								<xcp:outputSimple value=" " />
+								<p:outputPanel id="outfield">
+									<p:fieldset
+										legend="#{bundle.title_acidente}"
+										rendered="#{atestadosBacking.entity.assistenciaFk.cat == 1}">
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<xcp:panelForm labelClass="labelWidth2">
+														<xcp:combo
+															id="cboCat"
+															required="true"
+															value="#{atestadosBacking.entity.cat}"
+															label="#{bundle.lbl_cat}"
+															itens="#{atestadosBacking.itensCat}"
+															readonly="#{atestadosBacking.readOnlyCat}">
+															<p:ajax
+																event="change"
+																update="txtDataac,txtDataac_l "
+																listener="#{atestadosBacking.atualizaData}" />
+														</xcp:combo>
+													</xcp:panelForm>
+												</p:column>
+												<p:column>
+													<xcp:panelForm labelClass="labelWidth2">
+														<xcp:dateTime
+															id="txtDataac"
+															value="#{atestadosBacking.entity.dataac}"
+															required="true"
+															rendered="#{atestadosBacking.entity.cat == 1}"
+															label="#{bundle.lbl_dataac}"
+															readonly="#{atestadosBacking.readOnlyCat}" />
+													</xcp:panelForm>
+												</p:column>
+												<p:column>
+													<xcp:commandButton
+														id="btninst"
+														value="#{bundle.btn_info_sesmt}"
+														style="margin-left : 5px"
+														rendered="#{not empty atestadosBacking.parecerSesmt}"
+														oncomplete="PF('dlgParecer_w').show()"
+														update=":frmParecer" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<xcp:panelForm labelClass="labelWidth2">
+														<xcp:lov
+															id="lovNaturezaLesao"
+															value="#{atestadosBacking.entity.naturezaLesaoFk}"
+															label="#{bundle.lbl_naturezalesao}"
+															required="true"
+															query="naturezalesao"
+															size="7" />
+													</xcp:panelForm>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:fieldset>
+								</p:outputPanel>
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<p:row>
+					<p:column>
+						<p:fieldset legend="#{bundle.tit_cid}">
+
+							<p:row>
+								<p:column>
+									<p:outputLabel
+										style="float: left; padding: 5px"
+										value="#{bundle.lbl_lancvinculoscid}"
+										rendered="#{atestadosBacking.renderedCheckVincCID}" />
+								</p:column>
+								<p:column>
+									<xcp:check
+										simple="true"
+										style="float:left"
+										rendered="#{atestadosBacking.renderedCheckVincCID}"
+										id="chk_duplovinccid"
+										label="#{bundle.lbl_lancvinculoscid}"
+										value="#{atestadosBacking.lancVinculosCID}">
+										<p:ajax
+											event="change"
+											update="@this"
+											process="@this" />
+									</xcp:check>
+								</p:column>
+								<p:column>
+									<p:outputLabel
+										value="#{atestadosBacking.matsDuploVinc}"
+										style="display: table-cell;vertical-align: middle;height:20px;" />
+
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<p:dataTable
+										id="tabCIDs"
+										editable="true"
+										emptyMessage="#{bundle.msg_sem_resultado}"
+										value="#{atestadosBacking.listaAtestadosCid}"
+										var="cid"
+										style="float:left;width:680px">
+
+										<p:ajax
+											event="rowEdit"
+											update="tabCIDs :form:upHints"
+											listener="#{atestadosBacking.onRowEdit}" />
+
+										<p:ajax
+											event="rowEditCancel"
+											update=":form:upHints" />
+
+										<p:column
+											headerText="#{bundle.lbl_cid}"
+											style="width:550px;">
+											<p:cellEditor>
+												<f:facet name="output">
+													<xcp:lov
+														id="lovCidOut"
+														value="#{cid.cidFk}"
+														label="#{bundle.lbl_cid}"
+														simple="true"
+														readonly="true"
+														query="cid"
+														size="15" />
+												</f:facet>
+												<f:facet name="input">
+													<xcp:lov
+														id="lovCid"
+														value="#{cid.cidFk}"
+														label="#{bundle.lbl_cid}"
+														simple="true"
+														required="true"
+														query="cid"
+														size="15" />
+												</f:facet>
+											</p:cellEditor>
+										</p:column>
+
+										<p:column
+											style="width:10px;"
+											rendered="#{!atestadosBacking.disabledExcluir}">
+											<xcp:commandLink
+												id="btn_remove_cid"
+												icon="ui-icon-trash"
+												immediate="true"
+												rendered="#{cid.cid!=null}"
+												action="#{atestadosBacking.actionRemoveCid(cid)}">
+												<h:graphicImage
+													title="#{bundle.hint_remover}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</p:column>
+
+										<p:column
+											style="width:15px"
+											rendered="#{!atestadosBacking.disabledGravar}">
+											<p:rowEditor rendered="#{empty cid.cid}" />
+										</p:column>
+									</p:dataTable>
+								</p:column>
+							</p:row>
+
+						</p:fieldset>
+					</p:column>
+				</p:row>
+
+				<xcp:tableHints
+					id="upHints"
+					tableId="form:tabCIDs" />
+
+				<p:remoteCommand
+					name="rcCid"
+					process="@this"
+					update="tabCIDs upHints" />
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcpfunc:anexosButton
+					id="atestados"
+					entity="#{atestadosBacking.entity}"
+					disabledGravar="#{atestadosBacking.disabledGravar}"
+					disabledNovo="#{atestadosBacking.disabledNovo}"
+					disabledExcluir="#{atestadosBacking.disabledExcluir}"
+					funcionarioPK="#{atestadosBacking.funcionario.PK}" />
+
+				<xcp:commandButton
+					id="btnduplicar"
+					value="#{bundle.btn_duplicar}"
+					update=":frmAtestDlg"
+					action="#{atestadosBacking.actionDuplicarAtestado}"
+					rendered="#{not atestadosBacking.entity.novo}" />
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<xcpfunc:anexosDialog />
+
+		<p:dialog
+			id="dlgAtest"
+			widgetVar="dlgAtest_w"
+			header="#{bundle.tit_dlgDuplicar}">
+			<xcp:form id="frmAtestDlg">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovAssistenciaSelecao"
+						value="#{atestadosBacking.entityCopia.assistenciaFk}"
+						label="#{bundle.lbl_assistencia_lov}"
+						params="#{atestadosBacking.paramsAssistenciaFuncao}"
+						selectionListener="#{atestadosBacking.selectTipoMovtosCopia}"
+						query="assistencia_afast"
+						required="true"
+						update=":frmAtestDlg:lovAfastamentoDlg_l,:frmAtestDlg:lovAfastamentoDlg,:frmAtestDlg:txtDataretornoDlg,:frmAtestDlg:txtDataretornoDlg_l,:frmAtestDlg:txtDuracaoDlg,:frmAtestDlg:txtDuracaoDlg_l"
+						size="5" />
+
+					<xcp:date
+						id="txtDataDlg"
+						required="true"
+						value="#{atestadosBacking.entityCopia.data}"
+						label="#{bundle.lbl_data}"
+						size="12">
+
+						<p:ajax
+							event="change"
+							listener="#{atestadosBacking.calculaDiasDlg}"
+							update="txtDuracaoDlg" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{atestadosBacking.calculaDiasDlg}"
+							update="txtDuracaoDlg" />
+
+					</xcp:date>
+
+					<xcp:date
+						id="txtDataretornoDlg"
+						label="#{bundle.lbl_dataretorno}"
+						value="#{atestadosBacking.entityCopia.dtretorno}"
+						required="#{atestadosBacking.entityCopia.assistenciaFk.indDtfim == 1}"
+						size="12">
+						<p:ajax
+							event="change"
+							listener="#{atestadosBacking.calculaDiasDlg}"
+							update="txtDuracaoDlg" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{atestadosBacking.calculaDiasDlg}"
+							update="txtDuracaoDlg" />
+					</xcp:date>
+
+					<xcp:number
+						id="txtDuracaoDlg"
+						label="#{bundle.lbl_duracao}"
+						size="8"
+						required="#{atestadosBacking.entityCopia.assistenciaFk.indDtfim == 1}"
+						value="#{atestadosBacking.entityCopia.duracao}"
+						precision="6"
+						scale="2">
+						<p:ajax
+							event="change"
+							listener="#{atestadosBacking.calculaDataDlg}"
+							update="txtDataretornoDlg" />
+					</xcp:number>
+
+					<xcp:lov
+						id="lovAfastamentoDlg"
+						value="#{atestadosBacking.entityCopia.afastamentoFk}"
+						label="#{bundle.lbl_afastamento}"
+						query="tipomovtos"
+						required="#{atestadosBacking.entityCopia.assistenciaFk.afastamento == 1}"
+						size="12" />
+
+				</xcp:panelForm>
+
+				<p:toolbar id="pnlacoes">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_add_gravar"
+							action="#{atestadosBacking.actionGravarDuplicacao}"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk" />
+
+						<xcp:commandButton
+							id="btn_sair_add"
+							immediate="true"
+							oncomplete="PF('dlgAtest_w').hide()"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+		<p:dialog
+			id="dlgParecer"
+			widgetVar="dlgParecer_w"
+			header="#{bundle.tit_parecer_sesmt}">
+			<xcp:form id="frmParecer">
+
+				<xcp:memo
+					id="txtParecer"
+					label="#{bundle.lbl_parecer}"
+					rows="3"
+					cols="83"
+					value="#{atestadosBacking.parecerSesmt}"
+					size="1000"
+					simple="true" />
+
+				<p:toolbar id="pnlacoes">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair_add"
+							immediate="true"
+							oncomplete="PF('dlgParecer_w').hide()"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:confirmDialog
+			widgetVar="confirm_w"
+			header="#{bundle.title_confirmacao}"
+			message="#{bundle.msg_periodos_serao_canc}">
+			<p:commandButton
+				value="#{bundle.btn_sim}"
+				icon="ui-icon-check"
+				update=":form"
+				action="#{atestadosBacking.actionGravarFromMsg}"
+				onclick="PF('confirm_w').hide()" />
+			<p:commandButton
+				value="#{bundle.btn_nao}"
+				icon="ui-icon-close"
+				onclick="PF('confirm_w').hide()" />
+		</p:confirmDialog>
+
+
+	</ui:define>
+
+</ui:composition>

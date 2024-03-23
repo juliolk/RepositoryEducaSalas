@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="XcpTipoCampo"
+			backing="#{xcpTipoCampoBacking}">
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_seqParametro}"
+					value="#{row.seqParametro}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.seqParametro}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desTipoCampo}"
+					value="#{row.desTipoCampo}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.desTipoCampo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipParametro}"
+					value="#{row.tipParametro}"
+					type="Number"
+					size="2"
+					itens="#{xcpTipoCampoBacking.itensTipParametro}">
+					<xcp:outputSimple
+						value="#{row.tipParametro}"
+						precision="2"
+						scale="0"
+						itens="#{xcpTipoCampoBacking.itensTipParametro}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSeqParametro"
+						label="#{bundle.lbl_seqParametro}"
+						required="true"
+						value="#{xcpTipoCampoBacking.entity.seqParametro}"
+						size="10"
+						maxValue="9999999999"
+						readonly="true"
+						rendered="#{not xcpTipoCampoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDesTipoCampo"
+						label="#{bundle.lbl_desTipoCampo}"
+						required="true"
+						value="#{xcpTipoCampoBacking.entity.desTipoCampo}"
+						size="50" />
+
+					<xcp:combo
+						id="cboTipParametro"
+						value="#{xcpTipoCampoBacking.entity.tipParametro}"
+						label="#{bundle.lbl_tipParametro}"
+						required="true"
+						itens="#{xcpTipoCampoBacking.itensTipParametro}">
+						<p:ajax
+							update="txtNumTamanho,txtNumTamanho_l,txtNumDecimais,txtNumDecimais_l,lovCodLov,lovCodLov_l,txtDesLovClass,txtDesLovClass_l,cboIndRespostas,cboIndRespostas_l" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtNumTamanho"
+						label="#{bundle.lbl_numTamanho}"
+						value="#{xcpTipoCampoBacking.entity.numTamanho}"
+						size="5"
+						minValue="1"
+						maxValue="#{xcpTipoCampoBacking.entity.tipParametro == 3 ? 99999 : 20}"
+						rendered="#{xcpTipoCampoBacking.entity.tipParametro == 0
+						         or xcpTipoCampoBacking.entity.tipParametro == 1
+						         or xcpTipoCampoBacking.entity.tipParametro == 3}"
+						required="true" />
+
+					<xcp:number
+						id="txtNumDecimais"
+						value="#{xcpTipoCampoBacking.entity.numDecimais}"
+						label="#{bundle.lbl_numDecimais}"
+						size="2"
+						maxValue="4"
+						rendered="#{xcpTipoCampoBacking.entity.tipParametro == 1}"
+						required="true" />
+
+					<xcp:lov
+						id="lovCodLov"
+						value="#{xcpTipoCampoBacking.entity.codLovFk}"
+						label="#{bundle.lbl_codLov}"
+						query="xcp_tipo_lista"
+						size="20"
+						rendered="#{xcpTipoCampoBacking.entity.tipParametro == 4}"
+						required="true" />
+
+					<xcp:text
+						id="txtDesLovClass"
+						label="#{bundle.lbl_desLovClass}"
+						value="#{xcpTipoCampoBacking.entity.desLovClass}"
+						size="100"
+						rendered="#{xcpTipoCampoBacking.entity.tipParametro == 4}"
+						required="true" />
+
+					<xcp:radio
+						id="cboIndRespostas"
+						value="#{xcpTipoCampoBacking.entity.indRespostas}"
+						label="#{bundle.lbl_indRespostas}"
+						required="true"
+						itens="#{xcpTipoCampoBacking.itensIndSimNao}"
+						rendered="#{xcpTipoCampoBacking.entity.tipParametro != 4}" />
+
+				</xcp:panelForm>
+
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="XcpTipoCampoForm/XcpTipoCampoValorForm.xhtml" />
+			</ui:define>
+		</xcp:panelManut>
+
+	</ui:define>
+</ui:composition>

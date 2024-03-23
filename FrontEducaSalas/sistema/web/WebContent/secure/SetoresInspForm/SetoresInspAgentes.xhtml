@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:fragment autoUpdate="true">
+		<p:fieldset
+			legend="#{bundle.tit_agentes}">
+
+			<p:dataTable
+				id="tblAg"
+				var="rowAg"
+				rowKey="#{rowAg.PK}"
+				value="#{setoresInspBacking.helper.funcoesSel.listAgentes}"
+				filteredValue="#{setoresInspBacking.helper.funcoesSel.listAgentesFilter}"
+				sortMode="multiple"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}">
+
+				<xcp:column
+					headerText="#{bundle.col_agente}"
+					value="#{rowAg.agente}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{rowAg.agente}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{rowAg.agenteFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{rowAg.agenteFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{rowAg.obs}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{rowAg.obs}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandButton
+						icon="ui-icon-trash"
+						immediate="true"
+						id="btn_remove_ag"
+						update="tblAg"
+						action="#{setoresInspBacking.actionRemoveAg(rowAg)}">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</xcp:column>
+				
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandButton
+						icon="icon-editar"
+						id="btn_editar_agente"
+						update=":frmFuncag"
+						oncomplete="PF('w_funcag').show();">
+						<f:setPropertyActionListener
+							target="#{setoresInspBacking.helper.funcAgSel}"
+							value="#{rowAg}" />
+					</xcp:commandButton>
+				</xcp:column>
+
+			</p:dataTable>
+
+			<xcp:commandButton
+				id="btn_adicionar_ag"
+				style="margin-top:5px"
+				action="#{setoresInspBacking.actionOpenAg}"
+				update=":dlgFuncAg"
+				process="@this"
+				value="#{bundle.btn_adicionar}"
+				icon="ui-icon-plusthick" />
+
+		</p:fieldset>
+	</p:fragment>
+</ui:composition>

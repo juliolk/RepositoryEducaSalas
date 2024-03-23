@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="Requisitostreina"
+		backing="#{requisitostreinaBacking}"
+		masterId="Descfuncoes">
+
+		<ui:define name="colunas">
+			<xcp:column
+				headerText="#{bundle.col_treinamento}"
+				value="#{row.treinamento}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.treinamento}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.treinamentoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.treinamentoFk.descricao}" />
+			</xcp:column>
+			<xcp:column
+				headerText="#{bundle.col_pontos}"
+				value="#{row.qtdpontos}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.qtdpontos}"
+					precision="11"
+					scale="1" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTreinamento_Requisitostreina"
+					value="#{requisitostreinaBacking.entity.treinamentoFk}"
+					label="#{bundle.lbl_treinamento}"
+					required="true"
+					query="treinamento"
+					size="5"
+					readonly="#{not requisitostreinaBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtQtdpontos"
+					label="#{bundle.lbl_pontos}"
+					size="13"
+					value="#{requisitostreinaBacking.entity.qtdpontos}"
+					precision="11"
+					required="true"
+					scale="1" />
+
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

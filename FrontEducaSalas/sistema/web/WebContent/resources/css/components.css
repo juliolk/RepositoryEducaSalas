@@ -1,0 +1,165 @@
+/*panelgrid sem bordas*/
+.xcp.ui-panelgrid .ui-panelgrid-cell {
+	border: none;
+	padding: 0px;
+	vertical-align: top;
+	text-align: center;
+}
+
+.ui-panelgrid-cell {
+	border-width: 0px !important;
+	vertical-align: top;
+}
+
+.ui-picklist .ui-picklist-list {
+	width: 365px;
+	height: 300px;
+}
+
+/*
+.ui-widget-header{
+	height:25px !important;
+	
+}*/
+.xcp.ui-panelgrid>tbody>tr.ui-widget-content {
+	border: none;
+	background: none;
+}
+
+/* panel manut */
+.xcp_pmanut_form {
+	
+}
+
+.ui-panelgrid.xcp_pmanut_form .xcp_pmanut_form_cell_frm {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.xcp_pmanut_form_toolbar .ui-toolbar-group-left {
+	float: none;
+}
+
+.stiloCancelado {
+	color: red;
+}
+
+.xcp_pmanut_detalhes.ui-panel {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.xcp_pmanut_detalhes.ui-panel .ui-panel-title {
+	margin: 0px;
+	text-align: center !important;
+}
+
+.xcp_pmanut_detalhes.ui-panel .ui-panel-titlebar {
+	padding: 0.3em 1em 0.3em;
+}
+
+.xcp_columnNumber {
+	vertical-align: top;
+	text-align: right !important;
+}
+
+.xcp_columnString {
+	vertical-align: top;
+	text-align: left !important;
+}
+
+.xcp_columnDate,.xcp_columnCenter {
+	vertical-align: top;
+	text-align: center !important;
+}
+
+.ui-column-filter.ui-inputfield.xcp_filterNumber,.ui-column-filter.ui-inputfield.xcp_filterCenter,.ui-column-filter.ui-inputfield.xcp_filterDate,.ui-column-filter.ui-inputfield.xcp_filterString,select.ui-column-filter.xcp_filterString,select.ui-column-filter.xcp_filterNumber
+	{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	margin-left: 0px;
+	margin-right: 0px;
+	width: 100%;
+}
+
+.ui-column-filter.ui-inputfield.xcp_filterNumber {
+	text-align: right;
+}
+
+.ui-column-filter.ui-inputfield.xcp_filterString {
+	text-align: left;
+}
+
+.ui-column-filter.ui-inputfield.xcp_filterDate {
+	text-align: center !important;
+}
+
+.ui-column-filter.ui-inputfield.xcp_filterCenter {
+	text-align: center;
+}
+
+.ui-commandlink img {
+	border: none;
+}
+
+.ui-dialog .ui-dialog-content {
+	padding: 1em;
+}
+
+.xcp_column_Number {
+	text-align: right !important;
+}
+
+.xcp_column_Date {
+	text-align: center !important;
+}
+
+.xcp_column_Center {
+	text-align: center !important;
+}
+
+.xcp_column_String {
+	text-align: left !important;
+}
+
+.ui-growl {
+	width: 400px;
+	top: 40px;
+}
+
+.ui-growl-message {
+	width: 330px;
+	padding: 0px;
+}
+
+.ui-growl .ui-icon.ui-growl-icon-close {
+	width: 100%;
+	height: 100%;
+	background-position: right top;
+	background-position-x: right;
+	background-position-y: top;
+	background-image: url("#{resource['img/growl_close.png']}");
+}
+
+.xcp_multi_dialog .ui-dialog-content.ui-widget-content {
+	overflow: hidden;
+	padding: 5px;
+}
+
+.ui-datatable-scrollable-body {
+	overflow: scroll;
+	margin-right: 0px !important;
+}
+
+label.ui-selectonemenu-label {
+	padding-right: 10px;
+}
+
+/*
+div.ui-selectonemenu-trigger {
+	margin-right: -16px;
+}
+*/
+div.ui-selectonemenu {
+	padding-right: 16px;
+}

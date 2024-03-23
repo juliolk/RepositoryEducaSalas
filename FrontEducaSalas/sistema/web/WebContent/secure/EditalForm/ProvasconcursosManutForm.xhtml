@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:panelGroup id="formProva">
+		<xcp:panelForm>
+
+			<xcp:lov
+				id="lovProva"
+				value="#{editalBacking.provasConcursoManut.provaFk}"
+				label="#{bundle.lbl_prova}"
+				required="true"
+				query="provas"
+				size="10"
+				readonly="#{not editalBacking.provasConcursoManut.novo}" />
+
+			<xcp:date
+				id="txtData"
+				value="#{editalBacking.provasConcursoManut.data}"
+				label="#{bundle.lbl_data}" />
+
+			<xcp:number
+				id="txtQuestoes"
+				label="#{bundle.lbl_questoes}"
+				value="#{editalBacking.provasConcursoManut.questoes}"
+				size="10"
+				precision="4"
+				scale="0"
+				maxValue="9999" />
+
+			<xcp:number
+				id="txtVlrquestao"
+				label="#{bundle.lbl_vlrquestao}"
+				size="10"
+				value="#{editalBacking.provasConcursoManut.vlrquestao}"
+				precision="4"
+				scale="2" />
+
+			<xcp:number
+				id="txtPtminimo"
+				label="#{bundle.lbl_ptminimo}"
+				value="#{editalBacking.provasConcursoManut.ptminimo}"
+				size="10"
+				precision="4"
+				scale="0"
+				maxValue="9999" />
+
+			<xcp:number
+				id="txtFase"
+				label="#{bundle.lbl_fase}"
+				value="#{editalBacking.provasConcursoManut.fase}"
+				size="10"
+				maxlength="2"
+				precision="2"
+				scale="0"
+				maxValue="99" />
+			<!-- 
+			<xcp:combo
+				id="cboFase"
+				value="#{editalBacking.provasConcursoManut.fase}"
+				label="#{bundle.lbl_fase}"
+				itens="#{editalBacking.itensFase}" />
+
+			<xcp:combo
+				id="cboCritdesemp"
+				value="#{editalBacking.provasConcursoManut.critdesemp}"
+				label="#{bundle.lbl_critdesemp}"
+				itens="#{editalBacking.itensCritdesemp}" />
+ -->
+		</xcp:panelForm>
+		<p:toolbar
+			styleClass="xcp_pmanut_form_toolbar"
+			rendered="#{not editalBacking.detailsEdit}">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btnGravar_Prova"
+					icon="ui-icon-disk"
+					value="#{bundle.btn_gravar}"
+					action="#{editalBacking.actionGravarProva}"
+					disabled="#{editalBacking.disabledGravar}" />
+
+				<xcp:commandButton
+					id="btnVoltar_Prova"
+					immediate="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgProva_w').hide();" />
+			</f:facet>
+		</p:toolbar>
+
+	</h:panelGroup>
+</ui:composition>

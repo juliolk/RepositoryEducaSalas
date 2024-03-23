@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="EstoqueRegra"
+		backing="#{estoqueRegraBacking}"
+		masterId="EstoqueGrupo">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_orgao}"
+				value="#{row.orgaoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_divisao}"
+				rendered="#{estoqueRegraBacking.divisao}"
+				value="#{row.divisaoFk}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.divisaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_setor}"
+				rendered="#{estoqueRegraBacking.setor}"
+				value="#{row.setorFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.setorFk.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovOrgao_EstoqueRegra"
+					value="#{estoqueRegraBacking.entity.orgaoFk}"
+					rendered="#{estoqueRegraBacking.orgao}"
+					label="#{bundle.lbl_orgao}"
+					query="orgaos"
+					update="lovDivisao_EstoqueRegra,lovSetor_EstoqueRegra"
+					size="4" />
+
+				<xcp:lov
+					id="lovDivisao_EstoqueRegra"
+					value="#{estoqueRegraBacking.entity.divisaoFk}"
+					label="#{bundle.lbl_divisao}"
+					rendered="#{estoqueRegraBacking.divisao}"
+					query="divisoes_orgao"
+					selectionListener="#{estoqueRegraBacking.selectDivisao}"
+					params="#{estoqueRegraBacking.paramsDivisao}"
+					size="4" />
+
+				<xcp:lov
+					id="lovSetor_EstoqueRegra"
+					value="#{estoqueRegraBacking.entity.setorFk}"
+					label="#{bundle.lbl_setor}"
+					rendered="#{estoqueRegraBacking.setor}"
+					params="#{estoqueRegraBacking.paramsSetor}"
+					query="set_div_validade"
+					size="4" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

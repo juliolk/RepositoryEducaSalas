@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Contas"
+			backing="#{contasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_conta}"
+					value="#{row.conta}"
+					type="Number"
+					size="16">
+					<xcp:outputSimpleNumber
+						value="#{row.conta}"
+						precision="16"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					itens="#{contasBacking.itensTipo}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{contasBacking.itensTipo}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{contasBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{contasBacking.itensSituacao}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtConta"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						value="#{contasBacking.entity.conta}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="9999999999999999"
+						readonly="#{not contasBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{contasBacking.entity.descricao}"
+						size="73" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{contasBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{contasBacking.itensTipo}"
+						styleClass="combocontas"
+						width="150px !important">
+						<p:ajax
+							event="change"
+							update="cboIndEnviaEsoc cboIndEnviaEsoc_l" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboIndEnviaEsoc"
+						required="true"
+						value="#{contasBacking.entity.indEnviaEsoc}"
+						label="#{bundle.lbl_indEnviaEsoc}"
+						itens="#{contasBacking.itensIndSimNao}"
+						rendered="#{contasBacking.entity.tipo == 4 or contasBacking.entity.tipo == 5}" />
+
+					<xcp:lov
+						id="lovContabil"
+						value="#{contasBacking.entity.contabilFk}"
+						label="#{bundle.lbl_contabil}"
+						required="true"
+						query="contabil"
+						size="5" />
+
+					<xcp:number
+						id="txtPrioridade"
+						label="#{bundle.lbl_prioridade}"
+						value="#{contasBacking.entity.prioridade}"
+						size="5"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:combo
+						id="cboTipodesconto"
+						value="#{contasBacking.entity.tipodesconto}"
+						label="#{bundle.lbl_tipodesconto}"
+						itens="#{contasBacking.itensTipodesconto}"
+						styleClass="combocontas"
+						width="150px !important" />
+
+					<xcp:combo
+						id="cboEstruturado"
+						value="#{contasBacking.entity.estruturado}"
+						label="#{bundle.lbl_estruturado}"
+						itens="#{contasBacking.itensEstruturado}"
+						styleClass="combocontas"
+						width="150px !important" />
+
+					<xcp:combo
+						id="cboTipolcto"
+						value="#{contasBacking.entity.tipolcto}"
+						label="#{bundle.lbl_tipolcto}"
+						itens="#{contasBacking.itensTipolcto}"
+						styleClass="combocontas"
+						width="150px !important" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{contasBacking.entity.tipodocFk}"
+						selectionListener="#{contasBacking.selectTipodocumento}"
+						size="5"
+						update="lovDocumento,btnDownloadDocumento"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_conta" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{contasBacking.entity.registroFk}"
+						params="#{contasBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						query="documentos"
+						size="5"
+						update="btnDownloadDocumento" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+					<xcp:commandButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{contasBacking.entity.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(contasBacking.entity.registro)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+
+					<xcp:lov
+						id="lovRubrica"
+						value="#{contasBacking.entity.rubricaFk}"
+						label="#{bundle.lbl_rubrica}"
+						required="true"
+						query="natureza_rubrica"
+						size="5" />
+
+					<xcp:lov
+						id="lovEsocPrev"
+						value="#{contasBacking.entity.esocPrevFk}"
+						label="#{bundle.lbl_codigoEsocPrev}"
+						query="containcidesocial"
+						size="5"
+						params="#{contasBacking.paramsEsocPrev}"
+						required="true" />
+
+					<xcp:lov
+						id="lovEsocIrrf"
+						value="#{contasBacking.entity.esocIrrfFk}"
+						label="#{bundle.lbl_codigoEsocIrrf}"
+						query="containcidesocial"
+						size="5"
+						params="#{contasBacking.paramsEsocIrrf}"
+						required="true" />
+
+					<xcp:lov
+						id="lovEsocFgts"
+						value="#{contasBacking.entity.esocFgtsFk}"
+						label="#{bundle.lbl_codigoEsocFgts}"
+						query="containcidesocial"
+						size="5"
+						params="#{contasBacking.paramsEsocFgts}"
+						required="true" />
+
+					<xcp:lov
+						id="lovEsocSindic"
+						value="#{contasBacking.entity.esocSindicFk}"
+						label="#{bundle.lbl_codigoEsocSindic}"
+						query="containcidesocial"
+						size="5"
+						params="#{contasBacking.paramsEsocSindic}"
+						required="true" />
+
+					<xcp:lov
+						id="lovEsocPrevRpps"
+						value="#{contasBacking.entity.esocPrevRppsFk}"
+						label="#{bundle.lbl_codigoEsocPrevRpps}"
+						query="containcidesocial"
+						size="5"
+						params="#{contasBacking.paramsEsocPrevRpps}"
+						required="true" />
+
+					<xcp:combo
+						id="cboTeto"
+						required="true"
+						value="#{contasBacking.entity.esocTeto}"
+						label="#{bundle.lbl_indTeto}"
+						itens="#{contasBacking.itensIndSimNaoNull}" />
+
+					<xcp:lov
+						id="lovTceNatureza"
+						value="#{contasBacking.entity.tcenaturezaFk}"
+						label="#{bundle.lbl_esfingeNatureza}"
+						query="contas_tce"
+						size="5" />
+
+					<xcp:combo
+						id="cboTceTipo"
+						value="#{contasBacking.entity.tceTipo}"
+						label="#{bundle.lbl_esfingeTipo}"
+						itens="#{contasBacking.itensEsfingeTipo}" />
+
+					<xcp:memo
+						id="txtProcedimento"
+						label="#{bundle.lbl_procedimento}"
+						value="#{contasBacking.entity.procedimento}"
+						size="2000" />
+
+					<xcp:memo
+						id="txtHistorico"
+						label="#{bundle.lbl_historico}"
+						value="#{contasBacking.entity.historico}"
+						size="2000" />
+						
+					<xcp:combo
+						id="cboSituacao"
+						value="#{contasBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{contasBacking.itensSituacao}" />
+
+					<xcp:panelEsoc backing="#{contasBacking}" />
+					
+					
+
+				</xcp:panelForm>
+			</ui:define>
+			
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btnCopiarTela"
+					value="#{bundle.btn_clonar_conta}"
+					icon="ui-icon-gear"
+					onclick="PF('dlgClonarConta_w').show();"
+					update="frmClonarConta"
+					disabled="#{contasBacking.entity.novo}">
+				</xcp:commandButton>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="ContasForm/IncidenciaForm.xhtml" />
+
+				<ui:include src="ContasForm/ContasrestricoesForm.xhtml" />
+
+				<ui:include src="ContasForm/ContasProcessoForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+<ui:define name="modalPanelArea">
+
+<p:dialog
+			id="dlgClonarConta"
+			modal="true"
+			widgetVar="dlgClonarConta_w"
+			header="#{bundle.title_dlgClonarConta}">
+			<xcp:form id="frmClonarConta">
+				<xcp:panelForm>
+				
+					<xcp:number
+						id="numContaOri"
+						label="#{bundle.lbl_contaOri}"
+						value="#{contasBacking.entity.conta}"
+						size="10"
+						maxValue="9999999999"
+						required="true"
+						readonly="true">
+					</xcp:number>
+
+					<xcp:number
+						id="numContaNova"
+						label="#{bundle.lbl_conta}"
+						value="#{contasBacking.numContaNova}"
+						size="10"
+						maxValue="9999999999"
+						required="true">
+					</xcp:number>
+					
+					<xcp:text id="txtDescricaoNova"
+						label="#{bundle.lbl_descricao}"
+						value="#{contasBacking.descricaoContaNova}"
+						size="73"
+						maxValue="9999999999"
+						required="true">
+					</xcp:text>					
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnCopiar"
+							value="#{bundle.btn_clonar_conta}"
+							icon="ui-icon-gear"
+							update=":form, @form"							
+							action="#{contasBacking.actionClonar()}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+</ui:define>
+
+</ui:composition>

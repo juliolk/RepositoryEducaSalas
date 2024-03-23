@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="Requisitos_#{id}"
+		backing="#{backing}"
+		masterId="Descfuncoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_requisito}"
+				value="#{row.conhecimento}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.conhecimento}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.conhecimentoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.conhecimentoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_observacao}"
+				value="#{row.observacao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.observacao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_pontos}"
+				value="#{row.pontos}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.pontos}"
+					precision="7"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovAvaliacao_#{id}"
+					value="#{backing.avaliacoes}"
+					label="#{bundle.lbl_avaliacaocod}"
+					required="true"
+					query="avaliacoes"
+					size="4"
+					readonly="#{not backing.entity.novo}"
+					params="#{backing.paramsAvaliacao}" />
+
+				<xcp:lov
+					id="lovConhecimento_#{id}"
+					value="#{backing.entity.conhecimentoFk}"
+					label="#{bundle.lbl_conhecimento}"
+					required="true"
+					query="conhecimentosmanut"
+					size="4"
+					readonly="#{not backing.entity.novo}"
+					params="#{backing.paramsConhecimento}" />
+
+				<xcp:memo
+					id="txtObservacao_#{id}"
+					label="#{bundle.lbl_observacao}"
+					value="#{backing.entity.observacao}"
+					size="500" />
+
+				<xcp:number
+					id="txtPontos_#{id}"
+					label="#{bundle.lbl_pontos}"
+					required="true"
+					size="10"
+					value="#{backing.entity.pontos}"
+					precision="7"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

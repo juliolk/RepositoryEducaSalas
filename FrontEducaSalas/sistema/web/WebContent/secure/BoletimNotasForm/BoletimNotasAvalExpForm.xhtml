@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:fieldset
+		legend="#{bundle.title_anexos}"
+		rendered="#{boletimNotasBacking.avalExperiencia}"
+		style="padding-top: 2px;">
+		<p:dataTable
+			id="tabAnex"
+			value="#{boletimNotasBacking.listAnx}"
+			var="row"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			rowKey="#{row}">
+
+			<xcp:column
+				headerText="#{bundle.col_desArquivo}"
+				type="String"
+				size="50">
+				<xcp:outputSimple
+					id="outNome"
+					value="#{row.desArquivo}" />
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="1">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_download_anex"
+					update="tabAnex"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					ajax="false">
+					<h:graphicImage
+						value="/resources/img/download.png"
+						style="margin-top:3px;" />
+					<p:fileDownload
+						value="#{boletimNotasBacking.getAnexo(row)}"
+						contentDisposition="attachment" />
+				</xcp:commandLink>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="1">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_remove_lin"
+					update=":frmAnexo :form:tabAnex"
+					action="#{boletimNotasBacking.actionRemoverAnexo(row)}"
+					rendered="#{not boletimNotasBacking.avalMediato}">
+					<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" />
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandLink>
+			</xcp:column>
+
+		</p:dataTable>
+
+		<h:panelGroup
+			layout="block"
+			style="text-align:center;margin-top:5px;margin-bottom:5px">
+			<xcp:commandButton
+				id="btn_novo_anexo"
+				process="@this"
+				icon="ui-icon-plusthick"
+				value="#{bundle.btn_novo}"
+				rendered="#{not boletimNotasBacking.avalMediato}"
+				oncomplete="PF('w_anexo').show()" />
+		</h:panelGroup>
+
+	</p:fieldset>
+
+	<p:fieldset
+		legend="#{bundle.title_conclusao}"
+		rendered="#{boletimNotasBacking.avalExperiencia}"
+		style="padding-top: 2px;">
+
+		<xcp:panelForm>
+
+			<xcp:memo
+				id="txtConclusao"
+				label="#{bundle.lbl_conclusao}"
+				value="#{boletimNotasBacking.boletimSelecionado.conclusao}"
+				size="4000"
+				readonly="#{boletimNotasBacking.avalMediato}" />
+
+			<xcp:combo
+				id="cboConclusaoexp"
+				value="#{boletimNotasBacking.boletimSelecionado.conclusaoexp}"
+				label="#{bundle.lbl_conclusaoexp}"
+				itens="#{avalExpEdicaoBacking.itensConclusaoexp}"
+				readonly="#{boletimNotasBacking.avalMediato}">
+			</xcp:combo>
+
+		</xcp:panelForm>
+
+	</p:fieldset>
+
+
+	<p:fieldset
+		legend="#{bundle.title_avalmediato}"
+		rendered="#{boletimNotasBacking.avalMediato}"
+		style="padding-top: 2px;">
+		<xcp:panelForm>
+			<xcp:memo
+				label="#{bundle.lbl_manifestacao}"
+				id="obsResp"
+				value="#{boletimNotasBacking.boletimSelecionado.txtrespostamediato}" />
+		</xcp:panelForm>
+		
+	</p:fieldset>
+
+</ui:composition>

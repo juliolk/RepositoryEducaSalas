@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Audiencia"
+		backing="#{audienciaBacking}"
+		masterId="Juridico">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="1">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_horaini}"
+				value="#{row.hora}"
+				type="Number"
+				size="4">
+				<xcp:outputTimeNumber
+					id="outini"
+					simple="true"
+					value="#{row.hora}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_horafim}"
+				value="#{row.horafim}"
+				type="Number"
+				size="4">
+				<xcp:outputTimeNumber
+					id="outinifim"
+					simple="true"
+					value="#{row.horafim}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="String"
+				size="2"
+				itens="#{audienciaBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					precision="2"
+					scale="0"
+					itens="#{audienciaBacking.itensTipo}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+
+				<xcp:date
+					id="txtData_Audiencia"
+					required="true"
+					value="#{audienciaBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					readonly="#{not audienciaBacking.entity.novo}" />
+
+				<xcp:timeNumber
+					id="txtHoraIni_Audiencia"
+					label="#{bundle.lbl_horaIni}"
+					value="#{audienciaBacking.entity.hora}"
+					size="5" />
+
+				<xcp:timeNumber
+					id="txtHoraFim_Audiencia"
+					label="#{bundle.lbl_horaFim}"
+					value="#{audienciaBacking.entity.horafim}"
+					size="5" />
+
+				<xcp:combo
+					id="cboTipo_Audiencia"
+					value="#{audienciaBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					itens="#{audienciaBacking.itensTipo}" />
+
+				<xcp:memo
+					id="txtParecer_Audiencia"
+					label="#{bundle.lbl_descricao}"
+					value="#{audienciaBacking.entity.parecer}"
+					size="1000" />
+
+			</xcp:panelForm>
+
+			<p:fieldset
+				legend="#{bundle.tit_testemunhas}"
+				rendered="#{not audienciaBacking.entity.novo}">
+
+				<h:panelGrid columns="1">
+
+					<p:dataTable
+						id="tabTest"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						value="#{audienciaBacking.listTest}"
+						var="row"
+						style="float:left;width:680px">
+
+						<xcp:column
+							headerText="#{bundle.col_data}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_funcionario}"
+							type="String"
+							size="12">
+							<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_parte}"
+							type="Number"
+							size="1">
+							<xcp:outputSimple
+								value="#{row.parte}"
+								itens="#{audienciaBacking.itensParte}" />
+						</xcp:column>
+
+						<p:column style="width:1px;">
+							<xcp:commandButton
+								id="btn_edita"
+								icon="icon-editar"
+								immediate="true"
+								update=":dlgTest"
+								action="#{audienciaBacking.actionOpenTestemunha(row)}" />
+						</p:column>
+
+						<p:column style="width:1px;">
+							<xcp:commandButton
+								id="btn_remove"
+								icon="ui-icon-trash"
+								immediate="true"
+								update=":form:tabTest"
+								action="#{audienciaBacking.actionRemoveTestemunha(row)}">
+								<!-- <h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" /> -->
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
+					<xcp:commandButton
+						id="btn_adicionar_test"
+						style="margin-top:5px"
+						action="#{audienciaBacking.actionOpenTestemunha(null)}"
+						update=":dlgTest"
+						process="@this"
+						value="#{bundle.btn_adicionar}"
+						icon="ui-icon-plusthick" />
+				</h:panelGrid>
+
+			</p:fieldset>
+		</ui:define>
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"	
+	template="#{xcp:getLayout('manut')}">
+	
+	<ui:define name="conteudo">
+	
+		<xcp:panelFuncionarioLazy
+			id="CalcExcluidos"
+			apresentaIndice="true"
+			backing="#{calcExcluidosBacking}"
+			scrollable="false">
+		
+			<ui:define name="colunas">
+												
+				<xcp:column
+					headerText="#{bundle.col_referencia}"
+					sortBy="#{row.referencia}"
+					type="Date"
+					size="12">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_tipofolha}"
+					sortBy="#{row.tipofolhaFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.tipofolhaFk.descricao}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_conta}"
+					type="Number"
+					sortBy="#{row.conta}"
+					size="6">
+					<xcp:outputSimpleNumber
+	                    value="#{row.conta}"
+						precision="16"
+						scale="0"/>
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_des_conta}"
+					sortBy="#{row.contaFk.descricao}"
+					type="String"
+					size="25">
+					<xcp:outputSimple value="#{row.contaFk.descricao}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_incidencia}"
+					sortBy="#{row.incidencia}"
+					type="Number"
+					size="13">
+					<xcp:outputSimpleNumber
+	                    value="#{row.incidencia}"
+						precision="10"
+						scale="2"/>
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_qtd}"
+					sortBy="#{row.qtd}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+	                    value="#{row.qtd}"
+						precision="10"
+						scale="2"/>
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					sortBy="#{row.valor}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+	                    value="#{row.valor}"
+						precision="16"
+						scale="2"/>
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_tipolcto}"
+					sortBy="#{row.tipolcto}"
+					type="String"
+					size="6">
+					<xcp:outputSimple value="#{row.tipolcto}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_datapgto}"
+					sortBy="#{row.datapgto}"
+					type="Date"
+					size="15">
+					<xcp:outputSimpleDate value="#{row.datapgto}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					type="String">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+				
+				
+			</ui:define>
+
+
+			<ui:define name="form">
+				<xcp:panelForm>										
+							
+					<xcp:date
+						id="txtReferencia" 
+						value="#{calcExcluidosBacking.entity.referencia}"
+						label="#{bundle.lbl_referencia}"											
+			 			readonly="#{not calcExcluidosBacking.entity.novo}"
+			 			size="19"
+						 />
+							
+					<xcp:lov
+						id="lovTipofolha" 
+						value="#{calcExcluidosBacking.entity.tipofolhaFk}"
+						label="#{bundle.col_tipofolha}"
+						required="true"
+						query="tipofolha"
+						size="4"
+			 			readonly="#{not calcExcluidosBacking.entity.novo}"
+	  					 />
+							
+					<xcp:lov
+						id="lovConta" 
+						value="#{calcExcluidosBacking.entity.contaFk}"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						query="contas"
+						size="4"
+			 			readonly="#{not calcExcluidosBacking.entity.novo}"
+	  					 />
+							
+					<xcp:number
+						id="txtIncidencia" 
+						label="#{bundle.lbl_incidencia}" 
+						required="true"
+						value="#{calcExcluidosBacking.entity.incidencia}" 
+						size="19"
+						precision="3"
+						scale="0"
+						maxValue="999"									
+			 			readonly="#{not calcExcluidosBacking.entity.novo}"
+						 />
+							
+					<xcp:number
+						id="txtQtd" 
+						label="#{bundle.lbl_qtd}" 
+						required="true"
+						value="#{calcExcluidosBacking.entity.qtd}" 
+						size="19"
+						precision="16"
+						scale="2"											
+			 			readonly="#{not calcExcluidosBacking.entity.novo}"
+						 />
+							
+					<xcp:number
+						id="txtValor" 
+						label="#{bundle.lbl_valor}" 
+						required="true"
+						value="#{calcExcluidosBacking.entity.valor}" 
+						size="19"
+						precision="16"
+						scale="2"											
+			 			readonly="#{not calcExcluidosBacking.entity.novo}"
+					 	/>
+							
+					<xcp:combo
+						id="txtTipolcto"
+						label="#{bundle.lbl_tipolcto}"
+						value="#{calcExcluidosBacking.entity.tipolcto}"
+						itens="#{calcExcluidosBacking.itensTipolcto}"
+			 			readonly="true"
+						size="19" />
+												
+					<xcp:memo
+						id="txtObs"
+						required="#{calcExcluidosBacking.entity.tipolcto == 'F'}"
+						label="#{bundle.lbl_obs}"
+						value="#{calcExcluidosBacking.entity.obs}"
+						size="200" />
+															
+					<xcp:date
+						id="txtDatapgto" 
+						value="#{calcExcluidosBacking.entity.datapgto}"
+						label="#{bundle.lbl_datapgto}"		
+						size="19"									
+						 />
+						 
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+</ui:composition>

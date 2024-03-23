@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 70px;
+}
+
+.destaque {
+	background-color: lightgreen !important;
+}
+.pendencia {
+	color: red !important;
+}
+</style>
+
+		<xcp:panelFuncionario
+			id="Horastrab"
+			scrollHeight="364"
+			backing="#{horastrabGestorBacking}"
+			rowStyleClass="#{row.indFixo == 1 ? 'destaque' : ''} #{row.indPendencia == 1 ? 'pendencia' : ''}">
+
+			<ui:define name="filtros">
+				<div style="width: 190px; padding-right: 10px;">
+					<p:dataTable
+						id="tabSelLinha"
+						var="rowFiltro"
+						value="#{horastrabGestorBacking.listaPeriodos}"
+						selection="#{horastrabGestorBacking.periodoCorrente}"
+						rowKey="#{rowFiltro.PK}"
+						scrollHeight="161"
+						scrollWidth="190"
+						scrollable="true"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						selectionMode="single"
+						rowStyleClass="#{rowFiltro.indBloqueado == 0 ? 'destaque' : ''}">
+
+						<p:ajax
+							event="rowSelect"
+							update=":#{p:component('table_Horastrab')},:#{p:component('tabTotalizador')}"
+							listener="#{horastrabGestorBacking.onRowSelectPeriodo}" />
+						<xcp:column
+							type="Date"
+							size="5"
+							headerText="#{bundle.col_periodo_ini}">
+							<xcp:outputSimpleDate value="#{rowFiltro.dtinicio}" />
+						</xcp:column>
+						<xcp:column
+							type="Date"
+							size="5"
+							headerText="#{bundle.col_periodo_fim}">
+							<xcp:outputSimpleDate value="#{rowFiltro.dtfim}" />
+						</xcp:column>
+					</p:dataTable>
+					<p:spacer width="2" />
+					<p:dataTable
+						id="tabTotalizador"
+						var="rowTot"
+						value="#{horastrabGestorBacking.listaTotalizadores}"
+						rowKey="#{rowTot.numTotalizador}"
+						scrollHeight="161"
+						scrollWidth="190"
+						scrollable="true"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+						<xcp:column
+							type="String"
+							size="7"
+							headerText="#{bundle.col_num_totalizador}">
+							<xcp:outputSimple value="#{rowTot.desLabel}" />
+						</xcp:column>
+						<xcp:column
+							type="Number"
+							size="5"
+							headerText="#{bundle.col_qtd_horas}">
+							<xcp:outputSimpleTimeNumber
+								value="#{rowTot.qtdHoras}"
+								rendered="#{rowTot.tipQtd != 2}"
+								simple="true" />
+
+							<xcp:outputSimpleNumber
+								value="#{rowTot.qtdHoras}"
+								precision="4"
+								scale="2"
+								rendered="#{rowTot.tipQtd == 2}" />
+						</xcp:column>
+					</p:dataTable>
+				</div>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_datah}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datah}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hinicio}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleTimeNumber value="#{row.hinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hfim}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleTimeNumber value="#{row.hfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hinicio2}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleTimeNumber value="#{row.hinicio2}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hfim2}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleTimeNumber value="#{row.hfim2}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hinicio3}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleTimeNumber value="#{row.hinicio3}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hfim3}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleTimeNumber value="#{row.hfim3}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_total}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleTimeNumber value="#{row.qtdTotalHoras}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_jornada}"
+					type="String"
+					size="18">
+					<xcp:outputSimple value="#{row.jornadaFk.desJornada}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_horamp}"
+					type="String"
+					size="18">
+					<xcp:outputSimple value="#{row.horampFk.desJornada}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.motivoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_sit}"
+					type="String"
+					size="2">
+					<xcp:outputSimple value="#{row.desSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diaSemana}"
+					type="String"
+					size="2">
+					<xcp:outputSimple
+						value="#{bundle['tip_dia_semana_'.concat(row.diaSemana)]}" />
+				</xcp:column>
+
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+ -->
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtDatah"
+						required="true"
+						value="#{horastrabGestorBacking.entity.datah}"
+						label="#{bundle.lbl_datah}"
+						readonly="#{not horastrabGestorBacking.entity.novo}" />
+				</xcp:panelForm>
+				<p:fieldset legend="#{bundle.tit_jornada1}">
+					<h:panelGrid columns="2">
+						<xcp:panelForm labelClass="labelWidth">
+							<xcp:timeNumber
+								id="txtHinicio"
+								label="#{bundle.lbl_hinicio}"
+								size="7"
+								required="true"
+								readonly="true"
+								value="#{horastrabGestorBacking.entity.hinicio}"
+								precision="4" />
+						</xcp:panelForm>
+						<xcp:panelForm labelClass="labelWidth">
+							<xcp:timeNumber
+								id="txtHfim"
+								label="#{bundle.lbl_hfim}"
+								required="true"
+								size="7"
+								readonly="true"
+								value="#{horastrabGestorBacking.entity.hfim}"
+								precision="4" />
+						</xcp:panelForm>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset legend="#{bundle.tit_jornada2}">
+					<h:panelGrid columns="2">
+						<xcp:panelForm labelClass="labelWidth">
+							<xcp:timeNumber
+								id="txtHinicio2"
+								label="#{bundle.lbl_hinicio2}"
+								size="7"
+								readonly="true"
+								value="#{horastrabGestorBacking.entity.hinicio2}"
+								precision="4" />
+						</xcp:panelForm>
+						<xcp:panelForm labelClass="labelWidth">
+							<xcp:timeNumber
+								id="txtHfim2"
+								label="#{bundle.lbl_hfim2}"
+								size="7"
+								readonly="true"
+								value="#{horastrabGestorBacking.entity.hfim2}"
+								precision="4" />
+						</xcp:panelForm>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset legend="#{bundle.tit_jornada3}">
+					<h:panelGrid columns="2">
+						<xcp:panelForm labelClass="labelWidth">
+							<xcp:timeNumber
+								id="txtHinicio3"
+								label="#{bundle.lbl_hinicio3}"
+								size="7"
+								readonly="true"
+								value="#{horastrabGestorBacking.entity.hinicio3}"
+								precision="4" />
+						</xcp:panelForm>
+						<xcp:panelForm labelClass="labelWidth">
+							<xcp:timeNumber
+								id="txtHfim3"
+								label="#{bundle.lbl_hfim3}"
+								size="7"
+								readonly="true"
+								value="#{horastrabGestorBacking.entity.hfim3}"
+								precision="4" />
+						</xcp:panelForm>
+					</h:panelGrid>
+				</p:fieldset>
+				<p:spacer width="3" />
+				<xcp:panelForm>
+					<xcp:timeNumber
+						id="txtQtdTotalIntervalo"
+						label="#{bundle.lbl_qtd_total_intervalo}"
+						size="7"
+						readonly="true"
+						value="#{horastrabGestorBacking.entity.qtdTotalIntervalo}"
+						precision="4" />
+
+					<xcp:lov
+						id="lovJornada"
+						value="#{horastrabGestorBacking.entity.jornadaFk}"
+						label="#{bundle.lbl_jornada}"
+						query="jornadas"
+						size="3" />
+
+					<xcp:lov
+						id="lovHoramp"
+						value="#{horastrabGestorBacking.entity.horampFk}"
+						label="#{bundle.lbl_horamp}"
+						query="jornadas"
+						size="3">
+					</xcp:lov>
+
+				</xcp:panelForm>
+				<p:spacer width="3" />
+				<p:dataTable
+					id="tabTotalizadorDia"
+					var="rowTotData"
+					value="#{horastrabGestorBacking.listaTotalizadoresData}"
+					rowKey="#{row.codTotal}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="width:600px !important"
+					rowStyleClass="#{rowTotData.tipLcto == 'F' ? 'destaque' : ''}">
+					<f:facet name="header">
+						<p:outputLabel value="#{bundle.title_totalizadores}" />
+					</f:facet>
+					<xcp:column
+						type="String"
+						size="18"
+						headerText="#{bundle.col_des_total}">
+						<xcp:outputSimple value="#{rowTotData.desTotal}" />
+					</xcp:column>
+					<xcp:column
+						type="Number"
+						size="2"
+						headerText="#{bundle.col_qtd_total}">
+
+						<xcp:outputSimpleTimeNumber
+							value="#{rowTotData.qtdTotal}"
+							rendered="#{rowTotData.tipQtd != 2}"
+							simple="true" />
+
+						<xcp:outputSimpleNumber
+							value="#{rowTotData.qtdTotal}"
+							precision="4"
+							scale="2"
+							rendered="#{rowTotData.tipQtd == 2}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipo}"
+						type="String"
+						size="1">
+						<xcp:outputSimple value="#{rowTotData.tipLcto}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1"
+						headerText="#{bundle.col_editar}">
+
+						<xcp:commandButton
+							icon="icon-editar"
+							id="btn_editar"
+							oncomplete="PF('dlgPonto_w').show();"
+							update=":frmDlgPonto"
+							rendered="#{rowTotData.editar}"
+							action="#{horastrabGestorBacking.actionOpenPonto(rowTotData)}" />
+
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1"
+						headerText="#{bundle.col_remover}">
+
+						<xcp:commandButton
+							icon="ui-icon-trash"
+							id="btn_remover"
+							update="tabTotalizadorDia"
+							rendered="#{rowTotData.editar}"
+							action="#{horastrabGestorBacking.actionRemoverPonto(rowTotData)}">
+
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+
+
+						</xcp:commandButton>
+
+					</xcp:column>
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar"
+					value="#{bundle.btn_novo}"
+					style="margin-top: 5px"
+					update=":frmDlgPonto"
+					icon="ui-icon-document"
+					action="#{horastrabGestorBacking.actionNovoOcor}" />
+
+				<p:spacer height="5" />
+
+				<p:dataTable
+					id="tabTipMovs"
+					var="rowMovs"
+					rendered="#{horastrabGestorBacking.entity.desSituacao == 'AFA'}"
+					value="#{horastrabGestorBacking.listMovtos}"
+					rowKey="#{row.PK}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="width:600px !important">
+					<f:facet name="header">
+						<p:outputLabel value=" #{bundle.title_afastamentos}" />
+					</f:facet>
+					<xcp:column
+						type="Number"
+						size="2"
+						headerText="#{bundle.col_tipmov}">
+						<xcp:outputSimple value="#{rowMovs.tipmov}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="20"
+						headerText="#{bundle.col_descricao}">
+						<xcp:outputSimple value="#{rowMovs.descricao}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_banco_horas}"
+			modal="true"
+			id="dlgPonto"
+			widgetVar="dlgPonto_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmDlgPonto">
+				<xcp:panelForm>
+
+					<xcp:combo
+						id="cmbTipoponto"
+						label="#{bundle.lbl_tipoponto}"
+						required="true"
+						itens="#{horastrabGestorBacking.itensTipoPonto}"
+						value="#{horastrabGestorBacking.ponto.tipoponto}"
+						size="1">
+						<p:ajax
+							event="change"
+							update="txtHoras,txtQtd,txtHoras_l,txtQtd_l,txtHoraini,txtHorafim,txtHoraini_l,txtHorafim_l,txtObs,txtObs_l"
+							listener="#{horastrabGestorBacking.actionChangeTipoPonto}" />
+					</xcp:combo>
+
+					<xcp:timeNumber
+						id="txtHoraini"
+						label="#{bundle.lbl_txtHoraini}"
+						required="true"
+						rendered="#{horastrabGestorBacking.ponto.tipopontoFk.tipoqtd==3}"
+						size="10"
+						value="#{horastrabGestorBacking.ponto.horaini}"
+						precision="7"
+						scale="2">
+						<p:ajax
+							event="change"
+							listener="#{horastrabGestorBacking.calculaHoras}"
+							update="txtHorafim,txtHoras" />
+					</xcp:timeNumber>
+
+					<xcp:timeNumber
+						id="txtHorafim"
+						label="#{bundle.lbl_txtHorafim}"
+						required="true"
+						rendered="#{horastrabGestorBacking.ponto.tipopontoFk.tipoqtd==3}"
+						size="10"
+						value="#{horastrabGestorBacking.ponto.horafim}"
+						precision="7"
+						scale="2">
+						<p:ajax
+							event="change"
+							listener="#{horastrabGestorBacking.calculaHoras}"
+							update="@this,txtHoras" />
+					</xcp:timeNumber>
+
+					<xcp:timeNumber
+						id="txtHoras"
+						label="#{bundle.lbl_horas}"
+						required="true"
+						rendered="#{horastrabGestorBacking.ponto.tipopontoFk.tipoqtd==1 or horastrabGestorBacking.ponto.tipopontoFk.tipoqtd==3}"
+						readonly="#{horastrabGestorBacking.ponto.tipopontoFk.tipoqtd==3}"
+						size="10"
+						value="#{horastrabGestorBacking.ponto.horas}"
+						precision="7"
+						scale="2" />
+
+					<xcp:number
+						id="txtQtd"
+						label="#{bundle.lbl_qtde}"
+						required="true"
+						rendered="#{horastrabGestorBacking.ponto.tipopontoFk.tipoqtd==2}"
+						size="10"
+						value="#{horastrabGestorBacking.ponto.horas}"
+						precision="5"
+						scale="0" />
+
+					<xcp:combo
+						id="txtTipolcto"
+						label="#{bundle.lbl_tipolcto}"
+						required="true"
+						itens="#{horastrabGestorBacking.itensTipolcto}"
+						value="#{horastrabGestorBacking.ponto.tipolcto}"
+						size="1"
+						readonly="true" />
+
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						required="#{horastrabGestorBacking.ponto.tipopontoFk.indObs==1}"
+						value="#{horastrabGestorBacking.ponto.obs}"
+						size="300" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							value="#{bundle.btn_salvar}"
+							action="#{horastrabGestorBacking.actionSalvarPonto}"
+							update=":form"
+							icon="ui-icon-gear" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

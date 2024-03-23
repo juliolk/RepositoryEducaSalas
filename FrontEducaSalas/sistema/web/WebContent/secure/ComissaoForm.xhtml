@@ -1,0 +1,543 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(12)}"
+			escape="false" />
+
+		<xcp:panelManut
+			id="Comissao"
+			backing="#{comissaoBacking}"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc)}">
+
+			<ui:define name="filtro">
+
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+
+					<h:panelGrid columns="3">
+
+						<xcp:panelForm>
+
+							<xcp:dateRange
+								id="txtDataInicioFiltro"
+								valueStart="#{comissaoBacking.helper.dtaInicioIni}"
+								valueEnd="#{comissaoBacking.helper.dtaInicioFim}"
+								label="#{bundle.lbl_dtainicio}"
+								size="8" />
+
+							<xcp:dateRange
+								id="txtDataFimFiltro"
+								valueStart="#{comissaoBacking.helper.dtaFimIni}"
+								valueEnd="#{comissaoBacking.helper.dtaFimFim}"
+								label="#{bundle.lbl_dtafim}"
+								size="8" />
+
+							<xcp:numberRange
+								id="txtNumComissaoFiltro"
+								label="#{bundle.lbl_comissao}"
+								valueStart="#{comissaoBacking.helper.comissaoIni}"
+								valueEnd="#{comissaoBacking.helper.comissaoFim}" />
+
+							<xcp:text
+								id="txtDescricaoFiltro"
+								value="#{comissaoBacking.helper.descricao}"
+								size="45"
+								label="#{bundle.lbl_descricao}" />
+
+							<xcp:text
+								id="txtObservacaoFiltro"
+								value="#{comissaoBacking.helper.obs}"
+								size="45"
+								label="#{bundle.lbl_obs}" />
+
+						</xcp:panelForm>
+
+						<p:spacer width="10px" />
+
+						<xcp:panelForm>
+
+							<xcp:lov
+								id="lovDocumentoFiltro"
+								value="#{comissaoBacking.helper.registroFk}"
+								label="#{bundle.lbl_documento}"
+								query="documento_com"
+								size="5" />
+
+							<xcp:lov
+								id="lovOrgaoFiltro"
+								value="#{comissaoBacking.helper.orgaoFk}"
+								label="#{bundle.lbl_orgao}"
+								query="orgaos"
+								size="5" />
+
+							<xcp:combo
+								id="cmbSituacaoFiltro"
+								value="#{comissaoBacking.helper.situacao}"
+								label="#{bundle.lbl_situacao}"
+								width="100px"
+								itens="#{comissaoBacking.itensSituacao}" />
+
+							<xcp:combo
+								id="cmbTipoFiltro"
+								value="#{comissaoBacking.helper.tipo}"
+								label="#{bundle.lbl_tipo}"
+								size="10"
+								width="100px"
+								itens="#{comissaoBacking.itensTipo}" />
+
+						</xcp:panelForm>
+					</h:panelGrid>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<p:column style="width:16px">
+					<p:rowToggler rendered="#{row.detalhes}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_comissao}"
+					value="#{row.comissao}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.comissao}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{row.orgaoFk.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="10"
+					itens="#{comissaoBacking.itensTipo}">
+					<xcp:outputSimple
+						itens="#{comissaoBacking.itensTipo}"
+						value="#{row.tipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_sitcom}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{comissaoBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{comissaoBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.inicio}"
+					type="String"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.inicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{row.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.termino}" />
+				</xcp:column>
+
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabDoc"
+						var="rowDoc"
+						value="#{row.listaComissaoDoc}"
+						rowKey="#{rowDoc.PK}"
+						paginator="true"
+						selectionMode="single"
+						paginatorPosition="bottom"
+						selection="#{comissaoBacking.comDocSelecionada}"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-bottom:0;"
+						rowIndexVar="idx">
+
+						<p:ajax
+							event="rowSelect"
+							update=":frmDlg"
+							oncomplete="PF('dlg_w').show();" />
+
+						<ui:include src="DocManual/DocUnificadoDetalhesDoc.xhtml">
+							<ui:param
+								name="rowDoc"
+								value="#{rowDoc}" />
+
+							<ui:param
+								name="rowPrincipal"
+								value="#{row}" />
+
+							<ui:param
+								name="actionExclusao"
+								value="#{comissaoBacking.model}" />
+
+						</ui:include>
+
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtComissao"
+						label="#{bundle.lbl_comissao}"
+						required="true"
+						value="#{comissaoBacking.entity.comissao}"
+						size="8"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						rendered="#{not comissaoBacking.entity.novo}"
+						readonly="true" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{comissaoBacking.entity.descricao}"
+						style="width:610px;"
+						size="100"
+						readonly="#{comissaoBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:text>
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{comissaoBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="#{not comissaoBacking.entity.novo}"
+						itens="#{comissaoBacking.itensTipo}"
+						width="92px !important;">
+						<p:ajax
+							event="change"
+							update="lovSetor,lovOrgao,lovSetor_l,lovOrgao_l,lovMotivo,lovMotivo_l"
+							listener="#{comissaoBacking.changeTipo}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovMotivo"
+						value="#{comissaoBacking.entity.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						query="motivocomissao"
+						size="5"
+						rendered="#{comissaoBacking.entity.tipo == 3}"
+						update="lovZona,lovZona_l" />
+
+					<xcp:lov
+						id="lovZona"
+						value="#{comissaoBacking.entity.zonaFk}"
+						label="#{bundle.lbl_zona}"
+						query="zonajudiciaria"
+						rendered="#{comissaoBacking.entity.motivoFk.indZona == 1}"
+						size="4"
+						required="true" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{comissaoBacking.entity.orgaoFk}"
+						label="#{bundle.lbl_orgao}"
+						required="true"
+						readonly="#{not comissaoBacking.entity.novo}"
+						rendered="#{comissaoBacking.entity.tipo==2}"
+						query="orgaos"
+						size="8"
+						sizeDesc="70" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{comissaoBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						rendered="#{comissaoBacking.entity.tipo==2}"
+						size="8"
+						sizeDesc="70"
+						readonly="#{comissaoBacking.readOnlyFields}" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{comissaoBacking.entity.situacao}"
+						label="#{bundle.lbl_sitcom}"
+						required="true"
+						itens="#{comissaoBacking.itensSituacao}"
+						width="92px !important;"
+						readonly="#{comissaoBacking.readOnlyFields}" />
+
+					<xcp:dateRange
+						id="txtDataPonto"
+						valueStart="#{comissaoBacking.entity.inicio}"
+						valueEnd="#{comissaoBacking.entity.termino}"
+						requiredStart="true"
+						label="#{bundle.lbl_validade}"
+						size="8"
+						margin="5px;"
+						readonly="#{comissaoBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="@none" />
+					</xcp:dateRange>
+
+					<xcp:text
+						id="txtEmail"
+						label="#{bundle.lbl_email}"
+						value="#{comissaoBacking.entity.email}"
+						readonly="#{comissaoBacking.readOnlyFields}"
+						size="116"
+						maxlength="150" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{comissaoBacking.entity.tipodocFk}"
+						selectionListener="#{comissaoBacking.selectTipodocumento}"
+						size="5"
+						params="#{comissaoBacking.paramsTipoDoc}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,lovProcessoRev,lovProcessoRev_l,pnlinfotipodoc,txtObs, btnAddDoc"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_com"
+						readonly="#{comissaoBacking.readOnlyTipdoc}" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{comissaoBacking.entity.registroFk}"
+						params="#{comissaoBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento"
+						query="documentosman"
+						size="5"
+						readonly="#{comissaoBacking.readOnlyDoc}"
+						selectionListener="#{comissaoBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{comissaoBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{comissaoBacking.readOnlyProc}"
+						required="#{comissaoBacking.requiredProc}"
+						size="25" />
+
+					<xcp:lov
+						id="lovProcessoRev"
+						value="#{comissaoBacking.entity.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{comissaoBacking.renderedProcessoRev}"
+						size="25" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_txtPort}"
+						value="#{comissaoBacking.entity.obs}"
+						size="4000"
+						cols="99"
+						readonly="#{comissaoBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:memo>
+
+					<xcp:memo
+						id="txtObsLivre"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{comissaoBacking.entity.obsLivre}"
+						size="4000"
+						cols="99" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{comissaoBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(comissaoBacking.entity.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{comissaoBacking.model.actionOpenVisDialog(comissaoBacking.entity.registro)}"
+										process="@this" />
+
+								</p:splitButton>
+							</p:column>
+
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDoc"
+									model="#{comissaoBacking.model}" />
+							</p:column>
+
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty comissaoBacking.entity.tipodocFk.instrucoes}" />
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{comissaoBacking.entity.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{comissaoBacking.entity.retificacao}"
+										label="#{comissaoBacking.labelRetif}"
+										rendered="#{comissaoBacking.entity.retificacao!=null}"
+										readonly="true">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{comissaoBacking.actionRemoveRetificacao}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{comissaoBacking.labelRetif}"
+										rendered="#{comissaoBacking.entity.retificacao==null and comissaoBacking.entity.registro!=null and comissaoBacking.entity.registroFk.tipCriacao == 2}"
+										value="#{comissaoBacking.retificacao}">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="ComissaoForm/ComissaofuncForm.xhtml" />
+				<ui:include src="ComissaoForm/ComissaoReuniaoForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_historico}"
+			modal="true"
+			id="dlg"
+			widgetVar="dlg_w">
+			<xcp:form id="frmDlg">
+				<ui:include src="ComissaoForm/ComissaoDetalhesForm.xhtml" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlg_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+		
+		<p:dialog
+			id="dlgAta"
+			modal="true"
+			widgetVar="dlgAta_w"
+			header="#{bundle.title_importar_foto}">
+			<xcp:form
+				id="formAta"
+				multipart="true">
+				<xcp:panelForm>
+					<xcp:inputFile
+						label="#{bundle.lbl_registroAta}" 
+						id="inpFile"
+						value="#{comissaoReuniaoBacking.fileAta}" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_upload"
+							value="#{bundle.btn_upload}"
+							ajax="false"
+							icon="ui-icon-gear"
+							action="#{comissaoReuniaoBacking.actionUploadAta}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+			
+		</p:dialog>
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{comissaoBacking.model}" />
+		</ui:include>
+
+	</ui:define>
+</ui:composition>

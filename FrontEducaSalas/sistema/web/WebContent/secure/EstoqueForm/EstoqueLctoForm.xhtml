@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="EstoqueLcto"
+		backing="#{estoqueLctoBacking}"
+		masterId="Estoque">
+
+		<ui:define name="colunas">
+			<xcp:column
+				headerText="#{bundle.col_linha}"
+				value="#{row.linhaFk}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.linhaFk.descricao}" />
+			</xcp:column>
+
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_obs}"
+				value="#{row.obs}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.obs}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_entrada}"
+				value="#{row.entrada}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.entrada}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_saida}"
+				value="#{row.saida}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.saida}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData_EstoqueLcto"
+					required="true"
+					value="#{estoqueLctoBacking.entity.data}"
+					label="#{bundle.lbl_data}" />
+
+				<xcp:lov
+					id="lovLinha_EstoqueLcto"
+					value="#{estoqueLctoBacking.entity.linhaFk}"
+					label="#{bundle.lbl_linha}"
+					required="true"
+					query="linha"
+					size="6" />
+
+				<xcp:memo
+					id="txtObs_EstoqueLcto"
+					label="#{bundle.lbl_obs}"
+					required="true"
+					value="#{estoqueLctoBacking.entity.obs}"
+					size="4000" />
+
+				<xcp:number
+					id="txtEntrada_EstoqueLcto"
+					label="#{bundle.lbl_entrada}"
+					value="#{estoqueLctoBacking.entity.entrada}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtSaida_EstoqueLcto"
+					label="#{bundle.lbl_saida}"
+					value="#{estoqueLctoBacking.entity.saida}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

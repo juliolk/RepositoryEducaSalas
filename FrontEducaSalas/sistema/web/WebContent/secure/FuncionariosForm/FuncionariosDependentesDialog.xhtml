@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_dependente}"
+		modal="true"
+		id="dlgDependente"
+		widgetVar="dlgDependente_w"
+		dynamic="true"
+		onShow="XCUtil.selecttab('tabFuncionarios_w','tabDadosFilhacao')">
+
+		<xcp:form id="frmDependente">
+
+			<xcp:panelForm>
+				<xcp:output
+					id="outSeqfilho"
+					label="#{bundle.lbl_nro_depend}"
+					value="#{funcionariosBacking.dependente.sequencia}" />
+
+				<xcp:combo
+					id="comboDepServidorMagistrado"
+					value="#{funcionariosBacking.dependente.familiarServidor}"
+					itens="#{funcionariosBacking.itensIndSimNao}"
+					label="#{bundle.lbl_familiar_servidor}"
+					required="true"
+					rendered="#{funcionariosBacking.isTribunal()}">
+					<p:ajax
+						event="change"
+						update="txtNome_l txtNome lovFuncionariosDep_l lovFuncionariosDep txtCargoDep txtCargoDep_l cboBeneficiario lblCpf txtCpf pnlTeste btnBuscaDepCadGeral txtDtn_l txtDtn cboSexo cboSexo_l" />
+				</xcp:combo>
+
+				<xcp:text
+					id="txtNome"
+					label="#{bundle.lbl_nome}"
+					value="#{funcionariosBacking.dependente.nome}"
+					size="50"
+					rendered="#{funcionariosBacking.dependente.familiarServidor == 0}"
+					required="true">
+					<p:ajax
+						event="blur"
+						process="@this" />
+				</xcp:text>
+
+				<xcp:lov
+					id="lovFuncionariosDep"
+					value="#{funcionariosBacking.dependente.funcionarioFamiliarFk}"
+					label="#{bundle.lbl_funcionario}"
+					query="funcionarios"
+					size="6"
+					rendered="#{funcionariosBacking.dependente.familiarServidor == 1}"
+					update="txtNome txtCpf pnlTeste txtDtn txtCargoDep txtCargoDep_l"
+					selectionListener="#{funcionariosBacking.actionSelecionaFuncionarioFamiliar}"
+					required="true" />
+
+				<xcp:text
+					id="txtCargoDep"
+					label="#{bundle.lbl_cargo}"
+					readonly="true"
+					value="#{funcionariosBacking.getFuncionarioFamiliarCargo(funcionariosBacking.dependente)}"
+					size="60"
+					rendered="#{funcionariosBacking.dependente.familiarServidor == 1}" />
+
+				<xcp:combo
+					id="cboDependenteir"
+					value="#{funcionariosBacking.dependente.dependenteir}"
+					label="#{bundle.lbl_dependenteir}"
+					itens="#{funcionariosBacking.itensDependentesIRRF}"
+					styleClass="dependentes_irrf">
+					<p:ajax
+						event="change"
+						update="txtDtn,txtDtn_l,txtCpf,pnlTeste,txtCpf_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboGrau"
+					value="#{funcionariosBacking.dependente.grau}"
+					itens="#{funcionariosBacking.itensParFiliacao}"
+					label="#{bundle.lbl_grau}"
+					required="true"
+					styleClass="dependentes_select"
+					readonly="#{funcionariosBacking.readOnlyGrau}">
+					<p:ajax
+						update="cboBeneficiario cboBeneficiario_l,frmDependente:txtCpf,frmDependente:pnlTeste,frmDependente:txtCpf_l,frmDependente:lovDeficiencia,frmDependente:lovDeficiencia_l,cboIndEstudante,cboIndEstudante_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboSexo"
+					value="#{funcionariosBacking.dependente.sexo}"
+					label="#{bundle.lbl_sexo}"
+					itens="#{funcionariosBacking.itensSexo}"
+					required="true"
+					rendered="#{funcionariosBacking.renderedSexoDep}" />
+
+				<xcp:combo
+					id="cboEC"
+					value="#{funcionariosBacking.dependente.ec}"
+					label="#{bundle.lbl_ec}"
+					itens="#{funcionariosBacking.itensECNull}"
+					class="combo_infogerais"
+					rendered="#{funcionariosBacking.renderedEcDep}" />
+
+				<xcp:lov
+					id="lovDeficiencia"
+					value="#{funcionariosBacking.dependente.deficienciaFk}"
+					label="#{bundle.lbl_def}"
+					query="deficiencias"
+					size="8" />
+
+				<xcp:combo
+					id="cboBeneficiario"
+					value="#{funcionariosBacking.dependente.beneficiario}"
+					label="#{bundle.lbl_beneficiario}"
+					itens="#{funcionariosBacking.itensDependentesIRRF}"
+					styleClass="dependentes_irrf"
+					rendered="#{funcionariosBacking.renderedBeneficiario}">
+					<p:ajax
+						event="change"
+						update="frmDependente:txtDtn,frmDependente:txtDtn_l,frmDependente:txtCpf,frmDependente:pnlTeste,frmDependente:txtCpf_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboBeneficiarioPrev"
+					value="#{funcionariosBacking.dependente.beneficiarioprev}"
+					label="#{bundle.lbl_benprev}"
+					itens="#{funcionariosBacking.itensBeneficiarioPrev}"
+					styleClass="dependentes_irrf" />
+
+				<xcp:combo
+					id="cboIndEstudante"
+					value="#{funcionariosBacking.dependente.indEstudante}"
+					label="#{bundle.lbl_indestudante}"
+					itens="#{funcionariosBacking.itensIndSimNaoNull}"
+					required="true"
+					rendered="#{funcionariosBacking.renderedEstudante}" />
+
+				<xcp:date
+					id="txtDtn"
+					label="#{bundle.lbl_dtn}"
+					required="#{funcionariosBacking.requiredDtnDialog}"
+					rendered="#{funcionariosBacking.dependente.dependenteir == 1 or funcionariosBacking.dependente.familiarServidor == 0}"
+					readonly="#{funcionariosBacking.dependente.familiarServidor == 1}"
+					value="#{funcionariosBacking.dependente.dtn}"
+					size="10">
+					<p:ajax
+						event="change"
+						update="frmDependente:txtCpf,frmDependente:pnlTeste,frmDependente:txtCpf_l" />
+					<p:ajax
+						event="dateSelect"
+						update="frmDependente:txtCpf,frmDependente:pnlTeste,frmDependente:txtCpf_l" />
+				</xcp:date>
+
+				<p:outputLabel
+					id="lblCpf"
+					for="txtCpf"
+					value="#{bundle.lbl_cpf}"
+					rendered="#{funcionariosBacking.dependente.dependenteir == 1 or funcionariosBacking.dependente.familiarServidor == 0}" />
+
+				<p:outputPanel
+					id="pnlTeste"
+					rendered="#{funcionariosBacking.dependente.dependenteir == 1 or funcionariosBacking.dependente.familiarServidor == 0}">
+					<xcp:cpf
+						id="txtCpf"
+						label="#{bundle.lbl_cpf}"
+						value="#{funcionariosBacking.dependente.cpf}"
+						required="#{funcionariosBacking.requiredCpfDialog}"
+						rendered="#{funcionariosBacking.dependente.dependenteir == 1 or funcionariosBacking.dependente.familiarServidor == 0}"
+						readonly="#{funcionariosBacking.dependente.familiarServidor == 1}"
+						simple="true"
+						style="float:left">
+						<p:ajax
+							process="@this"
+							update="@this txtNome txtDtn"
+							listener="#{funcionariosBacking.actionLeaveCpf}" />
+					</xcp:cpf>
+
+					<xcp:commandButton
+						icon="ui-icon-search"
+						id="btnBuscaDepCadGeral"
+						action="#{funcionariosBacking.actionBuscaCadGeral}"
+						update=":frmCad :frmCad:lovFuncCadGeral"
+						immediate="true"
+						process="@this"
+						oncomplete="PF('dlgCad_w').show()"
+						disabled="#{funcionariosBacking.dependente.familiarServidor == 1}"
+						rendered="#{funcionariosBacking.dependente.dependenteir == 1 or funcionariosBacking.dependente.familiarServidor == 0}" />
+				</p:outputPanel>
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{funcionariosBacking.dependente.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					size="20" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{funcionariosBacking.dependente.obs}"
+					size="2000" />
+
+				<xcp:date
+					id="txtDtFim"
+					label="#{bundle.lbl_datafim}"
+					value="#{funcionariosBacking.dependente.dtafim}"
+					size="10"
+					rendered="#{funcionariosBacking.renderedDtFim}" />
+
+				<p:spacer width="1" />
+
+				<xcp:complemento
+					vo="#{funcionariosBacking.dependente.xcpTabelaColunaVO}" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						update="@form"
+						value="#{bundle.btn_gravar}"
+						action="#{funcionariosBacking.actionGravaDepFiliacao}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgDependente_w').hide();return false;" />
+
+				</f:facet>
+			</p:toolbar>
+
+
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		header="#{bundle.title_cadastrogeral}"
+		modal="true"
+		id="dlgCad"
+		widgetVar="dlgCad_w">
+		<xcp:form id="frmCad">
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovFuncCadGeral"
+					value="#{funcionariosBacking.helper.cadgeral}"
+					label="#{bundle.lbl_cpf}"
+					query="cadgeral"
+					size="10"
+					required="true"
+					selectionListener="#{funcionariosBacking.selectCadGeral}"
+					update=":frmDependente:txtCpf, :frmDependente:txtNome, :frmDependente:txtDtn, :frmDependente:lovDeficiencia" />
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgCad_w').hide();return false;" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

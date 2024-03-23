@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<!-- <center> -->
+		<xcp:border
+			id="brd_origem"
+			header="#{bundle.tit_informacao_origem}">
+			<xcp:lov
+				id="lovPerfilOrigem"
+				value="#{perfisBacking.perfilOrigem}"
+				label="#{bundle.lbl_perfil}"
+				required="true"
+				query="perfis"
+				size="4" />
+		</xcp:border>
+
+		<xcp:border
+			id="brd_destino"
+			header="#{bundle.tit_informacao_destino}">
+
+			<xcp:number
+				id="txtPerfilDestino"
+				label="#{bundle.lbl_perfil_destino}"
+				required="true"
+				value="#{perfisBacking.perfilDestino.codigo}"
+				size="4" />
+
+			<xcp:text
+				id="txtDescricaoDestino"
+				label="#{bundle.lbl_perfil_descricao_destino}"
+				required="true"
+				value="#{perfisBacking.perfilDestino.descricao}"
+				size="60">
+			</xcp:text>
+
+		</xcp:border>
+
+	<!-- </center>  -->
+
+</ui:composition>

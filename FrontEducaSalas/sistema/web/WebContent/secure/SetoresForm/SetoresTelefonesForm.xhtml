@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="SetoresTelefones"
+		backing="#{setoresTelefonesBacking}"
+		masterId="Setores">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="5">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_fone}"
+				value="#{row.fone}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.fone}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:text
+					id="txtDescricao_SetoresTelefones"
+					label="#{bundle.lbl_descricao}"
+					value="#{setoresTelefonesBacking.entity.descricao}"
+					size="100" />
+
+				<xcp:fone
+					id="txtFone_SetoresTelefones"
+					label="#{bundle.lbl_fone}"
+					required="true"
+					value="#{setoresTelefonesBacking.entity.fone}"
+					size="20" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

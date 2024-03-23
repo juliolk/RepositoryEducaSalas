@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<xcp:panelContent>
+
+		<p:fieldset legend="#{bundle.title_informacoes}">
+			<h:outputText value="#{bundle.msg_atenc_esoc}" />
+		</p:fieldset>
+
+		<p:toolbar id="toolbar">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btn_atualizar"
+					value="#{bundle.btn_atualizar}"
+					action="#{backing.actionPesquisar}"
+					update="tbl toolbar"
+					icon="ui-icon-gear" />
+
+				<p:spacer width="20" />
+
+				<xcp:commandButton
+					id="btn_executar"
+					value="#{bundle.btn_enviar}"
+					action="#{backing.actionEnviar}"
+					update="tbl"
+					icon="ui-icon-gear">
+					<p:confirm
+						header="#{bundle.tit_confirma_tranmissao}"
+						message="#{bundle.msg_confirma_tranmissao}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					value="#{bundle.btn_reprocessar_selecionados}"
+					action="#{backing.actionReprocessar}"
+					update="tbl"
+					icon="ui-icon-gear" />
+
+			</f:facet>
+			<f:facet name="right">
+				<c:if test="#{tipo == 1}">
+					<ui:include src="EsocFechamentoFormButton.xhtml" />
+				</c:if>
+			</f:facet>
+		</p:toolbar>
+
+		<p:dataTable
+			id="tbl"
+			var="row"
+			value="#{backing.helper.list}"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			rowKey="#{row}"
+			selection="#{backing.helper.listSel}"
+			paginator="true"
+			rows="500">
+
+			<p:column
+				selectionMode="multiple"
+				style="width:5px;text-align:center" />
+
+			<p:column
+				headerText="#{bundle.col_seq}"
+				width="15">
+				<xcp:outputSimple value="#{row.seq}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_evento}"
+				width="15">
+				<xcp:outputSimple value="#{row.evento}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_desEvento}"
+				width="50">
+				<xcp:outputSimple value="#{row.desEvento}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_data}"
+				width="40">
+				<xcp:outputSimpleTimestamp value="#{row.data}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_chave}"
+				width="100">
+				<xcp:outputSimple value="#{row.pk}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_tipAlteracao}"
+				width="20">
+				<xcp:outputSimple
+					value="#{row.tipAlteracao}"
+					itens="#{backing.itensTipAlteracao}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_tipSituacao}"
+				width="20">
+
+				<xcp:commandLink
+					action="#{backing.actionVerificaErro(row)}"
+					rendered="#{row.tipSituacao == 3}"
+					update=":frmFor">
+					<xcp:outputSimple
+						value="#{row.tipSituacao}"
+						itens="#{backing.itensTipSituacao}" />
+				</xcp:commandLink>
+
+				<xcp:outputSimple
+					value="#{row.tipSituacao}"
+					rendered="#{row.tipSituacao != 3}"
+					itens="#{backing.itensTipSituacao}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_deps}"
+				width="5"
+				rendered="#{backing.modulo == 1}">
+				<xcp:commandButton
+					action="#{backing.actionOpenDependencias(row)}"
+					rendered="#{row.dependencia}"
+					update=":frmDp"
+					icon="ui-icon-search" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_acoes}"
+				width="60">
+				<div style="float: left">
+					<!-- Somente reconsulta quando o lote fica preso no esocial por demora no processamento. -->
+					<xcp:commandButton
+						label="#{bundle.btn_reconsultar}"
+						value="#{bundle.btn_reconsultar}"
+						action="#{backing.actionReconsultar(row)}"
+						update="@form"
+						rendered="#{row.tipSituacao == 3 and row.tipErro == 1}" />
+
+					<!-- Sempre pode excluir (com cuidado) -->
+					<xcp:commandButton
+						label="#{bundle.btn_excluir}"
+						value="#{bundle.btn_excluir}"
+						action="#{backing.actionExcluir(row)}"
+						update="@form"
+						rendered="#{row.tipSituacao == 3 or backing.manutencaoEsoc}">
+						<p:confirm
+							header="#{bundle.tit_confirma_exclusao}"
+							message="#{bundle.msg_confirma_rem_esoc}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</div>
+			</p:column>
+		</p:dataTable>
+
+	</xcp:panelContent>
+
+</ui:composition>

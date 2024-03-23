@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_fones}"
+		modal="true"
+		id="dlgFones"
+		widgetVar="dlgFones_w"
+		dynamic="true"
+		width="650">
+		<xcp:form id="frmFones">
+			<p:dataTable
+				id="tabFones"
+				var="row"
+				value="#{funcionariosBacking.listaFones}"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+				<p:column headerText="#{bundle.col_fone}">
+					<xcp:fone
+						id="txtfone"
+						simple="true"
+						value="#{row.fone}"
+						readonly="true"
+						style="border: 0;box-shadow: none;" />
+				</p:column>
+				<p:column headerText="#{bundle.col_tipo}">
+					<xcp:output
+						id="txttipo"
+						simple="true"
+						value="#{row.tipo}"
+						itens="#{funcionariosBacking.itensFones}" />
+				</p:column>
+				<p:column
+					headerText="#{bundle.col_app}"
+					width="30px">
+					<xcp:output
+						id="txtapp"
+						simple="true"
+						value="#{row.app}"
+						itens="#{funcionariosBacking.itensIndSimNao}" />
+				</p:column>
+				<p:column
+					width="20"
+					rendered="#{funcionariosBacking.renderedAcoesMais}">
+					<xcp:commandButton
+						id="btnRemFone"
+						icon="ui-icon-trash"
+						update="tabFones"
+						immediate="true"
+						action="#{funcionariosBacking.actionRemoveFone(row)}">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</p:column>
+				<p:column
+					width="20"
+					rendered="#{funcionariosBacking.renderedAcoesMais}">
+					<xcp:commandButton
+						id="btnEditaFone"
+						icon="icon-editar"
+						immediate="true"
+						update=":frmFone"
+						oncomplete="PF('dlgFone_w').show();">
+						<f:setPropertyActionListener
+							target="#{funcionariosBacking.funcionariosFone}"
+							value="#{row}" />
+						<f:setPropertyActionListener
+							target="#{funcionariosBacking.modoFone}"
+							value="2" />
+					</xcp:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:spacer height="5" />
+
+			<div style="text-align: center">
+				<xcp:commandButton
+					id="btnNovoFone"
+					value="#{bundle.btn_novo}"
+					action="#{funcionariosBacking.actionNovoFone}"
+					update=":frmFone"
+					icon="ui-icon-document"
+					rendered="#{funcionariosBacking.renderedAcoesMais}">
+
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.modoFone}"
+						value="1" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btnVoltar"
+					image="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgFones_w').hide();return false;" />
+
+			</div>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		header="#{bundle.title_fone}"
+		modal="true"
+		id="dlgFone"
+		widgetVar="dlgFone_w"
+		dynamic="true">
+		<xcp:form id="frmFone">
+			<xcp:panelForm>
+				<xcp:fone
+					id="txtFoneF"
+					label="#{bundle.lbl_fone}"
+					required="true"
+					value="#{funcionariosBacking.funcionariosFone.fone}"
+					size="30" />
+
+				<xcp:combo
+					id="cboTipoF"
+					value="#{funcionariosBacking.funcionariosFone.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{funcionariosBacking.itensFones}" />
+
+				<xcp:combo
+					id="cboAppF"
+					value="#{funcionariosBacking.funcionariosFone.app}"
+					label="#{bundle.lbl_app}"
+					required="true"
+					itens="#{funcionariosBacking.itensIndSimNaoNull}"
+					rendered="#{funcionariosFoneBacking.tipo}" />
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						update=":frmFones"
+						action="#{funcionariosBacking.actionGravarFone}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgFone_w').hide();return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+ -
+</ui:composition>

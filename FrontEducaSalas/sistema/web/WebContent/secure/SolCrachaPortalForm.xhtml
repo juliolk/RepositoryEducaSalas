@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+#lnkVoltar_SolCracha {
+	display: none;
+}
+</style>
+
+		<xcp:panelManut
+			id="SolCracha"
+			backing="#{solCrachaPortalBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					value="#{row.seq}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="20"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datasol}"
+					value="#{row.datasol}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.datasol}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="5"
+					itens="#{solCrachaPortalBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{solCrachaPortalBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataconclusao}"
+					value="#{row.dataconclusao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataconclusao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+					<xcp:combo
+						id="cboSituacao"
+						value="#{solCrachaPortalBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{solCrachaPortalBacking.itensSituacao}"
+						readonly="true"
+						rendered="#{!solCrachaPortalBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						value="#{solCrachaPortalBacking.entity.motivo}"
+						size="4000"
+						readonly="#{!solCrachaPortalBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDataconclusao"
+						value="#{solCrachaPortalBacking.entity.dataconclusao}"
+						label="#{bundle.lbl_dataconclusao}"
+						rendered="#{solCrachaPortalBacking.entity.dataconclusao != null}"
+						readonly="#{!solCrachaPortalBacking.entity.novo}" />
+
+				</xcp:panelForm>
+
+				<p:fieldset legend="#{bundle.title_anexos}">
+					<p:dataTable
+						id="tblAnx"
+						value="#{solCrachaPortalBacking.listaAnx}"
+						var="row"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+						<p:column headerText="#{bundle.col_nome}">
+							<xcp:outputSimple value="#{row.desnome}" />
+						</p:column>
+						<p:column>
+							<xcp:commandButton
+								label="#{bundle.btn_download}"
+								value="#{bundle.btn_download}"
+								ajax="false"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+								<p:fileDownload
+									value="#{solCrachaPortalBacking.getDownload(row)}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+
+							<p:spacer width="5" />
+
+							<xcp:commandButton
+								id="btn_remover"
+								immediate="true"
+								update="tblAnx"
+								value="#{bundle.btn_remover}"
+								action="#{solCrachaPortalBacking.actionRemoverAnx(row)}"
+								rendered="#{solCrachaPortalBacking.entity.situacao == 1}">
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+						</p:column>
+					</p:dataTable>
+					<center>
+						<p:commandButton
+							value="#{bundle.btn_novo}"
+							action="#{solCrachaPortalBacking.actionNovo}"
+							rendered="#{solCrachaPortalBacking.entity.situacao == 1}" />
+					</center>
+				</p:fieldset>
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_dlgUploadDocumento}"
+			widgetVar="wDlgUpload"
+			modal="true">
+			<xcp:form
+				id="formUpload"
+				multipart="true">
+				<p:fileUpload
+					id="uploadDocumento"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_somente_pdf}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{solCrachaPortalBacking.actionUpload}"
+					update=":form:tblAnx" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

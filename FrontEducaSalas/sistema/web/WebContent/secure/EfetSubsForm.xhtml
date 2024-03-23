@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="EfetSubs"
+			backing="#{efetSubsBacking}"
+			consulta="true">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+					<xcp:panelForm>
+						<xcp:radio
+							id="cboStatusPesq"
+							value="#{efetSubsBacking.tipStatus}"
+							label="#{bundle.lbl_status}"
+							itens="#{efetSubsBacking.itensStatusNotNull}" />
+
+						<xcp:combo
+							id="cboIndAtestoFinPesq"
+							value="#{efetSubsBacking.indAtestoFin}"
+							label="#{bundle.lbl_indAtestofin}"
+							itens="#{efetSubsBacking.itensIndSimNaoNull}" />
+							
+					</xcp:panelForm>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.solSubs.dtaSol}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{row.solSubs.dtaSol}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaInicio}"
+					value="#{row.solSubs.dtaInicio}"
+					type="Date"
+					size="4">
+					<xcp:outputSimpleDate value="#{row.solSubs.dtaInicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaFim}"
+					value="#{row.solSubs.dtaFim}"
+					type="Date"
+					size="4">
+					<xcp:outputSimpleDate value="#{row.solSubs.dtaFim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.solSubs.substituido}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.solSubs.substituido}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.substituidoFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.substituidoFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matriculaFk.numMatricula}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.matriculaFk.numMatricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_titular}"
+					value="#{row.matriculaFk.desNome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.matriculaFk.desNome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cargo}"
+					value="#{row.matriculaFk.desCargo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.matriculaFk.desCargo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vinculo}"
+					value="#{row.matriculaFk.desVinculo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.matriculaFk.desVinculo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_solicitante}"
+					value="#{row.solicitanteFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.solicitanteFk.nome}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovSubstituido"
+						value="#{efetSubsBacking.entity.substituidoFk}"
+						label="#{bundle.lbl_funcSubsOri}"
+						query="funcionariosLov"
+						size="10"
+						required="true"
+						readonly="true" />
+
+					<xcp:date
+						id="txtdtini"
+						value="#{efetSubsBacking.entity.solSubs.dtaInicio}"
+						label="#{bundle.lbl_dtini}"
+						readonly="true"
+						required="true" />
+
+					<xcp:date
+						id="txtdttermino"
+						required="true"
+						value="#{efetSubsBacking.entity.solSubs.dtaFim}"
+						label="#{bundle.lbl_dttermino}"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovMotivoTransf"
+						value="#{efetSubsBacking.entity.motivoTransfFk}"
+						label="#{bundle.lbl_motivoTransf}"
+						query="motivo_transf"
+						readonly="true"
+						size="10" />
+
+					<xcp:combo
+						id="cboStatus"
+						value="#{efetSubsBacking.entity.solSubs.status}"
+						label="#{bundle.lbl_status}"
+						required="true"
+						itens="#{efetSubsBacking.itensStatusNotNull}"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboIndAtestoFin"
+						value="#{efetSubsBacking.entity.solSubs.indAtestofin}"
+						label="#{bundle.lbl_indAtestofin}"
+						itens="#{efetSubsBacking.itensIndSimNaoNull}"
+						required="true"
+						readonly="#{efetSubsBacking.entity.solSubs.status == 2 or efetSubsBacking.entity.solSubs.status == 4}" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{efetSubsBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="set_validade_par"
+						update="lovMatricula"
+						size="10"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{efetSubsBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_funcSubs}"
+						query="funcionariosLov"
+						size="10"
+						required="true"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovCargoSubs"
+						value="#{efetSubsBacking.entity.cargoSubsFk}"
+						label="#{bundle.lbl_cargo}"
+						query="cargoativo"
+						readonly="true"
+						size="10" />
+
+					<xcp:lov
+						id="lovSolicitante"
+						value="#{efetSubsBacking.entity.solicitanteFk}"
+						label="#{bundle.lbl_solicitante}"
+						query="funcionariosLovAtiv"
+						size="10"
+						readonly="true"
+						required="true" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{efetSubsBacking.entity.solSubs.obs}"
+						size="4000"
+						readonly="true" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraFormAnt">
+
+
+				<xcp:commandButton
+					id="btnAprovar"
+					value="#{bundle.btn_aprovar}"
+					icon="ui-icon-check"
+					action="#{efetSubsBacking.actionAprovar}"
+					update="@form"
+					rendered="#{efetSubsBacking.entity.solSubs.status == 1 or efetSubsBacking.entity.solSubs.status == 4}">
+					<p:confirm
+						header="#{bundle.tit_confirma_aprov_efet}"
+						message="#{bundle.msg_confirma_aprov_efet}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btnReprovar"
+					value="#{bundle.btn_reprovar}"
+					icon="ui-icon-close"
+					action="#{efetSubsBacking.actionReprovar}"
+					update="@form"
+					rendered="#{efetSubsBacking.entity.solSubs.status == 1 or efetSubsBacking.entity.solSubs.status == 4}">
+					<p:confirm
+						header="#{bundle.tit_confirma_rem_efet}"
+						message="#{bundle.msg_confirma_rem_efet}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btnGravar"
+					value="#{bundle.btn_gravar}"
+					icon="ui-icon-check"
+					action="#{efetSubsBacking.actionGravar}"
+					update=":form"
+					rendered="#{efetSubsBacking.entity.solSubs.status == 3}" />
+
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{efetSubsBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					oncomplete="PF('w_anexos').show()" />
+
+				<xcp:commandButton
+					id="btnPendencia"
+					value="#{bundle.btn_pendencia}"
+					update=":frmPendencia"
+					oncomplete="PF('dlgPendencia_w').show()"
+					rendered="#{efetSubsBacking.entity.solSubs.status == 1 or efetSubsBacking.entity.solSubs.status == 4}" />
+
+
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{efetSubsBacking.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{efetSubsBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="15">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="15">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="3">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{efetSubsBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+
+						<xcp:column
+							type="String"
+							size="2">
+							<xcp:commandButton
+								id="btn_editarSel"
+								oncomplete="PF('w_anexo').show();"
+								icon="icon-navegar"
+								update=":frmAnexo"
+								action="#{efetSubsBacking.actionEditarAnexo(rowAnex)}">
+
+							</xcp:commandButton>
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="2">
+							<xcp:commandButton
+								immediate="true"
+								id="btn_removerSel"
+								update="tblAnex :form:btn_anexos"
+								icon="ui-icon-trash"
+								action="#{efetSubsBacking.actionRemoveFile(rowAnex)}">
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+						</xcp:column>
+					</xcp:column>
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{efetSubsBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgPendencia"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgPendencia_w">
+			<xcp:form id="frmPendencia">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtPendencia"
+						value="#{efetSubsBacking.entity.solSubs.txtPendencia}"
+						required="true"
+						label="#{bundle.lbl_motivo}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-check"
+							action="#{efetSubsBacking.actionPendencia}"
+							update=":form" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgPendencia_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{efetSubsBacking.anexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{efetSubsBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{efetSubsBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

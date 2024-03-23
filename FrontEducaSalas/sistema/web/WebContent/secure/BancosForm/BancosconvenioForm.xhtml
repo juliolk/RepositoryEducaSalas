@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Bancosconvenio"
+		backing="#{bancosconvenioBacking}"
+		masterId="Bancos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_nrbanco}"
+				value="#{row.nrbanco}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.nrbanco}"
+					precision="7"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nragencia}"
+				value="#{row.nragencia}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.nragencia}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_digito}"
+				value="#{row.digito}"
+				type="String"
+				size="2">
+				<xcp:outputSimple value="#{row.digito}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_conta}"
+				value="#{row.conta}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.conta}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_convenio}"
+				value="#{row.convenio}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.convenio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_contato}"
+				value="#{row.contato}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.contato}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_telefone}"
+				value="#{row.telefone}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.telefone}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_email}"
+				value="#{row.email}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.email}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtNragencia_Bancosconvenio"
+					label="#{bundle.lbl_nragencia}"
+					required="true"
+					value="#{bancosconvenioBacking.entity.nragencia}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					readonly="#{not bancosconvenioBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDigito_Bancosconvenio"
+					label="#{bundle.lbl_digito}"
+					value="#{bancosconvenioBacking.entity.digito}"
+					maxlength="2"
+					size="5" />
+
+				<xcp:text
+					id="txtConvenio_Bancosconvenio"
+					label="#{bundle.lbl_convenio}"
+					required="true"
+					value="#{bancosconvenioBacking.entity.convenio}"
+					size="20" 
+					readonly="#{not bancosconvenioBacking.entity.novo}"/>
+
+				<xcp:text
+					id="txtConta_Bancosconvenio"
+					label="#{bundle.lbl_conta}"
+					value="#{bancosconvenioBacking.entity.conta}"
+					size="20" />
+
+				<xcp:text
+					id="txtContato_Bancosconvenio"
+					label="#{bundle.lbl_contato}"
+					value="#{bancosconvenioBacking.entity.contato}"
+					size="60" />
+
+				<xcp:fone
+					id="txtTelefone_Bancosconvenio"
+					label="#{bundle.lbl_telefone}"
+					value="#{bancosconvenioBacking.entity.telefone}"
+					size="30" />
+
+				<xcp:email
+					id="txtEmail_Bancosconvenio"
+					label="#{bundle.lbl_email}"
+					value="#{bancosconvenioBacking.entity.email}"
+					size="30" />
+
+				<xcp:number
+					id="txtNrLote_lote"
+					label="#{bundle.lbl_lote}"
+					value="#{bancosconvenioBacking.entity.nrlote}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent multipart="true">
+
+			<p:outputPanel rendered="#{solPortalTransfBacking.tipTela == 1}">
+				<p:dataTable
+					id="tabSolTransf"
+					value="#{solPortalTransfBacking.lista}"
+					var="row"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{row}"
+					selectionMode="single"
+					selection="#{solPortalTransfBacking.entity}">
+
+					<p:ajax
+						event="rowSelect"
+						update="@form"
+						listener="#{solPortalTransfBacking.actionSelectRow}" />
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.datasolicitacao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_situacao}"
+						type="Date"
+						size="7">
+						<xcp:outputSimple
+							value="#{row.situacao}"
+							itens="#{solPortalTransfBacking.itensSituacao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtinicio}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtinicio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipmov}"
+						type="String"
+						size="4">
+						<xcp:outputSimple value="#{row.tipmovFk.descricao}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+				<center>
+					<xcp:commandButton
+						id="btn_novo"
+						value="#{bundle.btn_add}"
+						update="@form"
+						action="#{solPortalTransfBacking.actionNovo}"
+						icon="ui-icon-document" />
+				</center>
+
+			</p:outputPanel>
+			<p:outputPanel rendered="#{solPortalTransfBacking.tipTela == 2}">
+				<p:fieldset style="padding-left: 10px; border: none;">
+					<xcp:panelForm>
+
+						<xcp:combo
+							id="cboSituacao"
+							value="#{solPortalTransfBacking.entity.situacao}"
+							label="#{bundle.lbl_situacao}"
+							required="true"
+							readonly="true"
+							rendered="#{not solPortalTransfBacking.entity.novo}"
+							itens="#{solPortalTransfBacking.itensSituacao}" />
+
+						<xcp:combo
+							id="txtTipo"
+							value="#{solPortalTransfBacking.entity.tipmov}"
+							label="#{bundle.lbl_tipo}"
+							itens="#{solPortalTransfBacking.listTipMov}"
+							readonly="#{not solPortalTransfBacking.entity.novo}" />
+
+						<xcp:date
+							id="txtDtinicio"
+							required="true"
+							value="#{solPortalTransfBacking.entity.dtinicio}"
+							label="#{bundle.lbl_dtinicio}"
+							readonly="#{solPortalTransfBacking.entity.situacao != 1}">
+
+							<p:ajax
+								process="@this"
+								update="cboSetor"
+								event="change"
+								listener="#{solPortalTransfBacking.changeData}" />
+							<p:ajax
+								event="dateSelect"
+								process="@this"
+								update="cboSetor"
+								listener="#{solPortalTransfBacking.changeData}" />
+
+						</xcp:date>
+
+
+						<xcp:combo
+							id="cboSetor"
+							value="#{solPortalTransfBacking.entity.setor}"
+							required="true"
+							label="#{bundle.lbl_setor}"
+							itens="#{solPortalTransfBacking.itensSetor}" />
+
+
+						<xcp:memo
+							id="txtObs"
+							label="#{bundle.lbl_obs}"
+							value="#{solPortalTransfBacking.entity.obs}"
+							size="1000"
+							style="width:470px;"
+							readonly="#{solPortalTransfBacking.entity.situacao != 1}" />
+
+						<xcp:inputFile
+							label="#{bundle.lbl_anexar_documento}"
+							id="inpFile"
+							value="#{solPortalTransfBacking.uploadFoto}"
+							required="false"
+							disabled="#{solPortalTransfBacking.entity.situacao != 1}" />
+
+						<xcp:border
+							id="brdButtonDoc"
+							header=" "
+							stylefieldset="border: none; padding: 0; margin-left: 0 !important; margin-bottom: 10px"
+							rendered="#{!solPortalTransfBacking.entity.novo}">
+							<p:button
+								href="#{solPortalTransfBacking.getDesPathDoc()}"
+								value="#{bundle.lbl_visualizar_documento}"
+								target="_blank"
+								class="lov_btnBuscar"
+								icon="icon-pesquisar" />
+						</xcp:border>
+
+					</xcp:panelForm>
+				</p:fieldset>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_GravarSolicitacao"
+							rendered="#{solPortalTransfBacking.entity.situacao == 1}"
+							value="#{bundle.btn_gravar_solicitacao}"
+							ajax="false"
+							process="@form"
+							update="@form"
+							action="#{solPortalTransfBacking.actionGravaSolicitacao}"
+							icon="ui-icon-disk" />
+
+						<xcp:commandButton
+							id="btn_voltar"
+							value="#{bundle.btn_voltar}"
+							ajax="false"
+							immediate="true"
+							action="#{solPortalTransfBacking.actionVoltar}" />
+
+						<xcp:commandButton
+							id="btnDownloadRelatorio"
+							widgetVar="wBtnDownloadRelatorio"
+							ajax="false"
+							immediate="true"
+							process="@this"
+							style="display: none;"
+							onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)">
+							<p:fileDownload
+								value="#{xcpExecObjBacking.file}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+					</f:facet>
+				</p:toolbar>
+
+			</p:outputPanel>
+
+			<script type="text/javascript">
+		    function showStatus() {
+                PF('w_dlgXcpExecStatus').show();
+			}
+		    function hideStatus() {
+		    	PF('w_dlgXcpExecStatus').hide();
+			}
+		    </script>
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<div style="width: 1000px;">
+		<p:dataTable
+			id="tabCargosTreinamento"
+			editable="true"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			value="#{treinamentoBacking.listaCargosTreinamento}"
+			var="rowCargo">
+			<p:ajax
+				event="rowEdit"
+				update=":form:tabTreinamento:upHints"
+				listener="#{treinamentoBacking.onRowEditCargo}" />
+			<p:ajax
+				event="rowEditCancel"
+				update=":form:tabTreinamento:upHints"/>
+
+			<p:column headerText="#{bundle.col_cargo}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<xcp:outputSimple value="#{rowCargo.cargoFk.descricao}" />
+					</f:facet>
+					<f:facet name="input">
+						<xcp:panelForm>
+							<xcp:lov
+								id="lovCargo"
+								value="#{rowCargo.cargoFk}"
+								label="#{bundle.lbl_cargo}"
+								simple="true"
+								required="true"
+								query="cargos_geral"
+								size="6"
+								readonly="#{not rowCargo.novo}" />
+						</xcp:panelForm>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:32px">
+				<xcp:commandLink
+					id="btn_remover_cargo"
+					icon="ui-icon-trash"
+					immediate="true"
+					update="tabCargosTreinamento :form:tabTreinamento:upHints"
+					rendered="#{!rowCargo.novo}"
+					action="#{treinamentoBacking.actionRemoveCargo(rowCargo)}">
+					<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" />
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandLink>
+			</p:column>
+
+			<p:column style="width:32px">
+				<p:rowEditor />
+			</p:column>
+
+		</p:dataTable>
+
+		<xcp:tableHints
+			id="upHints"
+			tableId="form:tabTreinamento:tabCargosTreinamento" />
+
+		<p:remoteCommand
+			name="rcCargos"
+			update="tabCargosTreinamento upHints" />
+	</div>
+</ui:composition>

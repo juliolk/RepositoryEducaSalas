@@ -1,0 +1,75 @@
+h1.titulo {
+	color: #111111;
+	font-size: 25pt;
+	font-weight: bold;
+	font-style: italic;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	text-align: center;
+}
+
+h1 {
+	color: #111111;
+	font-size: 22pt;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+h2 {
+	color: #111111;
+	font-size: 20pt;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+h3 {
+	color: #111111;
+	font-size: 18pt;
+	margin-bottom: 8px;
+	margin-top: 10px;
+}
+
+h4 {
+	color: #111111;
+	font-size: 16pt;
+	margin-bottom: 8px;
+	margin-top: 10px;
+}
+
+h5 {
+	color: #111111;
+	font-size: 14pt;
+	margin-bottom: 8px;
+	margin-top: 10px;
+}
+
+h6 {
+	color: #111111;
+	font-size: 12pt;
+	margin-bottom: 8px;
+	margin-top: 10px;
+}
+
+div.conteudo {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.help_table {
+	border: 1px solid #000000;
+	border-collapse: collapse;
+}
+
+.help_table td,.help_table th {
+	border: 1px solid #DDDDDD;
+}
+
+.help_table th {
+	background-color: #f0f0f0;
+}
+
+.help_table tr.even td {
+	background-color: #F9F9F9;
+}

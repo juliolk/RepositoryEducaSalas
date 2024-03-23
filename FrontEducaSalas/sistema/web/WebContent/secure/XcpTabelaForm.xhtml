@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="XcpTabela"
+			backing="#{xcpTabelaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codTabela}"
+					value="#{row.codTabela}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.codTabela}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desTabela}"
+					value="#{row.desTabela}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.desTabela}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtCodTabela"
+						label="#{bundle.lbl_codTabela}"
+						required="true"
+						value="#{xcpTabelaBacking.entity.codTabela}"
+						size="50"
+						readonly="#{not xcpTabelaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDesTabela"
+						label="#{bundle.lbl_desTabela}"
+						required="true"
+						value="#{xcpTabelaBacking.entity.desTabela}"
+						size="50" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="XcpTabelaForm/XcpTabelaColunaForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

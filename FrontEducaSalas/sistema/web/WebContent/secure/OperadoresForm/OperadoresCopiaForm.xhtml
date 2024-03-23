@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<center>
+		<xcp:border
+			id="brd_origem"
+			header="#{bundle.tit_informacao_origem}">
+			<xcp:lov
+				id="lovFuncionarioOrigem"
+				value="#{operadoresBacking.operadorOrigem}"
+				label="#{bundle.lbl_operador}"
+				required="true"
+				query="operadores_sistema"
+				size="8" />
+		</xcp:border>
+
+		<xcp:border
+			id="brd_destino"
+			header="#{bundle.tit_informacao_destino}">
+<!-- 
+			<xcp:number
+				id="txtOperadorDestino"
+				label="#{bundle.lbl_operador_destino}"
+				required="true"
+				value="#{operadoresBacking.operadorDestino.operador}"
+				size="15"
+				maxValue="999999999999999" />
+ -->
+			<xcp:text
+				id="txtNomeDestino"
+				label="#{bundle.lbl_nome}"
+				required="true"
+				value="#{operadoresBacking.operadorDestino.nome}"
+				size="40">
+				<p:ajax
+					event="change"
+					listener="#{operadoresBacking.validaNomeDest}"
+					update="txtNomeDestino,txtNomeDestino_l" />
+			</xcp:text>
+
+			<xcp:lov
+				id="lovFuncionarioCopia"
+				value="#{operadoresBacking.operadorDestino.funcionarioFk}"
+				label="#{bundle.lbl_matricula}"
+				query="operadores_novos"
+				size="8" />
+
+		</xcp:border>
+
+	</center>
+
+</ui:composition>

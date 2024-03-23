@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Assistenciaafast"
+		backing="#{assistenciaafastBacking}"
+		masterId="Assistencia">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_vinculo}"
+				value="#{row.vinculoFk.descricao}"
+				type="String"
+				size="1">
+				<xcp:outputSimple value="#{row.vinculoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipmov}"
+				value="#{row.tipmovFk.descricao}"
+				type="String"
+				size="12">
+				<xcp:outputSimple
+					value="#{row.tipmovFk.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovVinculo_Assistenciaafast"
+					value="#{assistenciaafastBacking.entity.vinculoFk}"
+					label="#{bundle.lbl_vinculo}"
+					required="true"
+					query="vinculos"
+					size="4"
+					readonly="#{not assistenciaafastBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovTipmov_Assistenciaafast"
+					value="#{assistenciaafastBacking.entity.tipmovFk}"
+					label="#{bundle.lbl_tipmov}"
+					required="true"
+					query="tipomovtos"
+					size="4"
+					readonly="#{not assistenciaafastBacking.entity.novo}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

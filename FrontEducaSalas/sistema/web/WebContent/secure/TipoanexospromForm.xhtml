@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Tipoanexosprom"
+			backing="#{tipoanexospromBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipEdital}"
+					value="#{row.tipEdital}"
+					type="String"
+					size="20"
+					itens="#{tipoanexospromBacking.itensTipEdital}">
+					<xcp:outputSimple
+						value="#{row.tipEdital}"
+						itens="#{tipoanexospromBacking.itensTipEdital}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obrigatorio}"
+					value="#{row.obrigatorio}"
+					type="String"
+					size="10"
+					itens="#{tipoanexospromBacking.itensIndSimNaoNull}">
+					<xcp:outputSimple
+						value="#{row.obrigatorio}"
+						itens="#{tipoanexospromBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{tipoanexospromBacking.entity.codigo}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not tipoanexospromBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{tipoanexospromBacking.entity.descricao}"
+						size="100" />
+
+					<xcp:combo
+						id="cboTipEdital"
+						value="#{tipoanexospromBacking.entity.tipEdital}"
+						label="#{bundle.lbl_tipEdital}"
+						required="true"
+						itens="#{tipoanexospromBacking.itensTipEdital}" />
+
+					<xcp:combo
+						id="cboObrigatorio"
+						value="#{tipoanexospromBacking.entity.obrigatorio}"
+						label="#{bundle.lbl_obrigatorio}"
+						required="true"
+						itens="#{tipoanexospromBacking.itensIndSimNaoNull}" />
+
+					<xcp:combo
+						id="cboIndInscricao"
+						value="#{tipoanexospromBacking.entity.indInscricao}"
+						label="#{bundle.lbl_indinscricao}"
+						itens="#{tipoanexospromBacking.itensIndSimNao}"
+						required="true" />
+						
+					<xcp:combo
+						id="cboDepartamento"
+						value="#{tipoanexospromBacking.entity.departamento}"
+						label="#{bundle.lbl_departamento}"
+						itens="#{tipoanexospromBacking.itensDep}" />	
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{tipoanexospromBacking.entity.obs}"
+						size="500" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

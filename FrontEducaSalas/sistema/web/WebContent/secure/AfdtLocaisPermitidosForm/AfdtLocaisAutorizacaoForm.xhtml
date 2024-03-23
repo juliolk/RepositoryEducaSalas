@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="AfdtLocaisAutorizacao"
+		backing="#{afdtLocaisAutorizacaoBacking}" masterId="AfdtLocaisPermitidos">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.col_codigo}" value="#{row.codigo}"
+				type="Number" width="5%">
+				<xcp:outputSimpleNumber value="#{row.codigo}" precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_inicioval}"
+				value="#{row.dataInicioValidade}" type="Date" width="5%">
+				<xcp:outputSimpleDate value="#{row.dataInicioValidade}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_fimval}"
+				value="#{row.dataFimValidade}" type="Date" width="5%">
+				<xcp:outputSimpleDate value="#{row.dataFimValidade}" />
+			</xcp:column>
+			
+			<xcp:column headerText="Tipo de Autorização"
+				value="#{afdtLocaisAutorizacaoBacking.getLabelTipoAutorizacao(row)}" width="5%">
+				<xcp:outputSimple value="#{afdtLocaisAutorizacaoBacking.getLabelTipoAutorizacao(row)}" />
+			</xcp:column>
+			
+			<xcp:column headerText="Autorizado"
+				value="#{afdtLocaisAutorizacaoBacking.getAutorizado(row)}" width="15%">
+				<xcp:outputSimple value="#{afdtLocaisAutorizacaoBacking.getAutorizado(row)}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm id="pnlForm">
+				<xcp:combo id="comboTipo"
+					value="#{afdtLocaisAutorizacaoBacking.tipoAutorizacao}"
+					label="Tipo de Autorização"
+					itens="#{afdtLocaisAutorizacaoBacking.itensTipoAutorizacao}">
+					<p:ajax event="change" update="@form" />
+				</xcp:combo>
+				
+				<xcp:date id="txtDataInicioValidade_AfdtLocalAutorizacao"
+					value="#{afdtLocaisAutorizacaoBacking.entity.dataInicioValidade}"
+					label="#{bundle.col_inicioval}"/>
+
+				<xcp:date id="txtDataFimValidade_AfdtLocalAutorizacao"
+					value="#{afdtLocaisAutorizacaoBacking.entity.dataFimValidade}"
+					label="#{bundle.col_fimval}" />
+					
+				<xcp:lov id="lovCodOrgao"
+					rendered="#{afdtLocaisAutorizacaoBacking.tipoAutorizacao == afdtLocaisAutorizacaoBacking.TIPO_ORGAO}"
+					value="#{afdtLocaisAutorizacaoBacking.entity.orgaoFk}"
+					label="#{bundle.col_empresa}" query="orgaos" size="4" />
+
+				<xcp:lov id="lovCodSetor"
+					rendered="#{afdtLocaisAutorizacaoBacking.tipoAutorizacao == afdtLocaisAutorizacaoBacking.TIPO_SETOR}"
+					value="#{afdtLocaisAutorizacaoBacking.entity.setorFk}"
+					label="#{bundle.col_setor}" query="setores" size="10" />
+
+				<xcp:lov id="lovMatricula"
+					rendered="#{afdtLocaisAutorizacaoBacking.tipoAutorizacao == afdtLocaisAutorizacaoBacking.TIPO_MATRICULA}"
+					value="#{afdtLocaisAutorizacaoBacking.entity.matriculaFk}"
+					label="#{bundle.lbl_matricula}" query="funcionarios" size="8" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

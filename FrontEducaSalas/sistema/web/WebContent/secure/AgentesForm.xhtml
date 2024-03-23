@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Agentes"
+			backing="#{agentesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_agente}"
+					value="#{row.agente}"
+					type="Number"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{row.agente}"
+						precision="7"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_gruporisco}"
+					value="#{row.gruporisco}"
+					type="Number"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{row.gruporisco}"
+						precision="7"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desGruporisco}"
+					value="#{row.gruporiscoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.gruporiscoFk.descricao}" />
+				</xcp:column>
+
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_recomendacao}"
+					value="#{row.recomendacao}"
+					type="String"
+					size="500">
+					<xcp:outputSimple value="#{row.recomendacao}" />
+				</xcp:column>
+				 -->
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtAgente"
+						label="#{bundle.lbl_agente}"
+						required="true"
+						value="#{agentesBacking.entity.agente}"
+						size="7"
+						precision="7"
+						scale="0"
+						maxValue="9999999"
+						readonly="#{not agentesBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{agentesBacking.entity.descricao}"
+						size="500" />
+
+					<xcp:lov
+						id="lovGruporisco"
+						value="#{agentesBacking.entity.gruporiscoFk}"
+						label="#{bundle.lbl_gruporisco}"
+						required="true"
+						query="gruporisco"
+						size="5" />
+
+					<xcp:memo
+						id="txtRecomendacao"
+						label="#{bundle.lbl_recomendacao}"
+						value="#{agentesBacking.entity.recomendacao}"
+						size="500"
+						style="width:433px;" />
+
+
+					<xcp:number
+						id="txtMinimo"
+						label="#{bundle.lbl_vlrMinimo}"
+						size="23"
+						value="#{agentesBacking.entity.minimo}"
+						precision="20"
+						scale="2" />
+
+					<xcp:number
+						id="txtMaximo"
+						label="#{bundle.lbl_vlrMaximo}"
+						size="23"
+						value="#{agentesBacking.entity.maximo}"
+						precision="20"
+						scale="2" />
+
+
+					<xcp:memo
+						id="txtOrientacao"
+						label="#{bundle.lbl_orientacao}"
+						value="#{agentesBacking.entity.orientacao}"
+						size="4000" />
+
+					<xcp:combo
+						id="cboTipaval"
+						value="#{agentesBacking.entity.tipaval}"
+						label="#{bundle.lbl_tipaval}"
+						itens="#{agentesBacking.itensTipaval}"
+						required="true" />
+
+					<xcp:memo
+						id="txtTecnica"
+						label="#{bundle.lbl_tecnica}"
+						required="true"
+						value="#{agentesBacking.entity.tecnica}"
+						size="40" />
+
+					<xcp:memo
+						id="txtEquipamento"
+						label="#{bundle.lbl_equipamentoMed}"
+						value="#{agentesBacking.entity.equipamento}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="AgentesForm/AgentesFonteForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

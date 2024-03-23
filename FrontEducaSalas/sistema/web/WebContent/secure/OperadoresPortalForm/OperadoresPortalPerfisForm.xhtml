@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panelGrid>
+		<p:row>
+			<p:column styleClass="alinhatopo">
+				<xcp:tableMultiSelect
+					header="#{bundle.tit_perfis_disponives}"
+					id="checkPerfis"
+					filteredValue="#{operadoresPortalBacking.listaFiltrados1}"
+					value="#{operadoresPortalBacking.listaPerfisDisponiveis}"
+					selection="#{operadoresPortalBacking.listaPerfisSelecionados}"
+					rowKey="#{rowMult.codigo}">
+
+					<xcp:column
+						value="#{rowMult.descricao}"
+						size="60"
+						type="String"
+						headerText="#{bundle.col_perfil}"
+						style="height:25px;">
+						<xcp:outputSimple value="#{rowMult.descricao}" />
+					</xcp:column>
+
+					<f:facet name="footer">
+						<xcp:commandButton
+							id="btn_adicionar"
+							process="checkPerfis :#{p:component('checkPerfilOperador')}"
+							update="checkPerfis :#{p:component('checkPerfilOperador')}"
+							actionListener="#{operadoresPortalBacking.actionAdicionaSelecionados}"
+							value="#{bundle.btn_adicionar}"
+							icon="ui-icon-document">
+						</xcp:commandButton>
+					</f:facet>
+				</xcp:tableMultiSelect>
+			</p:column>
+			<p:column styleClass="alinhatopo">
+				<xcp:tableMultiSelect
+					id="checkPerfilOperador"
+					rowKey="#{rowMult.PK}"
+					value="#{operadoresPortalBacking.listaPerfil}"
+					header="#{bundle.tit_perfil_operador}"
+					selection="#{operadoresPortalBacking.listaExcluir}"
+					filteredValue="#{operadoresPortalBacking.listaFiltrados2}">
+
+					<xcp:column
+						value="#{rowMult.perfilFk.descricao}"
+						size="40"
+						type="String"
+						headerText="#{bundle.col_perfil}">
+						<xcp:outputSimple value="#{rowMult.perfilFk.descricao}" />
+					</xcp:column>
+					<xcp:column
+						size="17"
+						value="#{rowMult.inicio}"
+						type="Date"
+						headerText="#{bundle.col_periodo_perfil_ini}">
+						<xcp:date
+							id="txtInicio"
+							simple="true"
+							value="#{rowMult.inicio}" />
+					</xcp:column>
+
+					<xcp:column
+						size="17"
+						value="#{rowMult.fim}"
+						type="Date"
+						headerText="#{bundle.col_periodo_perfil_fim}">
+						<xcp:date
+							id="txtFim"
+							simple="true"
+							value="#{rowMult.fim}" />
+					</xcp:column>
+
+					<f:facet name="footer">
+						<xcp:commandButton
+							id="btn_remover_sel"
+							process="checkPerfilOperador :#{p:component('checkPerfis')}"
+							update="checkPerfilOperador :#{p:component('checkPerfis')}"
+							actionListener="#{operadoresPortalBacking.actionRemoveSelecionados}"
+							value="#{bundle.btn_remover_sel}"
+							icon="ui-icon-trash">
+						</xcp:commandButton>
+					</f:facet>
+				</xcp:tableMultiSelect>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+</ui:composition>

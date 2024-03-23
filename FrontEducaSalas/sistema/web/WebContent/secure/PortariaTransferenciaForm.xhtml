@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:panelGrid id="panelPortaria">
+				<p:row>
+					<p:column>
+						<p:fieldset
+							legend="#{bundle.tit_tipo_documento}"
+							style="width:800px">
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovTipodoc"
+									value="#{portariaTransferenciaBacking.helper.tipodoc}"
+									selectionListener="#{portariaTransferenciaBacking.selectTipodocumento}"
+									size="8"
+									update="txtDataPeriodo,panelGeral,lovProcesso,lovProcesso_l,lovTipoMov,lovTipoMov_l"
+									label="#{bundle.lbl_doc_port}"
+									params="#{portariaTransferenciaBacking.paramsTipoDoc}"
+									query="tipodocumento_transf" />
+
+								<xcp:dateRange
+									id="txtDataPeriodo"
+									valueStart="#{portariaTransferenciaBacking.helper.dtaIni}"
+									readonly="true"
+									valueEnd="#{portariaTransferenciaBacking.helper.dtaFim}"
+									label="#{bundle.lbl_data_afastamento}" />
+
+								<xcp:lov
+									id="lovProcesso"
+									value="#{portariaTransferenciaBacking.helper.processoFk}"
+									label="#{bundle.lbl_processo}"
+									query="processos"
+									size="25"
+									selectionListener="#{portariaTransferenciaBacking.selectProcesso}"
+									rendered="#{portariaTransferenciaBacking.renderedProc}"
+									update="panelGeral" />
+
+								<xcp:lov
+									id="lovTipoMov"
+									value="#{portariaTransferenciaBacking.helper.tipmovFk}"
+									label="#{bundle.lbl_tipMovTransf}"
+									query="tipomovtos_transf"
+									size="4"
+									required="true"
+									rendered="#{portariaTransferenciaBacking.renderedCamposExtras}" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+						<p:outputPanel id="panelGeral">
+							<ui:include src="PortariaForm/PanelGeralForm.xhtml">
+								<ui:param
+									name="backing"
+									value="#{portariaTransferenciaBacking}" />
+								<ui:param
+									name="lov"
+									value="doc_transf_ret_canc" />
+								<ui:param
+									name="lovFunc"
+									value="funcionariosLovAll" />
+							</ui:include>
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{portariaTransferenciaBacking}" />
+		</ui:include>
+	</ui:define>
+</ui:composition>

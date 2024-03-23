@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+.solicitacao-adicionais .datacard-item:before {
+	content: "\f055";
+	font-family: FontAwesome;
+	position: absolute;
+	font-size: 2.5em;
+	top: 5px;
+	left: -45px;
+}
+
+.solicitacao-adicionais .datacard-item.solicitada:before {
+	color: var(- -positive-color) !important;
+}
+
+.solicitacao-adicionais .datacard-item.efetivada:before {
+	color: var(- -success-color) !important;
+}
+
+.solicitacao-adicionais .datacard-item.nao-aceita:before {
+	color: var(- -negative-color) !important;
+}
+
+.solicitacao-adicionais .datacard-item.cancelada-usuario:before {
+	color: var(- -default-color) !important;
+}
+
+.datacard-item-actions .item-action-col {
+	min-width: 39px;
+}
+
+.datacard-item-info small {
+	color: #999;
+}
+
+@media ( max-width :639px) {
+	.datacard-item {
+		min-height: 125px;
+	}
+}
+</style>
+
+		<div class="content_bg-gray solicitacao-adicionais">
+
+			<xcp:panelContent>
+
+				<p:outputPanel
+					id="pnl_ajuda"
+					class="ui-content-full-width">
+
+
+					<div class="datacard-container">
+
+						<p:fragment>
+							<div class="row">
+								<div class="col-xs-12">
+									<p:outputPanel>
+										<h1 class="datacard-container-title">#{bundle.lbl_ajudacusto}</h1>
+									</p:outputPanel>
+
+									<div class="datacard-listcontainer">
+
+										<div class="datacard datacard-grouped">
+											<div class="datacard-title">
+												#{bundle.lbl_registradas}
+
+												<h:commandLink
+													id="btn_add_solicitacao"
+													href="#"
+													immediate="true"
+													action="#{ajudaCustoPortalBacking.actionNovoPeriodo()}"
+													styleClass="datacard-icon-action"
+													title="#{bundle.lbl_nova_solicitacao}">
+
+													<p:ajax
+														update=":frmAjuda :dlgAjuda"
+														listener="#{ajudaCustoPortalBacking.actionNovoPeriodo()}" />
+
+													<i class="fa fa-fw fa-plus"></i> #{bundle.lbl_novo_periodo}
+												</h:commandLink>
+
+
+											</div>
+											<p:outputPanel
+												id="pnl_dados_solicitacao"
+												class="datacard-content">
+
+												<ui:fragment
+													rendered="#{empty ajudaCustoPortalBacking.lista }">
+													<div class="datacard-empty-message">#{bundle.msg_nenhum_periodo_cadastrado}</div>
+												</ui:fragment>
+
+												<ul class="datacard-itemslist-container">
+													<ui:repeat
+														var="solicitacao"
+														value="#{ajudaCustoPortalBacking.lista}">
+														<li
+															class="datacard-item container-fluid #{ajudaCustoPortalBacking.getClasseSituacao(solicitacao)}">
+															<div class="datacard-item-actions">
+																<div class="item-action-col">
+																	<xcp:commandLink
+																		href="#"
+																		title="#{bundle.lbl_anexos}"
+																		styleClass="big-item-action"
+																		update=":frmAnexos :dlgAnexos">
+																		<p:ajax
+																			listener="#{ajudaCustoPortalBacking.actionSelecionarAnexos(solicitacao)}"
+																			update=":frmAnexos :dlgAnexos" />
+																		<i class="fa fa-paperclip item-action-icon"></i>
+																		<span class="item-action-text">#{bundle.btn_anexo}</span>
+																	</xcp:commandLink>
+																</div>
+																<div class="item-action-col">
+																	<h:commandLink
+																		href="#"
+																		rendered="#{solicitacao.situacao == 1}"
+																		title="#{bundle.lbl_editar}">
+																		<p:ajax
+																			listener="#{ajudaCustoPortalBacking.actionSelecionar(solicitacao)}"
+																			update=":frmAjuda" />
+																		<i class="fa fa-fw fa-pencil fa-lg"></i>
+																	</h:commandLink>
+																	<xcp:commandLink
+																		title="Remover"
+																		rendered="#{solicitacao.situacao == 1 or solicitacao.situacao == 4}"
+																		update=":form:pnl_ajuda"
+																		action="#{ajudaCustoPortalBacking.actionRemover(solicitacao)}">
+																		<p:confirm
+																			header="#{bundle.tit_confirma_remover}"
+																			message="#{bundle.tit_confirma_exclusao}"
+																			icon="ui-icon-alert" />
+
+																		<i class="fa fa-fw fa-trash fa-lg"></i>
+																	</xcp:commandLink>
+																</div>
+
+															</div>
+															<div class="row">
+
+																<h:commandLink href="#">
+																	<p:ajax
+																		listener="#{ajudaCustoPortalBacking.actionSelecionar(solicitacao)}"
+																		update=":frmAjuda" />
+
+																	<div class="col-sm-10 col-xs-11">
+																		<div class="datacard-item-highlight">
+																			#{ajudaCustoPortalBacking.getData(solicitacao)}</div>
+																		<div class="datacard-item-info">
+																			<div class="row">
+																				<div class="col-sm-3">
+																					<small>#{bundle.lbl_situacao}</small><br />
+																					#{ajudaCustoPortalBacking.getSituacao(solicitacao)}
+																				</div>
+																				
+																				<div class="col-sm-6"> <small>#{bundle.lbl_pendencia}</small><br/>
+																					<xcp:outputSimple value="#{solicitacao.pendencia}"></xcp:outputSimple>
+																				</div>
+																				
+																			</div>
+																		</div>
+																	</div>
+																</h:commandLink>
+															</div>
+														</li>
+													</ui:repeat>
+												</ul>
+											</p:outputPanel>
+										</div>
+									</div>
+								</div>
+							</div>
+						</p:fragment>
+					</div>
+
+					<script type="text/javascript">
+					  $(function(){
+							$("[data-toggle=popover]").popover();
+							 
+							$('body').on('click', '.ui-widget-overlay',  function(){
+								PF('dlgAjuda_w').hide();
+								PF('dlgAnexo_w').hide();
+							});
+
+						});
+				    </script>
+				</p:outputPanel>
+
+			</xcp:panelContent>
+		</div>
+
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<ui:include
+			src="AjudaCustoPortalForm/AjudaCustoPortalFormDialog.xhtml" />
+		<ui:include
+			src="AjudaCustoPortalForm/AjudaCustoPortalFormAnexoDialog.xhtml" />
+	</ui:define>
+
+</ui:composition>

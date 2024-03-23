@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:panelGrid id="panelPortaria">
+				<p:row>
+					<p:column>
+						<p:fieldset
+							legend="#{bundle.tit_tipo_documento}"
+							style="width:800px">
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovTipodoc"
+									value="#{portariaProvimentoBacking.helper.tipodoc}"
+									selectionListener="#{portariaProvimentoBacking.selectTipodocumento}"
+									size="8"
+									update="txtDataPeriodo, panelGeral,lovProcesso,lovProcesso_l"
+									label="#{bundle.lbl_doc_port}"
+									params="#{portariaProvimentoBacking.paramsTipoDoc}"
+									query="tipodocumento_prov" />
+
+								<xcp:dateRange
+									id="txtDataPeriodo"
+									valueStart="#{portariaProvimentoBacking.helper.dtaIni}"
+									readonly="true"
+									valueEnd="#{portariaProvimentoBacking.helper.dtaFim}"
+									label="#{bundle.lbl_data_parametros}" />
+
+								<xcp:lov
+									id="lovProcesso"
+									value="#{portariaProvimentoBacking.helper.processoFk}"
+									label="#{bundle.lbl_processo}"
+									query="processos"
+									size="25"
+									selectionListener="#{portariaProvimentoBacking.selectProcesso}"
+									rendered="#{portariaProvimentoBacking.renderedProc}"
+									update="panelGeral" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+						<p:outputPanel id="panelGeral">
+							<ui:include src="PortariaForm/PanelGeralForm.xhtml">
+								<ui:param
+									name="backing"
+									value="#{portariaProvimentoBacking}" />
+								<ui:param
+									name="lov"
+									value="doc_prov_ret_canc" />
+								<ui:param
+									name="lovFunc"
+									value="funcionariosLovAll" />
+							</ui:include>
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{portariaProvimentoBacking}" />
+		</ui:include>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Setmateriais"
+			backing="#{setmateriaisBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setor}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.setor}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desSetor}"
+					value="#{row.setorFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.setorFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_material}"
+					value="#{row.materialFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.materialFk.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_quantidade}"
+					value="#{row.quantidade}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.quantidade}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo_operacao}"
+					value="#{row.tipoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_ca}"
+					value="#{row.ca}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.ca}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datadev}"
+					value="#{row.datadev}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datadev}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{setmateriaisBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						required="true"
+						query="set_validade"
+						size="10"
+						readonly="#{not setmateriaisBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovMaterial"
+						value="#{setmateriaisBacking.entity.materialFk}"
+						label="#{bundle.lbl_material}"
+						required="true"
+						query="materiais"
+						size="10"
+						readonly="#{not setmateriaisBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{setmateriaisBacking.entity.data}"
+						label="#{bundle.lbl_data}"
+						readonly="#{not setmateriaisBacking.entity.novo}" />
+
+
+					<xcp:number
+						id="txtQuantidade"
+						label="#{bundle.lbl_quantidade}"
+						required="true"
+						size="10"
+						value="#{setmateriaisBacking.entity.quantidade}"
+						precision="8"
+						scale="2" />
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{setmateriaisBacking.entity.tipoFk}"
+						required="true"
+						label="#{bundle.lbl_tipo_operacao}"
+						query="tipooperacao"
+						size="10" />
+
+					<xcp:text
+						id="txtCa"
+						label="#{bundle.lbl_ca}"
+						value="#{setmateriaisBacking.entity.ca}"
+						size="10" />
+
+					<xcp:date
+						id="txtDataval"
+						value="#{setmateriaisBacking.entity.dataval}"
+						label="#{bundle.lbl_dataval}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{setmateriaisBacking.entity.obs}"
+						size="1000"
+						style="width:455px;"  />
+
+					<xcp:date
+						id="txtDatadev"
+						value="#{setmateriaisBacking.entity.datadev}"
+						label="#{bundle.lbl_datadev}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelSelecaoExclusao">
+		<p:fieldset
+			legend="#{bundle.tit_portaria_ferias}"
+			style="width:800px">
+
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovDocumentoExclusao"
+					value="#{portariaComissaoBacking.helper.documentos}"
+					params="#{portariaComissaoBacking.paramsDocumentoReficicacao}"
+					label="#{bundle.lbl_documento}"
+					update="btnDownloadDocumentoExclusao"
+					required="true"
+					query="doc_com_ret_canc"
+					size="20" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<xcp:commandButton
+					id="btnDownloadDocumentoExclusao"
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					disabled="#{portariaComissaoBacking.helper.documentos == null}">
+					<p:fileDownload
+						value="#{documentosBacking.getDownloadDocumento(portariaComissaoBacking.helper.documentos.registro)}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+			</xcp:panelForm>
+		</p:fieldset>
+
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_remover"
+					icon="ui-icon-trash"
+					value="#{bundle.btn_remover}"
+					update=":#{p:component('panelPortaria')}"
+					action="#{portariaComissaoBacking.actionExcluirPortaria}" />
+			</f:facet>
+		</p:toolbar>
+	</p:outputPanel>
+</ui:composition>

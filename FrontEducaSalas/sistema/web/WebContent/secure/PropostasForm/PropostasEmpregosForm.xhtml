@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<style>
+.label_prop_emp {
+	width: 115px;
+}
+
+.label_prop_emp_2 {
+	width: 85px;
+}
+
+.cont_prop_emp_1 {
+	width: 140px;
+}
+</style>
+	<xcp:panelManutDetalhes
+		id="PropostasEmpregos"
+		backing="#{propostasEmpregosBacking}"
+		masterId="Propostas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_nomeempresa}"
+				value="#{row.nomeempresa}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.nomeempresa}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtadm}"
+				value="#{row.dtadm}"
+				type="Date"
+				size="5">
+				<xcp:outputSimpleDate value="#{row.dtadm}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtdem}"
+				value="#{row.dtdem}"
+				type="Date"
+				size="5">
+				<xcp:outputSimpleDate value="#{row.dtdem}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_totdias}"
+				value="#{row.totdias}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					value="#{row.totdias}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_faltas}"
+				value="#{row.faltas}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.faltas}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_afastamentos}"
+				value="#{row.afastamentos}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.afastamentos}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+
+			<xcp:panelForm
+				columns="4"
+				labelClass="label_prop_emp,label_prop_emp_2"
+				contentClass="cont_prop_emp_1">
+
+				<xcp:date
+					id="txtDtadm_PropostasEmpregos"
+					required="true"
+					value="#{propostasEmpregosBacking.entity.dtadm}"
+					label="#{bundle.lbl_dtadm}"
+					readonly="#{not propostasEmpregosBacking.entity.novo}" />
+
+				<xcp:date
+					id="txtDtdem_PropostasEmpregos"
+					required="true"
+					value="#{propostasEmpregosBacking.entity.dtdem}"
+					label="#{bundle.lbl_dtdem}" />
+			</xcp:panelForm>
+
+			<xcp:panelForm labelClass="label_prop_emp">
+				<xcp:text
+					id="txtNomeempresa_PropostasEmpregos"
+					label="#{bundle.lbl_nomeempresa}"
+					required="true"
+					value="#{propostasEmpregosBacking.entity.nomeempresa}"
+					size="100" />
+			</xcp:panelForm>
+
+			<xcp:panelForm
+				columns="6"
+				labelClass="label_prop_emp,label_prop_emp_2,label_prop_emp_2"
+				contentClass="cont_prop_emp_1">
+
+				<xcp:number
+					id="txtTotdias_PropostasEmpregos"
+					label="#{bundle.lbl_totdias}"
+					value="#{propostasEmpregosBacking.entity.totdias}"
+					size="8"
+					precision="4"
+					scale="0"
+					maxValue="9999" />
+
+				<xcp:number
+					id="txtFaltas_PropostasEmpregos"
+					label="#{bundle.lbl_faltas}"
+					value="#{propostasEmpregosBacking.entity.faltas}"
+					size="8"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:number
+					id="txtAfastamentos_PropostasEmpregos"
+					label="#{bundle.lbl_afastamentos}"
+					value="#{propostasEmpregosBacking.entity.afastamentos}"
+					size="8"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+			</xcp:panelForm>
+
+			<xcp:panelForm
+				columns="4"
+				labelClass="label_prop_emp,label_prop_emp_2,label_prop_emp_2"
+				contentClass="cont_prop_emp_1">
+
+				<xcp:combo
+					id="cboTipo_PropostasEmpregos"
+					value="#{propostasEmpregosBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{propostasEmpregosBacking.itensTipo}" />
+
+				<xcp:lov
+					id="lovCategoria_empregos"
+					value="#{propostasEmpregosBacking.entity.categoriaFk}"
+					label="#{bundle.lbl_categoria}"
+					query="empregos_categoria"
+					required="true"
+					size="8" />
+
+			</xcp:panelForm>
+
+			<xcp:panelForm labelClass="label_prop_emp">
+				<xcp:lov
+					id="lovFuncao"
+					value="#{propostasEmpregosBacking.entity.funcaoFk}"
+					label="#{bundle.lbl_funcao}"
+					query="funcoes"
+					size="6" />
+
+				<xcp:memo
+					id="txtAtividade_PropostasEmpregos"
+					label="#{bundle.lbl_atividade}"
+					value="#{propostasEmpregosBacking.entity.atividade}"
+					size="300" />
+
+				<xcp:text
+					id="txtContato_PropostasEmpregos"
+					label="#{bundle.lbl_contato}"
+					value="#{propostasEmpregosBacking.entity.contato}"
+					size="30"
+					maxlength="25" />
+
+				<xcp:text
+					id="txtFone_PropostasEmpregos"
+					label="#{bundle.lbl_fone}"
+					value="#{propostasEmpregosBacking.entity.fone}"
+					size="30"
+					maxlength="30" />
+
+				<xcp:memo
+					id="txtMotivo_PropostasEmpregos"
+					label="#{bundle.lbl_motivo}"
+					value="#{propostasEmpregosBacking.entity.motivo}"
+					size="300" />
+
+				<xcp:memo
+					id="txtObs_PropostasEmpregos"
+					label="#{bundle.lbl_obs}"
+					value="#{propostasEmpregosBacking.entity.obs}"
+					size="3000"
+					cols="85" />
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

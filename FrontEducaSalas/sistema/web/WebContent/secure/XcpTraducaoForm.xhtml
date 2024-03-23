@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="XcpTraducao"
+			backing="#{xcpTraducaoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_numRotina}"
+					value="#{row.numRotina}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.numRotina}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desRotina}"
+					value="#{row.numRotinaFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.numRotinaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desChave}"
+					value="#{row.desChave}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.desChave}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desTraducao}"
+					value="#{row.desTraducao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.desTraducao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovNumRotina"
+						value="#{xcpTraducaoBacking.entity.numRotinaFk}"
+						label="#{bundle.lbl_numRotina}"
+						query="rotinas"
+						size="6" />
+
+					<xcp:text
+						id="txtDesChave"
+						label="#{bundle.lbl_desChave}"
+						required="true"
+						value="#{xcpTraducaoBacking.entity.desChave}"
+						size="100" />
+
+					<xcp:text
+						id="txtDesTraducao"
+						label="#{bundle.lbl_desTraducao}"
+						required="true"
+						value="#{xcpTraducaoBacking.entity.desTraducao}"
+						maxlength="1000"
+						size="100" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

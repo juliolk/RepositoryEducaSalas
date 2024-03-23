@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="EstacaoPonto" backing="#{estacaoPontoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_codigo}" value="#{row.codigo}"
+					type="Number" size="8">
+					<xcp:outputSimpleNumber value="#{row.codigo}" precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}" type="String" size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_apiKey}" value="#{row.apiKey}"
+					type="String" size="30">
+					<xcp:outputSimple value="#{row.apiKey}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_inicioval}"
+					value="#{row.dataInicioValidade}" type="Date" size="7">
+					<xcp:outputSimpleDate value="#{row.dataInicioValidade}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_fimval}"
+					value="#{row.dataFimValidade}" type="Date" size="7">
+					<xcp:outputSimpleDate value="#{row.dataFimValidade}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text id="txtDescricao" label="#{bundle.lbl_descricao}"
+						required="true" value="#{estacaoPontoBacking.entity.descricao}"
+						size="100" />
+
+					<xcp:text id="txtApiKey" label="#{bundle.lbl_apiKey}"
+						required="true" value="#{estacaoPontoBacking.entity.apiKey}"
+						size="100" />
+
+					<xcp:date id="txtDataInicioValidade"
+						value="#{estacaoPontoBacking.entity.dataInicioValidade}"
+						label="#{bundle.col_inicioval}" />
+
+					<xcp:date id="txtDataFimValidade"
+						value="#{estacaoPontoBacking.entity.dataFimValidade}"
+						label="#{bundle.col_fimval}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="EstacaoPontoForm/EstacaoPontoIpsForm.xhtml" />
+
+				<ui:include src="EstacaoPontoForm/EstacaoPontoAutorizacaoForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

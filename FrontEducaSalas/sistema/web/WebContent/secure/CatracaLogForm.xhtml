@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Catracalog"
+			backing="#{catracaLogBacking}">
+
+			<ui:define name="filtros">
+
+				<div
+					class="tabela_ocorrencia_fixas"
+					style="width: 170px; padding: 10px;">
+					<h:panelGrid>
+						<p:row>
+							<p:column>
+								<xcp:commandButton
+									value=""
+									id="btnPeriodoAnterior"
+									ajax="true"
+									actionListener="#{catracaLogBacking.actionAnterior}"
+									update="@form"
+									icon="ui-icon-seek-prev"
+									style="height:24px; width:28px; position:relative; top:7px;" />
+								<span class="calendar"> <p:calendar
+										id="calReferencia"
+										pattern="dd/MM/yyyy"
+										size="9"
+										navigator="true"
+										readonlyInput="true"
+										value="#{catracaLogBacking.selDate}"
+										showOn="both">
+										<p:ajax
+											event="dateSelect"
+											update="calReferencia,table_Catracalog" />
+										<p:ajax
+											event="change"
+											update="calReferencia,table_Catracalog" />
+									</p:calendar></span>
+								<xcp:commandButton
+									value=""
+									id="btnPeriodoProximo"
+									actionListener="#{catracaLogBacking.actionProximo}"
+									update="@form"
+									ajax="true"
+									icon="ui-icon-seek-next"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+
+							</p:column>
+
+						</p:row>
+					</h:panelGrid>
+				</div>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dia}"
+					type="Number">
+					<xcp:outputSimpleNumber
+						value="#{row.dia}"
+						scale="0" />
+				</xcp:column>
+
+				<p:columns
+					value="#{catracaLogBacking.listCols}"
+					var="column"
+					headerText="#{column}"
+					columnIndexVar="i">
+					<h:outputText value="#{catracaLogBacking.getValue(row,i)}" />
+				</p:columns>
+
+			</ui:define>
+
+		</xcp:panelFuncionario>
+
+	</ui:define>
+</ui:composition>

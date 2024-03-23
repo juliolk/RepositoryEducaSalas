@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="Probatorio"
+			backing="#{probatorioBacking}">
+
+			<ui:define name="filtro">
+				<style>
+.vertical-align {
+	vertical-align: top;
+}
+</style>
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+
+					<h:panelGrid
+						columns="3"
+						columnClasses=",,vertical-align">
+						<xcp:panelForm>
+
+							<xcp:numberRange
+								id="txtNrdocFiltro"
+								label="#{bundle.lbl_codigo}"
+								valueStart="#{probatorioBacking.helper.filtro.numProbIni}"
+								valueEnd="#{probatorioBacking.helper.filtro.numProbFim}"
+								size="13"
+								maxlength="10" />
+
+							<xcp:text
+								id="txtDescricaoFiltro"
+								label="#{bundle.lbl_descricao}"
+								value="#{probatorioBacking.helper.filtro.desProb}"
+								maxlength="100"
+								size="75" />
+
+							<xcp:lov
+								id="lovMatriculaFiltro"
+								value="#{probatorioBacking.helper.filtro.funcionariosLov}"
+								label="#{bundle.lbl_matricula}"
+								query="funcionariosLovAtivR"
+								size="6" />
+
+
+						</xcp:panelForm>
+						<p:spacer width="15px" />
+						<xcp:panelForm>
+
+							<xcp:dateRange
+								id="txtDtprobiniFiltro"
+								valueStart="#{probatorioBacking.helper.filtro.dtaProbIniIni}"
+								valueEnd="#{probatorioBacking.helper.filtro.dtaProbIniFim}"
+								label="#{bundle.lbl_inicio}"
+								size="13" />
+
+							<xcp:dateRange
+								id="txtDtprobfimFiltro"
+								valueStart="#{probatorioBacking.helper.filtro.dtaProbFimIni}"
+								valueEnd="#{probatorioBacking.helper.filtro.dtaProbFimFim}"
+								label="#{bundle.lbl_termino}"
+								size="13" />
+
+
+							<p:outputLabel value="#{bundle.lbl_emavaliacao}" />
+
+							<h:panelGrid
+								columns="5"
+								style="border-collapse: separate;border-spacing:3px">
+								<xcp:check
+									id="chkAval"
+									simple="true"
+									value="#{probatorioBacking.helper.filtro.sitProbAval}" />
+
+								<xcp:check
+									id="chkAprov"
+									label="#{bundle.lbl_aprovado}"
+									value="#{probatorioBacking.helper.filtro.sitProbAprov}" />
+
+								<xcp:check
+									id="chkReprov"
+									label="#{bundle.lbl_reprovado}"
+									value="#{probatorioBacking.helper.filtro.sitProbRep}" />
+							</h:panelGrid>
+
+
+						</xcp:panelForm>
+					</h:panelGrid>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_probatorio}"
+					value="#{row.probatorio}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.probatorio}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_comissao}"
+					value="#{row.comissao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.comissaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.inicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.inicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{row.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.termino}" />
+				</xcp:column>
+
+				<!--	<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="10"
+					itens="#{probatorioBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{probatorioBacking.itensTipo}" />
+				</xcp:column>
+
+			-->
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacaoprob}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{probatorioBacking.itensSituacao}"
+					style="padding-top: 0px !important; border-top:0px !important;">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{probatorioBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtProbatorio"
+						label="#{bundle.lbl_probatorio}"
+						required="true"
+						value="#{probatorioBacking.entity.probatorio}"
+						size="8"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999"
+						readonly="true"
+						rendered="#{not probatorioBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{probatorioBacking.entity.situacao}"
+						label="#{bundle.lbl_situacaoprob}"
+						required="true"
+						rendered="#{not probatorioBacking.entity.novo}"
+						readonly="true"
+						itens="#{probatorioBacking.itensSituacao}"
+						width="92px !important;" />
+
+					<!-- Se for necessario editar esse campo, vai ser necessario tentar fazer um update em todas as linhas do boletim, para refletir essa nova matricula  -->
+					<xcp:lov
+						id="lovMatricula"
+						value="#{probatorioBacking.entity.funcionarioFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						readonly="#{not probatorioBacking.entity.novo}"
+						query="funcionariosLovAtivR"
+						size="8" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{probatorioBacking.entity.descricao}"
+						size="77"
+						readonly="#{probatorioBacking.readOnlyForm}"
+						maxlength="80" />
+
+					<xcp:lov
+						id="lovComissao"
+						value="#{probatorioBacking.entity.comissaoFk}"
+						label="#{bundle.lbl_comis}"
+						required="true"
+						query="comissaoativ"
+						size="8"
+						readonly="#{not probatorioBacking.entity.novo and probatorioBacking.readOnlyForm}" />
+
+					<xcp:lov
+						id="lovComissaoPar"
+						value="#{probatorioBacking.entity.comissaoparFk}"
+						label="#{bundle.lbl_comisPares}"
+						query="comissaoativ"
+						size="8"
+						rendered="#{probatorioBacking.temAvaliacaoPares}"
+						readonly="#{not probatorioBacking.entity.novo and probatorioBacking.readOnlyForm}" />
+						
+					<xcp:combo
+						id="cboTipo"
+						value="#{probatorioBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{probatorioBacking.itensTipo}"
+						readonly="#{probatorioBacking.entity.registroFk!=null and !probatorioBacking.entity.novo}"
+						width="92px !important;">
+						<p:ajax
+							event="change"
+							update="lovRegistroProb lovRegistroProb_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovRegistroProb"
+						value="#{probatorioBacking.entity.registroFk}"
+						label="#{bundle.lbl_documento}"
+						required="true"
+						rendered="#{!probatorioBacking.renderedBoletim}"
+						query="documentosfunc"
+						params="#{probatorioBacking.paramsDoc}"
+						size="8"
+						readonly="#{not probatorioBacking.entity.novo and probatorioBacking.readOnlyForm}" />
+
+					<xcp:dateRange
+						id="txtPeriodo"
+						requiredStart="true"
+						valueStart="#{probatorioBacking.entity.inicio}"
+						valueEnd="#{probatorioBacking.entity.termino}"
+						label="#{bundle.lbl_inicio}"
+						readonly="#{not probatorioBacking.entity.novo and probatorioBacking.readOnlyForm}"
+						margin="6px !important;"
+						size="8" />
+
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{probatorioBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						size="25" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{probatorioBacking.entity.obs}"
+						size="4000"
+						cols="79" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<p:outputPanel rendered="#{probatorioBacking.renderedBoletim}">
+					<ui:include src="ProbatorioForm/BoletimForm.xhtml" />
+				</p:outputPanel>
+
+				<ui:include src="ProbatorioForm/ProbatorioSindicanciaForm.xhtml" />
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcpfunc:anexosButton
+					id="atestados"
+					entity="#{probatorioBacking.entity}"
+					funcionarioPK="#{probatorioBacking.entity.funcionarioFk.PK}" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<xcpfunc:anexosDialog />
+	</ui:define>
+</ui:composition>

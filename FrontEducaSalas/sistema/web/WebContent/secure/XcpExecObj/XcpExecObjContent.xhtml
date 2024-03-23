@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="panelExecObjContent">
+
+		<xcp:panelForm
+			rendered="#{xcpExecObjBacking.helper.execObjVO == null}">
+			<xcp:lov
+				id="lovCodObjeto"
+				value="#{xcpExecObjBacking.helper.codObjeto}"
+				size="30"
+				label="#{bundle.lbl_codObjeto}"
+				query="xcp_objeto_execucao"
+				selectionListener="#{xcpExecObjBacking.selectCodObjeto}"
+				update="panelExecObjContent" />
+		</xcp:panelForm>
+
+		<xcp:panelGrid
+			rendered="#{xcpExecObjBacking.helper.execObjVO != null}">
+			<p:row
+				rendered="#{xcpExecObjBacking.helper.execObjVO.xcpObjeto.indSalvarConfig == 1}">
+				<p:column
+					colspan="#{xcpExecObjBacking.helper.execObjVO.multiplosModelos ? 2 : 1}">
+					<p:fieldset
+						legend="#{bundle.lbl_carregarConfig}"
+						style="margin-bottom: 10px;"
+						toggleable="true"
+						collapsed="true"
+						toggleSpeed="0">
+						<xcp:lov
+							id="lovCarregarConfig"
+							value="#{xcpExecObjBacking.helper.carregarConfig}"
+							label="#{bundle.lbl_carregarConfig}"
+							simple="true"
+							query="xcp_execucao_salva"
+							params="#{xcpExecObjBacking.paramsLovConfig}"
+							selectionListener="#{xcpExecObjBacking.selectCarregarConfig}"
+							update="panelExecObjContent" />
+					</p:fieldset>
+				</p:column>
+			</p:row>
+
+
+
+
+			<p:row>
+				<p:column
+					style="vertical-align: top;"
+					rendered="#{xcpExecObjBacking.helper.execObjVO.multiplosModelos}">
+					<p:fieldset
+						legend="#{bundle.lbl_modelo}"
+						style="margin-bottom: 10px; margin-right: 10px;">
+						<xcp:radio
+							id="cboModelo"
+							label="#{bundle.lbl_modelo}"
+							value="#{xcpExecObjBacking.helper.execObjVO.seqModelo}"
+							required="true"
+							simple="true"
+							layout="pageDirection">
+							<f:selectItems
+								value="#{xcpExecObjBacking.helper.execObjVO.listaModelos}"
+								var="it"
+								itemValue="#{it.seqModelo}"
+								itemLabel="#{it.desModelo}" />
+						</xcp:radio>
+					</p:fieldset>
+				</p:column>
+
+				<p:column style="vertical-align: top;">
+				
+					<p:fieldset
+						legend="#{bundle.lbl_vinculacaoDoc}"
+						style="margin-bottom: 10px;"
+						toggleable="true"
+						collapsed="false"
+						toggleSpeed="0"
+						rendered="#{xcpExecObjBacking.helper.execObjVO.xcpObjeto.indVincdoc == 1}">
+						<xcp:panelForm>
+
+							<xcp:lov
+								id="lovTipodoc"
+								value="#{xcpExecObjBacking.helper.execObjVO.tipDocFk}"
+								label="#{bundle.lbl_tipodocdlg}"
+								required="true"
+								query="tipodocexec"
+								size="6"
+								params="#{xcpExecObjBacking.paramsTipoDoc}"
+								update="lovProcesso lovProcesso_l" />
+
+							<xcp:lov
+								id="lovProcesso"
+								value="#{xcpExecObjBacking.helper.execObjVO.processoFk}"
+								label="#{bundle.lbl_processo}"
+								query="processos"
+								required="#{model.requiredProcNovo}"
+								size="25" />
+
+							<xcp:text
+								id="txtNrdoc"
+								label="#{bundle.lbl_nrdoc}"
+								required="true"
+								value="#{xcpExecObjBacking.helper.execObjVO.nrDoc}"
+								size="20"
+								maxlength="18" />
+
+						</xcp:panelForm>
+					</p:fieldset>
+					
+					<c:forEach
+						items="#{xcpExecObjBacking.helper.execObjVO.listaGrupos}"
+						var="grupo">
+						<c:if test="#{grupo.indMostrar}">
+							<p:fieldset
+								legend="#{bundle[xcpExecObjBacking.getChaveGrupo(grupo)]}"
+								style="margin-bottom: 10px;"
+								toggleable="true"
+								collapsed="#{xcpExecObjBacking.helper.getGrupoCollapsed(grupo)}">
+
+								<h:panelGrid
+									columns="#{grupo.linhaSizeMax * 2}"
+									columnClasses="form_label,form_content,form_label_col2,form_content,form_label_col2,form_content,form_label_col2,form_content,form_label_col2,form_content"
+									cellpadding="0"
+									cellspacing="0"
+									border="0"
+									styleClass="exec-obj-lista-campos">
+
+									<c:forEach
+										items="#{grupo.listaLinhas}"
+										var="linha">
+
+										<c:forEach
+											items="#{linha.listaParametros}"
+											var="row">
+											<c:choose>
+												<c:when test="#{empty row}">
+													<p:spacer
+														width="1"
+														height="1" />
+													<p:spacer
+														width="1"
+														height="1" />
+												</c:when>
+												<c:otherwise>
+													<xcp:creator
+														index="#{row.seqObjetoParametro}"
+														escapeLabel="false" />
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+
+									</c:forEach>
+
+								</h:panelGrid>
+
+							</p:fieldset>
+						</c:if>
+					</c:forEach>
+				</p:column>
+			</p:row>
+
+			<p:row
+				rendered="#{xcpExecObjBacking.helper.execObjVO.xcpObjeto.indSalvarConfig == 1}">
+				<p:column
+					colspan="#{xcpExecObjBacking.helper.execObjVO.multiplosModelos ? 2 : 1}">
+					<p:fieldset
+						legend="#{bundle.lbl_salvarConfig}"
+						toggleable="true"
+						collapsed="true"
+						toggleSpeed="0"
+						style="margin-bottom: 10px;">
+						<p:ajax
+							event="toggle"
+							listener="#{xcpExecObjBacking.toggleSalvarConfig}"
+							update="panelSalvarConfig,btnExecutar,btnExecutarSplit"
+							delay="1">
+							<p:resetInput target="panelSalvarConfig" />
+						</p:ajax>
+						<p:outputPanel id="panelSalvarConfig">
+							<xcp:panelForm>
+								<xcp:radio
+									id="cboTipSalvarConfig"
+									value="#{xcpExecObjBacking.helper.tipSalvarConfig}"
+									label="#{bundle.lbl_tipSalvarConfig}"
+									itens="#{xcpExecObjBacking.itensTipSalvarConfig}">
+									<p:ajax
+										update="btnExecutar,btnExecutarSplit,btnSalvarConfig,lovSalvarConfig,lovSalvarConfig_l,txtCodConfiguracao,txtCodConfiguracao_l,txtDesConfiguracao,txtDesConfiguracao_l"
+										listener="#{xcpExecObjBacking.changeTipSalvarConfig}" />
+								</xcp:radio>
+
+								<xcp:lov
+									id="lovSalvarConfig"
+									value="#{xcpExecObjBacking.helper.salvarConfig}"
+									label="#{bundle.lbl_configuracao}"
+									query="xcp_execucao_salva"
+									params="#{xcpExecObjBacking.paramsLovConfig}"
+									required="true"
+									rendered="#{xcpExecObjBacking.helper.tipSalvarConfig == 0}"
+									update="txtDesConfiguracao" />
+
+								<xcp:number
+									id="txtCodConfiguracao"
+									label="#{bundle.lbl_codigo}"
+									value="#{xcpExecObjBacking.helper.salvarConfig.codConfiguracao}"
+									scale="0"
+									rendered="#{xcpExecObjBacking.helper.tipSalvarConfig == 1}"
+									required="true" />
+
+								<xcp:text
+									id="txtDesConfiguracao"
+									label="#{bundle.lbl_descricao}"
+									value="#{xcpExecObjBacking.helper.salvarConfig.desConfiguracao}"
+									rendered="#{xcpExecObjBacking.helper.tipSalvarConfig != null}"
+									required="true" />
+							</xcp:panelForm>
+
+							<xcp:commandButton
+								id="btnSalvarConfig"
+								icon="ui-icon-disk"
+								value="#{bundle.btn_salvar}"
+								actionListener="#{xcpExecObjBacking.actionSalvar}"
+								process="panelExecObjContent"
+								update="panelExecObjContent"
+								onstart="PF('w_dlgXcpExecStatus').show();"
+								oncomplete="PF('w_dlgXcpExecStatus').hide();"
+								disabled="#{xcpExecObjBacking.helper.tipSalvarConfig == null}" />
+						</p:outputPanel>
+					</p:fieldset>
+				</p:column>
+			</p:row>
+
+			<p:row
+				rendered="#{xcpExecObjBacking.helper.execObjVO.xcpObjeto.indAgendamento == 1
+				        and xcpExecObjBacking.helper.execObjVO.xcpObjeto.tipObjeto != 2}">
+				<p:column
+					colspan="#{xcpExecObjBacking.helper.execObjVO.multiplosModelos ? 2 : 1}">
+					<p:fieldset
+						legend="#{bundle.lbl_agendarExecucao}"
+						toggleable="true"
+						collapsed="true"
+						toggleSpeed="0"
+						style="margin-bottom: 10px;">
+						<p:ajax
+							event="toggle"
+							listener="#{xcpExecObjBacking.toggleAgendarExecucao}"
+							update="panelAgendarExecucao,btnExecutar,btnExecutarSplit"
+							delay="1">
+							<p:resetInput target="panelAgendarExecucao" />
+						</p:ajax>
+						<p:outputPanel id="panelAgendarExecucao">
+							<p:outputPanel
+								rendered="#{xcpExecObjBacking.helper.agendarAberto}">
+								<xcp:panelForm>
+									<xcp:combo
+										id="cboTipAgenda"
+										value="#{xcpExecObjBacking.helper.agenda.tipAgenda}"
+										label="#{bundle.lbl_tipAgenda}"
+										itens="#{xcpExecObjBacking.itensTipAgenda}"
+										required="true">
+										<p:ajax
+											update="chkDiasSemana,chkDiasSemana_l,txtNumDiaMes,txtNumDiaMes_l,txtHraExecucao,txtHraExecucao_l,txtQtdMinutos,txtQtdMinutos_l,txtDthExecucao,txtDthExecucao_l" />
+									</xcp:combo>
+
+									<xcp:manyCheck
+										id="chkDiasSemana"
+										value="#{xcpExecObjBacking.helper.diasSelecionados}"
+										label="#{bundle.lbl_diasSemana}"
+										itens="#{xcpExecObjBacking.itensDiasSemana}"
+										rendered="#{xcpExecObjBacking.helper.agenda.tipAgenda == 2}"
+										required="true" />
+
+									<xcp:number
+										id="txtNumDiaMes"
+										value="#{xcpExecObjBacking.helper.agenda.numDiaMes}"
+										label="#{bundle.lbl_numDiaMes}"
+										size="2"
+										precision="2"
+										scale="0"
+										minValue="1"
+										maxValue="31"
+										rendered="#{xcpExecObjBacking.helper.agenda.tipAgenda == 3}"
+										required="true" />
+
+									<xcp:time
+										id="txtHraExecucao"
+										value="#{xcpExecObjBacking.helper.agenda.hraExecucao}"
+										label="#{bundle.lbl_hraExecucao}"
+										rendered="#{xcpExecObjBacking.helper.agenda.tipAgenda == 1
+										        or xcpExecObjBacking.helper.agenda.tipAgenda == 2
+										        or xcpExecObjBacking.helper.agenda.tipAgenda == 3}"
+										required="true" />
+
+									<xcp:dateTime
+										id="txtDthExecucao"
+										value="#{xcpExecObjBacking.helper.agenda.hraExecucao}"
+										label="#{bundle.lbl_dthExecucao}"
+										rendered="#{xcpExecObjBacking.helper.agenda.tipAgenda == 5}"
+										required="true" />
+
+									<xcp:number
+										id="txtQtdMinutos"
+										label="#{xcpExecObjBacking.helper.codObjeto.indSegundos == 0 ? bundle.lbl_qtdMinutos : bundle.lbl_qtdSegundos}"
+										value="#{xcpExecObjBacking.helper.agenda.qtdMinutos}"
+										size="5"
+										precision="5"
+										scale="0"
+										minValue="1"
+										maxValue="99999"
+										rendered="#{xcpExecObjBacking.helper.agenda.tipAgenda == 4}"
+										required="true" />
+
+									<xcp:check
+										id="chkAgendaEnviarEmail"
+										value="#{xcpExecObjBacking.helper.agengaEnviarEmail}"
+										label="#{bundle.lbl_enviarEmail}">
+										<p:ajax
+											event="change"
+											update="lovCodServer,lovCodServer_l,lovSeqTextoSucesso,lovSeqTextoSucesso_l,lovSeqTextoErro,lovSeqTextoErro_l,txtDesEmailsSucesso,txtDesEmailsSucesso_l,txtDesEmailsErro,txtDesEmailsErro_l"
+											process="@this" />
+									</xcp:check>
+
+									<xcp:lov
+										id="lovCodServer"
+										value="#{xcpExecObjBacking.helper.agenda.codServerFk}"
+										label="#{bundle.lbl_codServer}"
+										query="xcp_server_email"
+										size="10"
+										required="true"
+										rendered="#{xcpExecObjBacking.helper.agengaEnviarEmail}" />
+
+									<xcp:text
+										id="txtDesEmailsSucesso"
+										label="#{bundle.lbl_desEmailsSucesso}"
+										value="#{xcpExecObjBacking.helper.agenda.desEmailsSucesso}"
+										size="100"
+										maxlength="4000"
+										required="true"
+										rendered="#{xcpExecObjBacking.helper.agengaEnviarEmail}" />
+
+									<xcp:text
+										id="txtDesEmailsErro"
+										label="#{bundle.lbl_desEmailsErro}"
+										value="#{xcpExecObjBacking.helper.agenda.desEmailsErro}"
+										size="100"
+										maxlength="4000"
+										required="true"
+										rendered="#{xcpExecObjBacking.helper.agengaEnviarEmail}" />
+
+									<xcp:lov
+										id="lovSeqTextoSucesso"
+										value="#{xcpExecObjBacking.helper.agenda.seqTextoSucessoFk}"
+										label="#{bundle.lbl_seqTextoSucesso}"
+										query="xcp_texto"
+										size="20"
+										required="true"
+										rendered="#{xcpExecObjBacking.helper.agengaEnviarEmail}" />
+
+									<xcp:lov
+										id="lovSeqTextoErro"
+										value="#{xcpExecObjBacking.helper.agenda.seqTextoErroFk}"
+										label="#{bundle.lbl_seqTextoErro}"
+										query="xcp_texto"
+										size="20"
+										required="true"
+										rendered="#{xcpExecObjBacking.helper.agengaEnviarEmail}" />
+
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btnAgendarExecucao"
+									icon="ui-icon-disk"
+									value="#{bundle.btn_agendar}"
+									actionListener="#{xcpExecObjBacking.actionAgendar}"
+									process="panelExecObjContent"
+									update="panelExecObjContent"
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide();" />
+							</p:outputPanel>
+						</p:outputPanel>
+					</p:fieldset>
+				</p:column>
+			</p:row>
+		</xcp:panelGrid>
+
+		<p:toolbar
+			rendered="#{xcpExecObjBacking.helper.execObjVO != null}"
+			styleClass="xcp_pmanut_form_toolbar">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btnExecutar"
+					icon="ui-icon-gear"
+					value="#{xcpExecObjBacking.labelExecutar}"
+					actionListener="#{xcpExecObjBacking.actionExecutar}"
+					process="panelExecObjContent"
+					update="panelExecObjContent"
+					onstart="PF('w_dlgXcpExecStatus').show();"
+					oncomplete="PF('w_dlgXcpExecStatus').hide();"
+					disabled="#{xcpExecObjBacking.disabledBtnExecutar}"
+					rendered="#{not xcpExecObjBacking.renderedVisualizar}" />
+
+
+				<p:splitButton
+					id="btnExecutarSplit"
+					icon="ui-icon-gear"
+					value="#{xcpExecObjBacking.labelExecutar}"
+					actionListener="#{xcpExecObjBacking.actionExecutar}"
+					process="panelExecObjContent"
+					update="panelExecObjContent"
+					onstart="PF('w_dlgXcpExecStatus').show();"
+					oncomplete="PF('w_dlgXcpExecStatus').hide();"
+					disabled="#{xcpExecObjBacking.disabledBtnExecutar}"
+					rendered="#{xcpExecObjBacking.renderedVisualizar}">
+
+					<p:menuitem
+						icon="ui-icon-gear"
+						value="#{xcpExecObjBacking.labelExecutarPreview}"
+						actionListener="#{xcpExecObjBacking.actionExecutar}"
+						process="panelExecObjContent"
+						update="panelExecObjContent"
+						onstart="PF('w_dlgXcpExecStatus').show();"
+						oncomplete="PF('w_dlgXcpExecStatus').hide();"
+						disabled="#{xcpExecObjBacking.disabledBtnExecutar}"
+						preview="true" />
+
+				</p:splitButton>
+
+				<xcp:commandButton
+					id="btnLimpar"
+					icon="icon-limpar2"
+					value="#{xcpExecObjBacking.labelLimpar}"
+					action="#{xcpExecObjBacking.actionLimpar}"
+					rendered="#{xcpExecObjBacking.helper.codObjeto.indLimpar == 1}"
+					process="@this"
+					update="panelExecObjContent">
+					<p:resetInput target="panelExecObjContent" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btnCancelar"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{xcpExecObjBacking.labelCancelar}"
+					action="#{xcpExecObjBacking.actionCancelar}"
+					process="@this"
+					update="panelExecObjContent"
+					rendered="#{xcpExecObjBacking.renderedCancelar}" />
+
+				<xcp:commandButton
+					id="btnUpload"
+					type="button"
+					value="#{xcpExecObjBacking.labelUpload}"
+					onclick="PF('wDlgXcpExecUpload').show();"
+					rendered="#{xcpExecObjBacking.helper.execObjVO.xcpObjeto.indUpload == 1}" />
+			</f:facet>
+		</p:toolbar>
+
+		<p:remoteCommand
+			id="cmdFinalRelatorio"
+			name="cmdFinalRelatorio"
+			action="#{xcpExecObjBacking.actionFinalRelatorio}"
+			process="@this"
+			update="panelExecObjContent" />
+
+	</p:outputPanel>
+	<script>
+		$( 'label' ).each(function() {
+		 var text  = $( this ).html();
+		   if (text.toLowerCase().indexOf('&lt;br&gt;') >= 0){
+		     $( this ).closest('div').css('padding-bottom','5px');
+		   }
+		});
+	</script>
+</ui:composition>

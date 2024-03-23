@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="DemandasAcoes"
+		backing="#{demandasAcoesBacking}"
+		masterId="DemandasInspecoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_abertura}"
+				value="#{row.abertura}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.abertura}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_conclusao}"
+				value="#{row.conclusao}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.conclusao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_prazo}"
+				value="#{row.prazo}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.prazo}" />
+			</xcp:column>
+
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_responsavel}"
+				value="#{row.responsavelFk.nome}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.responsavelFk.nome}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:memo
+					id="txtDescricao_DemandasAcoes"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{demandasAcoesBacking.entity.descricao}"
+					maxlength="4000"
+					style="width: 535px" />
+
+				<h:outputLabel value="#{bundle.lbl_abertura}:*" />
+
+				<h:panelGroup
+					layout="block"
+					style="width:850px">
+					<xcp:date
+						id="txtAbertura_DemandasAcoes"
+						required="true"
+						simple="true"
+						style="float:left"
+						value="#{demandasAcoesBacking.entity.abertura}"
+						label="#{bundle.lbl_abertura}" />
+
+					<h:panelGrid
+						columns="2"
+						style="float:left;margin-left:5px">
+						<xcp:date
+							id="txtConclusao_DemandasAcoes"
+							style="margin-left:5px"
+							value="#{demandasAcoesBacking.entity.conclusao}"
+							label="#{bundle.lbl_conclusao}" />
+					</h:panelGrid>
+
+					<h:panelGrid
+						columns="2"
+						style="float:left;margin-left:5px">
+						<xcp:date
+							id="txtPrazo_DemandasAcoes"
+							style="margin-left:5px"
+							value="#{demandasAcoesBacking.entity.prazo}"
+							label="#{bundle.lbl_prazo}" />
+					</h:panelGrid>
+
+				</h:panelGroup>
+
+				<xcp:lov
+					id="lovResponsavelLoc"
+					value="#{demandasAcoesBacking.entity.responsavelFk}"
+					label="#{bundle.lbl_responsavelLocal}"
+					query="funcionariosLov"
+					size="10" />
+
+			</xcp:panelForm>
+			<p:spacer height="2" />
+			<p:fieldset
+				legend="#{bundle.title_acompanhamentos}"
+				rendered="#{!demandasAcoesBacking.entity.novo}"
+				style="width: 930px;">
+				<h:panelGroup
+					style="width: 250px;"
+					layout="block">
+					<p:dataTable
+						id="table_Acompanhamentos"
+						var="row"
+						selectionMode="single"
+						value="#{demandasAcoesBacking.helper.acompanhamentos}"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						selection="#{demandasAcoesBacking.helper.demandasAcompanhamentosSelecionada}"
+						rowKey="#{row.PK}">
+
+						<p:ajax
+							event="rowSelect"
+							oncomplete="PF('dlgAcompanhamentos_w').show();"
+							update=":#{p:component('dlgAcompanhamentos')}" />
+
+						<xcp:column
+							headerText="#{bundle.col_numero}"
+							type="Number"
+							size="5">
+							<xcp:outputSimpleNumber
+								value="#{row.numero}"
+								precision="5"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_data}"
+							type="Date"
+							size="10">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_descricao}"
+							type="String"
+							size="50">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_responsavel}"
+							type="String"
+							size="50">
+							<xcp:outputSimple value="#{row.responsavel}" />
+						</xcp:column>
+
+						<xcp:column style="width:20px;">
+							<xcp:commandButton
+								id="btn_removerAcompanhamento"
+								icon="ui-icon-trash"
+								update="table_Acompanhamentos"
+								immediate="true"
+								action="#{demandasAcoesBacking.actionRemoveAcompanhamento(row)}">
+								<!-- <h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" /> -->
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+						</xcp:column>
+
+					</p:dataTable>
+
+
+				</h:panelGroup>
+				<xcp:commandButton
+					id="btn_adicionar_Acompamnhamento"
+					value="#{bundle.btn_adicionar}"
+					update=":frmAcompanhamentos"
+					oncomplete="PF('dlgAcompanhamentos_w').show();"
+					icon="ui-icon-plusthick"
+					action="#{demandasAcoesBacking.actionNovoAcompanhamento}" />
+			</p:fieldset>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Assistenciasocial"
+			backing="#{assistPsicoBacking}">
+
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<xcp:panelForm>
+
+						<xcp:lov
+							id="lovAssistenciaSelecao"
+							value="#{assistPsicoBacking.assistencia}"
+							label="#{bundle.lbl_assistencia_lov}"
+							params="#{assistPsicoBacking.paramsAssistenciaFuncao}"
+							selectionListener="#{assistPsicoBacking.selectAssistencia}"
+							query="assistencia"
+							required="true"
+							update="table_Assistenciasocial btnNovo_Assistenciasocial btnPesq_Assistenciasocial"
+							readonly="#{assistPsicoBacking.funcionario==null}"
+							size="5" />
+
+					</xcp:panelForm>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="5">
+					<xcp:outputSimpleTimestamp value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="5">
+					<xcp:outputSimpleTimestamp value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovAssistencia"
+						value="#{assistPsicoBacking.assistencia}"
+						label="#{bundle.lbl_assistencia_social}"
+						readonly="true"
+						required="true"
+						query="assistencia"
+						size="8" />
+
+					<xcp:dateTime
+						id="txtDataIni"
+						required="true"
+						value="#{assistPsicoBacking.entity.dtinicio}"
+						label="#{bundle.lbl_dtinicio}"
+						readonly="#{not assistPsicoBacking.entity.novo}" />
+
+					<xcp:dateTime
+						id="txtDataFim"
+						value="#{assistPsicoBacking.entity.dtfim}"
+						label="#{bundle.lbl_dtafim}" />
+
+					<xcp:lov
+						id="lovResponsavel"
+						value="#{assistPsicoBacking.entity.responsavelFk}"
+						label="#{bundle.lbl_responsavel}"
+						query="atendente_assist"
+						params="#{assistPsicoBacking.paramsAssistencia}"
+						size="8" />
+
+					<xcp:combo
+						id="cboEncaminhamento"
+						value="#{assistPsicoBacking.entity.encaminhamento}"
+						label="#{bundle.lbl_encaminhamento}"
+						itens="#{assistPsicoBacking.itensTipo}">
+						<p:ajax
+							update="lovMatEnc lovMatEnc_l lovSetor lovSetor_l"
+							listener="#{assistPsicoBacking.changeTipo}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovMatEnc"
+						value="#{assistPsicoBacking.entity.matEncFk}"
+						label="#{bundle.lbl_encaminhadaPor}"
+						query="funcionarios"
+						size="8"
+						required="true"
+						rendered="#{assistPsicoBacking.entity.encaminhamento == 2}" />
+						
+					<xcp:lov
+						id="lovSetor"
+						value="#{assistPsicoBacking.entity.setorFk}"
+						label="#{bundle.lbl_encaminhadaPor}"
+						query="set_validade"
+						size="8"
+						required="true"
+						rendered="#{assistPsicoBacking.entity.encaminhamento == 3}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{assistPsicoBacking.entity.obs}"
+						size="4000" />
+				</xcp:panelForm>
+			</ui:define>
+			<ui:define name="detalhes">
+
+				<ui:include src="AssistPsicoForm/AssistPsicoMotForm.xhtml" />
+
+				<ui:include src="AssistPsicoForm/AssistPsicoAtendForm.xhtml" />
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcpfunc:anexosButton
+					id="assistenciasocial"
+					entity="#{assistPsicoBacking.entity}"
+					funcionarioPK="#{assistPsicoBacking.funcionario.PK}" />
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<xcpfunc:anexosDialog />
+
+		<p:dialog
+			header="#{bundle.title_tec}"
+			modal="true"
+			id="dlgTec"
+			widgetVar="dlgTec_w"
+			dynamic="true">
+			<xcp:form id="frmDlgTec">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovMatriculaTec"
+						value="#{assistPsicoAtendBacking.tecSel.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="atendente_assist"
+						params="#{assistPsicoBacking.paramsAssistencia}"
+						size="8" />
+
+					<xcp:combo
+						id="cboTecresponsavel"
+						value="#{assistPsicoAtendBacking.tecSel.tecresponsavel}"
+						label="#{bundle.lbl_tecresponsavel}"
+						required="true"
+						itens="#{assistPsicoAtendBacking.itensIndSimNao}" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_ok"
+							icon="ui-icon-disk"
+							action="#{assistPsicoAtendBacking.actionSalvarTec}"
+							value="#{bundle.btn_gravar}"
+							update=":#{p:component('tblTec')}" />
+
+						<xcp:commandButton
+							id="btn_voltar_env"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('dlgTec_w').hide();" />
+
+					</f:facet>
+
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

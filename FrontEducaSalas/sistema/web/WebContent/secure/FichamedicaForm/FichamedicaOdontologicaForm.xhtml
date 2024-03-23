@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:toolbar id="toolform">
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_adic_fichaOdonto"
+				immediate="true"
+				action="#{fichamedicaBacking.actionOpenFichaOdonto}"
+				value="#{bundle.btn_adicionar}"
+				icon="ui-icon-plusthick"
+				disabled="#{fichamedicaBacking.disabledNovo}" />
+		</f:facet>
+	</p:toolbar>
+
+	<p:dataTable
+		id="tblFichaOdontologica"
+		var="fichaOdonto"
+		rowKey="#{fichaOdonto.PK}"
+		paginator="true"
+		selectionMode="single"
+		paginatorPosition="bottom"
+		rows="14" 
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		value="#{fichamedicaBacking.listaFichaOdonto}"
+		selection="#{fichamedicaBacking.fichaOdontoSel}"
+		>
+
+		<p:ajax
+			event="rowSelect"
+			listener="#{fichamedicaBacking.actionEditFichaodonto}" 
+			update="tblFichaOdontologica"/>
+						
+
+		<xcp:column
+			headerText="#{bundle.col_dtexame}"
+			type="Date"
+			width="7">
+			<xcp:outputSimpleDate value="#{fichaOdonto.dtexame}" />
+		</xcp:column>
+
+		<p:column
+			headerText="#{bundle.col_indAlergia}"
+			width="5">
+			<xcp:outputSimple
+				value="#{fichaOdonto.indAlergia}" itens="#{fichamedicaBacking.itensIndSimNao}" />
+		</p:column>
+
+		<p:column
+			headerText="#{bundle.col_indHipertensao}"
+			width="5">
+			<xcp:outputSimple
+				value="#{fichaOdonto.indHipertensao}" itens="#{fichamedicaBacking.itensIndSimNao}" />
+		</p:column>
+		<p:column
+			headerText="#{bundle.col_indDiabetes}"
+			width="5">
+			<xcp:outputSimple
+				value="#{fichaOdonto.indDiabetes}" itens="#{fichamedicaBacking.itensIndSimNao}" />
+		</p:column>
+		<p:column
+			headerText="#{bundle.col_indSangramentogengiva}"
+			width="5">
+			<xcp:outputSimple
+				value="#{fichaOdonto.indSangramentogengiva}" itens="#{fichamedicaBacking.itensIndSimNao}" />
+		</p:column>
+		<p:column
+			headerText="#{bundle.col_indSensibilidadedentes}"
+			width="5">
+			<xcp:outputSimple
+				value="#{fichaOdonto.indSensibilidadedentes}" itens="#{fichamedicaBacking.itensIndSimNao}" />
+		</p:column>
+		<p:column
+			headerText="#{bundle.col_indMedicamento}"
+			width="5">
+			<xcp:outputSimple
+				value="#{fichaOdonto.indMedicamento}" itens="#{fichamedicaBacking.itensIndSimNao}" />
+		</p:column>
+		
+		<p:column
+			headerText="#{bundle.col_indProblemasaude}"
+			width="5">
+			<xcp:outputSimple
+				value="#{fichaOdonto.indProblemasaude}"  itens="#{fichamedicaBacking.itensIndSimNao}"/>
+		</p:column>
+		<xcp:column width="25">
+			<h:panelGroup layout="block">
+				<xcp:commandButton
+					id="btn_removerSel_fichaOdonto"
+					immediate="true"
+					action="#{fichamedicaBacking.actionRemoverFichaOdonto(fichaOdonto)}"
+					process="@this"
+					update="tblFichaOdontologica"
+					disabled="#{fichamedicaBacking.disabledExcluir}"
+					icon="ui-icon-trash">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+			</h:panelGroup>
+		</xcp:column>
+
+	</p:dataTable>
+
+
+	
+
+</ui:composition>

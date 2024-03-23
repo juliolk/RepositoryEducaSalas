@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:dialog
+		header="#{bundle.tit_efetivacao}"
+		modal="true"
+		id="dlg"
+		widgetVar="dlg_w">
+		<xcp:form id="frm">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtNovaMatricula"
+					label="#{bundle.lbl_novaMatricula}"
+					value="#{propostasBacking.helper.novaMatricula}"
+					size="8"
+					precision="8"
+					scale="0"
+					maxValue="99999999" />
+
+				<xcp:date
+					id="txtDtadm"
+					value="#{propostasBacking.helper.dtadm}"
+					label="#{bundle.lbl_dtadm}" />
+
+				<xcp:lov
+					id="lovCargo"
+					value="#{propostasBacking.helper.cargo}"
+					params="#{propostasBacking.paramsCargo}"
+					label="#{bundle.lbl_cargo}"
+					query="cargos_prop"
+					size="8" />
+
+				<xcp:lov
+					id="lovVinculo"
+					value="#{propostasBacking.helper.vinculos}"
+					label="#{bundle.lbl_vinculo}"
+					query="vinculos_est"
+					size="8" />
+
+				<xcp:lov
+					id="lovCcusto"
+					value="#{propostasBacking.helper.ccustos}"
+					label="#{bundle.lbl_ccusto}"
+					query="ccusto"
+					size="8" />
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{propostasBacking.helper.tipodocumento}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_pen"
+					params="#{propostasBacking.paramsTipoDoc}"
+					size="8" />
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_efeticar"
+						icon="ui-icon-disk"
+						action="#{propostasBacking.actionEfetiva}"
+						value="#{bundle.btn_gerar_documento}" />
+
+					<xcp:commandButton
+						id="btn_sair"
+						immediate="true"
+						oncomplete="PF('dlg_w').hide();"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_sair}" />
+				</f:facet>
+			</p:toolbar>
+			<p:remoteCommand
+				name="rcOpen"
+				oncomplete="PF('dlg_w').show();" />
+
+			<p:remoteCommand
+				name="rcClose"
+				oncomplete="PF('dlg_w').hide();"
+				update=":form" />
+		</xcp:form>
+
+	</p:dialog>
+
+</ui:composition>

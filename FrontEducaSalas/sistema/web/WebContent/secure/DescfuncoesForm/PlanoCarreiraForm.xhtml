@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<p:spacer width="10px" />
+		<h:panelGrid
+			columns="6"
+			styleClass="tabela_alinhamento">
+			<xcp:number
+				id="txtSalBase_planoCarreira"
+				label="#{bundle.lbl_vencimento}"
+				value="#{descfuncoesBacking.entity.funcaoFk.salbase}"
+				size="10"
+				precision="10"
+				readonly="true"
+				scale="2" />
+
+			<xcp:text
+				id="txtPadrao_planoCarreira"
+				label="#{bundle.lbl_padrao}"
+				value="#{descfuncoesBacking.cargos.padrao}"
+				readonly="true"
+				size="20" />
+
+			<xcp:text
+				id="txtClasse_planoCarreira"
+				label="#{bundle.lbl_classe}"
+				value="#{descfuncoesBacking.cargos.classe}"
+				readonly="true"
+				size="2" />
+		</h:panelGrid>
+		<p:spacer width="10px" />
+		<h:panelGrid columns="3">
+			<p:dataTable
+				id="tabPadroes"
+				var="row"
+				value="#{descfuncoesBacking.listaPadroesNiveis}"
+				scrollHeight="120"
+				scrollWidth="350"
+				scrollable="true"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+
+				<p:column headerText="#{bundle.col_classe}">
+					<xcp:outputSimple value="#{row.classe}" />
+				</p:column>
+
+
+				<p:column headerText="#{bundle.col_valor}">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="10"
+						scale="2" />
+				</p:column>
+
+			</p:dataTable>
+
+			<p:spacer width="10px" />
+
+			<p:dataTable
+				id="tabPadroesCargos"
+				var="row"
+				value="#{descfuncoesBacking.listaPadroesNiveisCargo}"
+				scrollHeight="120"
+				scrollWidth="500"
+				scrollable="true"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+
+				<p:column
+					headerText="#{bundle.col_padrao}">
+					<xcp:outputSimple value="#{row.padrao}" />
+				</p:column>
+
+				<p:column headerText="#{bundle.col_classe}">
+					<xcp:outputSimple value="#{row.classe}" />
+				</p:column>
+
+				<p:column headerText="#{bundle.col_valor}">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="10"
+						scale="2" />
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+	</p:outputPanel>
+</ui:composition>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:tab
+		id="#{id}"
+		title="#{bundle.title_substituicao}"
+		rendered="#{transferenciasBacking.isRendered(''.concat(id))}">
+
+		<p:dataTable
+			id="table_#{id}"
+			var="row"
+			value="#{transferenciasBacking.helper.listaSubstituicoes}"
+			rowKey="#{row.PK}"
+			rowIndexVar="idxPrinc"
+			paginator="true"
+			selectionMode="single"
+			paginatorPosition="bottom"
+			selection="#{transferenciasBacking.helper.transfSel}"
+			rows="#{viewUtil.tableRows}"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			style="margin-bottom:0;"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc,row.dtcancelamento)}">
+
+			<p:ajax
+				event="rowSelect"
+				listener="#{transferenciasBacking.actionMontaSelecaoOutras}"
+				update=":formdlgSubs"
+				oncomplete="PF('dlgSubs_w').show();" />
+
+			<p:column style="width:16px">
+				<p:rowToggler rendered="#{row.detalhes}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_inicio}"
+				width="60">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_termino}"
+				width="60">
+				<xcp:outputSimpleDate value="#{row.dttermino}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_qtdDias}"
+				width="20">
+				<xcp:outputSimpleNumber
+					scale="0"
+					precision="5"
+					value="#{row.diffDays}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_desPadrao}"
+				width="60">
+				<xcp:outputSimple value="#{row.desPadrao}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_matricula}"
+				width="50">
+				<xcp:outputSimple value="#{row.matriculaSubsFk.matricula}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_momeSubstituido}"
+				width="250">
+				<xcp:outputSimple value="#{row.matriculaSubsFk.nome}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_documento}"
+				width="100"
+				rendered="#{!transferenciasBacking.exibirMotivoTabela}">
+				<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_motivo}"
+				width="100"
+				rendered="#{transferenciasBacking.exibirMotivoTabela}">
+				<xcp:outputSimple value="#{row.desMotivo}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_obs}"
+				width="230">
+				<xcp:outputSimple value="#{row.obsLivre}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_remover}"
+				width="60">
+
+				<xcp:commandButton
+					id="btnRemov"
+					update=":form:tab:table_#{id}"
+					action="#{transferenciasBacking.actionRemoveSubs(row)}"
+					icon="ui-icon-trash" 
+					disabled="#{transferenciasBacking.disabledExcluir}">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+			</p:column>
+
+			<p:rowExpansion>
+				<p:dataTable
+					id="tabDoc"
+					var="rowDoc"
+					value="#{row.listaMovDoc}"
+					rowKey="#{rowDoc.PK}"
+					paginator="true"
+					rowIndexVar="idx"
+					selectionMode="single"
+					paginatorPosition="bottom"
+					selection="#{transferenciasBacking.helper.movDocSelecionada}"
+					rows="#{viewUtil.tableRows}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="margin-bottom:0;">
+
+					<p:ajax
+						event="rowSelect"
+						update=":formdlgSubsDoc"
+						listener="#{transferenciasBacking.selectTransDocSubs}" />
+
+					<ui:include src="../DocManual/DocUnificadoDetalhesDoc.xhtml">
+						<ui:param
+							name="rowDoc"
+							value="#{rowDoc}" />
+						<ui:param
+							name="rowPrincipal"
+							value="#{row}" />
+						<ui:param
+							name="actionExclusao"
+							value="#{transferenciasBacking.model}" />
+					</ui:include>
+
+				</p:dataTable>
+			</p:rowExpansion>
+
+		</p:dataTable>
+	</p:tab>
+</ui:composition>

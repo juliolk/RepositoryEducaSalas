@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:outputPanel rendered="#{assinprocBacking.modo == 1}">
+				<p:fieldset legend="#{bundle.lbl_filtros}">
+
+					<xcp:panelForm>
+						<xcp:radio
+							id="radioTipStatus"
+							label="#{bundle.lbl_tipoStatus}"
+							required="true"
+							value="#{assinprocBacking.tipStatus}"
+							itens="#{assinprocBacking.itensStatus}">
+							<p:ajax
+								event="change"
+								update="@form" />
+						</xcp:radio>
+					</xcp:panelForm>
+
+				</p:fieldset>
+
+				<p:spacer height="5" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							icon="ui-icon-search"
+							update="tblF"
+							value="#{bundle.btn_pesquisar}"
+							action="#{assinprocBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:dataTable
+					id="tblF"
+					var="row"
+					value="#{assinprocBacking.lista}"
+					rowKey="#{row}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					selection="#{assinprocBacking.entity}"
+					selectionMode="single">
+
+					<p:ajax
+						event="rowSelect"
+						listener="#{assinprocBacking.onRowSelect}"
+						update="@form" />
+
+					<xcp:column
+						headerText="#{bundle.col_seqProc}"
+						sortBy="#{row.seqproc}"
+						type="Number">
+						<xcp:outputSimpleNumber
+							value="#{row.seqproc}"
+							precision="18"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_ordem}"
+						sortBy="#{row.ordem}"
+						type="Number">
+						<xcp:outputSimpleNumber
+							value="#{row.ordem}"
+							precision="3"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtgeracao}"
+						sortBy="#{row.seqprocFk.dtgeracao}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.seqprocFk.dtgeracao}" />
+					</xcp:column>
+					
+					<xcp:column
+						headerText="#{bundle.col_desObjeto}"
+						sortBy="#{row.desObjeto}"
+						type="String">
+						<xcp:outputSimple value="#{row.desObjeto}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_solicitante}"
+						sortBy="#{row.matriculaFk.nome}"
+						type="String">
+						<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataassin}"
+						sortBy="#{row.dataassin}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.dataassin}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_acoes}"
+						sortBy="#{row.dataassin}">
+
+						<xcp:commandButton
+							label="#{bundle.btn_download}"
+							value="#{bundle.btn_download}"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+							<p:fileDownload
+								value="#{assinprocBacking.getDownloadDocumento(row)}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+			</p:outputPanel>
+
+			<p:outputPanel rendered="#{assinprocBacking.modo == 2}">
+				<xcp:panelForm>
+
+					<xcp:output
+						id="txtProcesso"
+						value="#{assinprocBacking.entity.seqproc}"
+						label="#{bundle.lbl_seqProc}" />
+
+					<xcp:outputDate
+						id="txtDataProc"
+						value="#{assinprocBacking.entity.seqprocFk.dtgeracao}"
+						label="#{bundle.lbl_dataProc}" />
+
+					<xcp:output
+						id="txtSolicitante"
+						value="#{assinprocBacking.entity.matriculaFk.nome}"
+						label="#{bundle.lbl_solicitante}" />
+
+					<xcp:outputDate
+						id="txtDataAssinatura"
+						value="#{assinprocBacking.entity.dataassin}"
+						label="#{bundle.lbl_dataAssin}" />
+
+				</xcp:panelForm>
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							value="#{bundle.btn_assinar}"
+							rendered="#{assinprocBacking.entity.tipAssinatura == 2 and assinprocBacking.entity.dataassin == null}"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+							<p:fileDownload
+								value="#{assinprocBacking.getDownloadXmlEcpf()}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							value="#{bundle.btn_assinar}"
+							rendered="#{assinprocBacking.entity.tipAssinatura == 1 and assinprocBacking.entity.dataassin == null}"
+							action="#{assinprocBacking.actionAssinarDigital}" />
+
+						<xcp:commandButton
+							action="#{assinprocBacking.actionVoltar}"
+							value="#{bundle.btn_voltar}"
+							update="@form" />
+					</f:facet>
+				</p:toolbar>
+
+			</p:outputPanel>
+		</xcp:panelContent>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style type="text/css">
+#form\:rowtransparent {
+	background-color: transparent;
+}
+</style>
+		<xcp:panelManut
+			id="Afdt"
+			backing="#{afdtPortalBacking}">
+
+			<ui:define name="barraListaNovo">
+
+				<p:panelGrid>
+
+					<p:row id="rowtransparent">
+						<p:column>
+							<xcp:commandButton
+								value=" "
+								id="btnPeriodoAnterior"
+								ajax="true"
+								actionListener="#{afdtPortalBacking.buscaAnterior}"
+								update="table_Afdt,dataSelecao"
+								icon="ui-icon-seek-prev"
+								style="height:24px; width:28px; position:relative; top:2px;" />
+						</p:column>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:date
+									id="dataSelecao"
+									label="#{bundle.lbl_filtro_data}"
+									value="#{afdtPortalBacking.dataSelecao}">
+									<p:ajax
+										event="change"
+										listener="#{afdtPortalBacking.actionPesquisar('dtaSelecao')}"
+										update="table_Afdt" />
+									<p:ajax
+										event="dateSelect"
+										listener="#{afdtPortalBacking.actionPesquisar('dtaSelecao')}"
+										update="table_Afdt" />
+								</xcp:date>
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:commandButton
+								value=""
+								id="btnPeriodoProximo"
+								actionListener="#{afdtPortalBacking.buscaProximo}"
+								update="table_Afdt,dataSelecao"
+								ajax="true"
+								icon="ui-icon-seek-next"
+								style="height:24px; width:28px; position:relative; top:2px;" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_nroseq}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.nroseq}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hora}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleTimeNumber value="#{row.hora}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					itens="#{afdtPortalBacking.itensTipo}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{afdtPortalBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipomanut}"
+					itens="#{afdtPortalBacking.itensTipomanut}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.tipomanut}"
+						itens="#{afdtPortalBacking.itensTipomanut}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.motivoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_rep}"
+					type="Number"
+					size="18">
+					<xcp:outputSimpleNumber
+						value="#{row.rep}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{afdtPortalBacking.entity.data}"
+						label="#{bundle.lbl_data}"
+						readonly="true"
+						size="10" />
+
+					<xcp:timeNumber
+						id="txtHora"
+						label="#{bundle.lbl_hora}"
+						required="true"
+						size="10"
+						value="#{afdtPortalBacking.entity.hora}"
+						precision="6"
+						scale="2"
+						validate="true"
+						readonly="#{not afdtPortalBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovRep"
+						value="#{afdtPortalBacking.entity.repFk}"
+						label="#{bundle.lbl_rep}"
+						query="relogios"
+						size="3" />
+
+					<xcp:combo
+						id="txtTipomanut"
+						label="#{bundle.lbl_tipomanut}"
+						readonly="true"
+						value="#{afdtPortalBacking.entity.tipomanut}"
+						itens="#{afdtPortalBacking.itensTipomanut}"
+						size="1"
+						width="120px !important;" />
+
+					<xcp:combo
+						id="txtTipoIncluido"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						rendered="#{afdtPortalBacking.entity.tipomanut == 'I'}"
+						value="#{afdtPortalBacking.entity.tipo}"
+						itens="#{afdtPortalBacking.itensTipoIncluido}"
+						size="1" />
+
+					<xcp:combo
+						id="txtTipo"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						rendered="#{afdtPortalBacking.entity.tipomanut != 'I'}"
+						value="#{afdtPortalBacking.entity.tipo}"
+						itens="#{afdtPortalBacking.itensTipo}"
+						size="1"
+						width="120px !important;" />
+
+					<xcp:lov
+						id="lovMotivo"
+						required="true"
+						value="#{afdtPortalBacking.entity.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						query="afdtmotivo"
+						size="3" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+
+	</ui:define>
+
+</ui:composition>

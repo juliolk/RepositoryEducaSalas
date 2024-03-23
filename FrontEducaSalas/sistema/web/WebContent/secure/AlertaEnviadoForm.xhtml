@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="AlertaEnviado" backing="#{alertaEnviadoBacking}" 
+			renderedNovo="false" renderedRemover="false" renderedGravar="false">
+		
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_seq}" value="#{row.seq}"
+					type="Number" size="8">
+					<xcp:outputSimpleNumber value="#{row.seq}" precision="18" scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_data}" value="#{row.data}"
+					type="Date" size="16">
+					<xcp:outputSimpleTimestamp value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_assunto}"
+					value="#{row.assunto}" type="String" size="30">
+					<xcp:outputSimple value="#{row.assunto}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_mensagem}"
+					value="#{row.mensagem}" type="String" size="60">
+					<xcp:outputSimple value="#{row.mensagem}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_oper}"
+					value="#{row.remetente}" type="Number" size="15">
+					<xcp:outputSimple value="#{row.remetenteFk.nome}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_destinatarios}"
+					value="#{row.destinatario}" type="Number" size="15">
+					<xcp:outputSimple value="#{row.destinatarioFk.nome}" />
+					<xcp:outputSimple value="#{row.emails}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number id="txtSeq" label="#{bundle.lbl_seq}" required="true"
+						value="#{alertaEnviadoBacking.entity.seq}" size="18"
+						precision="18" scale="0" maxValue="999999999999999999"
+						readonly="true" />
+
+					<xcp:date id="txtData" required="true"
+						value="#{alertaEnviadoBacking.entity.data}"
+						label="#{bundle.lbl_data}"
+						readonly="true" />
+
+					<xcp:text id="txtAssunto" label="#{bundle.lbl_assunto}"
+						required="true" value="#{alertaEnviadoBacking.entity.assunto}"
+						size="4000"
+						readonly="true" />
+
+					<xcp:memo id="txtMensagem" required="true"
+						value="#{alertaEnviadoBacking.entity.mensagem}"
+						label="#{bundle.lbl_mensagem}"
+						readonly="true" />
+
+					<xcp:lov id="lovRemetente"
+						value="#{alertaEnviadoBacking.entity.remetenteFk}"
+						label="#{bundle.lbl_operador}" required="true" query="operadores"
+						size="15"
+						readonly="true" />
+
+					<xcp:lov id="lovDestinatario"
+						value="#{alertaEnviadoBacking.entity.destinatarioFk}"
+						label="#{bundle.lbl_destinatario}" query="operadores" size="15"
+						readonly="true" 
+						rendered="#{alertaEnviadoBacking.entity.destinatarioFk != null}"/>
+
+					<xcp:text id="txtEmails" label="#{bundle.lbl_destinatarios}"
+						value="#{alertaEnviadoBacking.entity.emails}" size="4000"
+						readonly="true"
+						rendered="#{alertaEnviadoBacking.entity.emails != null}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

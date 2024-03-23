@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Demandas"
+			backing="#{demandasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_demanda}"
+					value="#{row.demanda}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.demanda}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_necessidade}"
+					value="#{row.necessidade}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.necessidade}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_origem}"
+					value="#{row.origem}"
+					type="String"
+					itens="#{demandasBacking.itensOrigem}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.origem}"
+						itens="#{demandasBacking.itensOrigem}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_abertura}"
+					value="#{row.abertura}"
+					type="Date"
+					size="10">
+					<xcp:outputSimpleDate value="#{row.abertura}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_conclusao}"
+					value="#{row.conclusao}"
+					type="Date"
+					size="10">
+					<xcp:outputSimpleDate value="#{row.conclusao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_responsavel}"
+					value="#{row.responsavelFk.nome}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.responsavelFk.nome}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtDemanda"
+						label="#{bundle.lbl_demanda}"
+						required="true"
+						value="#{demandasBacking.entity.demanda}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not demandasBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtNecessidade"
+						label="#{bundle.lbl_necessidade}"
+						required="true"
+						value="#{demandasBacking.entity.necessidade}"
+						size="4000" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{demandasBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="#{!demandasBacking.entity.novo}"
+						itens="#{demandasBacking.itensTipo}" />
+						
+					<xcp:date
+						id="txtAbertura"
+						required="true"
+						value="#{demandasBacking.entity.abertura}"
+						label="#{bundle.lbl_abertura}">
+
+						<p:ajax
+							event="change"
+							process="@this"
+							update="@this"
+							oncomplete="$(PrimeFaces.escapeClientId('form:txtDtvalidade_c_input')).focus()" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="@this"
+							oncomplete="$(PrimeFaces.escapeClientId('form:txtDtvalidade_c_input')).focus()" />
+
+					</xcp:date>
+
+					<xcp:date
+						id="txtDtvalidade"
+						value="#{demandasBacking.entity.dtvalidade}"
+						label="#{bundle.lbl_dtvalidade}" />
+
+					<xcp:date
+						id="txtConclusao"
+						value="#{demandasBacking.entity.conclusao}"
+						label="#{bundle.lbl_conclusao}" />
+
+					<xcp:combo
+						id="cboOrigem"
+						value="#{demandasBacking.entity.origem}"
+						label="#{bundle.lbl_origem}"
+						required="true"
+						readonly="#{!demandasBacking.entity.novo}"
+						itens="#{demandasBacking.itensOrigem}" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{demandasBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						required="true"
+						size="10"
+						selectionListener="#{demandasBacking.selectSetor}"
+						update="lovInspecao lovInspecao_l" />
+
+					<xcp:lov
+						id="lovInspecao"
+						value="#{demandasBacking.entity.inspecaoFk}"
+						label="#{bundle.lbl_laudodem}"
+						query="inspecaofiltro"
+						size="10"
+						params="#{demandasBacking.paramsInsp}" />
+
+					<xcp:lov
+						id="lovResponsavel"
+						value="#{demandasBacking.entity.responsavelFk}"
+						label="#{bundle.lbl_responsavel}"
+						query="funcionariosLov"
+						size="10" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+</ui:composition>

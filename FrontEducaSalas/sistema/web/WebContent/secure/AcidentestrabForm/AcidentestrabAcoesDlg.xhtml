@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<xcp:panelForm>
+
+		<xcp:lov
+			id="lovAcao"
+			value="#{acidentestrabBacking.acoesManut.acaoFk}"
+			label="#{bundle.lbl_acao}"
+			required="true"
+			query="acoes"
+			size="3"
+			readonly="#{not acidentestrabBacking.acoesManut.novo}" />
+
+		<xcp:text
+			id="txtNome"
+			label="#{bundle.lbl_nome}"
+			value="#{acidentestrabBacking.acoesManut.nome}"
+			size="50" />
+
+		<xcp:date
+			id="txtLimite"
+			required="true"
+			value="#{acidentestrabBacking.acoesManut.limite}"
+			label="#{bundle.lbl_limite}" />
+
+		<xcp:date
+			id="txtConcluido"
+			value="#{acidentestrabBacking.acoesManut.concluido}"
+			label="#{bundle.lbl_concluido}" />
+
+		<xcp:memo
+			id="txtObs"
+			label="#{bundle.lbl_obs}"
+			value="#{acidentestrabBacking.acoesManut.obs}"
+			size="2000" />
+	</xcp:panelForm>
+
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_gravar"
+				icon="ui-icon-disk"
+				update="@form"
+				value="#{bundle.btn_gravar}"
+				action="#{acidentestrabBacking.actionGravarAcoes}" />
+
+			<xcp:commandButton
+				id="btnVoltar"
+				image="true"
+				icon="ui-icon-arrowreturnthick-1-w"
+				value="#{bundle.btn_voltar}"
+				onclick="PF('dlgAcoes_w').hide();return false;" />
+
+		</f:facet>
+	</p:toolbar>
+</ui:composition>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipoEvento"
+					value="#{esocExclusaoBacking.helper.esocTipoEvento}"
+					label="#{bundle.lbl_evento}"
+					required="true"
+					query="esoc_tipo_evento"
+					size="3"
+					update=":form"
+					selectionListener="#{esocExclusaoBacking.selectTipoEvento}" />
+
+				<xcp:text
+					id="txtDesPk"
+					value="#{esocExclusaoBacking.helper.desPk}"
+					label="#{bundle.lbl_desPk}"
+					required="true"
+					rendered="#{esocExclusaoBacking.eventoBasico}"
+					size="20" />
+
+				<xcp:check
+					id="chkValida"
+					label="#{bundle.lbl_valida}"
+					value="#{esocExclusaoBacking.helper.valida}"
+					rendered="#{esocExclusaoBacking.eventoBasico}" />
+
+				<xcp:cpf
+					id="txtCpf"
+					value="#{esocExclusaoBacking.helper.desCpf}"
+					label="#{bundle.lbl_cpf}"
+					required="true"
+					rendered="#{esocExclusaoBacking.renderedCpf}" />
+
+
+				<xcp:radio
+					id="optTipo"
+					value="#{esocExclusaoBacking.helper.tipApuracao}"
+					itens="#{esocExclusaoBacking.itensTipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					rendered="#{esocExclusaoBacking.eventoPeriodico}" />
+
+				<xcp:date
+					id="txtDtApuracao"
+					value="#{esocExclusaoBacking.helper.dtApuracao}"
+					required="true"
+					label="#{bundle.lbl_dtapuracao}"
+					rendered="#{esocExclusaoBacking.eventoPeriodico}">
+					<p:ajax
+						event="change"
+						listener="#{esocExclusaoBacking.selectDataApuracao}"
+						update="txtDesRecibo"
+						process="@this txtCpf optTipo" />
+					<p:ajax
+						event="dateSelect"
+						listener="#{esocExclusaoBacking.selectDataApuracao}"
+						update="txtDesRecibo"
+						process="@this txtCpf optTipo" />
+				</xcp:date>
+
+				<xcp:text
+					id="txtDesRecibo"
+					value="#{esocExclusaoBacking.helper.desRecibo}"
+					label="#{bundle.lbl_desRecibo}"
+					required="true"
+					rendered="#{esocExclusaoBacking.eventoNaoPeriodico or esocExclusaoBacking.eventoPeriodico}"
+					size="30" />
+
+				<xcp:number
+					id="txtDesMatricula"
+					value="#{esocExclusaoBacking.helper.desMatricula}"
+					label="#{bundle.lbl_matricula}"
+					required="true"
+					rendered="#{esocExclusaoBacking.eventoNaoPeriodico}"
+					size="30" />
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="txtExecutar"
+						value="#{bundle.btn_executar}"
+						action="#{esocExclusaoBacking.actionExecutar}"
+						disabled="#{esocExclusaoBacking.helper.esocTipoEvento == null}" />
+				</f:facet>
+			</p:toolbar>
+
+			<script>
+			  var el = document.getElementById('form');
+			  var divs = el.getElementsByTagName('div');
+	
+			  for(i = 0;i &lt;  divs.length; i++) {
+				 var currEl = divs[i];
+				 if(currEl.childNodes.length == 0 ){
+					 currEl.parentNode.style.padding = '0px';
+			     }
+			  }
+		</script>
+
+
+		</xcp:panelContent>
+
+
+	</ui:define>
+</ui:composition>

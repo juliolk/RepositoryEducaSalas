@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="GrupopontoOper"
+		backing="#{grupopontoOperBacking}"
+		masterId="Grupoponto">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codigo}"
+				value="#{row.tipoponto}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.tipoponto}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.tipopontoFk.descricao}"
+				type="String"
+				size="4">
+				<xcp:outputSimple value="#{row.tipopontoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_operacao}"
+				value="#{row.operacao}"
+				type="Number"
+				size="2"
+				itens="#{grupopontoOperBacking.itensOperacao}">
+				<xcp:outputSimple
+					value="#{row.operacao}"
+					itens="#{grupopontoOperBacking.itensOperacao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_ordem}"
+				value="#{row.ordem}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.ordem}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipoponto_GrupopontoOper"
+					value="#{grupopontoOperBacking.entity.tipopontoFk}"
+					label="#{bundle.lbl_tipoponto}"
+					required="true"
+					query="tipoponto"
+					size="4" />
+
+				<xcp:combo
+					id="cboOperacao_GrupopontoOper"
+					value="#{grupopontoOperBacking.entity.operacao}"
+					label="#{bundle.lbl_operacao}"
+					required="true"
+					itens="#{grupopontoOperBacking.itensOperacao}" />
+
+				<xcp:number
+					id="txtOrdem_GrupopontoOper"
+					label="#{bundle.lbl_ordemcalc}"
+					required="true"
+					value="#{grupopontoOperBacking.entity.ordem}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

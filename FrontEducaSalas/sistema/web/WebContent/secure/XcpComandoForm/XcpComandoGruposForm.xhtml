@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="XcpComandoGrupos"
+		backing="#{xcpComandoGruposBacking}"
+		masterId="XcpComando">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codGrupoMen}"
+				value="#{row.codGrupo}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.codGrupo}"
+					precision="18"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desGrupo}"
+				value="#{row.codGrupoFk.desGrupo}"
+				type="String"
+				size="15">
+				<xcp:outputSimple value="#{row.codGrupoFk.desGrupo}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCodGrupo_XcpComandoGrupos"
+					value="#{xcpComandoGruposBacking.entity.codGrupoFk}"
+					label="#{bundle.lbl_codGrupo}"
+					required="true"
+					query="xcp_grupo_mensagem"
+					size="18"
+					readonly="#{not xcpComandoGruposBacking.entity.novo}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.espaco {
+	padding: 0 15px 0 0
+}
+</style>
+		<xcp:panelManut
+			id="Padroes"
+			backing="#{padroesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_padrao}"
+					value="#{row.padrao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.padrao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_categoria}"
+					value="#{row.categoriaFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.categoriaFk.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:text
+									id="txtPadrao"
+									label="#{bundle.lbl_padrao}"
+									required="true"
+									value="#{padroesBacking.entity.padrao}"
+									size="30"
+									readonly="#{not padroesBacking.entity.novo}" />
+
+								<xcp:text
+									id="txtObs"
+									required="true"
+									label="#{bundle.lbl_obs}"
+									value="#{padroesBacking.entity.obs}"
+									size="75" />
+
+								<xcp:lov
+									id="lovCategoria"
+									value="#{padroesBacking.entity.categoriaFk}"
+									label="#{bundle.lbl_categoria}"
+									required="true"
+									query="categoria_padroes"
+									size="5" />
+
+								<xcp:lov
+									id="lovTipodoc"
+									value="#{padroesBacking.entity.tipodocFk}"
+									selectionListener="#{padroesBacking.selectTipodocumento}"
+									size="5"
+									update="lovDocumento,btnDownloadDocumento"
+									label="#{bundle.lbl_tipodoc}"
+									query="tipodocumento" />
+
+								<xcp:lov
+									id="lovDocumento"
+									value="#{padroesBacking.entity.registroFk}"
+									params="#{padroesBacking.paramsTipodocumento}"
+									label="#{bundle.lbl_documento}"
+									query="documentos_publica"
+									size="5"
+									update="btnDownloadDocumento" />
+
+								<p:spacer
+									height="1"
+									width="1" />
+								<xcp:commandButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{padroesBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(padroesBacking.entity.registro)}"
+										contentDisposition="attachment" />
+								</xcp:commandButton>
+
+
+								<h:outputLabel value="#{bundle.lbl_informar}" />
+								<h:panelGrid
+									columns="6"
+									columnClasses="espaco,,espaco">
+									<xcp:combo
+										id="chk_informar"
+										label="#{bundle.lbl_informar}"
+										simple="true"
+										value="#{padroesBacking.entity.indInformar}"
+										itens="#{padroesBacking.itensIndSimNao}" />
+
+									<xcp:number
+										id="txtHoras"
+										label="#{bundle.lbl_horas}"
+										size="7"
+										value="#{padroesBacking.entity.horas}"
+										precision="5"
+										scale="2" />
+
+									<xcp:combo
+										id="cboSituacao"
+										value="#{padroesBacking.entity.situacao}"
+										label="#{bundle.lbl_situacao}"
+										required="true"
+										itens="#{padroesBacking.itensSituacao}">
+									</xcp:combo>
+
+								</h:panelGrid>
+
+								<xcp:panelEsoc backing="#{padroesBacking}" />
+
+								<xcp:commandButton
+									id="btn_nova_classe"
+									value="#{bundle.btn_nova_classe}"
+									icon="ui-icon-document"
+									actionListener="#{padroesBacking.actionNovaClasse}" />
+
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<xcp:panelGrid rendered="#{!padroesBacking.entity.novo}">
+					<p:row>
+						<p:column>
+							<p:dataTable
+								id="tabConsulta"
+								var="dat"
+								value="#{padroesBacking.helper.listaDatas}"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								rows="#{viewUtil.tableRows}"
+								paginator="true"
+								paginatorPosition="bottom"
+								resizableColumns="true">
+
+								<xcp:column
+									headerText="#{bundle.col_data}"
+									style="width: 50px"
+									type="Date">
+									<xcp:outputSimpleDate
+										value="#{dat}"
+										rendered="#{dat != padroesBacking.helper.dataPadrao}" />
+
+									<xcp:outputSimpleDate
+										value="#{bundle.lbl_valor_atual}"
+										rendered="#{dat == padroesBacking.helper.dataPadrao}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_observ}"
+									style="width: 60px"
+									type="String">
+
+									<xcp:outputSimple
+										value="#{padroesBacking.helper.listaObs[dat]}"
+										rendered="#{padroesBacking.helper.listaObs[dat] != null}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_percentual}"
+									style="width: 20px"
+									type="Number">
+
+									<xcp:outputSimpleNumber
+										value="#{padroesBacking.helper.listaPerc[dat]}"
+										rendered="#{padroesBacking.helper.listaPerc[dat] != null}"
+										scale="4" />
+								</xcp:column>
+
+								<p:columns
+									value="#{padroesBacking.helper.listaClasses}"
+									var="col"
+									styleClass="xcp_column_Number"
+									style="width: 100px"
+									columnIndexVar="colIndex">
+									<f:facet name="header">
+										<h:outputText value="#{col}" />
+									</f:facet>
+
+									<xcp:outputSimpleNumber
+										value="#{padroesBacking.helper.dados[dat][col].valor}"
+										precision="10"
+										scale="2" />
+
+									<xcp:commandButton
+										icon="ui-icon-search"
+										id="btnAlterar"
+										rendered="#{padroesBacking.helper.dados[dat][col].data == padroesBacking.helper.dataPadrao}"
+										action="#{padroesBacking.actionAlterarClasse(padroesBacking.helper.dados[dat][col])}"
+										oncomplete="PF('dlgPad_w').show()" />
+								</p:columns>
+							</p:dataTable>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_classe}"
+			modal="true"
+			dynamic="true"
+			id="dlgPad"
+			widgetVar="dlgPad_w">
+			<xcp:form id="frmPad">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtClasse"
+						label="#{bundle.lbl_classe}"
+						required="true"
+						value="#{padroesBacking.helper.padroesNiveis.classe}"
+						size="4"
+						readonly="#{not padroesBacking.helper.padroesNiveis.novo}" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						size="19"
+						value="#{padroesBacking.helper.padroesNiveis.valor}"
+						precision="16"
+						scale="2" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							action="#{padroesBacking.actionGravarClasse}"
+							update=":form:tabConsulta" />
+						<xcp:commandButton
+							id="btn_remover"
+							value="#{bundle.btn_remover}"
+							rendered="#{!padroesBacking.helper.padroesNiveis.novo}"
+							action="#{padroesBacking.actionRemoverClasse}"
+							update=":form:tabConsulta" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

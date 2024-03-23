@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Assinaturas"
+			backing="#{assinaturasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_assinatura}"
+					value="#{row.assinatura}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.assinatura}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtAssinatura"
+						label="#{bundle.lbl_assinatura}"
+						required="true"
+						value="#{assinaturasBacking.entity.assinatura}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not assinaturasBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{assinaturasBacking.entity.descricao}"
+						size="100" />
+
+					<xcp:combo
+						id="cboTipAssinatura"
+						value="#{assinaturasBacking.entity.tipAssinatura}"
+						label="#{bundle.lbl_tipAssinatura}"
+						required="true"
+						itens="#{assinaturasBacking.itensTipAssinatura}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="AssinaturasForm/AssinaturasDocForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

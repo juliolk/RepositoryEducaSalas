@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgTransDoc"
+		header="#{bundle.tit_historico}"
+		widgetVar="dlgTransDoc_w"
+		dynamic="true"
+		modal="true"
+		resizable="false">
+
+		<xcp:form id="formdlgdoc">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDtini"
+					required="true"
+					readonly="true"
+					value="#{transferenciasBacking.helper.transfSel.dtinicio}"
+					label="#{bundle.lbl_dtInicio}" />
+
+				<xcp:date
+					id="txtTermino"
+					readonly="true"
+					rendered="#{transferenciasBacking.helper.transfSel.dttermino!=null}"
+					value="#{transferenciasBacking.helper.transfSel.dttermino}"
+					label="#{bundle.lbl_dtTermino}" />
+
+				<xcp:lov
+					id="lovDe"
+					value="#{transferenciasBacking.helper.transfSelDe}"
+					label="#{transferenciasBacking.getLabelTelaAtual(null)}"
+					query="#{transferenciasBacking.queryDoc}"
+					rendered="#{!transferenciasBacking.telaTrocaNome}"
+					readonly="true"
+					size="5" />
+
+				<xcp:lov
+					id="lovDePadrao"
+					value="#{transferenciasBacking.helper.transfSelDePadrao}"
+					label="#{bundle.lbl_dePadrao}"
+					query="cargos_padroes_trans"
+					rendered="#{transferenciasBacking.telaCargos}"
+					readonly="true"
+					size="5" />
+
+				<xcp:lov
+					id="lovDeNivel"
+					value="#{transferenciasBacking.helper.transfSelDeNivel}"
+					label="#{bundle.lbl_deNivel}"
+					required="true"
+					query="padroesniveis"
+					rendered="#{transferenciasBacking.telaPadroes or transferenciasBacking.telaCargos}"
+					readonly="true"
+					size="5" />
+
+				<xcp:date
+					id="txtDtproxaval"
+					value="#{transferenciasBacking.helper.transfSel.dtproxaval}"
+					label="#{bundle.lbl_dtproxaval}"
+					rendered="#{transferenciasBacking.helper.transfSel.indtemp == 1}"
+					readonly="#{transferenciasBacking.readOnlyFields}" />
+
+				<xcp:date
+					id="txtDtPrevRetorno"
+					rendered="#{transferenciasBacking.telaTrocaFuncao}"
+					value="#{transferenciasBacking.helper.transfSel.dtprevretorno}"
+					label="#{bundle.lbl_dtprevretorno}"
+					readonly="true" />
+
+				<xcp:text
+					id="txtde"
+					label="#{bundle.lbl_nome}"
+					rendered="#{transferenciasBacking.telaTrocaNome}"
+					readonly="true"
+					value="#{transferenciasBacking.helper.transfSel.obs2}"
+					size="60" />
+
+				<xcp:lov
+					id="lovMotivoTransf"
+					value="#{transferenciasBacking.helper.transfSel.motivoTransfFk}"
+					label="#{bundle.lbl_motivoTransf}"
+					query="motivo_transf"
+					size="10"
+					rendered="#{transferenciasBacking.renderedMotivoTransf}"
+					readonly="true"
+					params="#{transferenciasBacking.paramsMotivoTransf}" />
+
+				<xcp:lov
+					id="lovMatriculaPerm"
+					value="#{transferenciasBacking.helper.transfSel.matriculaPermFk}"
+					label="#{bundle.lbl_matriculaPerm}"
+					query="funcionarios"
+					size="10"
+					readonly="true"
+					rendered="#{transferenciasBacking.telaSetor and transferenciasBacking.helper.transfSel.motivoTransfFk.permuta == 1}" />
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{transferenciasBacking.helper.transfSel.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_transf"
+					readonly="true"
+					params="#{transferenciasBacking.paramsTipoDoc}"
+					selectionListener="#{transferenciasBacking.selectTipodocumento}"
+					size="5" />
+
+				<xcp:lov
+					id="lovDoc"
+					value="#{transferenciasBacking.helper.transfSel.registroFk}"
+					params="#{transferenciasBacking.paramsDoc}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					readonly="true"
+					size="5"
+					selectionListener="#{transferenciasBacking.selectDocumento}" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{transferenciasBacking.helper.transfSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="true"
+					required="#{transferenciasBacking.requiredProc}"
+					size="25" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:splitButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{transferenciasBacking.helper.transfSel.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(transferenciasBacking.helper.transfSel.registro)}"
+									contentDisposition="attachment" />
+								<p:menuitem
+									value="#{bundle.btn_detalhes_doc}"
+									action="#{transferenciasBacking.model.actionOpenVisDialog(transferenciasBacking.helper.transfSel.registro)}"
+									process="@this" />
+							</p:splitButton>
+						</p:column>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:dateTime
+									id="txtRetificacao"
+									value="#{transferenciasBacking.helper.transfSel.retificacao}"
+									label="#{bundle.lbl_retificacaoTransf}"
+									rendered="#{transferenciasBacking.helper.transfSel.retificacao!=null}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_txtPort}"
+					value="#{transferenciasBacking.helper.transfSel.obs}"
+					readonly="true" />
+
+			</xcp:panelForm>
+			<h:panelGroup id="panelBotoes">
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlgTransDoc_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</h:panelGroup>
+		</xcp:form>
+		<script>
+		  function ajusta(){
+			  var el = document.getElementById('formdlgdoc');
+			  var divs = el.getElementsByTagName('div');
+	
+			  for(i = 0;i &lt;  divs.length; i++) {
+				 var currEl = divs[i];
+				 if(currEl.childNodes.length == 0 ){
+					 currEl.parentNode.style.padding = '0px';
+			     }
+			  }
+		  }
+
+		  ajusta();
+		</script>
+
+
+	</p:dialog>
+
+</ui:composition>

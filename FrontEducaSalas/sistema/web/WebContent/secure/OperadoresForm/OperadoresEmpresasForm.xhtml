@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<xcp:tableMultiSelect
+		header="#{bundle.tit_empresas_selecionadas}"
+		id="checkEmpresas"
+		filteredValue="#{operadoresBacking.listaFiltrados1}"
+		value="#{operadoresBacking.listaEmpresas}"
+		selection="#{operadoresBacking.listaEmpresasSelecionadas}"
+		rowKey="#{rowMult.empresa}">
+
+		<xcp:column
+			value="#{rowMult.empresa}"
+			size="3"
+			scale="0"
+			type="Number"
+			headerText="#{bundle.col_empresa}">
+			<xcp:outputSimpleNumber
+				value="#{rowMult.empresa}"
+				size="8"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			value="#{rowMult.nome}"
+			size="60"
+			type="String"
+			headerText="#{bundle.tit_nome_empresa}">
+			<xcp:outputSimple value="#{rowMult.nome}" />
+		</xcp:column>
+
+	</xcp:tableMultiSelect>
+
+</ui:composition>

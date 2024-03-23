@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Ufs"
+			backing="#{ufsBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_uf}"
+					value="#{row.uf}"
+					type="String"
+					size="3">
+					<xcp:outputSimple value="#{row.uf}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_pais}"
+					value="#{row.paisFk.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimpleNumber
+						value="#{row.paisFk.descricao}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtUf"
+						label="#{bundle.lbl_uf}"
+						required="true"
+						value="#{ufsBacking.entity.uf}"
+						size="3"
+						readonly="#{not ufsBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{ufsBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:lov
+						id="lovPais"
+						value="#{ufsBacking.entity.paisFk}"
+						label="#{bundle.lbl_pais}"
+						required="true"
+						query="paises"
+						size="3"
+						sizeDesc="38" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

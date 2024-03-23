@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:date
+			id="txtDtaInicioFerias"
+			required="true"
+			value="#{lancLotesBacking.helper.ferias.dtgozo}"
+			label="#{bundle.lbl_dtaIni}">
+			<p:ajax
+				event="change"
+				listener="#{lancLotesBacking.calculaDias}"
+				update="txtDiasFerias" />
+			<p:ajax
+				event="dateSelect"
+				listener="#{lancLotesBacking.calculaDias}"
+				update="txtDiasFerias" />
+
+		</xcp:date>
+
+		<xcp:date
+			id="txtDtaRetFerias"
+			required="true"
+			value="#{lancLotesBacking.helper.ferias.dtret}"
+			label="#{bundle.lbl_dtaRet}">
+			<p:ajax
+				event="change"
+				listener="#{lancLotesBacking.calculaDias}"
+				update="txtDiasFerias" />
+			<p:ajax
+				event="dateSelect"
+				listener="#{lancLotesBacking.calculaDias}"
+				update="txtDiasFerias" />
+		</xcp:date>
+
+		<xcp:number
+			id="txtDiasFerias"
+			label="#{bundle.lbl_diasFerias}"
+			required="true"
+			value="#{lancLotesBacking.helper.ferias.diasferias}"
+			size="2"
+			precision="2"
+			scale="0">
+			<p:ajax
+				event="change"
+				listener="#{lancLotesBacking.calculaDataGozo}"
+				update="txtDtaRetFerias" />
+		</xcp:number>
+		
+		<xcp:number 
+			id="numExercicio" 
+			label="Execício"
+			size="4"
+			precision="4"
+			scale="0"
+			value="#{lancLotesBacking.helper.ferias.exercicio}"/>
+		
+
+		<xcp:number
+			id="txtDiasAbonoFerias"
+			label="#{bundle.lbl_diasAbono}"
+			value="#{lancLotesBacking.helper.ferias.diasabono}"
+			size="2"
+			precision="2"
+			scale="0" />
+
+		<xcp:date
+			id="txtDtaPgto"
+			required="true"
+			value="#{lancLotesBacking.helper.ferias.datapgto}"
+			label="#{bundle.lbl_dtaPgto}" />
+
+		<xcp:lov
+			id="lovSituacaoFerias"
+			value="#{lancLotesBacking.helper.ferias.situacaoFk}"
+			label="#{bundle.lbl_situacao_ferias}"
+			query="tipoferias"
+			required="true"
+			size="2" />
+
+		<xcp:lov
+			id="lovTipodocumentoFer"
+			value="#{lancLotesBacking.helper.tipdoc}"
+			label="#{bundle.lbl_tipodocumento}"
+			params="#{lancLotesBacking.paramsTipoDoc}"
+			update="lovProcessoFer lovProcessoFer_l"
+			query="tipodocumento_ferias"
+			size="10" />
+
+		<xcp:lov
+			id="lovDocumentoFer"
+			value="#{lancLotesBacking.helper.doc}"
+			params="#{lancLotesBacking.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			query="documentosman"
+			size="10"
+			update="lovProcessoFer,lovProcessoFer_l"
+			selectionListener="#{lancLotesBacking.selectDocumento}" />
+
+		<xcp:lov
+			id="lovProcessoFer"
+			value="#{lancLotesBacking.helper.proc}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			required="#{lancLotesBacking.requiredProc}"
+			size="25" />
+
+		<xcp:memo
+			id="txtObsFer"
+			label="#{bundle.lbl_txtPort}"
+			value="#{lancLotesBacking.helper.ferias.obs}"
+			size="100" />
+
+		<xcp:memo
+			id="txtObsLivreFer"
+			label="#{bundle.lbl_obsLivre}"
+			value="#{lancLotesBacking.helper.ferias.obsLivre}"
+			size="100" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+
+	</xcp:panelForm>
+
+</ui:composition>

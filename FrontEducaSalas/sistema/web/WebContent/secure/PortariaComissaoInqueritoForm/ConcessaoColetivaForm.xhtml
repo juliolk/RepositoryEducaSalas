@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:blockUI
+		block="panelSelecao"
+		trigger="btn_buscar">
+		<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+	</p:blockUI>
+	<p:outputPanel id="panelSelecao">
+		<p:fieldset
+			legend="#{bundle.tit_portaria_ferias}"
+			style="width:800px">
+
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovOrgao"
+					value="#{portariaComissaoInqueritoBacking.helper.orgao}"
+					label="#{bundle.lbl_orgao}"
+					query="orgaos"
+					size="8" />
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_buscar"
+						value="#{bundle.btn_buscarComissao}"
+						icon="ui-icon-search"
+						action="#{portariaComissaoInqueritoBacking.actionBuscaComissoes}"
+						update="tblComissao" />
+
+					<xcp:commandButton
+						id="btn_limpar"
+						value="#{bundle.btn_limparSelecao}"
+						icon="ui-icon-search"
+						action="#{portariaComissaoInqueritoBacking.actionLimparSelecao}"
+						update="tblComissao" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</p:fieldset>
+		<p:fieldset
+			legend="#{bundle.tit_individual}"
+			style="width:800px">
+
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovComissaoCol"
+					value="#{portariaComissaoInqueritoBacking.helper.comissao}"
+					label="#{bundle.lbl_codcomissao}"
+					query="comissao_all"
+					update="lovComissaoColInq"
+					size="8"
+					selectionListener="#{portariaComissaoInqueritoBacking.selectComissao}" />
+
+				<xcp:lov
+					id="lovComissaoColInq"
+					value="#{portariaComissaoInqueritoBacking.helper.inquerito}"
+					label="#{bundle.lbl_inquerito}"
+					selectionListener="#{portariaComissaoInqueritoBacking.selectInquerito}"
+					params="#{portariaComissaoInqueritoBacking.paramsInquerito}"
+					query="comissao_inq_all"
+					update="tblComissao"
+					size="8" />
+
+			</xcp:panelForm>
+
+		</p:fieldset>
+
+		<p:fieldset
+			legend="#{bundle.tit_inqselecionados}"
+			style="width:800px">
+			<p:dataTable
+				id="tblComissao"
+				var="row"
+				rowKey="#{row.PK}"
+				value="#{portariaComissaoInqueritoBacking.helper.listaInquerito}"
+				selection="#{portariaComissaoInqueritoBacking.helper.listaInqueritoSel}"
+				sortMode="multiple"
+				scrollHeight="120"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				scrollable="true">
+
+				<p:column
+					selectionMode="multiple"
+					style="width:1%;text-align:center" />
+
+				<xcp:column
+					headerText="#{bundle.col_codcomissao}"
+					value="#{row.comissao}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.comissao}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inquerito}"
+					value="#{row.seqinq}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.seqinq}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+			</p:dataTable>
+		</p:fieldset>
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_gerar_coletivo"
+					icon="ui-icon-gear"
+					action="#{portariaComissaoInqueritoBacking.actionValidaPortariaColetiva}"
+					update=":#{p:component('dlg')}"
+					value="#{bundle.btn_gerar_coletivo}" />
+			</f:facet>
+		</p:toolbar>
+	</p:outputPanel>
+</ui:composition>

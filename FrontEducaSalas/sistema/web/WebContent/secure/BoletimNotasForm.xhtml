@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.ui-selectonemenu.cmb_aval {
+	width: 98% !important;
+}
+
+.ui-selectonemenu-label.cmb_aval {
+	width: 99% !important;
+}
+</style>
+
+		<xcp:panelContent>
+			<h:panelGroup id="panelGeral">
+				<h:panelGroup
+					id="panelSemPesquisa"
+					rendered="#{boletimNotasBacking.statusTela == 0}">
+					<xcp:panelForm>
+						<xcp:outputSimple value="#{bundle.msg_sem_boletim}" />
+					</xcp:panelForm>
+				</h:panelGroup>
+
+				<h:panelGroup
+					id="panelPesquisas"
+					rendered="#{boletimNotasBacking.statusTela == 1}">
+
+					<p:dataTable
+						id="tableBoletinsPendentes"
+						var="row"
+						value="#{boletimNotasBacking.listaBoletim}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="false"
+						resizableColumns="true"
+						selectionMode="single"
+						selection="#{boletimNotasBacking.boletimSelecionado}"
+						rowKey="#{row.PKTela}">
+
+						<p:ajax
+							event="rowSelect"
+							resetValues="true"
+							update=":#{p:component('panelGeral')}"
+							listener="#{boletimNotasBacking.actionMontaBoletim}" />
+
+						<xcp:column
+							type="Number"
+							size="2"
+							headerText="#{bundle.col_matricula}">
+							<xcp:outputSimpleNumber
+								value="#{row.funcionarioFk.matricula}"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="22"
+							headerText="#{bundle.col_nome}">
+							<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+						</xcp:column>
+
+						<xcp:column
+							type="Date"
+							size="10"
+							headerText="#{bundle.col_tipo}">
+							<xcp:outputSimple
+								value="#{row.probatorioFk.origem}"
+								itens="#{boletimNotasBacking.itensOrigem}" />
+							<xcp:outputSimple
+								rendered="#{row.tipRegistro == 2}"
+								value=" #{bundle.txt_mediato}" />
+
+						</xcp:column>
+
+						<xcp:column
+							type="Date"
+							size="3"
+							headerText="#{bundle.col_numeroBol}">
+							<xcp:outputSimpleNumber
+								value="#{row.numero}"
+								scale="0"
+								precision="5" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_ini_boletim}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.dataini}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_fim_boletim}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.datafim}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtresposta}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.dtaRespostaTela}" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="4">
+
+							<xcp:commandButton
+								id="btnDownload"
+								rendered="#{row.seqExecucaoResp != null and row.dtaRespostaTela != null}"
+								ajax="false"
+								immediate="true"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								value="#{bundle.btn_download}">
+								<p:fileDownload
+									value="#{boletimNotasBacking.getDownloadDocumento(row)}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="10">
+
+							<xcp:commandButton
+								id="btnFormulario"
+								ajax="false"
+								immediate="true"
+								action="#{boletimNotasBacking.actionDownloadFormulario(row)}"
+								rendered="#{boletimNotasBacking.isRenderedRelatorios(row)}"
+								value="#{bundle.btn_relatorios}" />
+
+						</xcp:column>
+
+					</p:dataTable>
+				</h:panelGroup>
+
+				<h:panelGroup
+					id="panelPesquisa"
+					rendered="#{boletimNotasBacking.statusTela == 2}">
+
+					<xcp:panelForm>
+
+						<xcp:output
+							id="txtNome"
+							label="#{bundle.lbl_nome}:"
+							value="#{boletimNotasBacking.boletimSelecionado.funcionarioFk.nome}"
+							size="70" />
+
+						<xcp:output
+							id="txtTipo"
+							label="#{bundle.lbl_tipo}:"
+							value="#{boletimNotasBacking.boletimSelecionado.probatorioFk.origem}"
+							itens="#{boletimNotasBacking.itensOrigem}" />
+
+						<xcp:outputDate
+							id="txtIni"
+							label="#{bundle.lbl_dataini}:"
+							value="#{boletimNotasBacking.boletimSelecionado.dataini}" />
+
+						<xcp:outputDate
+							id="txtFim"
+							label="#{bundle.lbl_datafim}:"
+							value="#{boletimNotasBacking.boletimSelecionado.datafim}" />
+
+					</xcp:panelForm>
+
+					<p:dataTable
+						id="tabNotas"
+						value="#{boletimNotasBacking.listaBoletinNotas}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						var="row"
+						paginator="false">
+
+						<xcp:column
+							type="String"
+							size="50"
+							headerText="#{bundle.col_conhecimento}">
+
+							<xcp:commandLink
+								actionListener="#{boletimNotasBacking.abreHelp(row)}"
+								immediate="true"
+								update=":frmDlgHelp"
+								id="btn_help">
+
+								<h:graphicImage
+									value="/resources/img/ajuda.png"
+									styleClass="xcp_fav_icon2" />
+							</xcp:commandLink>
+
+							<h:outputText
+								value="#{row.descricao}"
+								escape="false"
+								style="#{row.tipResposta == 1 ? 'font-weight: bold;' : ''}" />
+
+							<!-- 
+							<xcp:memo
+								id="txtObs"
+								label="#{bundle.lbl_obs}"
+								readonly="true"
+								rendered="#{row.boletimNota.conhecimentoFk.obs!=null}"
+								value="#{row.boletimNota.conhecimentoFk.obs}"
+								size="600" />
+ -->
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="50"
+							headerText="#{bundle.col_respostas}">
+
+							<p:selectOneMenu
+								label="#{row.boletimNota.conhecimentoFk.descricao}"
+								styleClass="cmb_aval"
+								value="#{row.boletimNota.nota}"
+								rendered="#{row.tipResposta == 2}"
+								disabled="#{boletimNotasBacking.avalMediato}"
+								required="#{row.boletimNota.conhecimentoFk.obrigatorio == 1}">
+								<f:selectItems
+									value="#{row.listaNotas}"
+									var="it"
+									itemValue="#{it.nota}"
+									itemLabel="#{it.descricao}" />
+							</p:selectOneMenu>
+							<xcp:memo
+								id="txtDescritiva"
+								label="#{row.boletimNota.conhecimentoFk.descricao}"
+								required="#{row.boletimNota.conhecimentoFk.obrigatorio == 1}"
+								simple="true"
+								readonly="#{boletimNotasBacking.avalMediato}"
+								rendered="#{row.tipResposta != 2}"
+								value="#{row.boletimNota.obs}"
+								size="4000" />
+						</xcp:column>
+					</p:dataTable>
+
+					<p:spacer height="5" />
+
+					<ui:include src="BoletimNotasForm/BoletimNotasAvalDesempForm.xhtml" />
+
+					<ui:include src="BoletimNotasForm/BoletimNotasAvalExpForm.xhtml" />
+
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_voltar"
+								value="#{bundle.btn_voltar}"
+								process="@form"
+								update="@form"
+								immediate="true"
+								action="#{boletimNotasBacking.setStatusTela(1)}"
+								icon="ui-icon-arrowreturnthick-1-w" />
+							<xcp:commandButton
+								id="btn_GravarPesquisa"
+								value="#{bundle.btn_gravar_pesquisa}"
+								process="@form"
+								update="@form"
+								action="#{boletimNotasBacking.actionGravaBoletim}"
+								icon="ui-icon-disk" />
+							<xcp:commandButton
+								id="btn_FinalizaPesquisa"
+								value="#{bundle.btn_finalizar_pesquisa}"
+								process="@form"
+								update="@form, :dlgAviso"
+								action="#{boletimNotasBacking.actionFinalizaBoletim(false)}"
+								icon="ui-icon-disk" />
+						</f:facet>
+					</p:toolbar>
+				</h:panelGroup>
+			</h:panelGroup>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgHelp"
+			width="950"
+			height="500"
+			header="#{bundle.title_ajuda}"
+			widgetVar="dlgHelp_w">
+			<xcp:form id="frmDlgHelp">
+				<h:panelGrid columns="1">
+					<h:outputText
+						style="font-weight: bold;"
+						value="#{boletimNotasBacking.boletimNotasSelecionado.boletimNota.conhecimentoFk.obs}" />
+				</h:panelGrid>
+
+				<p:dataTable
+					id="tabConceiros"
+					value="#{boletimNotasBacking.boletimNotasSelecionado.listaNotas}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="rowResp"
+					paginator="false">
+
+					<xcp:column
+						type="String"
+						size="20"
+						headerText="#{bundle.col_respostas}">
+						<xcp:outputSimple value="#{rowResp.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="50"
+						headerText="#{bundle.col_obs}">
+						<xcp:memo
+							simple="true"
+							id="obsResp"
+							readonly="true"
+							value="#{rowResp.obs}"
+							cols="100"
+							size="600" />
+					</xcp:column>
+
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgAviso"
+			header="#{bundle.title_aviso}"
+			widgetVar="dlgAviso_w">
+			<xcp:form id="frmDlgAviso">
+
+				<h:outputText
+					value="#{bundle.title_avisobol}"
+					style="font-weight: bold;" />
+
+				<center style="margin-top: 10px">
+					<xcp:panelForm>
+
+						<h:outputText
+							value="#{bundle.lbl_pontos}:"
+							style="font-weight: bold;" />
+
+						<h:outputText
+							value="#{boletimNotasBacking.qtdPontos}"
+							style="font-weight: bold;font-size: 18px" />
+
+						<h:outputText
+							value="#{bundle.lbl_resultadoAval}:"
+							style="font-weight: bold;" />
+
+						<h:outputText
+							value="#{boletimNotasBacking.percPontos}"
+							style="font-weight: bold;font-size: 18px" />
+
+					</xcp:panelForm>
+				</center>
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_finaliza"
+							value="#{bundle.btn_finalizar_pesquisa}"
+							update=":form"
+							action="#{boletimNotasBacking.actionFinalizaBoletim(true)}"
+							icon="ui-icon-disk" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgAviso_w').hide(); return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_item}"
+			modal="true"
+			id="dlgItem"
+			widgetVar="dlgItem_w"
+			styleClass="full-page-dialog rightside-dialog">
+			<xcp:form id="frmDlgItem">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtItem"
+						label="#{bundle.lbl_numero}"
+						required="true"
+						value="#{boletimNotasBacking.itemSel.item}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						rendered="#{not boletimNotasBacking.itemSel.novo}"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboTipoItem"
+						value="#{boletimNotasBacking.itemSel.tipo}"
+						label="#{bundle.lbl_tipoitem}"
+						required="true"
+						itens="#{boletimNotasBacking.itensTipoItem}">
+						<p:ajax update="@form" />
+					</xcp:combo>
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{boletimNotasBacking.itemSel.descricao}"
+						size="80"
+						maxlength="200"
+						rendered="#{boletimNotasBacking.tipoItemGeral}" />
+
+					<xcp:number
+						id="txtPrioridade"
+						label="#{bundle.lbl_prioridadeitem}"
+						value="#{boletimNotasBacking.itemSel.prioridade}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						rendered="#{boletimNotasBacking.tipoItemGeral}" />
+
+					<xcp:memo
+						id="txtDetalhe"
+						label="#{bundle.lbl_detalhe}"
+						value="#{boletimNotasBacking.itemSel.detalhe}"
+						size="1000" />
+
+					<xcp:number
+						id="txtPrazo"
+						label="#{bundle.lbl_prazo}"
+						value="#{boletimNotasBacking.itemSel.prazo}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						rendered="#{boletimNotasBacking.tipoItemGeral}" />
+
+					<xcp:combo
+						id="cboTipoPrazo"
+						value="#{boletimNotasBacking.itemSel.tipoPrazo}"
+						label="#{bundle.lbl_unidade}"
+						required="true"
+						itens="#{avalDesempEdicaoBacking.itensPrazo}"
+						rendered="#{boletimNotasBacking.tipoItemGeral}" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							icon="ui-icon-document"
+							value="#{bundle.btn_gravar}"
+							action="#{boletimNotasBacking.actionGravarItem}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgItem_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true"
+			dynamic="true">
+			<xcp:form id="frmAnexo">
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{boletimNotasBacking.actionUploadAnexo}"
+					update=":form:tabAnex" />
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

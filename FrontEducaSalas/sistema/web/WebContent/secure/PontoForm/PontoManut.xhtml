@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+
+	<xcp:panelFuncionario
+		id="Ponto"
+		apresentaIndice="true"
+		backing="#{pontoBacking}"
+		scrollable="false">
+
+		<ui:define name="filtros">
+			<div style="width: 210px; padding-right: 10px;">
+
+				<xcp:border
+					id="brd_peridoFolha"
+					header="#{bundle.tit_perido_folha}">
+					<xcp:date
+						id="txtDataInicioPerido"
+						label="#{bundle.lbl_inicio_periodo}"
+						value="#{pontoBacking.dtaIni}" />
+
+					<xcp:date
+						id="txtDataTerminoPerido"
+						label="#{bundle.lbl_termino_periodo}"
+						value="#{pontoBacking.dtaFim}" />
+
+					<xcp:outputSimple value=" " />
+
+					<xcp:commandButton
+						icon="ui-icon-refresh"
+						value="#{bundle.btn_pesquisar}"
+						action="#{pontoBacking.actionPesquisar('Ponto')}"
+						update="table_Ponto"
+						id="btn_pesquisar">
+					</xcp:commandButton>
+				</xcp:border>
+			</div>
+		</ui:define>
+
+		<ui:define name="colunas">
+			<xcp:column
+				headerText="#{bundle.col_tipoponto}"
+				type="Number"
+				size="4"
+				value="#{row.tipoponto}">
+				<xcp:outputSimpleNumber
+					value="#{row.tipoponto}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipoponto_descricao}"
+				type="String"
+				size="25"
+				value="#{row.tipopontoFk.descricao}">
+				<xcp:outputSimple value="#{row.tipopontoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				type="Date"
+				size="7"
+				value="#{row.data}">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_qtd_horas}"
+				type="Number"
+				size="10"
+				value="#{row.horas}">
+				<xcp:outputSimpleTimeNumber
+					value="#{row.horas}"
+					rendered="#{row.tipopontoFk.tipoqtd == 1 or row.tipopontoFk.tipoqtd == 3}"
+					precision="7"
+					scale="2" />
+				<xcp:outputSimpleNumber
+					value="#{row.horas}"
+					rendered="#{row.tipopontoFk.tipoqtd == 2}"
+					precision="7"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tip_qtd}"
+				type="String"
+				size="5"
+				value="#{pontoBacking.getDesLabel(row)}">
+				<xcp:outputSimple value="#{pontoBacking.getDesLabel(row)}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_observ}"
+				type="String"
+				size="15"
+				value="#{row.obs}">
+				<xcp:outputSimple value="#{row.obs}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipolcto}"
+				type="Center"
+				size="3"
+				value="#{row.tipolcto}">
+				<xcp:outputSimple value="#{row.tipolcto}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData"
+					required="true"
+					value="#{pontoBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					mindate="#{pontoBacking.periodoCorrente.dtinicio}"
+					maxdate="#{pontoBacking.periodoCorrente.dtfim}"
+					readonly="#{not pontoBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovTipoponto"
+					value="#{pontoBacking.entity.tipopontoFk}"
+					label="#{bundle.lbl_tipoponto}"
+					required="true"
+					query="#{pontoBacking.queryLov}"
+					size="4"
+					params="#{pontoBacking.paramsTipoPonto}"
+					update="txtHoras,txtQtd,txtHoras_l,txtQtd_l,txtObs,txtObs_l,txtHoraini,txtHorafim,txtHoraini_l,txtHorafim_l,txtNomefamiliar,txtNomefamiliar_l,lovGrau,lovGrau_l"
+					readonly="#{not pontoBacking.entity.novo}"
+					selectionListener="#{pontoBacking.selectTipoponto}" />
+
+				<xcp:text
+					id="txtNomefamiliar"
+					label="#{bundle.lbl_nomefamiliar}"
+					value="#{pontoBacking.entity.nomefamiliar}"
+					size="50"
+					required="true"
+					rendered="#{pontoBacking.entity.tipopontoFk.indFamiliar == 1}" />
+
+				<xcp:lov
+					id="lovGrau"
+					value="#{pontoBacking.entity.grauFk}"
+					label="#{bundle.lbl_grau}"
+					query="parentesco_abono"
+					size="3"
+					required="true"
+					rendered="#{pontoBacking.entity.tipopontoFk.indFamiliar == 1}" />
+
+				<xcp:timeNumber
+					id="txtHoraini"
+					label="#{bundle.lbl_txtHoraini}"
+					required="true"
+					rendered="#{pontoBacking.entity.tipopontoFk.tipoqtd==3}"
+					size="10"
+					value="#{pontoBacking.entity.horaini}"
+					precision="7"
+					scale="2"
+					validate="true">
+					<p:ajax
+						event="change"
+						listener="#{pontoBacking.calculaHoras}"
+						update="txtHorafim,txtHoras" />
+				</xcp:timeNumber>
+
+				<xcp:timeNumber
+					id="txtHorafim"
+					label="#{bundle.lbl_txtHorafim}"
+					required="true"
+					rendered="#{pontoBacking.entity.tipopontoFk.tipoqtd==3}"
+					size="10"
+					value="#{pontoBacking.entity.horafim}"
+					precision="7"
+					scale="2"
+					validate="true">
+					<p:ajax
+						event="change"
+						listener="#{pontoBacking.calculaHoras}"
+						update="@this,txtHoras" />
+				</xcp:timeNumber>
+
+				<xcp:timeNumber
+					id="txtHoras"
+					label="#{bundle.lbl_horas}"
+					required="true"
+					rendered="#{pontoBacking.entity.tipopontoFk.tipoqtd==1 or pontoBacking.entity.tipopontoFk.tipoqtd==3}"
+					readonly="#{pontoBacking.entity.tipopontoFk.tipoqtd==3}"
+					size="10"
+					value="#{pontoBacking.entity.horas}"
+					precision="7"
+					scale="2"
+					validate="minutes" />
+
+				<xcp:number
+					id="txtQtd"
+					label="#{bundle.lbl_qtde}"
+					required="true"
+					rendered="#{pontoBacking.entity.tipopontoFk.tipoqtd==2}"
+					size="10"
+					value="#{pontoBacking.entity.horas}"
+					precision="7"
+					scale="0" />
+
+				<xcp:combo
+					id="txtTipolcto"
+					label="#{bundle.lbl_tipolcto}"
+					required="true"
+					itens="#{pontoBacking.itensTipolcto}"
+					value="#{pontoBacking.entity.tipolcto}"
+					size="1"
+					readonly="true" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{pontoBacking.entity.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					size="20" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					required="#{pontoBacking.entity.tipopontoFk.indObs==1}"
+					value="#{pontoBacking.entity.obs}"
+					size="300" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+		<ui:define name="barraForm">
+			<xcp:commandButton
+				id="btn_anexos"
+				icon="#{pontoBacking.anexoIcon}"
+				update=":frmAnexos"
+				value="#{bundle.btn_anexos}"
+				rendered="#{pontoBacking.renderedUpload}"
+				action="#{pontoBacking.actionOpenAnexos}" />
+		</ui:define>
+
+	</xcp:panelFuncionario>
+</ui:composition>

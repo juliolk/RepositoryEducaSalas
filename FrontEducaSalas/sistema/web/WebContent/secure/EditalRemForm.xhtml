@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Edital"
+			backing="#{editalRemBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{row.numero}"
+					type="Number"
+					size="8">
+					<xcp:outputSimple value="#{row.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_responsavel}"
+					value="#{row.responsavel}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.responsavel}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{editalRemBacking.itensSit}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{editalRemBacking.itensSit}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtEdital"
+						label="#{bundle.lbl_edital}"
+						required="true"
+						value="#{editalRemBacking.entity.numero}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not editalRemBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricaoEdital"
+						required="true"
+						label="#{bundle.lbl_descricao_edital}"
+						value="#{editalRemBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:date
+						id="txtDataEdital"
+						required="true"
+						value="#{editalRemBacking.entity.data}"
+						label="#{bundle.lbl_data_edital}" />
+
+					<xcp:text
+						id="txtResponsavel"
+						label="#{bundle.lbl_responsavel}"
+						required="true"
+						value="#{editalRemBacking.entity.responsavel}"
+						size="60" />
+
+					<xcp:text
+						id="txtNumDiarioOficial"
+						label="#{bundle.lbl_numDiarioOficial}"
+						value="#{editalRemBacking.entity.numDiarioOficial}"
+						size="60"
+						maxlength="100" />
+
+					<xcp:lov
+						id="lovRegraInsc"
+						value="#{editalRemBacking.entity.regraInscFk}"
+						label="#{bundle.lbl_regraInsc}"
+						query="edital_regra_insc"
+						size="8" />
+
+					<xcp:lov
+						id="lovRegraSel"
+						value="#{editalRemBacking.entity.regraSelFk}"
+						label="#{bundle.lbl_regraRem}"
+						query="edital_regra_sel"
+						size="8" />
+
+
+				</xcp:panelForm>
+				<p:spacer width="3px" />
+				<div style="width: 1000px;">
+					<p:tabView id="tabView">
+						<p:tab
+							id="tabDados"
+							title="#{bundle.tit_dados}">
+
+							<p:fieldset
+								id="brd_periodo"
+								legend="#{bundle.tit_periodo_inscricao}">
+								<h:panelGrid
+									columns="4"
+									styleClass="tabela_alinhamento">
+
+									<xcp:date
+										id="txtDtinicio"
+										value="#{editalRemBacking.entity.dtinicio}"
+										label="#{bundle.lbl_dtinicio}" />
+
+									<xcp:date
+										id="txtDtfim"
+										value="#{editalRemBacking.entity.dtfim}"
+										label="#{bundle.lbl_dtfimEdital}" />
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset
+								id="brd_periodo_desist"
+								legend="#{bundle.tit_periodo_desist}">
+								<h:panelGrid
+									columns="4"
+									styleClass="tabela_alinhamento">
+
+									<xcp:date
+										id="txtDtinicioDesist"
+										value="#{editalRemBacking.entity.dtdesistini}"
+										label="#{bundle.lbl_dtinicio}" />
+
+									<xcp:date
+										id="txtDtfimDesist"
+										value="#{editalRemBacking.entity.dtdesistfim}"
+										label="#{bundle.lbl_dtfimEdital}" />
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:spacer width="3px" />
+
+							<xcp:panelForm>
+
+								<xcp:number
+									id="txtQtdinscserv"
+									label="#{bundle.lbl_qtdinscserv}"
+									value="#{editalRemBacking.entity.qtdinscserv}"
+									size="10"
+									precision="3"
+									scale="0"
+									maxValue="999" />
+
+								<xcp:text
+									id="txtDesUrlDiario"
+									label="#{bundle.lbl_desUrlDiario}"
+									value="#{editalRemBacking.entity.desUrlDiario}"
+									maxlength="500"
+									size="60" />
+
+								<h:outputLabel
+									value="#{bundle.lbl_divulgacao}:"
+									for="txtDivulgacao" />
+
+								<p:outputPanel
+									style="display: flex;align-items: center;justify-content: center;">
+
+									<xcp:memo
+										id="txtDivulgacao"
+										label="#{bundle.lbl_divulgacao}"
+										value="#{editalRemBacking.entity.divulgacao}"
+										cols="60"
+										size="4000"
+										simple="true"
+										style="float:left"
+										disabled="#{editalRemBacking.entity.sitTexto > 0}" />
+
+									<xcp:commandButton
+										id="btnTexto"
+										process="@this"
+										update="txtDivulgacao"
+										immediate="true"
+										value="#{bundle.btn_gerartexto}"
+										rendered="#{editalRemBacking.seqTexto != null}"
+										action="#{editalRemBacking.actionGerarTexto}"
+										style="margin-left: 5px;" />
+
+								</p:outputPanel>
+
+								<xcp:memo
+									id="txtObs"
+									cols="60"
+									label="#{bundle.lbl_obs}"
+									value="#{editalRemBacking.entity.obs}"
+									size="4000" />
+							</xcp:panelForm>
+						</p:tab>
+
+						<p:tab
+							id="tabCargos"
+							rendered="#{not editalRemBacking.entity.novo}"
+							title="#{bundle.tit_cargos}">
+							<ui:include src="EditalRemForm/EditalCargosForm.xhtml" />
+						</p:tab>
+
+						<p:tab
+							id="tabConcursos"
+							rendered="#{not editalRemBacking.entity.novo}"
+							title="#{bundle.tit_vagasrem}">
+							<ui:include src="EditalRemForm/ConcursoForm.xhtml" />
+						</p:tab>
+
+						<p:tab
+							id="tabVinculos"
+							rendered="#{not editalRemBacking.entity.novo}"
+							title="#{bundle.tit_vinculosperm}">
+							<ui:include src="EditalRemForm/EditalVinculosForm.xhtml" />
+						</p:tab>
+
+					</p:tabView>
+				</div>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_enviar"
+					action="#{editalRemBacking.actionEnviarTexto}"
+					process="@this"
+					value="#{bundle.btn_publicar_texto}"
+					rendered="#{editalRemBacking.tipIntegracao > 0 and not editalRemBacking.entity.novo}"
+					disabled="#{editalRemBacking.entity.sitTexto > 0}">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_envtxt}"
+						message="#{bundle.msg_confirma_envtxt}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgConcurso"
+			width="800px"
+			height="120px"
+			header="#{bundle.tit_vagas}"
+			widgetVar="dlgConcurso_w">
+			<xcp:form id="frmConcurso">
+				<ui:include src="EditalRemForm/ConcursosManutForm.xhtml" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgCargos"
+			width="800px"
+			height="120px"
+			header="#{bundle.tit_cargos}"
+			widgetVar="dlgCargos_w">
+			<xcp:form id="frmCargos">
+				<ui:include src="EditalRemForm/EditalCargosManutForm.xhtml" />
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			modal="true"
+			id="dlgVinculo"
+			width="800px"
+			height="120px"
+			header="#{bundle.tit_vinculos}"
+			widgetVar="dlgVinc_w">
+			<xcp:form id="frmVinc">
+				<ui:include src="EditalRemForm/EditalVinculosManutForm.xhtml" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

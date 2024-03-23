@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Logradouro"
+		backing="#{logradouroBacking}"
+		masterId="Cidades">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_logradouro}"
+				value="#{row.logradouro}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.logradouro}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="60">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtLogradouro_Logradouro"
+					label="#{bundle.lbl_logradouro}"
+					required="true"
+					value="#{logradouroBacking.entity.logradouro}"
+					size="6"
+					maxValue="999999"
+					readonly="#{not logradouroBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_Logradouro"
+					label="#{bundle.lbl_descricao}"
+					value="#{logradouroBacking.entity.descricao}"
+					size="73" />
+
+				<xcp:lov
+					id="lovTipo_Logradouro"
+					value="#{logradouroBacking.entity.tipoFk}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					query="tplogradouro"
+					size="6" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

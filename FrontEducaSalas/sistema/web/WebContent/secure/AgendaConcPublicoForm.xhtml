@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="AgendaConcPublico"
+			backing="#{agendaConcPublicoBacking}">
+
+
+			<ui:define name="filtro">
+				<style>
+.vertical-align {
+	vertical-align: top;
+}
+</style>
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+
+					<h:panelGrid
+						columns="3"
+						columnClasses=",,vertical-align">
+						<xcp:panelForm>
+
+							<p:outputLabel
+								for="calData"
+								value="" />
+
+							<p:calendar
+								locale="pt_BR"
+								id="calData"
+								autocomplete="off"
+								showOn="both"
+								pattern="dd/MM/yyyy"
+								maxlength="10"
+								size="10"
+								navigator="true"
+								onchange="Format.date(this)"
+								mode="inline"
+								value="#{agendaConcPublicoBacking.dt}">
+								<p:ajax
+									event="dateSelect"
+									process="@this"
+									oncomplete="$(PrimeFaces.escapeClientId('form:btnAtualizar_AgendaConcPublico')).click()" />
+							</p:calendar>
+							
+						</xcp:panelForm>
+					</h:panelGrid>
+
+				</p:fieldset>
+
+			</ui:define>
+
+			<p:spacer height="30px" />
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_datahora}"
+					value="#{row.datahora}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleTimestamp value="#{row.datahora}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.matriculaFk.nome}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					itens="#{agendaConcPublicoBacking.itensTipoAgendaConc}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{agendaConcPublicoBacking.itensTipoAgendaConc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_assunto}"
+					value="#{row.assunto}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.assunto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_comparecimento}"
+					value="#{row.ind}"
+					itens="#{agendaConcPublicoBacking.itensInd}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.ind}"
+						itens="#{agendaConcPublicoBacking.itensInd}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{agendaConcPublicoBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{agendaConcPublicoBacking.itensTipoAgendaConc}">
+						<p:ajax
+							update="lovMatricula lovMatricula_l"
+							listener="#{agendaConcPublicoBacking.changeTipo}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{agendaConcPublicoBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="#{agendaConcPublicoBacking.query}"
+						size="8" />
+
+					<xcp:dateTime
+						id="txtDatahora"
+						required="true"
+						value="#{agendaConcPublicoBacking.entity.datahora}"
+						label="#{bundle.lbl_datahora}" />
+
+					<xcp:text
+						id="txtAssunto"
+						label="#{bundle.lbl_assunto}"
+						required="true"
+						value="#{agendaConcPublicoBacking.entity.assunto}"
+						size="74" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{agendaConcPublicoBacking.entity.obs}"
+						size="4000" />
+
+					<xcp:combo
+						id="cboInd"
+						value="#{agendaConcPublicoBacking.entity.ind}"
+						label="#{bundle.lbl_comparecimento}"
+						itens="#{agendaConcPublicoBacking.itensInd}" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_email"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_enviar_msg}"
+					action="#{agendaConcPublicoBacking.actionOpenEmail}"
+					update=":formmsg" />
+
+				<xcp:commandButton
+					id="btn_consultaremaiol"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_msg_enviadas}"
+					action="#{agendaConcPublicoBacking.actionOpenCons}"
+					update=":formcons" />
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_enviar_msg}"
+			modal="true"
+			id="dlgMsg"
+			width="800px"
+			widgetVar="dlgMsg_w">
+			<xcp:form
+				id="formmsg"
+				multipart="true">
+
+				<xcp:panelForm>
+
+					<h:outputText value="" />
+
+					<h:outputText
+						value="#{agendaConcPublicoBacking.msgMatriculas}"
+						style="color:red;font-style:red; display:block;width:600px; word-wrap:break-word;" />
+
+					<xcp:dateTimeRange
+						id="txtDta"
+						label="#{bundle.lbl_dataAgendamento}"
+						valueStart="#{agendaConcPublicoBacking.msgHelper.dtaIni}"
+						valueEnd="#{agendaConcPublicoBacking.msgHelper.dtaFim}"
+						required="true">
+						<p:ajax
+							event="change"
+							update="@form"
+							listener="#{agendaConcPublicoBacking.selectDate}" />
+						<p:ajax
+							event="dateSelect"
+							update="@form"
+							listener="#{agendaConcPublicoBacking.selectDate}" />
+					</xcp:dateTimeRange>
+
+					<xcp:radio
+						id="txtMsg"
+						label="#{bundle.lbl_tipMsg}"
+						required="true"
+						value="#{agendaConcPublicoBacking.msgHelper.tipMsg}"
+						itens="#{agendaConcPublicoBacking.itensTipMsg}">
+						<p:ajax
+							event="change"
+							update="@form" />
+					</xcp:radio>
+
+					<xcp:lov
+						id="lovSeqTexto"
+						required="true"
+						value="#{agendaConcPublicoBacking.msgHelper.xcpTexto}"
+						label="#{bundle.lbl_textoEmail}"
+						query="xcp_texto"
+						size="20"
+						rendered="#{agendaConcPublicoBacking.msgHelper.tipMsg == 1}" />
+
+					<xcp:text
+						id="txtAssunto"
+						required="true"
+						label="#{bundle.lbl_assuntoEmail}"
+						value="#{agendaConcPublicoBacking.msgHelper.assunto}"
+						rendered="#{agendaConcPublicoBacking.msgHelper.tipMsg == 2}" />
+
+					<h:outputLabel
+						value="#{bundle.lbl_mensagem}:"
+						rendered="#{agendaConcPublicoBacking.msgHelper.tipMsg == 2}" />
+
+					<p:editor
+						id="txtMsgDlg"
+						required="true"
+						label="#{bundle.lbl_mensagem}"
+						widgetVar="editorWidget"
+						value="#{agendaConcPublicoBacking.msgHelper.desMsg}"
+						rendered="#{agendaConcPublicoBacking.msgHelper.tipMsg == 2}"
+						width="600" />
+
+					<h:outputLabel value="#{bundle.lbl_anexo}:" />
+
+					<p:fileUpload
+						id="uploadAnexos"
+						mode="advanced"
+						auto="true"
+						label="#{bundle.btn_upload}"
+						uploadLabel="#{bundle.btn_upload}"
+						invalidFileMessage="#{bundle.msg_upload_arquivo}"
+						converterMessage="#{bundle.msg_upload_conversao}"
+						fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+						invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+						messageTemplate="#{bundle.msg_upload_mensagem}"
+						requiredMessage="#{bundle.msg_upload_requerido}"
+						validatorMessage="#{bundle.msg_upload_validacao}"
+						cancelLabel="#{bundle.btn_upload_cancel}"
+						dragDropSupport="false"
+						fileUploadListener="#{agendaConcPublicoBacking.actionUploadAnexo}" />
+				</xcp:panelForm>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_enviar"
+							icon="ui-icon-document"
+							value="#{bundle.btn_enviar}"
+							process="btn_enviar txtDta txtAssunto txtMsgDlg"
+							action="#{agendaConcPublicoBacking.actionEnviarMsg}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			header="#{bundle.tit_consulta_msg}"
+			modal="true"
+			id="dlgCons"
+			width="1000px"
+			widgetVar="dlgCons_w">
+			<xcp:form
+				id="formcons"
+				multipart="true">
+				<p:fieldset legend="#{bundle.title_consulta}">
+
+					<xcp:panelForm>
+						<xcp:dateTimeRange
+							id="txtDtaEnvio"
+							label="#{bundle.lbl_dataenvio}"
+							valueStart="#{agendaConcPublicoBacking.msgHelper.dtaIni}"
+							valueEnd="#{agendaConcPublicoBacking.msgHelper.dtaFim}"
+							required="true" />
+
+					</xcp:panelForm>
+
+					<p:toolbar>
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_pesquisar"
+								value="#{bundle.btn_pesquisar}"
+								update="tblLogs"
+								action="#{agendaConcPublicoBacking.actionPesquisarCons}" />
+						</f:facet>
+					</p:toolbar>
+
+				</p:fieldset>
+
+				<p:spacer height="2" />
+
+				<p:dataTable
+					id="tblLogs"
+					value="#{agendaConcPublicoBacking.msgHelper.listMsg}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_dthinclusao}"
+						value="#{row.dthinclusao}"
+						type="Date"
+						size="5">
+						<xcp:outputSimpleTimestamp value="#{row.dthinclusao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_assunto}"
+						value="#{row.assunto}"
+						type="String"
+						size="8">
+						<xcp:outputSimple value="#{row.assunto}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_mensagem}"
+						value="#{row.desMensagem}"
+						type="String"
+						size="20">
+						<xcp:outputSimple value="#{row.desMensagem}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_opcoes}"
+						size="5">
+
+						<xcp:commandButton
+							id="btn_showfunc"
+							icon="ui-icon-search"
+							update=":formfunc"
+							action="#{agendaConcPublicoBacking.actionShowFunc(row)}" />
+
+						<xcp:commandButton
+							label="#{bundle.btn_download}"
+							value="#{bundle.btn_anexo}"
+							rendered="#{not empty row.nome}"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+							<p:fileDownload
+								value="#{agendaConcPublicoBacking.getDownload(row)}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+
+					</xcp:column>
+
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_agendasag_msg}"
+			modal="true"
+			id="dlgFunc"
+			width="800px"
+			widgetVar="dlgFunc_w">
+			<xcp:form id="formfunc">
+				<p:dataTable
+					id="tblFunc"
+					value="#{agendaConcPublicoBacking.msgHelper.listFunc}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_agenda}"
+						value="#{row.agenda}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.agenda}"
+							precision="18"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						value="#{row.agendaFk.datahora}"
+						type="Date"
+						size="8">
+						<xcp:outputSimpleTimestamp value="#{row.agendaFk.datahora}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_funcionario}"
+						value="#{row.desNome}"
+						type="String"
+						size="18">
+						<xcp:outputSimple value="#{row.desNome}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

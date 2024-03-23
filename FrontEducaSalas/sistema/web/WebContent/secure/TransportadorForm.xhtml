@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Transportador"
+			backing="#{transportadorBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_transportador}"
+					value="#{row.transportador}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.transportador}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipoFk.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="15"
+					itens="#{xcpObjetoParametroBacking.itensIndSimNaoNull}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{transportadorBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cnpj}"
+					value="#{row.cnpj}"
+					type="Number"
+					size="14">
+					<xcp:outputCnpj
+						id="txtCnpj"
+						simple="true"
+						value="#{row.cnpj}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtTransportador"
+						label="#{bundle.lbl_transportador}"
+						required="true"
+						value="#{transportadorBacking.entity.transportador}"
+						style="width: 120px important!"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not transportadorBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{transportadorBacking.entity.descricao}"
+						size="72" />
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{transportadorBacking.entity.tipoFk}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						query="tptransporte"
+						size="3" />
+
+					<xcp:check
+						id="chkSituacao"
+						required="true"
+						label="#{bundle.lbl_situacao}"
+						value="#{transportadorBacking.entity.indSituacao}" />
+
+					<xcp:cnpj
+						id="txtCnpj"
+						label="#{bundle.lbl_cnpj}"
+						value="#{transportadorBacking.entity.cnpj}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

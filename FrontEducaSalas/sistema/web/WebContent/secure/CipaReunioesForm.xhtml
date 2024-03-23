@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="CipaReunioes"
+			backing="#{cipaReunioesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{row.editalFk.edital}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.editalFk.edital}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleTimestamp value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{cipaReunioesBacking.itensTipo}"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{cipaReunioesBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{row.editalFk.orgaoFk.descricao}"
+					type="String"
+					size="25">
+					<xcp:outputSimple value="#{row.editalFk.orgaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_ata}"
+					value="#{row.ata}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.ata}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovEdital"
+						value="#{cipaReunioesBacking.entity.editalFk}"
+						label="#{bundle.lbl_edital}"
+						required="true"
+						query="cipa"
+						size="8"
+						readonly="#{not cipaReunioesBacking.entity.novo}" />
+
+					<xcp:dateTime
+						id="txtData"
+						required="true"
+						value="#{cipaReunioesBacking.entity.data}"
+						label="#{bundle.lbl_data}"
+						readonly="#{not cipaReunioesBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{cipaReunioesBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{cipaReunioesBacking.itensTipo}"
+						styleClass="cipa" />
+
+					<xcp:memo
+						id="txtAta"
+						label="#{bundle.lbl_ata}"
+						value="#{cipaReunioesBacking.entity.ata}"
+						size="16000"
+						style="width:445px;" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="CipaReunioesForm/CipaParticipantesForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="pnlUpdOcor">
+
+		<p:outputPanel rendered="#{setoresInspBacking.telaOcorLista}">
+
+			<p:dataTable
+				id="tableOcor"
+				var="rowInsp"
+				rowKey="#{rowInsp.uuid}"
+				value="#{setoresInspBacking.entity.listOcor}"
+				filteredValue="#{setoresInspBacking.entity.listOcorFilter}"
+				sortMode="multiple"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				selection="#{setoresInspBacking.helper.ocorSel}"
+				selectionMode="single"
+				rows="#{viewUtil.tableRows}">
+
+				<p:ajax
+					event="rowSelect"
+					listener="#{setoresInspBacking.onRowSelectOcor}"
+					update=":form:tabView:pnlUpdOcor" />
+
+				<xcp:column
+					headerText="#{bundle.col_ocorrencia}"
+					value="#{rowInsp.ocorrencia}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{rowInsp.ocorrencia}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{rowInsp.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{rowInsp.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{rowInsp.inicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{rowInsp.inicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{rowInsp.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{rowInsp.termino}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+
+			<xcp:commandButton
+				id="btn_novo"
+				style="margin-top:5px"
+				update=":form:tabView:pnlUpdOcor"
+				process="@this"
+				action="#{setoresInspBacking.actionNovoOcor}"
+				value="#{bundle.btn_novo}"
+				icon="ui-icon-plusthick" />
+
+		</p:outputPanel>
+
+
+		<p:outputPanel rendered="#{setoresInspBacking.telaOcorForm}">
+
+			<p:outputPanel style="margin:10px">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{setoresInspBacking.helper.ocorSel.descricao}"
+						size="60" />
+
+					<h:outputLabel value="#{bundle.lbl_inicio}:*" />
+
+					<h:panelGroup layout="block">
+
+						<xcp:date
+							id="txtInicio"
+							required="true"
+							simple="true"
+							value="#{setoresInspBacking.helper.ocorSel.inicio}"
+							label="#{bundle.lbl_inicio}"
+							style="float:left" />
+
+						<h:panelGrid
+							columns="2"
+							style="float:left;margin-left:17px">
+							<xcp:date
+								id="txtTermino"
+								value="#{setoresInspBacking.helper.ocorSel.termino}"
+								label="#{bundle.lbl_dtatermino}" />
+						</h:panelGrid>
+					</h:panelGroup>
+
+					<h:outputLabel value="#{bundle.lbl_previsaoOcor}:" />
+
+					<h:panelGroup layout="block">
+
+						<xcp:date
+							id="txtPrevisao"
+							simple="true"
+							value="#{setoresInspBacking.helper.ocorSel.previsao}"
+							label="#{bundle.lbl_previsaoOcor}"
+							style="float:left" />
+
+						<h:panelGrid
+							columns="2"
+							style="float:left;margin-left:5px">
+
+							<xcp:date
+								id="txtConclusao"
+								value="#{setoresInspBacking.helper.ocorSel.conclusao}"
+								label="#{bundle.lbl_dtconclusao}" />
+
+						</h:panelGrid>
+					</h:panelGroup>
+
+
+					<xcp:memo
+						id="txtAcao"
+						label="#{bundle.lbl_acaoinsp}"
+						value="#{setoresInspBacking.helper.ocorSel.acao}"
+						size="4000" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{setoresInspBacking.helper.ocorSel.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+
+				<ui:include src="SetoresInspEnv.xhtml" />
+
+				<p:toolbar style="margin-top:5px">
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_ok_ag"
+							icon="ui-icon-disk"
+							update=":form:tabView:pnlUpdOcor"
+							process=":form:tabView:pnlUpdOcor"
+							action="#{setoresInspBacking.actionSalvarOcor}"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_excluir_ag"
+							icon="ui-icon-trash"
+							update=":form:tabView:pnlUpdOcor"
+							value="#{bundle.btn_remover}"
+							action="#{setoresInspBacking.actionRemoveOcor}"
+							process="@this">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btn_voltar_ag"
+							immediate="true"
+							update=":form:tabView:pnlUpdOcor"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							action="#{setoresInspBacking.actionVoltarOcor}" />
+
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+		</p:outputPanel>
+	</p:outputPanel>
+</ui:composition>

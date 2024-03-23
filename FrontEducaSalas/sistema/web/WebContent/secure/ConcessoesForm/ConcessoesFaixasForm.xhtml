@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ConcessoesFaixas"
+		backing="#{concessoesFaixasBacking}"
+		masterId="Concessoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_diasFaixa}"
+				value="#{row.diasFaixa}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.diasFaixa}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diasPerdidos}"
+				value="#{row.diasPerdidos}"
+				type="Number"
+				size="15">
+				<xcp:outputSimpleNumber
+					value="#{row.diasPerdidos}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtDiasFaixa_ConcessoesFaixas"
+					label="#{bundle.lbl_diasFaixa}"
+					required="true"
+					size="9"
+					value="#{concessoesFaixasBacking.entity.diasFaixa}"
+					precision="6"
+					scale="2"
+					readonly="#{not concessoesFaixasBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtDiasPerdidos_ConcessoesFaixas"
+					label="#{bundle.lbl_diasPerdidos}"
+					required="true"
+					value="#{concessoesFaixasBacking.entity.diasPerdidos}"
+					size="9"
+					precision="4"
+					scale="0"
+					maxValue="9999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

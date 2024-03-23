@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Divisoes"
+			backing="#{divisoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="9"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_gerencia}"
+					value="#{row.gerenciaFk.descricao}"
+					type="String"
+					size="50"
+					rendered="#{divisoesBacking.renderedGerencia}">
+					<xcp:outputSimple value="#{row.gerenciaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{row.orgaoFk.descricao}"
+					type="String"
+					size="50"
+					rendered="#{!divisoesBacking.renderedGerencia}">
+					<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_responsavel}"
+					value="#{row.responsavel}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.responsavel}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{divisoesBacking.entity.codigo}"
+						size="20"
+						maxlength="9"
+						precision="9"
+						scale="0"
+						maxValue="99999999"
+						readonly="#{not divisoesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{divisoesBacking.entity.descricao}"
+						size="78"
+						maxlength="190" />
+
+
+					<xcp:lov
+						id="lovGerencias"
+						value="#{divisoesBacking.entity.gerenciaFk}"
+						label="#{bundle.lbl_gerencia}"
+						required="true"
+						query="gerencias"
+						size="13"
+						maxlength="8"
+						rendered="#{divisoesBacking.renderedGerencia}" />
+
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{divisoesBacking.entity.orgaoFk}"
+						label="#{bundle.lbl_orgao}"
+						required="true"
+						query="orgaos"
+						size="13"
+						maxlength="8"
+						rendered="#{!divisoesBacking.renderedGerencia}" />
+
+					<xcp:fone
+						id="txtFone"
+						label="#{bundle.lbl_fone}"
+						value="#{divisoesBacking.entity.fone}" />
+
+					<xcp:text
+						id="txtResponsavel"
+						label="#{bundle.lbl_responsavel}"
+						required="true"
+						value="#{divisoesBacking.entity.responsavel}"
+						size="78"
+						maxlength="60" />
+
+				</xcp:panelForm>
+				<xcp:panelForm>
+					<xcp:endereco
+						id="empresa"
+						value="#{divisoesBacking.entity.endereco}"
+						stylefieldset="margin-left:15px !important" />
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="detalhes">
+		<ui:include src="DivisoesForm/DivisoesResponsaveisForm.xhtml" />
+		<ui:include src="DivisoesForm/SubstitutosForm.xhtml">
+			<ui:param
+				name="id"
+				value="auto" />
+			<ui:param
+				name="backing"
+				value="#{divisoesSubstitutosAutoBacking}" />
+		</ui:include>
+		<ui:include src="DivisoesForm/SubstitutosForm.xhtml">
+			<ui:param
+				name="id"
+				value="event" />
+			<ui:param
+				name="backing"
+				value="#{divisoesSubstitutosEventBacking}" />
+		</ui:include>
+		<ui:include src="DivisoesForm/SubstitutosForm.xhtml">
+			<ui:param
+				name="id"
+				value="assist" />
+			<ui:param
+				name="backing"
+				value="#{divisoesSubstitutosAssistBacking}" />
+		</ui:include>
+		<p:outputPanel rendered="#{divisoesBacking.tribunal}">
+			<ui:include src="DivisoesForm/DivisoesTransformacaoForm.xhtml" />
+		</p:outputPanel>
+	</ui:define>
+</ui:composition>

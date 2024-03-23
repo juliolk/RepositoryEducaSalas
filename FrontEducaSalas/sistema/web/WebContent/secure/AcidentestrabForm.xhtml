@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 100px;
+}
+
+.labelpadding {
+	padding-left: 5px;
+}
+
+.combosn select {
+	width: 100px !important;
+}
+
+.combosn  label {
+	width: 91px !important;
+}
+</style>
+
+		<xcp:panelFuncionario
+			id="Acidentestrab"
+			backing="#{acidentestrabBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_datahora}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleTimestamp value="#{row.datahora}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_acidente}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.acidente}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelGrid>
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:combo
+									id="cboTipoCat"
+									value="#{acidentestrabBacking.entity.tipocat}"
+									label="#{bundle.lbl_tipocat}"
+									itens="#{acidentestrabBacking.itensTipoCat}"
+									required="true">
+									<p:ajax
+										update="txtDtobito txtDtobito_l cboIndMorte cboIndMorte_l lovCatOrigem lovCatOrigem_l" />
+								</xcp:combo>
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+
+								<xcp:combo
+									id="cboIndMorte"
+									rendered="#{acidentestrabBacking.entity.tipocat == 1 || acidentestrabBacking.entity.tipocat == 2}"
+									value="#{acidentestrabBacking.entity.indMorte}"
+									label="#{bundle.lbl_indMorte}"
+									itens="#{acidentestrabBacking.itensIndSimNaoNull}"
+									required="true">
+									<p:ajax update="txtDtobito txtDtobito_l" />
+								</xcp:combo>
+
+
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:date
+									id="txtDtobito"
+									rendered="#{acidentestrabBacking.entity.indMorte == 1 || acidentestrabBacking.entity.tipocat == 3}"
+									value="#{acidentestrabBacking.entity.dtobito}"
+									label="#{bundle.lbl_dtobito}"
+									required="true" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="3">
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:lov
+									id="lovCatOrigem"
+									value="#{acidentestrabBacking.entity.acidenteTrabCatOrig}"
+									label="#{bundle.lbl_catorig}"
+									query="acidentestrab"
+									rendered="#{acidentestrabBacking.entity.novo and (acidentestrabBacking.entity.tipocat == 2 or acidentestrabBacking.entity.tipocat == 3)}"
+									size="15"
+									params="#{acidentestrabBacking.paramsAcidTrab}" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:dateTime
+									id="txtDatahora"
+									required="true"
+									value="#{acidentestrabBacking.entity.datahora}"
+									label="#{bundle.lbl_datahora}"
+									readonly="#{not acidentestrabBacking.entity.novo}">
+									<p:ajax
+										event="change"
+										update="tabGeral:txtEquipamentos"
+										listener="#{acidentestrabBacking.montaEPIeEPC}" />
+									<p:ajax
+										event="dateSelect"
+										update="tabGeral:txtEquipamentos"
+										listener="#{acidentestrabBacking.montaEPIeEPC}" />
+
+								</xcp:dateTime>
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:timeNumber
+									id="txtAposhoras"
+									label="#{bundle.lbl_aposhoras}"
+									size="9"
+									value="#{acidentestrabBacking.entity.aposhoras}"
+									precision="6"
+									scale="2"
+									required="true" />
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:combo
+									id="cboRegpolicial"
+									value="#{acidentestrabBacking.entity.regpolicial}"
+									label="#{bundle.lbl_regpolicial}"
+									required="true"
+									itens="#{acidentestrabBacking.itensRegpolicial}" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+
+
+				<xcp:panelGrid>
+					<p:row>
+						<p:column colspan="2">
+							<!-- 
+							<p:fieldset
+								id="brd_ocorrido"
+								legend="#{bundle.tit_ocorrido}">
+							</p:fieldset>
+ -->
+							<p:fieldset
+								id="brd_hr_trab"
+								legend="#{bundle.tit_hr_trab}">
+								<xcp:panelGrid>
+									<p:row>
+										<p:column>
+											<xcp:panelForm labelClass="labelWidth">
+												<xcp:text
+													id="txtTurno1"
+													label="#{bundle.lbl_turno1}"
+													value="#{acidentestrabBacking.entity.turno1}"
+													size="15" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<xcp:panelForm labelClass="labelWidth">
+												<xcp:text
+													id="txtTurno2"
+													label="#{bundle.lbl_turno2}"
+													value="#{acidentestrabBacking.entity.turno2}"
+													size="15" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<xcp:panelForm labelClass="labelWidth">
+												<xcp:date
+													id="txtDttrab"
+													value="#{acidentestrabBacking.entity.dttrab}"
+													label="#{bundle.lbl_dttrab}"
+													required="true" />
+											</xcp:panelForm>
+										</p:column>
+									</p:row>
+								</xcp:panelGrid>
+							</p:fieldset>
+
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+
+
+				<xcp:panelForm labelClass="labelWidth">
+
+					<p:outputLabel
+						value="#{bundle.lbl_acidente}: *"
+						for="txtAcidente" />
+
+					<h:panelGrid
+						columns="3"
+						columnClasses=",labelpadding,">
+						<xcp:text
+							id="txtAcidente"
+							label="#{bundle.lbl_acidente}"
+							required="true"
+							value="#{acidentestrabBacking.entity.acidente}"
+							maxlength="100"
+							size="60"
+							simple="true" />
+						<xcp:combo
+							id="cboTipo"
+							value="#{acidentestrabBacking.entity.tipo}"
+							label="#{bundle.lbl_tipo}"
+							itens="#{acidentestrabBacking.itensTipo}"
+							required="true" />
+					</h:panelGrid>
+
+
+					<xcp:combo
+						id="cboTipoemissao"
+						value="#{acidentestrabBacking.entity.tipoemissao}"
+						label="#{bundle.lbl_tipoemissao}"
+						itens="#{acidentestrabBacking.itensTipoemissao}"
+						required="true" />
+
+					<!-- natureza e tipo comentados, aguardando definição layout esocial -->
+
+					<!--<xcp:lov
+						id="lovTipoacid"
+						value="#{acidentestrabBacking.entity.tipoacidFk}"
+						label="#{bundle.lbl_tipoacid}"
+						query="tipoacidentetrab"
+						size="7"
+						required="true" />-->
+
+					<xcp:lov
+						id="lovCaracteristica"
+						value="#{acidentestrabBacking.entity.caracteristicaFk}"
+						label="#{bundle.lbl_caracteristica}"
+						required="true"
+						query="tipoacidente"
+						size="7" />
+
+					<xcp:lov
+						id="lovAgente"
+						value="#{acidentestrabBacking.entity.agenteFk}"
+						label="#{bundle.lbl_agente}"
+						required="true"
+						query="fontegeradoramestre"
+						params="#{acidentestrabBacking.paramsAgente}"
+						size="7" />
+
+					<xcp:lov
+						id="lovPartescorpo"
+						value="#{acidentestrabBacking.entity.partescorpoFk}"
+						label="#{bundle.lbl_partescorpo}"
+						required="true"
+						query="partescorpomestre"
+						params="#{acidentestrabBacking.paramsParte}"
+						size="7" />
+
+					<xcp:combo
+						id="cboIndAfastamento"
+						value="#{acidentestrabBacking.entity.indAfastamento}"
+						label="#{bundle.lbl_indAfastamento}"
+						itens="#{acidentestrabBacking.itensIndSimNao}">
+						<p:ajax
+							update="lovAfastamento lovAfastamento_l"
+							listener="#{acidentestrabBacking.actionChangeAfast}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovAfastamento"
+						value="#{acidentestrabBacking.entity.afastamentoFk}"
+						label="#{bundle.lbl_tipoAfastamento}"
+						rendered="#{acidentestrabBacking.entity.indAfastamento == 1 and acidentestrabBacking.renderedAfastamento == true}"
+						query="tipomovtos"
+						size="7" />
+
+					<p:outputLabel
+						value="#{bundle.lbl_especlocal}: *"
+						for="txtEspeclocal" />
+
+					<h:panelGrid
+						columns="3"
+						columnClasses=",labelpadding,">
+						<xcp:text
+							id="txtEspeclocal"
+							label="#{bundle.lbl_especlocal}"
+							value="#{acidentestrabBacking.entity.especlocal}"
+							maxlength="100"
+							size="40"
+							required="true"
+							simple="true" />
+						<xcp:combo
+							id="cboLocal"
+							value="#{acidentestrabBacking.entity.local}"
+							label="#{bundle.lbl_local}"
+							itens="#{acidentestrabBacking.itensLocal}"
+							required="true"
+							style="width: 275px !important">
+							<p:ajax update=":form:tabGeral" />
+						</xcp:combo>
+					</h:panelGrid>
+
+					<xcp:memo
+						id="txtTrajeto"
+						label="#{bundle.lbl_trajeto}"
+						rows="2"
+						cols="80"
+						value="#{acidentestrabBacking.entity.trajeto}"
+						size="500" />
+
+					<xcp:memo
+						id="txtTrajetodia"
+						rows="2"
+						cols="80"
+						label="#{bundle.lbl_trajetodia}"
+						value="#{acidentestrabBacking.entity.trajetodia}"
+						size="500" />
+
+					<p:outputLabel value="" />
+
+					<xcp:panelEsoc
+						value="#{acidentestrabBacking}"
+						tipoesoc="4"
+						stylefieldset="width: fit-content" />
+
+				</xcp:panelForm>
+
+				<p:tabView id="tabGeral">
+					<p:tab
+						id="tab_partes"
+						title="#{bundle.tit_partes}"
+						rendered="#{!acidentestrabBacking.entity.novo and acidentestrabBacking.isRendered('tab_partes')}">
+						<ui:include src="AcidentestrabForm/Acidentestrabparte.xhtml" />
+					</p:tab>
+					<p:tab
+						id="tab_agentes"
+						title="#{bundle.tit_agentescau}"
+						rendered="#{!acidentestrabBacking.entity.novo and acidentestrabBacking.isRendered('tab_agentes')}">
+						<ui:include src="AcidentestrabForm/Acidentestrabag.xhtml" />
+					</p:tab>
+
+					<p:tab
+						id="tab_relato"
+						title="#{bundle.tit_relato}"
+						rendered="#{acidentestrabBacking.isRendered('tab_relato')}">
+						<xcp:panelForm>
+							<xcp:memo
+								id="txtRelato"
+								label="#{bundle.lbl_relato}"
+								value="#{acidentestrabBacking.entity.relato}"
+								size="4000" />
+
+							<xcp:combo
+								id="cboUtilizavaepi"
+								styleClass="combosn"
+								value="#{acidentestrabBacking.entity.utilizavaepi}"
+								label="#{bundle.lbl_utilizavaepi}"
+								itens="#{acidentestrabBacking.itensIndSimNao}">
+								<p:ajax
+									action="change"
+									update="txtMotivo,txtMotivo_l,txtEquipamentos_l" />
+							</xcp:combo>
+
+							<xcp:memo
+								id="txtEquipamentos"
+								label="#{bundle['lbl_utilizavaepi_'.concat(acidentestrabBacking.entity.utilizavaepi)]}"
+								value="#{acidentestrabBacking.entity.equipamentos}"
+								size="2000" />
+
+							<xcp:memo
+								id="txtMotivo"
+								label="#{bundle.lbl_motivo_nao}"
+								value="#{acidentestrabBacking.entity.motivo}"
+								rendered="#{acidentestrabBacking.entity.utilizavaepi == 0}"
+								size="2000" />
+						</xcp:panelForm>
+
+					</p:tab>
+					<p:tab
+						id="tab_localend"
+						title="#{bundle.tit_localend}"
+						rendered="#{acidentestrabBacking.entity.local != 1 and acidentestrabBacking.isRendered('tab_localend')}">
+						<xcp:endereco
+							id="localend"
+							value="#{acidentestrabBacking.entity.endereco}"
+							requiredNum="true"
+							maxlengthcompl="30" />
+					</p:tab>
+					<p:tab
+						title="#{bundle.tit_parecer_unidade}"
+						id="tab_parecer"
+						rendered="#{acidentestrabBacking.isRendered('tab_parecer')}">
+						<xcp:panelForm>
+							<xcp:text
+								id="txtResponsavelsetor"
+								label="#{bundle.lbl_responsavelsetor}"
+								value="#{acidentestrabBacking.entity.responsavelsetor}"
+								size="50" />
+
+							<xcp:memo
+								id="txtParecerunid"
+								label="#{bundle.lbl_parecerunid}"
+								value="#{acidentestrabBacking.entity.parecerunid}"
+								size="4000" />
+
+						</xcp:panelForm>
+					</p:tab>
+					<p:tab
+						title="#{bundle.tit_parecer_sesmt}"
+						id="tab_sesmt"
+						rendered="#{acidentestrabBacking.isRendered('tab_sesmt')}">
+						<xcp:panelForm>
+							<xcp:combo
+								id="cboIndAcidente"
+								value="#{acidentestrabBacking.entity.indAcidente}"
+								label="#{bundle.lbl_indAcidente}"
+								itens="#{acidentestrabBacking.itensIndSimNaoNull}" />
+
+							<xcp:date
+								id="txtDtanalise"
+								value="#{acidentestrabBacking.entity.dtanalise}"
+								label="#{bundle.lbl_dtanalise}" />
+
+							<xcp:memo
+								id="txtParecer"
+								label="#{bundle.lbl_parecersesmt}"
+								value="#{acidentestrabBacking.entity.parecer}"
+								size="1000" />
+						</xcp:panelForm>
+					</p:tab>
+					<p:tab
+						title="#{bundle.tit_parecer_recomentacoes}"
+						id="tab_recomendacoes"
+						rendered="#{acidentestrabBacking.isRendered('tab_recomendacoes')}">
+						<xcp:memo
+							id="txtRecomendacao"
+							simple="true"
+							label="#{bundle.lbl_recomendacao}"
+							value="#{acidentestrabBacking.entity.recomendacao}"
+							size="2000" />
+					</p:tab>
+					<!-- 
+					<p:tab title="#{bundle.tit_parecer_testemunhas}">
+						<xcp:memo
+							id="txtParecertest"
+							label="#{bundle.lbl_parecertest}"
+							simple="true"
+							value="#{acidentestrabBacking.entity.parecertest}"
+							size="1000" />
+					</p:tab>
+ -->
+					<p:tab
+						title="#{bundle.tit_testemunhas}"
+						id="tab_testemunhas"
+						rendered="#{acidentestrabBacking.isRendered('tab_testemunhas')}">
+						<xcp:panelGrid>
+							<p:row>
+								<p:column>
+									<xcp:panelForm>
+										<xcp:text
+											id="txtTestemunha1"
+											label="#{bundle.lbl_testemunha1}"
+											value="#{acidentestrabBacking.entity.testemunha1}"
+											size="50" />
+										<xcp:text
+											id="txtFone1"
+											label="#{bundle.lbl_fone1}"
+											value="#{acidentestrabBacking.entity.fone1}"
+											size="20" />
+
+										<xcp:memo
+											id="txtParecertestemunha1"
+											label="#{bundle.lbl_parecertestemunha1}"
+											value="#{acidentestrabBacking.entity.parecertestemunha1}"
+											size="4000" />
+									</xcp:panelForm>
+									<xcp:endereco
+										required="false"
+										id="endereco1"
+										value="#{acidentestrabBacking.entity.endereco1}" />
+								</p:column>
+								<p:column>
+									<xcp:panelForm>
+										<xcp:text
+											id="txtTestemunha2"
+											label="#{bundle.lbl_testemunha2}"
+											value="#{acidentestrabBacking.entity.testemunha2}"
+											size="50" />
+
+										<xcp:text
+											id="txtFone2"
+											label="#{bundle.lbl_fone2}"
+											value="#{acidentestrabBacking.entity.fone2}"
+											size="20" />
+
+										<xcp:memo
+											id="txtParecertestemunha2"
+											label="#{bundle.lbl_parecertestemunha2}"
+											value="#{acidentestrabBacking.entity.parecertestemunha2}"
+											size="4000" />
+
+									</xcp:panelForm>
+									<xcp:endereco
+										id="endereco2"
+										required="false"
+										value="#{acidentestrabBacking.entity.endereco2}" />
+
+								</p:column>
+							</p:row>
+						</xcp:panelGrid>
+					</p:tab>
+					<p:tab
+						title="#{bundle.tit_acoes}"
+						id="tab_acoes"
+						rendered="#{!acidentestrabBacking.entity.novo and acidentestrabBacking.isRendered('tab_acoes')}">
+						<ui:include src="AcidentestrabForm/AcidentestrabAcoes.xhtml" />
+					</p:tab>
+					<p:tab
+						title="#{bundle.tit_parecer_acoes}"
+						id="tab_paracoes"
+						rendered="#{!acidentestrabBacking.entity.novo and acidentestrabBacking.isRendered('tab_paracoes')}">
+						<xcp:panelForm>
+							<xcp:combo
+								id="cboEficaz"
+								styleClass="combosn"
+								value="#{acidentestrabBacking.entity.eficaz}"
+								label="#{bundle.lbl_eficaz}"
+								itens="#{acidentestrabBacking.itensIndSimNaoNull}" />
+
+							<xcp:date
+								id="txtDatafinal"
+								value="#{acidentestrabBacking.entity.datafinal}"
+								label="#{bundle.lbl_datafinal}" />
+
+							<xcp:text
+								id="txtAvaliador"
+								label="#{bundle.lbl_avaliador}"
+								value="#{acidentestrabBacking.entity.avaliador}"
+								size="50" />
+
+							<xcp:memo
+								id="txtObsfinal"
+								label="#{bundle.lbl_obsfinal}"
+								value="#{acidentestrabBacking.entity.obsfinal}"
+								size="2000" />
+						</xcp:panelForm>
+					</p:tab>
+					<p:tab
+						title="#{bundle.tit_procedimentos}"
+						id="tab_procedimentos"
+						rendered="#{!acidentestrabBacking.entity.novo and acidentestrabBacking.isRendered('tab_procedimentos')}">
+						<ui:include src="AcidentestrabForm/AcidentestrabExa.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcpfunc:anexosButton
+					id="acidentestrab"
+					entity="#{acidentestrabBacking.entity}"
+					funcionarioPK="#{acidentestrabBacking.funcionario.PK}" />
+
+				<xcp:commandButton
+					value="#{bundle.btn_atend}"
+					action="#{acidentestrabBacking.actionAtestadosMedicos}"
+					update=":frmAtest"
+					immediate="true"
+					rendered="#{acidentestrabBacking.vlrAcidentesTrab5 == 1}" />
+
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgAcoes"
+			header="#{bundle.title_adicionarAcoes}"
+			widgetVar="dlgAcoes_w">
+			<xcp:form id="frmAcoes">
+				<ui:include src="AcidentestrabForm/AcidentestrabAcoesDlg.xhtml" />
+			</xcp:form>
+		</p:dialog>
+
+		<ui:include src="AcidentestrabForm/AcidentestrabExaDlg.xhtml" />
+		<ui:include src="AcidentestrabForm/AcidentestrabparteDlg.xhtml" />
+		<ui:include src="AcidentestrabForm/AcidentestrabagDlg.xhtml" />
+		<ui:include src="AcidentestrabForm/AcidentestrabAtestadosDlg.xhtml" />
+
+		<xcpfunc:anexosDialog />
+	</ui:define>
+</ui:composition>

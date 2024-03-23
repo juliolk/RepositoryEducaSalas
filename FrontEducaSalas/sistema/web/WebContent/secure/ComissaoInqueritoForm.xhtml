@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(13)}"
+			escape="false" />
+
+		<xcp:panelContent>
+
+			<p:dataTable
+				id="tblComissoes"
+				var="row"
+				rowKey="#{row.PK}"
+				value="#{comissaoInqueritoBacking.helper.listComissoes}"
+				selectionMode="single"
+				selection="#{comissaoInqueritoBacking.helper.comissaoSel}"
+				sortMode="multiple"
+				scrollHeight="120"
+				rows="#{viewUtil.tableRows}"
+				paginator="true"
+				paginatorPosition="bottom"
+				resizableColumns="true"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc)}">
+
+				<p:ajax
+					event="rowSelect"
+					update=":form:pnlInq"
+					listener="#{comissaoInqueritoBacking.actionSelectComissao}" />
+
+				<xcp:column
+					headerText="#{bundle.col_comissao}"
+					value="#{row.comissao}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.comissao}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{row.orgaoFk.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="10"
+					itens="#{comissaoInqueritoBacking.itensTipo}">
+					<xcp:outputSimple
+						itens="#{comissaoInqueritoBacking.itensTipo}"
+						value="#{row.tipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_sitcom}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{comissaoInqueritoBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{comissaoInqueritoBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.inicio}"
+					type="String"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.inicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{row.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.termino}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:spacer height="5" />
+
+			<p:outputPanel id="pnlInq">
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_novo"
+							icon="ui-icon-document"
+							disabled="#{comissaoInqueritoBacking.helper.comissaoSel == null}"
+							value="#{bundle.btn_novo}"
+							action="#{comissaoInqueritoBacking.actionNovo}"
+							process="@form"
+							update="@form" />
+
+						<xcp:commandButton
+							icon="ui-icon-print"
+							id="btnImprimir_com"
+							value="#{bundle.btn_relatorio}"
+							rendered="#{not empty comissaoInqueritoBacking.rotina.codObjeto}"
+							action="#{comissaoInqueritoBacking.actionImprimir('ComissaoInq')}"
+							process="@this" />
+
+					</f:facet>
+				</p:toolbar>
+
+				<p:dataTable
+					id="tblInq"
+					var="row"
+					rowKey="#{row.PK}"
+					value="#{comissaoInqueritoBacking.helper.listInqueritos}"
+					selectionMode="single"
+					selection="#{comissaoInqueritoBacking.helper.inqueritoSel}"
+					sortMode="multiple"
+					scrollHeight="120"
+					rows="#{viewUtil.tableRows}"
+					paginator="true"
+					paginatorPosition="bottom"
+					resizableColumns="true"
+					emptyMessage="#{bundle.msg_sem_resultado}">
+
+					<p:ajax
+						event="rowSelect"
+						update=":frmDlgInq"
+						oncomplete="PF('dlgInq_w').show()" />
+
+					<p:column style="width:16px">
+						<p:rowToggler rendered="#{row.detalhes}" />
+					</p:column>
+
+					<xcp:column
+						headerText="#{bundle.col_seqinquerito}"
+						value="#{row.seqinq}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.seqinq}"
+							precision="5"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.descricao}"
+						type="String"
+						size="60">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_inicio}"
+						value="#{row.dtinicio}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtinicio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_termino}"
+						value="#{row.dttermino}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dttermino}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandLink
+							id="btn_remove"
+							update=":form:tblInq"
+							immediate="true"
+							action="#{comissaoInqueritoBacking.actionExcluir(row)}">
+							<h:graphicImage
+								title="#{bundle.hint_remover}"
+								value="/resources/img/remover.png"
+								style="margin-top:3px;" />
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<p:rowExpansion>
+						<p:dataTable
+							id="tabDoc"
+							var="rowDoc"
+							value="#{row.listaComissaoIncDoc}"
+							rowKey="#{rowDoc.PK}"
+							paginator="true"
+							selectionMode="single"
+							paginatorPosition="bottom"
+							rowIndexVar="idx"
+							selection="#{comissaoInqueritoBacking.helper.inqueritoDocSel}"
+							rows="#{viewUtil.tableRows}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							style="margin-bottom:0;">
+
+							<p:ajax
+								event="rowSelect"
+								update=":frmDlgDocInq"
+								oncomplete="PF('dlgInqDoc_w').show();" />
+
+
+							<ui:include src="DocManual/DocUnificadoDetalhesDoc.xhtml">
+								<ui:param
+									name="rowDoc"
+									value="#{rowDoc}" />
+
+								<ui:param
+									name="rowPrincipal"
+									value="#{row}" />
+
+								<ui:param
+									name="actionExclusao"
+									value="#{comissaoInqueritoBacking.model}" />
+							</ui:include>
+
+						</p:dataTable>
+					</p:rowExpansion>
+
+				</p:dataTable>
+
+			</p:outputPanel>
+
+		</xcp:panelContent>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{comissaoInqueritoBacking.model}" />
+		</ui:include>
+		<ui:include src="ComissaoInquerito/ComissaoInqueritoDialog.xhtml" />
+		<ui:include src="ComissaoInquerito/ComissaoInqueritoDocDialog.xhtml" />
+
+	</ui:define>
+
+
+</ui:composition>

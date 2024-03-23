@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="table_Provas"
+		var="rowProva"
+		value="#{editalBacking.listaProvas}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		scrollable="true"
+		scrollHeight="161"
+		selectionMode="single"
+		selection="#{editalBacking.provasConcursoManut}"
+		rowKey="#{rowProva.PK}">
+
+		<xcp:column
+			headerText="#{bundle.col_prova}"
+			type="Number"
+			size="4">
+			<xcp:outputSimpleNumber
+				value="#{rowProva.prova}"
+				precision="4"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_desProva}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{rowProva.provaFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{rowProva.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_ptminimo}"
+			type="Number"
+			size="4">
+			<xcp:outputSimpleNumber
+				value="#{rowProva.ptminimo}"
+				precision="4"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_fase}"
+			type="Number"
+			size="2">
+			<xcp:outputSimpleNumber
+				value="#{rowProva.fase}"
+				precision="2"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="2">
+			<xcp:commandButton
+				id="btn_removerSel"
+				immediate="true"
+				icon="ui-icon-trash"
+				update="table_Provas"
+				action="#{editalBacking.actionExcluirProva(rowProva)}">
+			<!-- 	<h:graphicImage
+					title="#{bundle.hint_remover}"
+					value="/resources/img/remover_icon.png"
+					style="margin-top:3px;" /> -->
+				<p:confirm
+					header="#{bundle.tit_confirma_remover}"
+					message="#{bundle.msg_confirma_remover}"
+					icon="ui-icon-alert" />
+			</xcp:commandButton>
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="2">
+			<xcp:commandButton
+				id="btn_editarSel"
+				icon="icon-navegar"
+				update="table_Provas,:#{p:component('formProva')}"
+				oncomplete="PF('dlgProva_w').show();"
+				action="#{editalBacking.setProvasConcursoManut(rowProva)}">
+				<!-- <h:graphicImage
+					title="#{bundle.hint_editar}"
+					value="/resources/img/navegar.png"
+					style="margin-top:3px;" /> -->
+			</xcp:commandButton>
+		</xcp:column>
+	</p:dataTable>
+
+	<p:remoteCommand
+		name="closeDlgProva"
+		update="table_Provas"
+		oncomplete="PF('dlgProva_w').hide();" />
+</ui:composition>

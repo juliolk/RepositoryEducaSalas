@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.tit_downloadDocumentoPortal}"
+		modal="true"
+		id="dlgCaptchaDownPortal"
+		widgetVar="dlgCaptchaDownPortal_w">
+		<xcp:form id="frmDownload">
+			<p:focus context="frmDownload" />
+			<p:defaultCommand target="btnDownload" />
+			<xcp:panelForm>
+				<p:outputLabel
+					rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}"
+					value="#{bundle.lbl_verificacao}#{viewUtil.labelSufix}"
+					for="txtCaptcha" />
+				<p:inputText
+					id="txtCaptcha"
+					rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}"
+					label="#{bundle.lbl_verificacao}"
+					required="true"
+					validator="#{xcpCaptchaBacking.getValidator('download_portal').validate}"
+					autocomplete="off" />
+
+				<p:spacer />
+				<h:panelGroup>
+					<p:graphicImage
+						id="imgDownloadCaptcha"
+						rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}"
+						value="#{xcpCaptchaBacking.imgCaptcha.download_portal}"
+						cache="false" />
+					<xcp:commandButton
+						id="btnRefreshCaptcha"
+						rendered="#{xcpCaptchaBacking.tipoCaptcha == 0}"
+						icon="ui-icon-refresh"
+						process="@this"
+						immediate="true"
+						update="imgDownloadCaptcha"
+						action="#{xcpCaptchaBacking.actionTrocarCaptcha('download_portal')}" />
+					<p:captcha id="reCaptchaDoc" language="pt" required="required"
+						requiredMessage="#{bundle.msg_recaptcha_requerido}" 
+						rendered="#{xcpCaptchaBacking.tipoCaptcha == 1}" />
+				</h:panelGroup>
+				
+			</xcp:panelForm>
+
+			<xcp:commandButton
+				id="btnDownload"
+				value="#{bundle.btn_download}"
+				action="#{xcpPortalBacking.actionDownload}" />
+
+		</xcp:form>
+	</p:dialog>
+	
+</ui:composition>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelFuncionarioDet
+			id="sesmt"
+			backing="#{funcionariosSESMTBacking}">
+			<ui:define name="form">
+			
+				<p:tab
+					id="tabAtestados"
+					title="#{bundle.tit_atestados}">
+					<ui:include
+						src="FuncionariosSESMTForm/FuncionariosSESMTAtestados.xhtml" />
+				</p:tab>
+
+				<p:tab
+					id="tabAcidentesTra"
+					title="#{bundle.tit_acidentestrab}">
+					<ui:include
+						src="FuncionariosSESMTForm/FuncionariosSESMTAcidentes.xhtml" />
+				</p:tab>
+
+				<p:tab
+					id="tabepi"
+					title="#{bundle.tit_epi}">
+					<ui:include src="FuncionariosSESMTForm/FuncionariosSESMTEpi.xhtml" />
+				</p:tab>
+
+			</ui:define>
+		</xcp:panelFuncionarioDet>
+	</ui:define>
+</ui:composition>

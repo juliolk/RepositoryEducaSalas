@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="cargosLotacao"
+		backing="#{cargosLotacaoBacking}"
+		masterId="Cargos"
+		update=":form:cboLotacao">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_orgao}"
+				value="#{row.orgao}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.orgao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desc_orgao}"
+				value="#{row.orgaoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_divisao}"
+				rendered="#{cargosBacking.entity.lotacao > 1}"
+				value="#{row.divisao}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.divisao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_des_divisao}"
+				rendered="#{cargosBacking.entity.lotacao > 1}"
+				value="#{row.divisaoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.divisaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_setor}"
+				rendered="#{cargosBacking.entity.lotacao > 2}"
+				value="#{row.setor}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.setor}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.des_setor}"
+				rendered="#{cargosBacking.entity.lotacao > 2}"
+				value="#{row.setorFk.descricao}"
+				size="30">
+				<xcp:outputSimple value="#{row.setorFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nrofunc}"
+				value="#{row.nrofunc}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.nrofunc}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtaini}"
+				value="#{row.dtaini}"
+				type="Date"
+				size="8">
+				<xcp:outputSimpleDate value="#{row.dtaini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtafim}"
+				value="#{row.dtafim}"
+				type="Date"
+				size="8">
+				<xcp:outputSimpleDate value="#{row.dtafim}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovOrgao_Lotacao"
+					value="#{cargosLotacaoBacking.entity.orgaoFk}"
+					selectionListener="#{cargosLotacaoBacking.selectOrgao}"
+					label="#{bundle.lbl_orgao}"
+					required="true"
+					query="orgaos"
+					update="txtDivisao_Lotacao,lovSetor_Lotacao"
+					size="4" />
+
+				<xcp:lov
+					id="txtDivisao_Lotacao"
+					required="true"
+					rendered="#{cargosBacking.entity.lotacao > 1}"
+					value="#{cargosLotacaoBacking.entity.divisaoFk}"
+					label="#{bundle.lbl_divisao}"
+					query="divisoes_orgao"
+					selectionListener="#{cargosLotacaoBacking.selectDivisao}"
+					params="#{cargosLotacaoBacking.paramsDivisao}"
+					update="lovSetor_Lotacao"
+					size="4" />
+
+				<xcp:lov
+					id="lovSetor_Lotacao"
+					required="true"
+					value="#{cargosLotacaoBacking.entity.setorFk}"
+					rendered="#{cargosBacking.entity.lotacao > 2}"
+					label="#{bundle.lbl_setor}"
+					params="#{cargosLotacaoBacking.paramsSetor}"
+					query="set_div_validade"
+					size="4" />
+
+				<xcp:number
+					id="txtNrofunc_Lotacao"
+					label="#{bundle.lbl_nrofunc}"
+					required="true"
+					value="#{cargosLotacaoBacking.entity.nrofunc}"
+					size="4"
+					precision="6"
+					scale="0"
+					minValue="1"
+					maxValue="999999">
+					<p:ajax
+						update="cboIndChefe cboIndChefe_l lovMatricula lovMatricula_l"
+						process="@this"
+						listener="#{cargosLotacaoBacking.changeNumFunc}" />
+				</xcp:number>
+
+				<xcp:dateRange
+					id="txtDtaini"
+					valueStart="#{cargosLotacaoBacking.entity.dtaini}"
+					valueEnd="#{cargosLotacaoBacking.entity.dtafim}"
+					label="#{bundle.lbl_data}"
+					requiredStart="true" />
+
+				<xcp:lov
+					id="lovMatricula"
+					value="#{cargosLotacaoBacking.entity.matrespFk}"
+					label="#{bundle.lbl_matresp}"
+					query="funcionariosLov"
+					size="8"
+					required="#{cargosLotacaoBacking.entity.indChefe == 1}" />
+
+				<xcp:combo
+					id="cboIndChefe"
+					value="#{cargosLotacaoBacking.entity.indChefe}"
+					label="#{bundle.lbl_indChefe}"
+					required="true"
+					itens="#{cargosLotacaoBacking.itensIndSimNao}"
+					rendered="#{cargosBacking.entity.tipo == 2 and cargosBacking.entity.lotacao > 2 and cargosLotacaoBacking.entity.nrofunc == 1}">
+					<p:ajax update="lovMatricula lovMatricula_l" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovTipodocumentoLot"
+					value="#{cargosLotacaoBacking.entity.tipodocFk}"
+					label="#{bundle.lbl_tipodocumento}"
+					selectionListener="#{cargosLotacaoBacking.selectTipodocumento}"
+					update="lovDocumentoLot,btnDownloadDocumento"
+					query="tipodocumento_lot"
+					params="#{cargosLotacaoBacking.paramsTipoDoc}"
+					size="10"
+					readonly="#{cargosLotacaoBacking.readOnlyTipdoc}" />
+
+				<xcp:lov
+					id="lovDocumentoLot"
+					value="#{cargosLotacaoBacking.entity.registroFk}"
+					params="#{cargosLotacaoBacking.paramsTipodocumento}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					size="10"
+					update="btnDownloadDocumento"
+					readonly="#{cargosLotacaoBacking.readOnlyDoc}" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:commandButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{cargosLotacaoBacking.entity.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(cargosLotacaoBacking.entity.registro)}"
+									contentDisposition="attachment" />
+							</p:commandButton>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+			</xcp:panelForm>
+		</ui:define>
+
+		<ui:define name="barraListaDet">
+			<xcp:commandButton
+				action="#{cargosLotacaoBacking.actionOpenLotacao}"
+				value="#{bundle.btn_carregar_lotacao}"
+				rendered="#{cargosBacking.entity.lotacao == 3}"
+				immediate="true"
+				update=":frmLotacao" />
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

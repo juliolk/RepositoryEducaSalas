@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="PlanoConflitos" backing="#{planoConflitosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}" type="String" width="50%">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_dataini}" value="#{row.dtini}"
+					type="Date" width="25%">
+					<xcp:outputSimpleDate value="#{row.dtini}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_datafim}" value="#{row.dtfim}"
+					type="Date" width="25%">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:memo id="txtDescricao" required="true"
+						value="#{planoConflitosBacking.entity.descricao}"
+						label="#{bundle.lbl_descricao}" />
+
+					<xcp:date id="txtDtini" required="true"
+						value="#{planoConflitosBacking.entity.dtini}"
+						label="#{bundle.lbl_dtini}" />
+
+					<xcp:date id="txtDtfim"
+						value="#{planoConflitosBacking.entity.dtfim}"
+						label="#{bundle.lbl_datafim}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="PlanoConflitosForm/PlanoConflitosEnvolvidosForm.xhtml" />
+				<ui:include src="PlanoConflitosForm/PlanoConflitosAcoesForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+		<ui:include src="PlanoConflitosForm/PlanoConflitosAcoesEnvolvidosDlg.xhtml" />
+		<ui:include src="PlanoConflitosForm/PlanoConflitosAcoesAnexosDlg.xhtml" />
+	</ui:define>
+	
+</ui:composition>

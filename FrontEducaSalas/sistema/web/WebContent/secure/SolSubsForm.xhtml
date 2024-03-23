@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="SolSubs"
+			backing="#{solSubsBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+					<xcp:panelForm>
+						<xcp:radio
+							id="cboStatusPesq"
+							value="#{solSubsBacking.tipStatus}"
+							label="#{bundle.lbl_status}"
+							itens="#{solSubsBacking.itensStatusNotNull}" />
+
+						<xcp:combo
+							id="cboIndAtestoFinPesq"
+							value="#{solSubsBacking.indAtestoFin}"
+							label="#{bundle.lbl_indAtestofin}"
+							itens="#{efetSubsBacking.itensIndSimNaoNull}" />
+					</xcp:panelForm>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.dtaSol}"
+					type="Date"
+					size="1">
+					<xcp:outputSimpleDate value="#{row.dtaSol}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaInicio}"
+					value="#{row.dtaInicio}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{row.dtaInicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaFim}"
+					value="#{row.dtaFim}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{row.dtaFim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.substituido}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.substituido}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.substituidoFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.substituidoFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_titular}"
+					value="#{row.matriculaFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_solicitante}"
+					value="#{row.solicitanteFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.solicitanteFk.nome}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovSubstituido"
+						value="#{solSubsBacking.entity.substituidoFk}"
+						label="#{bundle.lbl_funcSubsOri}"
+						query="funcionariosLov"
+						size="10"
+						required="true"
+						readonly="#{solSubsBacking.readOnly}" />
+
+					<xcp:date
+						id="txtdtini"
+						value="#{solSubsBacking.entity.dtaInicio}"
+						label="#{bundle.lbl_dtini}"
+						required="true"
+						readonly="#{solSubsBacking.readOnly}">
+						<p:ajax
+							event="change"
+							process="@this"
+							update="lovSetor,lovMatricula"
+							listener="#{solSubsBacking.changeDtInicio}" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="lovSetor,lovMatricula"
+							listener="#{solSubsBacking.changeDtInicio}" />
+					</xcp:date>
+
+					<xcp:date
+						id="txtdttermino"
+						required="true"
+						value="#{solSubsBacking.entity.dtaFim}"
+						label="#{bundle.lbl_dttermino}"
+						readonly="#{solSubsBacking.readOnly}">
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="" />
+
+						<p:ajax
+							event="change"
+							process="@this"
+							update="" />
+
+					</xcp:date>
+
+					<xcp:lov
+						id="lovMotivoTransf"
+						value="#{solSubsBacking.entity.motivoTransfFk}"
+						label="#{bundle.lbl_motivoTransf}"
+						query="motivo_transf"
+						size="10"
+						params="#{solSubsBacking.paramsMotivoTransf}" />
+
+					<xcp:combo
+						id="cboStatus"
+						value="#{solSubsBacking.entity.status}"
+						label="#{bundle.lbl_status}"
+						required="true"
+						itens="#{solSubsBacking.itensStatus}"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboIndAtestoFin"
+						value="#{solSubsBacking.entity.indAtestofin}"
+						label="#{bundle.lbl_indAtestofin}"
+						itens="#{solSubsBacking.itensIndSimNaoNull}"
+						readonly="true"
+						rendered="#{solSubsBacking.entity.status == 2 or solSubsBacking.entity.status == 3}" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{solSubsBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="set_validade_par"
+						params="#{solSubsBacking.paramsSubs}"
+						selectionListener="#{solSubsBacking.selectSetorSubs}"
+						update="lovMatricula"
+						size="10"
+						readonly="#{solSubsBacking.readOnly}" />
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{solSubsBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_funcSubs}"
+						query="funcionariosLov"
+						size="10"
+						required="true"
+						readonly="#{solSubsBacking.readOnly}" />
+
+					<xcp:lov
+						id="lovCargoSubs"
+						value="#{solSubsBacking.entity.cargoSubsFk}"
+						label="#{bundle.lbl_cargo}"
+						query="cargoativo"
+						size="10"
+						params="#{solSubsBacking.paramsCargoSubs}"
+						rendered="#{solSubsBacking.renderedFuncAdic}" />
+
+					<xcp:lov
+						id="lovSolicitante"
+						value="#{solSubsBacking.entity.solicitanteFk}"
+						label="#{bundle.lbl_solicitante}"
+						query="funcionariosLovAtivR"
+						size="10"
+						required="true"
+						readonly="false" />
+
+					<xcp:lov
+						id="lovCpHorario"
+						value="#{solSubsBacking.entity.horarioFk}"
+						label="#{bundle.lbl_horario}"
+						required="false"
+						query="horarios"
+						size="8" />
+					
+					<xcp:combo
+						id="cboIndTrocaEscala"
+						value="#{solSubsBacking.entity.indTrocaEscala}"
+						label="#{bundle.lbl_indTrocaEscala}"
+						rendered="#{solSubsBacking.renderedTrocarEscala}"
+						itens="#{solSubsBacking.itensIndSimNaoNull}"
+						required="false" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{solSubsBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{solSubsBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					oncomplete="PF('w_anexos').show()"
+					disabled="#{solSubsBacking.entity.novo}" />
+
+				<xcp:commandButton
+					id="btnPendencia"
+					value="#{bundle.btn_pendencia}"
+					update=":frmPendencia"
+					oncomplete="PF('dlgPendencia_w').show()"
+					rendered="#{solSubsBacking.entity.status == 4}" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgPendencia"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgPendencia_w">
+			<xcp:form id="frmPendencia">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtPendencia"
+						value="#{solSubsBacking.entity.txtPendencia}"
+						required="true"
+						readonly="true"
+						label="#{bundle.lbl_motivo}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgPendencia_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{solSubsBacking.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{solSubsBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{solSubsBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo"
+							action="#{solSubsBacking.actionEditarAnexo(rowAnex)}"
+							disabled="#{solSubsBacking.readOnly}">
+
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update="tblAnex :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{solSubsBacking.actionRemoveFile(rowAnex)}"
+							disabled="#{solSubsBacking.readOnly}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{solSubsBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{solSubsBacking.anexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{solSubsBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{solSubsBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+
+</ui:composition>

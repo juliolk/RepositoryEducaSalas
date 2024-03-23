@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="TipofolhaLib"
+			backing="#{tipofolhaLibBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipofolha}"
+					value="#{row.tipofolha}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.tipofolha}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_seqPer}"
+					value="#{row.seqPer}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.seqPer}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaIniLib}"
+					value="#{row.dtaIni}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtaIni}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaFimLib}"
+					value="#{row.dtaFim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtaFim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaLimiteLib}"
+					value="#{row.dtaLimite}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtaLimite}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipofolha"
+						value="#{tipofolhaLibBacking.entity.tipofolhaFk}"
+						label="#{bundle.lbl_tipofolha}"
+						required="true"
+						query="tipofolha"
+						size="4"
+						readonly="#{not tipofolhaLibBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtSeqPer"
+						label="#{bundle.lbl_seqPer}"
+						required="true"
+						value="#{tipofolhaLibBacking.entity.seqPer}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not tipofolhaLibBacking.entity.novo}" />
+
+					<xcp:border
+						id="brd_periodo"
+						header="#{bundle.lbl_periodoLib}"
+						stylefieldset="margin-left:0px !important">
+
+						<xcp:date
+							id="txtDtaIni"
+							required="true"
+							value="#{tipofolhaLibBacking.entity.dtaIni}"
+							label="#{bundle.lbl_dtaIniLib}" />
+
+						<xcp:date
+							id="txtDtaFim"
+							required="true"
+							value="#{tipofolhaLibBacking.entity.dtaFim}"
+							label="#{bundle.lbl_dtaFimLib}" />
+
+						<xcp:date
+							id="txtDtaLimite"
+							required="true"
+							value="#{tipofolhaLibBacking.entity.dtaLimite}"
+							label="#{bundle.lbl_dtaLimiteLib}" />
+					</xcp:border>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{tipofolhaLibBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

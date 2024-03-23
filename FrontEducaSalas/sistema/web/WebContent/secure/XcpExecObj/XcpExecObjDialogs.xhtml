@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+	<p:dialog
+		id="dlgXcpExecStatus"
+		modal="true"
+		widgetVar="w_dlgXcpExecStatus"
+		header="#{bundle.title_executandoRelatorio}"
+		draggable="false"
+		closable="false"
+		resizable="false">
+		<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+	</p:dialog>
+
+	<p:dialog
+		id="dlgXcpExecObj"
+		modal="true"
+		widgetVar="w_dlgXcpExecObj"
+		header="#{bundle.title_relatorio}"
+		resizable="false"
+		closeOnEscape="true"
+		dynamic="true">
+
+		<p:ajax
+			event="close"
+			listener="#{xcpExecObjBacking.actionClose}"
+			update="formXcpExecObj" />
+
+		<xcp:form id="formXcpExecObj">
+			<ui:include src="#{xcpExecObjBacking.helper.includeAtual}" />
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgXcpExecUpload"
+		header="#{bundle.tit_dlgUpload}"
+		widgetVar="wDlgXcpExecUpload"
+		modal="true"
+		dynamic="true">
+		<xcp:form
+			id="formXcpExecUpload"
+			multipart="true">
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				uploadLabel="#{bundle.btn_upload}"
+				invalidFileMessage="#{bundle.msg_upload_arquivo}"
+				converterMessage="#{bundle.msg_upload_conversao}"
+				fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				messageTemplate="#{bundle.msg_upload_mensagem}"
+				requiredMessage="#{bundle.msg_upload_requerido}"
+				validatorMessage="#{bundle.msg_upload_validacao}"
+				cancelLabel="#{bundle.btn_upload_cancel}"
+				dragDropSupport="false"
+				fileUploadListener="#{xcpExecObjBacking.actionUpload}"
+				sizeLimit="#{xcpExecObjBacking.helper.uploadSizeLimit}" />
+		</xcp:form>
+	</p:dialog>
+
+	<xcp:form
+		id="formXcpDownObj"
+		multipart="true">
+		<xcp:commandButton
+			id="btnDownloadRelatorio"
+			widgetVar="wBtnDownloadRelatorioGlobal"
+			ajax="false"
+			immediate="true"
+			process="@this"
+			onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+			style="display: none;">
+			<p:fileDownload
+				value="#{xcpExecObjBacking.file}"
+				contentDisposition="attachment" />
+		</xcp:commandButton>
+	</xcp:form>
+
+	<p:dialog
+		id="dlgXcpExecPreview"
+		header="#{bundle.tit_preview}"
+		widgetVar="wDlgXcpExecPreview"
+		modal="true"
+		dynamic="true"
+		width="800px"
+		height="600px"
+		onHide="$('#objpdf').hide();"
+		onShow="$('#objpdf').show();">
+
+		<object
+			id="objpdf"
+			data="#{facesContext.externalContext.requestContextPath}/prev?seqproc=#{xcpExecObjBacking.helper.lastExecucao}"
+			style="width: 100%; height: 94%;"
+			type="application/pdf" />
+
+		<p:toolbar>
+			<f:facet name="left">
+
+				<a
+					type="button"
+					class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+					href="#{facesContext.externalContext.requestContextPath}/prev?seqproc=#{xcpExecObjBacking.helper.lastExecucao}"
+					download="#{xcpExecObjBacking.fileName}"> <span
+					class="ui-button-text ui-c">#{bundle.btn_download}</span>
+				</a>
+
+				<!--  				<p:commandButton
+					value="#{bundle.btn_download}"
+					oncomplete="PF('wBtnDownloadRelatorioGlobal').getJQ().click();"
+					update=":formXcpDownObj" />-->
+				<p:commandButton
+					value="#{bundle.btn_assinar}"
+					action="#{xcpExecObjBacking.actionOpenDialogAssinar}"
+					update=":formXcpExecAssinatura"
+					rendered="#{xcpExecObjBacking.renderedAssinatura}" />
+			</f:facet>
+		</p:toolbar>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgXcpExecAssinatura"
+		header="#{bundle.tit_assinatura}"
+		widgetVar="wDlgXcpExecAssinatura"
+		modal="true"
+		dynamic="true">
+
+		<xcp:form id="formXcpExecAssinatura">
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovAssinatura_ass"
+					value="#{xcpExecObjBacking.helper.assinaturas}"
+					label="#{bundle.lbl_assinatura}"
+					required="true"
+					query="assinaturas"
+					size="8" />
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton
+						value="#{bundle.btn_confirmar}"
+						action="#{xcpExecObjBacking.actionAssinar}" />
+					<p:commandButton
+						value="#{bundle.btn_cancelar}"
+						onstart="PF('wDlgXcpExecAssinatura').hide();" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+
+	</p:dialog>
+
+	<script type="text/javascript">
+		function xcpDownloadFileStart() {
+			PF('w_dlgXcpExecStatus').show();
+		}
+	
+		function xcpDownloadFileStop() {
+			PF('w_dlgXcpExecStatus').hide();
+		}
+	</script>
+
+</ui:composition>

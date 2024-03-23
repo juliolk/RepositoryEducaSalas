@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	
+	<div class="modal modal-leitura fade" role="dialog" tabindex="-1" aria-labelledby="modal-titulo-leitura" aria-hidden="true"> 
+		<div class="modal-dialog modal-lg" role="document"> 
+			<div class="modal-content"> 
+				<div class="modal-header"> 
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button> 
+					<h4 class="modal-title">
+						<span class="modal-titulo-leitura"></span>
+					</h4> 
+				</div> 
+				<div class="modal-body">
+					<img class="modal-img-leitura"></img>
+					<div class="modal-conteudo-leitura"></div>
+					<small class="modal-publicacao"></small>
+				</div> 
+			</div> 
+		</div> 
+	</div>		
+	
+	<script>
+		$(function(){
+			$('.post-portal').on('click', function(){
+				$('.modal-titulo-leitura').html($(this).find('.titulo-post').html());
+				$('.modal-publicacao').html($(this).find('.publicacao').html());
+				var img = $(this).find('.img-post');
+				if(img.length === 0){
+					$('.modal-img-leitura').hide();
+				} else {
+					$('.modal-img-leitura').attr('src', img.css('background-image').replace('url("', '').replace('")', ''));
+					$('.modal-img-leitura').show();
+				}
+				$('.modal-conteudo-leitura').html($(this).find('.conteudo-noticia').html());
+				$('.modal-leitura').modal();
+			});		
+		});
+	</script>
+	
+</ui:composition>

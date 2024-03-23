@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelGrid style="width:100%;">
+		<p:row>
+			<p:column style="text-align: right;">
+				<p:selectCheckboxMenu
+					id="selColunas"
+					label="#{bundle.lbl_colunas}"
+					value="#{xcpExecObjBacking.helper.execObjVO.colunasSelecionadas}"
+					filter="true"
+					filterMatchMode="contains">
+
+					<f:selectItems
+						value="#{xcpExecObjBacking.helper.execObjVO.colunasDisponoveis}"
+						var="it"
+						itemValue="#{it}"
+						itemLabel="#{xcpExecObjBacking.helper.execObjVO.colunas[it].label}" />
+
+					<p:ajax
+						update=":#{p:component('tabConsulta')}"
+						listener="#{xcpExecObjBacking.onTabConsultaColumnSelect}"
+						oncomplete="hideBreakChars()" />
+					<p:ajax
+						event="toggleSelect"
+						update=":#{p:component('tabConsulta')}"
+						listener="#{xcpExecObjBacking.onTabConsultaColumnSelect}"
+						oncomplete="hideBreakChars()" />
+				</p:selectCheckboxMenu>
+			</p:column>
+		</p:row>
+	</xcp:panelGrid>
+
+	<p:dataTable
+		id="tabConsulta"
+		widgetVar="wTabConsulta"
+		var="row"
+		value="#{xcpExecObjBacking.helper.execObjVO.dadosConsulta}"
+		filteredValue="#{xcpExecObjBacking.helper.execObjVO.dadosConsultaFiltrados}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		rows="#{viewUtil.tableRows}"
+		paginator="true"
+		paginatorPosition="bottom"
+		resizableColumns="true"
+		draggableColumns="true"
+		sortMode="multiple"
+		tableStyle="width:auto">
+
+		<p:ajax
+			event="colReorder"
+			listener="#{xcpExecObjBacking.onTabConsultaColumnReorder}"
+			oncomplete="hideBreakChars()" />
+
+		<p:ajax
+			event="sort"
+			oncomplete="hideBreakChars()" />
+
+		<p:ajax
+			event="page"
+			oncomplete="hideBreakChars()" />
+
+		<p:ajax
+			event="filter"
+			oncomplete="hideBreakChars();rcuptot();" />
+
+		<p:columns
+			value="#{xcpExecObjBacking.helper.execObjVO.colunasSelecionadas}"
+			var="col"
+			columnIndexVar="colIndex"
+			sortBy="#{row[col]}"
+			filterBy="#{row[col]}"
+			styleClass="xcp_column#{xcpExecObjBacking.helper.execObjVO.colunas[col].style}"
+			filterStyleClass="xcp_filter#{xcpExecObjBacking.helper.execObjVO.colunas[col].style}"
+			filterMatchMode="contains"
+			filterFunction="#{viewUtil.filterXcpColumn}">
+			<f:facet name="header">
+				<h:outputText
+					value="#{xcpExecObjBacking.helper.execObjVO.colunas[col].label}" />
+			</f:facet>
+
+			<h:outputText
+				value="#{row[xcpExecObjBacking.helper.execObjVO.colunas[col].fieldKey]}"
+				rendered="#{not xcpExecObjBacking.isRenderedImage(xcpExecObjBacking.helper.execObjVO.colunas[col])}" />
+
+			<h:outputLabel
+				value="#{row[xcpExecObjBacking.helper.execObjVO.colunas[col].fieldKey]}"
+				rendered="#{xcpExecObjBacking.isRenderedImage(xcpExecObjBacking.helper.execObjVO.colunas[col])}">
+
+				<f:attribute
+					name="matricula"
+					value="#{row[xcpExecObjBacking.helper.execObjVO.colunas[col].fieldKey]}" />
+
+				<p:ajax
+					event="mouseover"
+					listener="#{xcpExecObjBacking.actionMouseOver}"
+					oncomplete="PF('wpnlImg').show('#{component.clientId}')"
+					update=":form:pnlImg" />
+
+				<p:ajax
+					event="mouseout"
+					oncomplete="PF('wpnlImg').hide()" />
+			</h:outputLabel>
+
+		</p:columns>
+		<f:facet name="footer">
+			<h:outputText
+				id="lblTotReg"
+				value="#{xcpExecObjBacking.desMsgFooter}" />
+		</f:facet>
+
+	</p:dataTable>
+
+	<p:overlayPanel
+		id="pnlImg"
+		widgetVar="wpnlImg">
+
+		<p:graphicImage
+			value="#{xcpExecObjBacking.desPathFoto}"
+			cache="false"
+			style="max-width:120px; max-height:170px ;padding:0px; border:none; vertical-align: middle;" />
+
+	</p:overlayPanel>
+
+
+	<p:remoteCommand
+		name="rcuptot"
+		update=":form:tabConsulta:lblTotReg" />
+
+
+	<p:inputText
+		id="txtColumnWidths"
+		widgetVar="wTxtColumnWidths"
+		type="hidden"
+		value="#{xcpExecObjBacking.helper.colunasLargura}" />
+
+	<p:toolbar
+		rendered="#{xcpExecObjBacking.helper.execObjVO != null}"
+		styleClass="xcp_pmanut_form_toolbar">
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_voltar"
+				icon="ui-icon-arrowreturnthick-1-w"
+				value="#{bundle.btn_voltar}"
+				action="#{xcpExecObjBacking.actionVoltarConsulta}"
+				process="@this"
+				update="form" />
+
+			<p:splitButton
+				id="btnExportar"
+				icon="ui-icon-arrowreturnthick-1-w"
+				value="#{bundle.btn_exportar}"
+				action="#{xcpExecObjBacking.actionExportarConsulta('PDF')}"
+				process="@this,txtColumnWidths"
+				update="@none"
+				onstart="calcColumnsWidths();PF('w_dlgXcpExecStatus').show();"
+				oncomplete="PF('w_dlgXcpExecStatus').hide();">
+				<c:forEach
+					items="#{xcpExecObjBacking.itensTipFormato}"
+					var="tipo">
+					<p:menuitem
+						value="#{tipo.label}"
+						action="#{xcpExecObjBacking.actionExportarConsulta(tipo.value)}"
+						process="@this,txtColumnWidths"
+						update="@none"
+						onstart="calcColumnsWidths();PF('w_dlgXcpExecStatus').show();"
+						oncomplete="PF('w_dlgXcpExecStatus').hide();" />
+				</c:forEach>
+
+			</p:splitButton>
+
+		</f:facet>
+	</p:toolbar>
+
+	<xcp:commandButton
+		id="btnDownloadConsulta"
+		widgetVar="wBtnDownloadConsulta"
+		ajax="false"
+		immediate="true"
+		process="@this"
+		onclick="PrimeFaces.monitorDownload(xcpDownloadConsultaStart, xcpDownloadConsultaStop)"
+		style="display: none;">
+		<p:fileDownload
+			value="#{xcpExecObjBacking.file}"
+			contentDisposition="attachment" />
+	</xcp:commandButton>
+
+	<script type="text/javascript">
+		$(function(){
+			hideBreakChars();
+		});
+
+		function hideBreakChars() {
+			$('td.xcp_columnString').each(function( index, element ){
+			    var conteudo = $( this ).html();
+			    $( this ).html(conteudo.replace(/__br__/g, "<br/>"));
+			});
+		}
+		
+		function xcpDownloadConsultaStart() {
+			PF('w_dlgXcpExecStatus').show();
+		}
+
+		function xcpDownloadConsultaStop() {
+			PF('w_dlgXcpExecStatus').hide();
+		}
+		
+		function calcColumnsWidths() {
+			var widths = "";
+			$('th',PF('wTabConsulta').getJQ()).each(function( index ) {
+				widths += $( this ).width() + ",";
+			});
+			PF('wTxtColumnWidths').getJQ().val(widths);
+		}
+	</script>
+
+</ui:composition>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_emails}"
+		modal="true"
+		id="dlgEmails"
+		widgetVar="dlgEmails_w"
+		dynamic="true"
+		width="650">
+		<xcp:form id="frmEmails">
+			<p:dataTable
+				id="tabEmails"
+				var="row"
+				value="#{funcionariosBacking.listaEmails}"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+				<p:column headerText="#{bundle.col_email}">
+					<xcp:email
+						id="txtemail"
+						simple="true"
+						value="#{row.email}"
+						readonly="true"
+						style="border: 0;box-shadow: none;" />
+				</p:column>
+				<p:column headerText="#{bundle.col_tipo}">
+					<xcp:output
+						id="txttipo"
+						simple="true"
+						value="#{row.tipo}"
+						itens="#{funcionariosBacking.itensEmails}" />
+				</p:column>
+				<p:column
+					width="20"
+					rendered="#{funcionariosBacking.renderedAcoesMais}">
+					<xcp:commandButton
+						id="btnRemEmail"
+						icon="ui-icon-trash"
+						update="tabEmails"
+						immediate="true"
+						action="#{funcionariosBacking.actionRemoveEmail(row)}">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</p:column>
+				<p:column
+					width="20"
+					rendered="#{funcionariosBacking.renderedAcoesMais}">
+					<xcp:commandButton
+						id="btnEditaEmail"
+						icon="icon-editar"
+						immediate="true"
+						update=":frmEmail"
+						oncomplete="PF('dlgEmail_w').show();">
+						<f:setPropertyActionListener
+							target="#{funcionariosBacking.funcionariosEmail}"
+							value="#{row}" />
+						<f:setPropertyActionListener
+							target="#{funcionariosBacking.modoEmail}"
+							value="2" />
+					</xcp:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:spacer height="5" />
+
+			<div style="text-align: center">
+				<xcp:commandButton
+					id="btnNovoEmail"
+					value="#{bundle.btn_novo}"
+					action="#{funcionariosBacking.actionNovoEmail}"
+					update=":frmEmail"
+					icon="ui-icon-document"
+					rendered="#{funcionariosBacking.renderedAcoesMais}">
+
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.modoEmail}"
+						value="1" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btnVoltar"
+					image="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgEmails_w').hide();return false;" />
+
+			</div>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		header="#{bundle.title_email}"
+		modal="true"
+		id="dlgEmail"
+		widgetVar="dlgEmail_w"
+		dynamic="true">
+		<xcp:form id="frmEmail">
+			<xcp:panelForm>
+				<xcp:email
+					id="txtEmailF"
+					label="#{bundle.lbl_email}"
+					required="true"
+					value="#{funcionariosBacking.funcionariosEmail.email}"
+					size="70" />
+
+				<xcp:combo
+					id="cboTipoF"
+					value="#{funcionariosBacking.funcionariosEmail.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{funcionariosBacking.itensEmails}" />
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						update=":frmEmails"
+						action="#{funcionariosBacking.actionGravarEmail}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgEmail_w').hide();return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+ -
+</ui:composition>

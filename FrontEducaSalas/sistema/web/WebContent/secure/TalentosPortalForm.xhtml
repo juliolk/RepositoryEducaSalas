@@ -1,0 +1,1172 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<div class="content_bg-gray">
+
+			<xcp:panelContent backing="#{talentosPortalBacking}">
+
+				<h:panelGroup
+					id="panelTalentos"
+					styleClass="floating-label big-controls">
+
+					<p:outputPanel
+						class="section-header secondary-bgcolor ui-content-no-space-top ui-content-no-space-bottom">
+						<div class="section-info">
+							<h1>#{talentosPortalBacking.funcionarioDet.nome}</h1>
+							<p>#{bundle.lbl_cpf}: #{
+								talentosPortalBacking.getCpfFuncionario() } -
+								#{bundle.lbl_matricula}:
+								#{talentosPortalBacking.funcionarioDet.matricula}</p>
+						</div>
+					</p:outputPanel>
+
+					<p:outputPanel class="shadow-top-inset ui-content-full-width">
+
+						<p:outputPanel
+							rendered="#{talentosPortalBacking.canRenderObjImprimir()}">
+							<div class="main-actions-container">
+								<xcp:commandButton
+									id="btn_imprimir"
+									value="#{bundle.btn_imprimir}"
+									styleClass="btn-main-action"
+									ajax="false"
+									action="#{talentosPortalBacking.emitirRelatorio()}"
+									icon="ui-icon-print">
+								</xcp:commandButton>
+							</div>
+						</p:outputPanel>
+
+						<div
+							class="datacard-container"
+							style="padding-top: 45px">
+
+							<ui:include src="TalentosPortalForm/TalentosFormHistoricos.xhtml" />
+
+							<ui:include
+								src="TalentosPortalForm/TalentosFormTreinamento.xhtml" />
+
+							<ui:include
+								src="TalentosPortalForm/TalentosFormCompetencias.xhtml" />
+
+							<ui:include src="TalentosPortalForm/TalentosFormObjetivos.xhtml" />
+
+							<ui:include src="TalentosPortalForm/TalentosFormInfCompl.xhtml" />
+
+							<ui:include
+								src="TalentosPortalForm/TalentosFormDocumentosAnexos.xhtml" />
+
+						</div>
+					</p:outputPanel>
+				</h:panelGroup>
+
+				<h:panelGroup
+					rendered="#{talentosPortalBacking.funcionarioDet == null}">
+					<h:outputText value="#{bundle.mgs_emptyMessage}" />
+
+				</h:panelGroup>
+			</xcp:panelContent>
+		</div>
+
+		<script type="text/javascript">
+			$(function(){
+				$('body').on('click', '.ui-widget-overlay',  function(){
+					PF('dlgConhec_w').hide();
+					PF('dlgHabil_w').hide();
+					PF('dlgAtit_w').hide();
+					PF('dlgAtivCompl_w').hide();
+					PF('dlgCert_w').hide();
+					PF('dlgIdioma_w').hide();
+					PF('dlgAreaInt_w').hide();
+					PF('dlgAreaCurAcad_w').hide();
+					PF('dlgObjProf_w').hide();
+					PF('dlgObjCurso_w').hide();
+					PF('dlgObjIdi_w').hide();
+					PF('dlgObjInstrutoria_w').hide();
+					PF('dlgObjVida_w').hide();
+					PF('dlgTrabManual_w').hide();
+					PF('dlgTrabVol_w').hide();
+					PF('dlgFuncLazer_w').hide();
+					PF('dlgFuncViagens_w').hide();
+					PF('dlgFuncAtivFisica_w').hide();
+					PF('dlgFuncObras_w').hide();
+					PF('w_anexo').hide();
+				});
+
+				 $('.collapse')
+			         .on('hidden.bs.collapse', function() {
+			             $(this)
+			                 .parent()
+			                 .find(".fa-minus-square-o")
+			                 .removeClass("fa-minus-square-o")
+			                 .addClass("fa-plus-square-o");
+		                 })
+			         .on('shown.bs.collapse', function() {
+			             $(this)
+			                 .parent()
+			                 .find(".fa-plus-square-o")
+			                 .removeClass("fa-plus-square-o")
+			                 .addClass("fa-minus-square-o");
+		         });
+			});
+	         
+		</script>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_conhecimento}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgConhec_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlg">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovConhecimento"
+						value="#{talentosPortalBacking.helper.funcconhec.conhecimentoFk}"
+						label="#{bundle.lbl_conhecimento}"
+						required="true"
+						query="conhecimentos_tipo"
+						size="4"
+						params="#{talentosPortalBacking.paramsConhecimento}" />
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{talentosPortalBacking.helper.funcconhec.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:number
+						id="txtTempo"
+						label="#{bundle.lbl_qtdhoras}"
+						size="10"
+						value="#{talentosPortalBacking.helper.funcconhec.tempo}"
+						precision="7"
+						scale="2" />
+
+					<xcp:number
+						id="txtPontos"
+						label="#{bundle.lbl_pontos}"
+						size="10"
+						value="#{talentosPortalBacking.helper.funcconhec.pontos}"
+						precision="7"
+						scale="2" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{talentosPortalBacking.helper.funcconhec.obs}"
+						size="500" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarConhec"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-document"
+							update=":#{p:component('listaConhecimento')}"
+							action="#{talentosPortalBacking.actionSalvarConhec}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_habilidade}"
+			modal="true"
+			widgetVar="dlgHabil_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgHabil">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{talentosPortalBacking.helper.funchabil.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:lov
+						id="lovConhecimento"
+						value="#{talentosPortalBacking.helper.funchabil.conhecimentoFk}"
+						label="#{bundle.lbl_habilidade}"
+						required="true"
+						query="conhecimentos_tipo"
+						size="4"
+						params="#{talentosPortalBacking.paramsHabilidades}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{talentosPortalBacking.helper.funchabil.obs}"
+						size="500" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarConhec"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							update=":#{p:component('listaHabilidades')}"
+							action="#{talentosPortalBacking.actionSalvarHabil}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			header="#{bundle.tit_atitude}"
+			modal="true"
+			widgetVar="dlgAtit_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgAtit">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{talentosPortalBacking.helper.funcatit.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:lov
+						id="lovConhecimento"
+						value="#{talentosPortalBacking.helper.funcatit.conhecimentoFk}"
+						label="#{bundle.lbl_atitude}"
+						required="true"
+						query="conhecimentos_tipo"
+						size="4"
+						params="#{talentosPortalBacking.paramsAtitudes}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{talentosPortalBacking.helper.funcatit.obs}"
+						size="500" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarConhec"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							update=":#{p:component('listaAtitudes')}"
+							action="#{talentosPortalBacking.actionSalvarAtit}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_ativcompl}"
+			modal="true"
+			widgetVar="dlgAtivCompl_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgAtivCompl">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.funcativcompl.descricao}"
+						size="70"
+						maxlength="100" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{talentosPortalBacking.helper.funcativcompl.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{talentosPortalBacking.itensTipoAtivCompl}" />
+
+					<xcp:lov
+						id="lovArea"
+						value="#{talentosPortalBacking.helper.funcativcompl.areaFk}"
+						label="#{bundle.lbl_area}"
+						required="true"
+						query="areas"
+						size="5"
+						update="lovDivisao"
+						selectionListener="#{talentosPortalBacking.selectArea}" />
+
+					<xcp:lov
+						id="lovDivisao"
+						value="#{talentosPortalBacking.helper.funcativcompl.divisaoFk}"
+						label="#{bundle.lbl_subarea}"
+						query="areasdivisao"
+						params="#{talentosPortalBacking.paramsDivisao}"
+						size="5" />
+
+					<xcp:lov
+						id="lovInstituicao"
+						value="#{talentosPortalBacking.helper.funcativcompl.instituicaoFk}"
+						label="#{bundle.lbl_instituicao}"
+						required="true"
+						query="instituicoes"
+						size="5" />
+
+					<xcp:date
+						id="txtDataconc"
+						value="#{talentosPortalBacking.helper.funcativcompl.dataconc}"
+						label="#{bundle.lbl_dataconc}" />
+
+					<xcp:timeNumber
+						id="txtCargahoraria"
+						label="#{bundle.lbl_cargahoraria}"
+						size="10"
+						value="#{talentosPortalBacking.helper.funcativcompl.cargahoraria}" />
+
+					<xcp:memo
+						id="txtDetalhamento"
+						label="#{bundle.lbl_detalhamento}"
+						value="#{talentosPortalBacking.helper.funcativcompl.detalhamento}"
+						size="4000"
+						autoResize="false" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{talentosPortalBacking.helper.funcativcompl.obs}"
+						size="500" />
+
+					<xcp:combo
+						id="cboIndAprovado"
+						value="#{talentosPortalBacking.helper.funcativcompl.indAprovado}"
+						label="#{bundle.lbl_aprovado}"
+						readonly="true"
+						rendered="#{talentosPortalBacking.helper.indAprovado == 1}"
+						itens="#{talentosPortalBacking.itensIndSimNao}" />
+
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarAtivCompl"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							update=":#{p:component('listaAtivCompl')}"
+							action="#{talentosPortalBacking.actionSalvarAtivCompl}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_funccert}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgCert_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgCert">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.funccertif.descricao}"
+						size="70"
+						required="true"
+						maxlength="100" />
+
+					<xcp:lov
+						id="lovInstcert"
+						value="#{talentosPortalBacking.helper.funccertif.instCertFk}"
+						label="#{bundle.lbl_instcert}"
+						required="true"
+						query="instituicoes"
+						size="3" />
+
+					<xcp:dateRange
+						id="txtData"
+						valueStart="#{talentosPortalBacking.helper.funccertif.dataini}"
+						valueEnd="#{talentosPortalBacking.helper.funccertif.datafim}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:lov
+						id="lovAreacertif"
+						value="#{talentosPortalBacking.helper.funccertif.areaCertifFk}"
+						label="#{bundle.lbl_areacertif}"
+						query="areascertif"
+						size="3" />
+
+					<xcp:memo
+						id="txtDetalhamento"
+						label="#{bundle.lbl_detalhamento}"
+						value="#{talentosPortalBacking.helper.funccertif.detalhamento}"
+						size="4000"
+						autoResize="false" />
+
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarCert"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-document"
+							update=":#{p:component('listaCert')}"
+							action="#{talentosPortalBacking.actionSalvarCert}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_idiomas}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgIdioma_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgIdioma">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovIdioma"
+						value="#{talentosPortalBacking.helper.funcidiomas.idiomaFk}"
+						label="#{bundle.lbl_idioma}"
+						required="true"
+						query="idiomas"
+						size="3" />
+
+					<xcp:combo
+						id="cboEntende"
+						value="#{talentosPortalBacking.helper.funcidiomas.entende}"
+						label="#{bundle.lbl_entende}"
+						required="true"
+						itens="#{talentosPortalBacking.itensFluencia}" />
+
+					<xcp:combo
+						id="cboLe"
+						value="#{talentosPortalBacking.helper.funcidiomas.leitura}"
+						label="#{bundle.lbl_le}"
+						required="true"
+						itens="#{talentosPortalBacking.itensFluencia}" />
+
+					<xcp:combo
+						id="cboFala"
+						value="#{talentosPortalBacking.helper.funcidiomas.fala}"
+						label="#{bundle.lbl_fala}"
+						required="true"
+						itens="#{talentosPortalBacking.itensFluencia}" />
+
+					<xcp:combo
+						id="cboEscreve"
+						value="#{talentosPortalBacking.helper.funcidiomas.escreve}"
+						label="#{bundle.lbl_escreve}"
+						required="true"
+						itens="#{talentosPortalBacking.itensFluencia}" />
+
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarIdioma"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-document"
+							update=":#{p:component('listaIdioma')}"
+							action="#{talentosPortalBacking.actionSalvarIdioma}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_areas_int}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgAreaInt_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgAreaInt">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{talentosPortalBacking.helper.areainteresse.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="8" />
+
+					<xcp:lov
+						id="lovCodigo"
+						value="#{talentosPortalBacking.helper.areainteresse.codigoFk}"
+						label="#{bundle.lbl_area}"
+						required="true"
+						query="areas"
+						size="3" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.areainteresse.descricao}"
+						size="200" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarArea"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaAreaInteresse')}"
+							action="#{talentosPortalBacking.actionSalvarAreaInt}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_obj_curacad}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgAreaCurAcad_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgCurAcad">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCodigo"
+						value="#{talentosPortalBacking.helper.objetivoacad.codigoFk}"
+						label="#{bundle.lbl_cursoacad}"
+						query="cursoacad"
+						size="3"
+						required="true" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarCurAcad"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaCursoAcademico')}"
+							action="#{talentosPortalBacking.actionSalvarObjAcad}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_obj_prof}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgObjProf_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgObjProf">
+				<xcp:panelForm>
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.objetivoprofissional.descricao}"
+						size="200" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarObjProf"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaCursoProf')}"
+							action="#{talentosPortalBacking.actionSalvarObjProf}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_obj_curso}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgObjCurso_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgCurso">
+				<xcp:panelForm>
+
+					<xcp:memo
+						id="txtCurso"
+						label="#{bundle.lbl_curso}"
+						value="#{talentosPortalBacking.helper.objetivocurso.curso}"
+						size="300" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarCurso"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaOutrosCursos')}"
+							action="#{talentosPortalBacking.actionSalvarObjCurso}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_obj_idioma}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgObjIdi_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgOutIdi">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCodigo"
+						value="#{talentosPortalBacking.helper.objetivoidiomas.codigoFk}"
+						label="#{bundle.lbl_idioma}"
+						required="true"
+						query="idiomas"
+						size="3"
+						readonly="#{not talentosBacking.helper.objetivoidiomas.novo}" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarObjIdi"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaObjIdioma')}"
+							action="#{talentosPortalBacking.actionSalvarObjIdiomas}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_obj_instrutoria}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgObjInstrutoria_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgObjInstrutoria">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovAreaint"
+						value="#{talentosPortalBacking.helper.objetivoinstrutoria.areaintFk}"
+						label="#{bundle.lbl_areaint}"
+						query="areas"
+						size="3" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{talentosPortalBacking.helper.objetivoinstrutoria.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarObjVida"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaObjInstrutoria')}"
+							action="#{talentosPortalBacking.actionSalvarObjInstrutoria}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_obj_vida}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgObjVida_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmDlgObjVida">
+				<xcp:panelForm>
+
+
+					<xcp:memo
+						id="txtCursos"
+						label="#{bundle.lbl_curso}"
+						value="#{talentosPortalBacking.helper.objetivovida.cursos}"
+						size="300" />
+
+					<xcp:memo
+						id="txtAtividades"
+						label="#{bundle.lbl_atividades}"
+						value="#{talentosPortalBacking.helper.objetivovida.atividades}"
+						size="300" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarObjVida"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaObjVida')}"
+							action="#{talentosPortalBacking.actionSalvarObjVida}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_trab_manual}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgTrabManual_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmTrabManual">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCodigo"
+						value="#{talentosPortalBacking.helper.functrabmanual.codigoFk}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						query="trabmanual"
+						size="3"
+						readonly="#{not talentosBacking.helper.functrabmanual.novo}" />
+
+					<xcp:memo
+						id="txtMaterial"
+						label="#{bundle.lbl_material}"
+						value="#{talentosPortalBacking.helper.functrabmanual.material}"
+						size="200" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.functrabmanual.descricao}"
+						size="200" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarTrabManual"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaTrabManual')}"
+							action="#{talentosPortalBacking.actionSalvarTrabManual}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_trab_volunt}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgTrabVol_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmTrabVol">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtEntidade"
+						label="#{bundle.lbl_entidade}"
+						value="#{talentosPortalBacking.helper.functrabvolunt.entidade}"
+						size="100" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.functrabvolunt.descricao}"
+						size="400" />
+
+					<xcp:dateRange
+						id="txtData"
+						label="#{bundle.lbl_data}"
+						valueStart="#{talentosPortalBacking.helper.functrabvolunt.datainicio}"
+						valueEnd="#{talentosPortalBacking.helper.functrabvolunt.datafim}" />
+
+					<xcp:combo
+						id="cboFrequencia"
+						value="#{talentosPortalBacking.helper.functrabvolunt.frequencia}"
+						label="#{bundle.lbl_frequencia}"
+						required="true"
+						itens="#{talentosPortalBacking.itensFrequencia}" />
+
+					<xcp:text
+						id="txtTempo"
+						label="#{bundle.lbl_hor}"
+						value="#{talentosPortalBacking.helper.functrabvolunt.tempo}"
+						size="10" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarTrabVol"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaTrabVol')}"
+							action="#{talentosPortalBacking.actionSalvarTrabVolunt}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_func_lazer}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgFuncLazer_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmFuncLazer">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCodigo"
+						value="#{talentosPortalBacking.helper.funclazer.codigoFk}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						query="lazer"
+						size="3"
+						readonly="#{not talentosBacking.helper.funclazer.novo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.funclazer.descricao}"
+						size="400" />
+
+					<xcp:combo
+						id="cboFrequencia"
+						value="#{talentosPortalBacking.helper.funclazer.frequencia}"
+						label="#{bundle.lbl_frequencia}"
+						required="true"
+						itens="#{talentosPortalBacking.itensFrequencia}" />
+
+					<xcp:text
+						id="txtTempo"
+						label="#{bundle.lbl_tempo}"
+						value="#{talentosPortalBacking.helper.funclazer.tempo}"
+						size="10" />
+						
+					<xcp:date
+						id="txtDataLazer"
+						value="#{talentosPortalBacking.helper.funclazer.data}"
+						label="#{bundle.lbl_data}" />	
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarFuncLazer"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaLazer')}"
+							action="#{talentosPortalBacking.actionSalvarFuncLazer}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_func_viagens}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgFuncViagens_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmFuncViagens">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCidade"
+						value="#{talentosPortalBacking.helper.funcviagens.cidadeFk}"
+						label="#{bundle.lbl_cidade}"
+						required="true"
+						query="cidades"
+						size="4"
+						readonly="#{not talentosBacking.helper.funcviagens.novo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{talentosPortalBacking.helper.funcviagens.descricao}"
+						size="400" />
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{talentosPortalBacking.helper.funcviagens.data}"
+						label="#{bundle.lbl_data}"
+						readonly="#{not talentosBacking.helper.funcviagens.novo}" />
+
+					<xcp:text
+						id="txtDuracao"
+						label="#{bundle.lbl_duracao}"
+						value="#{talentosPortalBacking.helper.funcviagens.duracao}"
+						size="10" />
+
+					<xcp:text
+						id="txtTpduracao"
+						label="#{bundle.lbl_periodo}"
+						value="#{talentosPortalBacking.helper.funcviagens.tpduracao}"
+						size="50" />
+
+					<xcp:lov
+						id="lovEspecie"
+						value="#{talentosPortalBacking.helper.funcviagens.especieFk}"
+						label="#{bundle.lbl_especie}"
+						required="true"
+						query="especieviagem"
+						size="3" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarFuncLazer"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaViagem')}"
+							action="#{talentosPortalBacking.actionSalvarFuncViagens}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_func_ativfisica}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgFuncAtivFisica_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmFuncAtivFisica">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{talentosPortalBacking.helper.funcativfisica.tipoFk}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						query="ativfisica"
+						size="3"
+						readonly="#{not talentosBacking.helper.funcativfisica.novo}" />
+
+					<xcp:text
+						id="txtModalidade"
+						label="#{bundle.lbl_modalidade}"
+						value="#{talentosPortalBacking.helper.funcativfisica.modalidade}"
+						size="30" />
+
+					<xcp:combo
+						id="cboFrequencia"
+						value="#{talentosPortalBacking.helper.funcativfisica.frequencia}"
+						label="#{bundle.lbl_frequencia}"
+						required="true"
+						itens="#{talentosPortalBacking.itensFrequencia}" />
+
+					<xcp:text
+						id="txtTempo"
+						label="#{bundle.lbl_hor}"
+						value="#{talentosPortalBacking.helper.funcativfisica.tempo}"
+						size="10" />
+
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarFuncAtivFisica"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaAtivFisica')}"
+							action="#{talentosPortalBacking.actionSalvarFuncAtivFisica}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_func_obras}"
+			modal="true"
+			closeOnEscape="true"
+			widgetVar="dlgFuncObras_w"
+			styleClass="full-page-dialog rightside-dialog"
+			resizable="false">
+			<xcp:form id="frmFuncObras">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCodigo"
+						value="#{talentosPortalBacking.helper.funcobras.codigoFk}"
+						label="#{bundle.lbl_area}"
+						required="true"
+						query="obras"
+						size="3"
+						readonly="#{not talentosBacking.helper.funcobras.novo}" />
+
+					<xcp:text
+						id="txtTitulo"
+						label="#{bundle.lbl_tit}"
+						value="#{talentosPortalBacking.helper.funcobras.titulo}"
+						size="100" />
+
+					<xcp:text
+						id="txtAssunto"
+						label="#{bundle.lbl_assunt}"
+						value="#{talentosPortalBacking.helper.funcobras.assunto}"
+						size="100" />
+
+					<xcp:text
+						id="txtEditora"
+						label="#{bundle.lbl_editora}"
+						value="#{talentosPortalBacking.helper.funcobras.editora}"
+						size="50" />
+
+					<xcp:text
+						id="txtVolume"
+						label="#{bundle.lbl_volume}"
+						value="#{talentosPortalBacking.helper.funcobras.volume}"
+						size="20" />
+
+					<xcp:text
+						id="txtPaginas"
+						label="#{bundle.lbl_paginas}"
+						value="#{talentosPortalBacking.helper.funcobras.paginas}"
+						size="10" />
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{talentosPortalBacking.helper.funcobras.data}"
+						label="#{bundle.lbl_data}"
+						readonly="#{not talentosBacking.helper.funcobras.novo}" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarFuncObras"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":#{p:component('listaObras')}"
+							action="#{talentosPortalBacking.actionSalvarFuncObras}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			closeOnEscape="true"
+			modal="true"
+			styleClass="docs-anexos-componente portal full-page-dialog rightside-dialog"
+			resizable="false"
+			draggable="false"
+			closable="true"
+			widgetVar="w_anexo"
+			header="#{bundle.title_upload_documento_anexo}">
+
+			<xcp:form id="frmDocAnexo">
+				<p:outputPanel>
+					<p:graphicImage
+						id="iconeDocAnexo"
+						styleClass="doc-anexo-icone-dlg"
+						value="#{talentosPortalBacking.icone }" />
+					<p:outputPanel styleClass="doc-anexo-conteudo-dlg">
+						<p:outputLabel>#{bundle.nome_arquivo_doc_anexo}:</p:outputLabel>
+						<p:outputPanel
+							id="nomeDocAnexo"
+							styleClass="doc-anexo-nome-arquivo-dlg">#{talentosPortalBacking.helper.talentosAnexos.nome}</p:outputPanel>
+						<xcp:text
+							id="txtDescricaoAnexo"
+							required="true"
+							label="#{bundle.lbl_descricao}"
+							size="80"
+							value="#{talentosPortalBacking.helper.talentosAnexos.descricao}" />
+
+						<xcp:combo
+							id="cboTipo"
+							value="#{talentosPortalBacking.helper.talentosAnexos.tipo}"
+							label="#{bundle.lbl_tipo}"
+							required="true"
+							itens="#{talentosPortalBacking.itensTipoAnexo}" />
+
+						<p:fileUpload
+							mode="advanced"
+							auto="true"
+							update=":#{p:component('iconeDocAnexo')} :#{p:component('nomeDocAnexo')}"
+							label="#{bundle.btn_upload}"
+							fileUploadListener="#{talentosPortalBacking.actionFileUpload}" />
+					</p:outputPanel>
+				</p:outputPanel>
+
+				<p:outputPanel class="dlg-botoes-container">
+
+					<p:toolbar>
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_gravar_anexo"
+								process="@this txtDescricaoAnexo cboTipo"
+								icon="ui-icon-gear"
+								update=":#{p:component('pnlDocsAnexos')} :#{p:component('frmDocAnexo')}"
+								actionListener="#{talentosPortalBacking.actionGravarAnexo}"
+								oncomplete="PF('w_anexo').hide();"
+								value="#{bundle.btn_gravar}">
+							</xcp:commandButton>
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

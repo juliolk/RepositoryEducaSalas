@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<xcp:panelGrid
+				rendered="#{declaracaobensPortalBacking.modo == declaracaobensPortalBacking.modoLista}">
+			<p:row>
+				<p:column>
+				<p:dataTable
+					id="tabPeriodos"
+					value="#{declaracaobensPortalBacking.lista}"
+					var="row"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{row}">
+	
+					<xcp:column 
+						headerText="#{bundle.col_conferido}" 
+						width="12%"
+						style="text-align:center; vertical-align:middle"
+						rendered="#{declaracaobensPortalBacking.habilitaConferencia}">
+						<h:selectBooleanCheckbox value="#{row.conferido}" disabled="true"/>
+					</xcp:column>
+					
+					<xcp:column
+						headerText="#{bundle.col_ano}"
+						type="Date"
+						width="12%">
+						<xcp:outputSimple value="#{declaracaobensPortalBacking.getAno(row.periodo.referencia)}"/>
+					</xcp:column>
+	
+					<xcp:column
+						headerText="#{bundle.col_prazo_envio}"
+						type="Date"
+						width="12%"
+						rendered="#{declaracaobensPortalBacking.habilitaConferencia}">
+						<xcp:outputSimple value="#{declaracaobensPortalBacking.getPrazoEnvio(row.periodo)}" />
+					</xcp:column>
+	
+					<xcp:column 
+						headerText="Possui Pendência?" 
+						width="12%"
+						style="text-align:center; vertical-align:middle"
+						rendered="#{declaracaobensPortalBacking.habilitaConferencia}">
+						<span title="#{row.pendencia == 1 ? 'Verifique sua caixa de mensagens do Portal' : '' }">
+						<xcp:outputSimple value="#{row.pendencia}" itens="#{declaracaobensPortalBacking.itensIndSimNao}"/>
+						</span>
+					</xcp:column>
+	
+					<xcp:column
+						type="String"
+						headerText="#{bundle.col_acoes}"
+						width="40%">
+	
+						<xcp:commandButton
+							id="btnUploadDocumento"
+							oncomplete="PF('wDlgUploadDocumento').show();"
+							value="#{bundle.btn_enviar_copia_irpf}"
+							rendered="#{declaracaobensPortalBacking.canRenderCarregar(row)}">
+							<f:setPropertyActionListener
+								value="#{row}"
+								target="#{declaracaobensPortalBacking.selRow}" />
+						</xcp:commandButton>
+	
+						<xcp:commandButton
+							id="btnPreenchimentoManual"
+							value="#{bundle.btn_preenchimento_manual}"
+							rendered="#{declaracaobensPortalBacking.canRenderPreenchimentoManual(row)}"
+							action="#{declaracaobensPortalBacking.actionPreenchimentoManual}"
+							process="@form"
+							update="@form">
+							<f:setPropertyActionListener
+								value="#{row}"
+								target="#{declaracaobensPortalBacking.selRow}" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btnEnviarFormulario"
+							value="#{bundle.btn_enviar_formulario}"
+							rendered="#{declaracaobensPortalBacking.canRenderFormulario(row)}"
+							oncomplete="PF('wDlgUploadFormulario').show();">
+							<f:setPropertyActionListener
+								value="#{row}"
+								target="#{declaracaobensPortalBacking.selRow}" />
+						</xcp:commandButton>
+	
+						<xcp:commandButton
+							id="btnDownload"
+							rendered="#{declaracaobensPortalBacking.canRenderBaixar(row)}"
+							ajax="false"
+							immediate="true"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							value="#{bundle.btn_baixar_copia_irpf}">
+							<p:fileDownload
+								value="#{declaracaobensPortalBacking.getDownloadDocumento(row)}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+
+                        <xcp:commandButton
+                            id="btnDownloadFormulario"
+                            rendered="#{declaracaobensPortalBacking.canRenderBaixarFormulario(row)}"
+                            ajax="false"
+                            immediate="true"
+                            onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+                            value="#{bundle.btn_baixar_copia_formulario}">
+                            <p:fileDownload
+                                value="#{declaracaobensPortalBacking.getDownloadFormulario(row)}"
+                                contentDisposition="attachment" />
+                        </xcp:commandButton>
+	
+						<xcp:commandButton
+							id="btnDownloadComp"
+							rendered="#{row.indExec == 1}"
+							ajax="false"
+							immediate="true"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							value="#{bundle.btn_comprovante}">
+							<p:fileDownload
+								value="#{declaracaobensPortalBacking.getDownloadComprovante(row)}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+					</xcp:column>
+	
+				</p:dataTable>
+				</p:column>
+			</p:row>
+			</xcp:panelGrid>
+			<xcp:panelGrid
+				id="grdForm"
+				styleClass="xcp_pmanut_form"
+				rendered="#{declaracaobensPortalBacking.modo == declaracaobensPortalBacking.modoForm}">
+				<p:row>
+					<p:column>
+						<p:fieldset
+							legend="#{bundle.lbl_declaracao_rendimentos_recebidos}">
+							<p:dataTable
+								id="tabRend"
+								value="#{declaracaobensPortalBacking.listRendimentos}"
+								var="row"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								rowKey="#{row.uuid}"
+								rowStyleClass="#{row.status == declaracaobensPortalBacking.REGISTRO_EXCLUIDO ? 'ui-helper-hidden' : ''}"
+								selectionMode="single"
+								selection="#{declaracaobensPortalBacking.rendimentoSelecionado}"
+								>
+
+								<p:ajax
+									event="rowSelect"
+									update=":frmDlgRend"
+									listener="#{declaracaobensPortalBacking.onSelectRendimento}"
+									onstart="PF('dlgRend_w').show()" />
+				
+								<xcp:column
+									type="String" 
+									headerText="#{bundle.col_nome_fonte_pagadora}" 
+									width="35%">
+									<xcp:outputSimple value="#{row.nomeFontePagadora}"/>
+								</xcp:column>
+
+								<xcp:column 
+									type="String" 
+									headerText="#{bundle.col_cpf_cnpj}" 
+									width="15%">
+									<xcp:outputSimpleCpf 
+										value="#{row.cnpjCpf}"
+										rendered="#{row.cnpjCpf.length() le 11}"/>
+										
+									<h:outputText
+										value="#{row.cnpjCpf}"
+										converter="xcpFormatCnpj"
+										rendered="#{row.cnpjCpf.length() gt 11}"/>
+										
+								</xcp:column>
+								
+								<xcp:column 
+									type="Number"
+									headerText="#{bundle.col_rendimentos_tributaveis}" 
+									width="15%">
+									<xcp:outputSimpleNumber value="#{row.valorRendTributaveis}" scale="2"/> 
+								</xcp:column>
+								
+								<xcp:column 
+									type="Number"
+									headerText="#{bundle.col_rendimentos_isentos}" 
+									width="15%">
+									<xcp:outputSimpleNumber value="#{row.valorRendIsentos}" scale="2"/> 
+								</xcp:column>
+
+								<xcp:column 
+									type="Number"
+									headerText="#{bundle.col_rendimentos_13salario}" 
+									width="15%">
+									<xcp:outputSimpleNumber value="#{row.valorRend13salario}" scale="2"/> 
+								</xcp:column>
+								
+			                    <xcp:column
+			                        type="String"
+			                        width="5%">
+			                        <xcp:commandLink
+			                            id="btn_remove_rend"
+			                            icon="ui-icon-trash"
+			                            immediate="true"
+			                            update="tabRend"
+			                            action="#{declaracaobensPortalBacking.actionRemoveRendimento(row)}">
+			                            <h:graphicImage
+			                            	title="#{bundle.hint_remover}"
+			                                value="/resources/img/remover.png"
+			                                style="margin-top:3px;" />
+			                            <p:confirm
+			                                header="#{bundle.tit_confirma_remover}"
+			                                message="#{bundle.msg_confirma_remover}"
+			                                icon="ui-icon-alert" />
+			                        </xcp:commandLink>
+			                    </xcp:column>					
+								
+							</p:dataTable>
+
+							<p:toolbar>
+								<f:facet name="left">
+									<xcp:commandButton
+										id="btn_NovoRendimento"
+										value="#{bundle.btn_adicionar_rendimento}"
+										update=":frmDlgRend"
+										oncomplete="PF('dlgRend_w').show();"
+										action="#{declaracaobensPortalBacking.actionNovoRendimento}"
+										icon="ui-icon-document" />
+								</f:facet>
+							</p:toolbar>
+							
+							
+						</p:fieldset>
+	
+						<p:fieldset 
+							legend="#{bundle.lbl_declaracao_bens_diretos}">
+							<p:outputPanel style="text-align: left; font-size: 14px">
+								<h:outputText value="#{declaracaobensPortalBacking.textoExplicativoBensDireitos}"/>
+							</p:outputPanel>
+							<p:dataTable
+								id="tabBens"
+								value="#{declaracaobensPortalBacking.listBens}"
+								var="row"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								rowKey="#{row.uuid}"
+								rowStyleClass="#{row.status == declaracaobensPortalBacking.REGISTRO_EXCLUIDO ? 'ui-helper-hidden' : ''}"
+								selectionMode="single"
+								selection="#{declaracaobensPortalBacking.bemSelecionado}"
+								>
+
+								<p:ajax
+									event="rowSelect"
+									update=":frmDlgBens"
+									listener="#{declaracaobensPortalBacking.onSelectBem}"
+									onstart="PF('dlgBens_w').show()" />
+												
+								<xcp:column
+									type="String" 
+									headerText="#{bundle.col_descricao_bem_direito}" 
+									width="75%">
+									<xcp:outputSimple value="#{row.descricao}"/>
+								</xcp:column>
+
+								<xcp:column
+									type="Number" 
+									headerText="#{bundle.col_valor}" 
+									width="20%">
+									<xcp:outputSimpleNumber 
+										value="#{row.valor}"
+										scale="2"/>
+								</xcp:column>
+								
+			                    <xcp:column
+			                        type="String"
+			                        width="5%">
+			                        <xcp:commandLink
+			                            id="btn_remove_bem"
+			                            icon="ui-icon-trash"
+			                            immediate="true"
+			                            update="tabBens"
+			                            action="#{declaracaobensPortalBacking.actionRemoveBem(row)}">
+			                            <h:graphicImage
+			                            	title="#{bundle.hint_remover}"
+			                                value="/resources/img/remover.png"
+			                                style="margin-top:3px;" />
+			                            <p:confirm
+			                                header="#{bundle.tit_confirma_remover}"
+			                                message="#{bundle.msg_confirma_remover}"
+			                                icon="ui-icon-alert" />
+			                        </xcp:commandLink>
+			                    </xcp:column>					
+								
+							</p:dataTable>
+
+							<p:toolbar>
+								<f:facet name="left">
+									<xcp:commandButton
+										id="btn_NovoBem"
+										value="#{bundle.btn_adicionar_bem_direito}"
+										update=":frmDlgBens"
+										oncomplete="PF('dlgBens_w').show();"
+										action="#{declaracaobensPortalBacking.actionNovoBem}"
+										icon="ui-icon-document" />
+								</f:facet>
+							</p:toolbar>
+							
+						</p:fieldset>
+	
+						<p:fieldset 
+							legend="#{bundle.lbl_declaracao_cargos}">
+							
+							<p:dataTable
+								id="tabCargos"
+								value="#{declaracaobensPortalBacking.listCargos}"
+								var="row"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								rowKey="#{row.uuid}"
+								rowStyleClass="#{row.status == declaracaobensPortalBacking.REGISTRO_EXCLUIDO ? 'ui-helper-hidden' : ''}"
+								selectionMode="single"
+								selection="#{declaracaobensPortalBacking.cargoSelecionado}"
+								>
+
+								<p:ajax
+									event="rowSelect"
+									update=":frmDlgCargos"
+									listener="#{declaracaobensPortalBacking.onSelectCargo}"
+									onstart="PF('dlgCargos_w').show()" />
+				
+								<xcp:column
+									type="String" 
+									headerText="#{bundle.lbl_cargo}" 
+									width="35%">
+									<xcp:outputSimple value="#{row.descricao}"/>
+								</xcp:column>
+
+								<xcp:column
+									type="String" 
+									headerText="#{bundle.lbl_empresa_orgao}" 
+									width="30%">
+									<xcp:outputSimple value="#{row.nomeEmpresaOrgao}"/>
+								</xcp:column>
+								
+								<xcp:column
+									type="Date" 
+									headerText="#{bundle.col_datainicial}" 
+									width="15%">
+									<xcp:outputSimpleDate value="#{row.dataInicial}"/>
+								</xcp:column>
+								
+								<xcp:column
+									type="Date" 
+									headerText="#{bundle.col_datafinal}" 
+									width="15%">
+									<xcp:outputSimpleDate value="#{row.dataFinal}"/>
+								</xcp:column>
+								
+			                    <xcp:column
+			                        type="String"
+			                        width="5%">
+			                        <xcp:commandLink
+			                            id="btn_remove_cargo"
+			                            icon="ui-icon-trash"
+			                            immediate="true"
+			                            update="tabCargos"
+			                            action="#{declaracaobensPortalBacking.actionRemoveCargo(row)}">
+			                            <h:graphicImage
+			                            	title="#{bundle.hint_remover}"
+			                                value="/resources/img/remover.png"
+			                                style="margin-top:3px;" />
+			                            <p:confirm
+			                                header="#{bundle.tit_confirma_remover}"
+			                                message="#{bundle.msg_confirma_remover}"
+			                                icon="ui-icon-alert" />
+			                        </xcp:commandLink>
+			                    </xcp:column>					
+								
+							</p:dataTable>
+
+							<p:toolbar>
+								<f:facet name="left">
+									<xcp:commandButton
+										id="btn_NovoCargo"
+										value="#{bundle.btn_adicionar_cargo}"
+										update=":frmDlgCargos"
+										oncomplete="PF('dlgCargos_w').show();"
+										action="#{declaracaobensPortalBacking.actionNovoCargo}"
+										icon="ui-icon-document" />
+								</f:facet>
+							</p:toolbar>
+							
+						</p:fieldset>
+						
+						<p:toolbar>
+							<f:facet name="left">
+								<xcp:commandButton
+									id="btn_GravarDeclaracao"
+									value="#{bundle.btn_gravar_declaracao}"
+									update="@form"
+									action="#{declaracaobensPortalBacking.actionGravarDeclaracao}"
+									icon="ui-icon-document" />
+									
+								<xcp:commandButton
+									id="btnVoltar"
+									immediate="true"
+									icon="ui-icon-arrowreturnthick-1-w"
+									value="#{bundle.btn_voltar}"
+									action="#{declaracaobensPortalBacking.actionVoltar}"
+									update="@form" />
+									
+							</f:facet>
+						</p:toolbar>
+						
+					
+					</p:column>
+				</p:row>
+			</xcp:panelGrid>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgUploadDocumento}"
+			widgetVar="wDlgUploadDocumento"
+			modal="true">
+			<xcp:form
+				id="formUpload"
+				multipart="true">
+				<p:fileUpload
+					id="uploadDocumento"
+					mode="advanced"
+					auto="true"
+					allowTypes="/(\.|\/)(pdf)$/"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_somente_pdf}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{declaracaobensPortalBacking.actionUpload}" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_dlgUploadDocumento}"
+			widgetVar="wDlgUploadFormulario"
+			modal="true">
+			<xcp:form
+				id="formUploadFormulario"
+				multipart="true">
+				<p:fileUpload
+					id="uploadFormulario"
+					mode="advanced"
+					auto="true"
+					allowTypes="/(\.|\/)(pdf|doc|docx|odt)$/"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_somente_pdf}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{declaracaobensPortalBacking.actionUploadFormulario}" />
+			</xcp:form>
+		</p:dialog>
+		
+		<p:dialog
+			header="#{bundle.lbl_titulo_declaracao_rendimentos}"
+			modal="true"
+			id="dlgRend"
+			widgetVar="dlgRend_w"
+			dynamic="true"
+			resizable="false"
+			closeOnEscape="true">
+			<xcp:form id="frmDlgRend">
+				<ui:include src="DeclaracaobensPortalForm/DeclaracaobensPortalRendForm.xhtml" />
+				<p:remoteCommand
+					name="closeDlgRend"
+					update=":#{p:component('tabRend')}"
+					oncomplete="PF('dlgRend_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.lbl_titulo_declaracao_bens_direitos}"
+			modal="true"
+			id="dlgBens"
+			widgetVar="dlgBens_w"
+			dynamic="true"
+			resizable="false"
+			closeOnEscape="true">
+			<xcp:form id="frmDlgBens">
+				<ui:include src="DeclaracaobensPortalForm/DeclaracaobensPortalBensForm.xhtml" />
+				<p:remoteCommand
+					name="closeDlgBens"
+					update=":#{p:component('tabBens')}"
+					oncomplete="PF('dlgBens_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.lbl_titulo_declaracao_cargos}"
+			modal="true"
+			id="dlgCargos"
+			widgetVar="dlgCargos_w"
+			dynamic="true"
+			resizable="false"
+			closeOnEscape="true">
+			<xcp:form id="frmDlgCargos">
+				<ui:include src="DeclaracaobensPortalForm/DeclaracaobensPortalCargosForm.xhtml" />
+				<p:remoteCommand
+					name="closeDlgCargos"
+					update=":#{p:component('tabCargos')}"
+					oncomplete="PF('dlgCargos_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+		
+	</ui:define>
+</ui:composition>

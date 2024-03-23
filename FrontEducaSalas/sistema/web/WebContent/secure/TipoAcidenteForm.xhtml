@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Tipoacidente"
+			backing="#{tipoacidenteBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.tipo}"
+						precision="9"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="String"
+					size="14">
+					<xcp:outputSimple value="#{row.codigo}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtTipo"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						value="#{tipoacidenteBacking.entity.tipo}"
+						size="9"
+						precision="9"
+						scale="0"
+						maxValue="999999999"
+						readonly="#{not tipoacidenteBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{tipoacidenteBacking.entity.descricao}"
+						rows="4"
+						size="4000" />
+
+					<xcp:mask
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						mask="99.99.99.999"
+						required="true"
+						value="#{tipoacidenteBacking.entity.codigo}" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

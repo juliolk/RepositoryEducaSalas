@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+
+				<p:calendar
+					locale="pt_BR"
+					id="calData"
+					autocomplete="off"
+					showOn="both"
+					pattern="dd/MM/yyyy"
+					maxlength="10"
+					size="10"
+					navigator="true"
+					onchange="Format.date(this)"
+					mode="inline"
+					value="#{agendaJurBacking.helper.data}">
+
+					<p:ajax
+						event="change"
+						listener="#{agendaJurBacking.actionChangeDate}" />
+					<p:ajax
+						event="dateSelect"
+						listener="#{agendaJurBacking.actionChangeDate}" />
+
+				</p:calendar>
+
+			</p:fieldset>
+
+			<p:fieldset
+				legend="#{bundle.title_audiencias}"
+				style="margin-bottom: 5px">
+
+				<p:dataTable
+					id="tblAudiencia"
+					var="row"
+					value="#{agendaJurBacking.helper.listAudiencia}"
+					rows="#{viewUtil.tableRows}"
+					rowKey="#{row.PK}"
+					paginator="true"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginatorPosition="bottom"
+					selection="#{agendaJurBacking.helper.audiencia}"
+					selectionMode="single">
+
+					<p:ajax
+						event="rowSelect"
+						update=":#{p:component('tblTestemunhas')}"
+						listener="#{agendaJurBacking.actionSelectAudiencia}" />
+
+					<xcp:column
+						headerText="#{bundle.col_hora}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleTime value="#{row.hora}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleNumber
+							value="#{row.matricula}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						type="String"
+						size="4">
+						<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_processo}"
+						type="String"
+						size="4">
+						<xcp:outputSimple value="#{row.juridicoFk.processo}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+			</p:fieldset>
+
+			<p:fieldset legend="#{bundle.title_testemunhas}">
+				<p:dataTable
+					id="tblTestemunhas"
+					var="row"
+					value="#{agendaJurBacking.helper.listTestemunhas}"
+					rows="#{viewUtil.tableRows}"
+					rowKey="#{row}"
+					paginator="true"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginatorPosition="bottom">
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						type="Number"
+						size="4">
+						<xcp:outputSimple value="#{row.funcionario}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						type="String"
+						size="4">
+						<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_parte}"
+						type="String"
+						size="4">
+						<xcp:outputSimple
+							value="#{row.parte}"
+							itens="#{agendaJurBacking.itensParte}" />
+					</xcp:column>
+
+				</p:dataTable>
+			</p:fieldset>
+
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

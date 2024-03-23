@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<xcp:panelForm>
+
+			<xcp:combo
+				id="cboTipBloq"
+				value="#{operadoresBacking.permissaoAcao.tipBloq}"
+				label="#{bundle.lbl_tipBloq}"
+				required="true"
+				readonly="#{not operadoresBacking.permissaoAcao.novo}"
+				itens="#{operadoresBacking.itensTipBloq}">
+				<p:ajax update="@form" />
+			</xcp:combo>
+
+			<xcp:dateRange
+				id="dtaPesq"
+				rendered="#{operadoresBacking.permissaoAcao.tipBloq == 2}"
+				valueStart="#{operadoresBacking.permissaoAcao.dtaIni}"
+				valueEnd="#{operadoresBacking.permissaoAcao.dtaFim}"
+				label="#{bundle.lbl_data}" />
+
+			<xcp:text
+				id="txtAcao"
+				label="#{bundle.lbl_acao}"
+				required="true"
+				value="#{operadoresBacking.permissaoAcao.acao}"
+				size="50"
+				rendered="#{operadoresBacking.permissaoAcao.tipBloq == 1}" />
+
+			<xcp:combo
+				id="cboSituacaoManut"
+				label="#{bundle.lbl_bloqueia}"
+				styleClass="combooperadores"
+				value="#{operadoresBacking.permissaoAcao.situacao}"
+				itens="#{operadoresBacking.itensSituacao}">
+				<p:ajax update="txtMsg txtMsg_l" />
+			</xcp:combo>
+
+			<xcp:memo
+				id="txtMsg"
+				label="#{bundle.lbl_msgtela}"
+				value="#{operadoresBacking.permissaoAcao.msg}"
+				size="2000"
+				rendered="#{operadoresBacking.permissaoAcao.tipBloq == 2 and operadoresBacking.permissaoAcao.situacao == 0}" />
+
+		</xcp:panelForm>
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_gravar"
+					icon="ui-icon-disk"
+					update="@form"
+					value="#{bundle.btn_gravar}"
+					action="#{operadoresBacking.actionGravarPermissaoAcao}" />
+
+				<xcp:commandButton
+					id="btnVoltar"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgAcao_w').hide();return false;" />
+
+			</f:facet>
+		</p:toolbar>
+	</p:outputPanel>
+</ui:composition>

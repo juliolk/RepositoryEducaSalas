@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_atuacao}"
+		modal="true"
+		id="dlgAtuacao"
+		widgetVar="dlgAtuacao_w"
+		dynamic="true">
+		<xcp:form id="frmAtuacao">
+
+			<xcp:panelForm>
+
+				<p:outputLabel
+					value="#{bundle.lbl_dtinicio}: *"
+					for="txtDtinicio_c" />
+
+				<xcp:date
+					id="txtDtinicio"
+					value="#{funcionariosBacking.atuacao.dtinicio}"
+					label="#{bundle.lbl_dtinicio}"
+					simple="true">
+					<p:ajax
+						event="change"
+						process="@this" />
+
+					<p:ajax
+						event="dateSelect"
+						process="@this" />
+				</xcp:date>
+
+				<xcp:date
+					id="txtDttermino"
+					value="#{funcionariosBacking.atuacao.dttermino}"
+					label="#{bundle.lbl_dttermino}" />
+
+				<xcp:lov
+					id="lovSetor"
+					value="#{funcionariosBacking.atuacao.setorFk}"
+					label="#{bundle.lbl_setor}"
+					required="true"
+					params="#{funcionariosBacking.paramsAtuacao}"
+					query="set_validade_par"
+					size="8" />
+
+				<xcp:number
+					id="txtChmensal"
+					label="#{bundle.lbl_chmensal}"
+					size="9"
+					value="#{funcionariosBacking.atuacao.chmensal}"
+					precision="6"
+					scale="2" />
+				
+				<xcp:lov
+					id="lovTipoAtuacao"
+					value="#{funcionariosBacking.atuacao.tipoFk}"
+					label="#{bundle.lbl_tipo_atuacoes}"
+					required="true"
+					query="tipo_atuacoes"
+					size="8" />
+				
+				<xcp:memo 
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{funcionariosBacking.atuacao.obs}" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						action="#{funcionariosBacking.actionGravaAtuacao}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgAtuacao_w').hide();return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+</ui:composition>

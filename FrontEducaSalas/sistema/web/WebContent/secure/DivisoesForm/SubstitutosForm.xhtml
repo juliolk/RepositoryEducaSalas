@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="#{id}"
+		backing="#{backing}"
+		masterId="Divisoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.matricula}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.matriculaFk.nome}"
+				type="String"
+				size="8">
+				<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtaini}"
+				value="#{row.dtinicio}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtafim}"
+				value="#{row.dtfim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="#{id}_lovMat"
+					value="#{backing.entity.matriculaFk}"
+					label="#{bundle.lbl_matricula}"
+					required="true"
+					query="funcionariosLov"
+					size="8" />
+
+				<xcp:date
+					id="#{id}_txtDtaini"
+					required="true"
+					value="#{backing.entity.dtinicio}"
+					label="#{bundle.lbl_dtaini}" />
+
+				<xcp:date
+					id="#{id}_txtDtafim"
+					value="#{backing.entity.dtfim}"
+					label="#{bundle.lbl_dtafim}" />
+
+				<xcp:memo
+					id="#{id}_txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{backing.entity.obs}"
+					size="1000" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

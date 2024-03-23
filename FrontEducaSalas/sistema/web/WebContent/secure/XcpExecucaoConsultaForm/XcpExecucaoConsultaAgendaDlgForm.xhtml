@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+		<xcp:outputNumber
+			id="txtSeqExecucao"
+			label="#{bundle.lbl_seqExecucaoAgenda}"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.seqExecucao}"
+			size="10"
+			precision="10"
+			scale="0" />
+
+		<xcp:output
+			id="txtCodObjeto"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.seqExecucaoFk.codObjeto}"
+			label="#{bundle.lbl_codObjeto}"
+			size="50" />
+
+		<xcp:output
+			id="txtDesObjeto"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.seqExecucaoFk.codObjetoFk.desObjeto}"
+			label="#{bundle.lbl_desObjeto}"
+			size="50" />
+
+		<xcp:outputTimestamp
+			id="txtDthAgenda"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.seqExecucaoFk.dthAgenda}"
+			label="#{bundle.lbl_dthAgenda}" />
+
+		<xcp:output
+			id="cboTipAgenda"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.tipAgenda}"
+			label="#{bundle.lbl_tipAgenda}"
+			itens="#{xcpExecucaoConsultaBacking.itensTipAgenda}" />
+
+		<xcp:memo
+			id="txtDesEmailsSucesso"
+			rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.desEmailsSucesso!=null}"
+			label="#{bundle.lbl_desEmailsSucesso}"
+			readonly="true"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.desEmailsSucesso}" />
+
+		<xcp:memo
+			id="txtDesEmailsErro"
+			rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.desEmailsErro!=null}"
+			readonly="true"
+			label="#{bundle.lbl_desEmailsErro}"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.desEmailsErro}" />
+
+		<xcp:output
+			id="txtIpAcesso"
+			label="#{bundle.lbl_ipAcesso}"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.seqExecucaoFk.desIp}" />
+
+		<xcp:output
+			id="txtIp"
+			label="#{bundle.lbl_ipServidor}"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.seqExecucaoFk.desServidor}" />
+
+		<xcp:outputNumber
+			id="txtPorta"
+			label="#{bundle.lbl_numPorta}"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.seqExecucaoFk.numPorta}"
+			precision="5"
+			scale="0" />
+
+		<xcp:outputTimestamp
+			id="txtDthInatividade"
+			value="#{xcpExecucaoConsultaBacking.xcpExecucaoAgenda.dthInatividade}"
+			label="#{bundle.lbl_dthInatividade}" />
+
+	</xcp:panelForm>
+
+</ui:composition>

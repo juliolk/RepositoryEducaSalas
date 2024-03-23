@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Medicos"
+			backing="#{medicosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_medico}"
+					value="#{row.medico}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.medico}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{medicosBacking.itensTipo}"
+					size="12">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{medicosBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nomeLista}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.nomeLista}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtMedico"
+						label="#{bundle.lbl_medico}"
+						required="true"
+						value="#{medicosBacking.entity.medico}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"
+						readonly="true"
+						rendered="#{not medicosBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{medicosBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{medicosBacking.itensTipo}">
+						<p:ajax
+							event="change"
+							update="lovMatricula,lovMatricula_l,txtNome,txtNome_l,cboIpam,cboIpam_l,txtCredencial,txtCredencial_l,cboCredencialuf,cboCredencialuf_l,cboCredenciador,cboCredenciador_l"
+							listener="#{medicosBacking.changeCboTipo}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{medicosBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="funcionariosLov"
+						size="8"
+						update="lovMatricula,lovMatricula_l,txtNome,txtNome_l,cboIpam,cboIpam_l,txtCredencial,txtCredencial_l,cboCredencialuf,cboCredencialuf_l,cboCredenciador,cboCredenciador_l"
+						rendered="#{medicosBacking.entity.tipo == 1}" />
+
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						value="#{medicosBacking.entity.nome}"
+						size="70"
+						rendered="#{medicosBacking.entity.tipo == 2}"
+						required="true" />
+
+
+					<xcp:combo
+						id="cboIpam"
+						value="#{medicosBacking.entity.ipam}"
+						label="#{bundle.lbl_ipam}"
+						required="true"
+						itens="#{medicosBacking.itensIndSimNao}" />
+
+					<xcp:text
+						id="txtCredencial"
+						label="#{bundle.lbl_credencial}"
+						value="#{medicosBacking.credencial}"
+						size="20"
+						required="#{medicosBacking.entity.tipo == 2}"
+						readonly="#{medicosBacking.entity.tipo == 1}" />
+
+					<xcp:combo
+						id="cboCredencialuf"
+						value="#{medicosBacking.credencialuf}"
+						label="#{bundle.lbl_credencialuf}"
+						itens="#{medicosBacking.itensUfNull}"
+						readonly="#{medicosBacking.entity.tipo == 1}" />
+
+					<xcp:combo
+						id="cboCredenciador"
+						value="#{medicosBacking.credenciador}"
+						label="#{bundle.lbl_credenciador}"
+						itens="#{medicosBacking.itensCredenciador}"
+						required="#{medicosBacking.entity.tipo == 2}"
+						rendered="#{medicosBacking.entity.tipo == 2}" />
+
+					<xcp:number
+						id="txtLimiteagenda"
+						label="#{bundle.lbl_limiteagenda}"
+						value="#{medicosBacking.entity.limiteagenda}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="MedicosForm/MedicosEspForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

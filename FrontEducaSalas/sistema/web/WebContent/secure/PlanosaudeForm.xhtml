@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Planosaude"
+			backing="#{planosaudeBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_plano}"
+					value="#{row.plano}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.plano}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vlrinscrtitular}"
+					value="#{row.vlrinscrtitular}"
+					type="Number"
+					size="19">
+					<xcp:outputSimpleNumber
+						value="#{row.vlrinscrtitular}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_perctitular}"
+					value="#{row.perctitular}"
+					type="Number"
+					size="14">
+					<xcp:outputSimpleNumber
+						value="#{row.perctitular}"
+						precision="10"
+						scale="3" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vlrtitular}"
+					value="#{row.vlrtitular}"
+					type="Number"
+					size="19">
+					<xcp:outputSimpleNumber
+						value="#{row.vlrtitular}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_vlrinscrdep}"
+					value="#{row.vlrinscrdep}"
+					type="Number"
+					size="19">
+					<xcp:outputSimpleNumber
+						value="#{row.vlrinscrdep}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_percdep}"
+					value="#{row.percdep}"
+					type="Number"
+					size="14">
+					<xcp:outputSimpleNumber
+						value="#{row.percdep}"
+						precision="10"
+						scale="3" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vlrdep}"
+					value="#{row.vlrdep}"
+					type="Number"
+					size="19">
+					<xcp:outputSimpleNumber
+						value="#{row.vlrdep}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtPlano"
+						label="#{bundle.lbl_plano}"
+						required="true"
+						value="#{planosaudeBacking.entity.plano}"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999"
+						readonly="#{not planosaudeBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{planosaudeBacking.entity.descricao}"
+						size="30" />
+
+				</xcp:panelForm>
+				<h:panelGrid columns="2">
+					<p:fieldset legend="#{bundle.tit_titular}">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtVlrinscrtitular"
+								label="#{bundle.lbl_vlrinscrtitular}"
+								required="true"
+								size="14"
+								value="#{planosaudeBacking.entity.vlrinscrtitular}"
+								precision="16"
+								scale="2" />
+
+							<xcp:number
+								id="txtPerctitular"
+								label="#{bundle.lbl_perctitular}"
+								required="true"
+								size="14"
+								value="#{planosaudeBacking.entity.perctitular}"
+								precision="10"
+								scale="3" />
+
+							<xcp:number
+								id="txtVlrtitular"
+								label="#{bundle.lbl_vlrtitular}"
+								required="true"
+								size="14"
+								value="#{planosaudeBacking.entity.vlrtitular}"
+								precision="16"
+								scale="2" />
+
+
+						</xcp:panelForm>
+					</p:fieldset>
+					<p:fieldset legend="#{bundle.tit_dependente}">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtVlrinscrdep"
+								label="#{bundle.lbl_vlrinscrdep}"
+								required="true"
+								size="14"
+								value="#{planosaudeBacking.entity.vlrinscrdep}"
+								precision="16"
+								scale="2" />
+
+							<xcp:number
+								id="txtPercdep"
+								label="#{bundle.lbl_percdep}"
+								required="true"
+								size="14"
+								value="#{planosaudeBacking.entity.percdep}"
+								precision="10"
+								scale="3" />
+
+							<xcp:number
+								id="txtVlrdep"
+								label="#{bundle.lbl_vlrdep}"
+								required="true"
+								size="14"
+								value="#{planosaudeBacking.entity.vlrdep}"
+								precision="16"
+								scale="2" />
+
+						</xcp:panelForm>
+					</p:fieldset>
+				</h:panelGrid>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="PlanosaudeForm/FaixasplanoForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

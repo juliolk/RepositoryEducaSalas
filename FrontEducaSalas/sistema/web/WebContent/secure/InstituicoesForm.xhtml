@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Instituicoes"
+			backing="#{instituicoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nivel}"
+					value="#{row.nivel}"
+					type="String"
+					size="30"
+					itens="#{instituicoesBacking.itensNivel}">
+					<xcp:outputSimple
+						value="#{row.nivel}"
+						itens="#{instituicoesBacking.itensNivel}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{instituicoesBacking.entity.codigo}"
+						size="10"
+						maxValue="9999999999"
+						readonly="#{not instituicoesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{instituicoesBacking.entity.descricao}"
+						size="100"
+						maxlength="150" />
+
+					<xcp:combo
+						id="txtNivel"
+						label="#{bundle.lbl_nivel}"
+						itens="#{instituicoesBacking.itensNivel}"
+						required="true"
+						value="#{instituicoesBacking.entity.nivel}" />
+
+					<xcp:cnpj
+						id="txtCnpj"
+						label="#{bundle.lbl_cnpj}"
+						value="#{instituicoesBacking.entity.cnpj}" />
+
+				</xcp:panelForm>
+				<xcp:panelForm>
+					<xcp:endereco
+						id="end"
+						value="#{instituicoesBacking.entity.endereco}"
+						required="false" />
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

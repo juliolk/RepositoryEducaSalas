@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="pnlAfast">
+
+
+		<p:outputPanel
+			id="pnlAfastInserir"
+			rendered="#{lancLotesBacking.helper.tipOperacao == 1}">
+			<xcp:panelForm>
+
+				<xcp:combo
+					id="cboTipoOperacao"
+					value="#{lancLotesBacking.helper.tipOperacao}"
+					label="#{bundle.lbl_tipoOperacao}"
+					required="true"
+					itens="#{lancLotesBacking.itensTipOperAfast}">
+					<p:ajax
+						update="@form"
+						process="@this"
+						listener="#{lancLotesBacking.actionTrocarTipoOperacao}" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovTipmovAfast"
+					value="#{lancLotesBacking.helper.afast.tipmovFk}"
+					label="#{bundle.lbl_tipmov}"
+					required="true"
+					query="tipomovtos_afast_ati"
+					size="5"
+					selectionListener="#{lancLotesBacking.actionSelectTipMov}"
+					params="#{lancLotesBacking.paramsTipMovAfast}"
+					update="lovConvAfast,lovConvAfast_l,txtDtefeitoAfast,txtDtefeitoAfast_l,cboIndJuizoAfast,cboIndJuizoAfast_l,cboTipoReintegracaoAfast,cboTipoReintegracaoAfast_l,txtDtterminoAfast,txtDtterminoAfast_l,txtDiasAfastamentoAfast,txtDiasAfastamentoAfast_l,txtObsLivreAfast,txtObsLivreAfast_l,txtDtprevretornoAfast,txtDtprevretornoAfast_l" />
+
+				<xcp:border
+					id="brd_datas"
+					header="#{bundle.tit_periodo_afastamento}"
+					stylefieldset="width:460px !important; margin-left: 0px !important">
+
+					<xcp:date
+						id="txtDtinicioAfast"
+						required="true"
+						value="#{lancLotesBacking.helper.afast.dtinicio}"
+						label="#{bundle.lbl_dtinicio}">
+						<p:ajax
+							event="change"
+							listener="#{lancLotesBacking.calculaDiasIni}"
+							update="txtDiasAfastamentoAfast,txtDtterminoAfast,lovConvAfast,lovConvAfast_l" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{lancLotesBacking.calculaDiasIni}"
+							update="txtDiasAfastamentoAfast,txtDtterminoAfast,lovConvAfast,lovConvAfast_l" />
+					</xcp:date>
+
+					<xcp:date
+						id="txtDtterminoAfast"
+						value="#{lancLotesBacking.helper.afast.dttermino}"
+						label="#{bundle.lbl_dttermino}"
+						readonly="#{lancLotesBacking.readOnlyFieldsTermino}">
+						<p:ajax
+							event="change"
+							listener="#{lancLotesBacking.calculaDiasMov}"
+							update="txtDiasAfastamentoAfast" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{lancLotesBacking.calculaDiasMov}"
+							update="txtDiasAfastamentoAfast" />
+					</xcp:date>
+
+					<xcp:number
+						id="txtDiasAfastamentoAfast"
+						value="#{lancLotesBacking.helper.qtdDiasAfastamento}"
+						label="#{bundle.lbl_diasAfastamento}"
+						size="10"
+						precision="5"
+						scale="0"
+						readonly="#{lancLotesBacking.readOnlyFieldsTermino}">
+						<p:ajax
+							event="change"
+							listener="#{lancLotesBacking.calculaData}"
+							update="txtDtterminoAfast" />
+					</xcp:number>
+
+				</xcp:border>
+
+				<xcp:date
+					id="txtDtprevretornoAfast"
+					value="#{lancLotesBacking.helper.afast.dtprevretorno}"
+					label="#{bundle.lbl_dtprevretorno}"
+					rendered="#{lancLotesBacking.renderedPrevRetorno}" />
+
+				<xcp:lov
+					id="lovConvAfast"
+					value="#{lancLotesBacking.helper.afast.codconvFk}"
+					label="#{bundle.lbl_convenio}"
+					query="consignacoes_cedido"
+					size="10"
+					rendered="#{lancLotesBacking.renderedLovConv}"
+					required="true"
+					params="#{lancLotesBacking.parEspConsig}" />
+
+				<xcp:combo
+					id="cboTipoReintegracaoAfast"
+					value="#{lancLotesBacking.helper.afast.tipReintegracao}"
+					label="#{bundle.lbl_tipoReintegracao}"
+					required="true"
+					rendered="#{lancLotesBacking.helper.afast.tipmovFk.classificacao == 13}"
+					itens="#{lancLotesBacking.itensReintegracao}" />
+
+				<xcp:date
+					id="txtDtefeitoAfast"
+					required="true"
+					rendered="#{lancLotesBacking.helper.afast.tipmovFk.classificacao == 13}"
+					value="#{lancLotesBacking.helper.afast.dtEfeito}"
+					label="#{bundle.lbl_dtefeito}" />
+
+				<xcp:combo
+					id="cboIndJuizoAfast"
+					required="true"
+					value="#{lancLotesBacking.helper.afast.indPagamentoJuizo}"
+					label="#{bundle.lbl_pagamentojuizo}"
+					rendered="#{lancLotesBacking.helper.afast.tipmovFk.classificacao == 13}"
+					itens="#{lancLotesBacking.itensIndSimNaoNull}" />
+
+				<xcp:lov
+					id="lovTipodocAfast"
+					value="#{lancLotesBacking.helper.afast.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_afas"
+					params="#{lancLotesBacking.paramsTipoDoc}"
+					selectionListener="#{lancLotesBacking.selectTipodocumentoAfast}"
+					update="lovDocumentoAfast,lovProcessoAfast,lovProcessoAfast_l,lovProcessoRevAfast,lovProcessoRevAfast_l,txtProcjudicAfast,txtProcjudicAfast_l"
+					size="5" />
+
+				<xcp:lov
+					id="lovDocumentoAfast"
+					value="#{lancLotesBacking.helper.afast.registroFk}"
+					params="#{lancLotesBacking.paramsTipodocumentoAfast}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					size="5"
+					update="lovProcessoAfast,lovProcessoAfast_l"
+					selectionListener="#{lancLotesBacking.selectDocumentoAfast}" />
+
+				<xcp:lov
+					id="lovProcessoAfast"
+					value="#{lancLotesBacking.helper.afast.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="#{lancLotesBacking.readOnlyProc}"
+					required="#{lancLotesBacking.requiredProcAfast}"
+					size="25" />
+
+				<xcp:lov
+					id="lovProcessoRevAfast"
+					value="#{lancLotesBacking.helper.afast.processoRevFk}"
+					label="#{bundle.lbl_processoRev}"
+					query="processos"
+					rendered="#{lancLotesBacking.renderedProcessoRev}"
+					size="25" />
+
+				<xcp:text
+					id="txtProcjudicAfast"
+					label="#{bundle.lbl_procjudic}"
+					value="#{lancLotesBacking.helper.afast.procjudic}"
+					size="25"
+					rendered="#{lancLotesBacking.helper.afast.tipodocFk.indprocjudicial == 1}" />
+
+				<xcp:memo
+					id="txtObsAfast"
+					label="#{bundle.lbl_txtPort}"
+					value="#{lancLotesBacking.helper.afast.obs}"
+					size="4000"
+					styleClass="scrollarea">
+					<p:ajax
+						process="@this"
+						update="@none"
+						event="change" />
+				</xcp:memo>
+
+				<xcp:memo
+					id="txtObsLivreAfast"
+					label="#{bundle.lbl_obsLivre}"
+					value="#{lancLotesBacking.helper.afast.obsLivre}"
+					size="4000"
+					styleClass="scrollarea"
+					required="#{lancLotesBacking.requiredObsLivre}" />
+
+			</xcp:panelForm>
+		</p:outputPanel>
+
+		<p:outputPanel
+			id="pnlAfastFinalizar"
+			rendered="#{lancLotesBacking.helper.tipOperacao == 2}">
+			<xcp:panelForm>
+
+				<xcp:combo
+					id="cboTipoOperacaoFin"
+					value="#{lancLotesBacking.helper.tipOperacao}"
+					label="#{bundle.lbl_tipoOperacao}"
+					required="true"
+					itens="#{lancLotesBacking.itensTipOperAfast}">
+					<p:ajax
+						update="pnlAfast"
+						process="@this" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovTipmovAfastFin"
+					value="#{lancLotesBacking.helper.afast.tipmovFk}"
+					label="#{bundle.lbl_tipmov}"
+					required="true"
+					query="tipomovtos_afast_ced"
+					size="5" />
+
+				<xcp:date
+					id="txtDtterminoAfastFin"
+					value="#{lancLotesBacking.helper.afast.dttermino}"
+					label="#{bundle.lbl_dttermino}"
+					required="true" />
+
+			</xcp:panelForm>
+
+
+		</p:outputPanel>
+	</p:outputPanel>
+
+</ui:composition>

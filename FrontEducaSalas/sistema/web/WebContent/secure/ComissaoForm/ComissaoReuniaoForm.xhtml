@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="ComissaoReuniao"
+		backing="#{comissaoReuniaoBacking}" masterId="Comissao">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.col_dataReuniao}"
+				value="#{row.dataReuniao}" type="Date" size="8">
+				<xcp:outputSimpleDate value="#{row.dataReuniao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm multipart="true">
+
+				<xcp:date id="txtDataReuniao_ComissaoReuniao" required="true"
+					value="#{comissaoReuniaoBacking.entity.dataReuniao}"
+					label="#{bundle.lbl_dataReuniao}" />
+
+				<xcp:lov id="lovFuncComp" value="#{comissaoReuniaoBacking.func}"
+					label="#{bundle.lbl_participante}" query="funcionarios_comp"
+					params="#{comissaoReuniaoBacking.paramsFuncComp}" size="10"
+					update="pnlMat"
+					selectionListener="#{comissaoReuniaoBacking.selectFuncComp}" />
+
+				<p:spacer width="0" height="1" />
+
+				<h:panelGrid styleClass="table-itens-multi-selecao" columns="2"
+					id="pnlMat">
+
+					<p:dataTable id="tblMat" rows="0" var="it" 
+						value="#{comissaoReuniaoBacking.listFuncComp}"
+						selection="#{comissaoReuniaoBacking.listFuncCompSel}"
+						rowKey="#{it}" scrollHeight="null" scrollRows="400"
+						scrollable="true" emptyMessage="#{bundle.msg_sem_resultado}"
+						style="width:400px;float:left"
+						rendered="#{!comissaoReuniaoBacking.listFuncComp.isEmpty()}">
+
+						<p:column selectionMode="multiple"
+							style="width:20px;text-align:center" />
+
+						<xcp:column headerText="#{label}">
+							<xcp:outputSimple value="#{it.matricula} - #{it.nome}" />
+						</xcp:column>
+
+					</p:dataTable>
+
+					<p:commandButton id="btnLimpaMat" icon="icon-limpar"
+						styleClass="limpar-multi-selecao" process="@this tblMat"
+						update="pnlMat"
+						rendered="#{!comissaoReuniaoBacking.listFuncComp.isEmpty()}"
+						action="#{comissaoReuniaoBacking.actionLimpaMat}" />
+
+				</h:panelGrid>
+
+				<p:spacer width="0" height="1" />
+
+				<h:panelGrid  columns="3"
+					id="pnlFile">
+					<p:commandButton icon="ui-icon-plusthick" value="#{bundle.btn_carregar_ata}"
+						oncomplete="PF('dlgAta_w').show()" update=":formAta btnVisuAta btnRemoveAta">
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-download" value="#{bundle.btn_visualizar_ata}"
+						ajax="false" id="btnVisuAta"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						rendered="#{comissaoReuniaoBacking.entity.arquivoAta != null}">
+						<p:fileDownload value="#{comissaoReuniaoBacking.downloadAta}" />
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-minusthick" value="#{bundle.btn_remover_ata}" id="btnRemoveAta"
+						ajax="false" actionListener="#{comissaoReuniaoBacking.actionRemoverAta}"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						rendered="#{comissaoReuniaoBacking.entity.arquivoAta != null}">
+					</p:commandButton>
+				</h:panelGrid>
+
+				<p:ajaxStatus onstart="PF('w_dlgXcpExecStatus').show()"
+					onsuccess="PF('w_dlgXcpExecStatus').hide()"
+					oncomplete="PF('w_dlgXcpExecStatus').hide()"
+					onerror="PF('w_dlgXcpExecStatus').hide()" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+
+	</xcp:panelManutDetalhes>
+
+</ui:composition>

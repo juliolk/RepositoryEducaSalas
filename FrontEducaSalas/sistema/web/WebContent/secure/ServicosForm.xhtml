@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Servicos"
+			backing="#{servicosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_servico}"
+					value="#{row.servico}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.servico}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cbo}"
+					value="#{row.cbo}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.cbo}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_desCbo}"
+					value="#{row.cboFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.cboFk.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtServico"
+						label="#{bundle.lbl_servico}"
+						required="true"
+						value="#{servicosBacking.entity.servico}"
+						size="8"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not servicosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{servicosBacking.entity.descricao}"
+						size="50" />
+
+					<xcp:lov
+						id="lovCbo"
+						value="#{servicosBacking.entity.cboFk}"
+						label="#{bundle.lbl_cbo}"
+						query="cbo"
+						size="8" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

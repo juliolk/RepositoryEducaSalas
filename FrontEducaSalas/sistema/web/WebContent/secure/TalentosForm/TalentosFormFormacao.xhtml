@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:dataTable
+		id="tabListaFormacao"
+		value="#{talentosBacking.helper.listaFormacao}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="formacao"
+		emptyMessage="#{bundle.msg_sem_resultado}">
+
+		<xcp:column
+			headerText="#{bundle.col_tipo}"
+			type="String"
+			size="15">
+			<xcp:outputSimple value="#{formacao.cursoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_instituicao}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{formacao.instituicaoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_areaCurso}"
+			type="String"
+			size="30">
+			<xcp:outputSimple
+				value="#{formacao.area}"
+				rendered="#{formacao.area !=null}" />
+			<xcp:outputSimple
+				value="#{formacao.cursoacadFk.descricao}"
+				rendered="#{formacao.cursoacadFk !=null}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtinicio}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{formacao.dtinicio}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtfim}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{formacao.dtfim}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_pontos}"
+			type="Number"
+			size="5">
+			<xcp:outputSimpleNumber
+				value="#{formacao.pontos}"
+				precision="5"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_situacao}"
+			type="String"
+			size="10">
+			<xcp:outputSimple value="#{formacao.situacaoFk.descricao}" />
+		</xcp:column>
+	</p:dataTable>
+
+
+</ui:composition>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags" template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+		
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+				
+					<xcp:dateRange
+						id="txtDataPesq"
+						valueStart="#{esfingeConsultaEnvioBacking.dtInicio}"
+						valueEnd="#{esfingeConsultaEnvioBacking.dtFim}"
+						label="#{bundle.lbl_intervalo}"
+						size="8" />
+						
+					<xcp:commandButton
+						id="btn_pesquisar"
+						value="#{bundle.btn_pesquisar}"
+						action="#{esfingeConsultaEnvioBacking.actionPesquisar}"
+						update="tbl"
+						icon="ui-icon-search">
+					</xcp:commandButton>
+	
+					<xcp:commandButton
+						id="btn_atualizar"
+						value="#{bundle.btn_atualizar}"
+						action="#{esfingeConsultaEnvioBacking.actionConsultarEsfinge}"
+						update="tbl"
+						icon="ui-icon-gear" />
+	
+					<p:spacer width="20" />
+						
+				</f:facet>
+	
+			</p:toolbar>
+				
+			<p:dataTable
+				id="tbl"
+				var="row"
+				value="#{esfingeConsultaEnvioBacking.list}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{row}"
+				paginator="true"
+				rows="300">
+				
+				<p:column
+					headerText="#{bundle.col_codigoregistroinformacao}"
+					width="70">
+					<xcp:outputSimple value="#{row.codigoregistroinformacao}" />
+				</p:column>		
+	
+				<p:column
+					headerText="#{bundle.col_dataenvio}"
+					width="30">
+					<xcp:outputSimpleTimestamp value="#{row.dataenvio}" />
+				</p:column>
+	
+				<p:column 
+					headerText="#{bundle.col_tipoenvio}"
+					width="50">
+					<xcp:outputSimple value="#{row.tipodadoenviado}" />
+				</p:column>
+	
+				<p:column
+					headerText="#{bundle.col_situacao}"
+					width="70">					
+					<xcp:outputSimple value="#{row.situacao}"  />					
+				</p:column>
+				
+				<p:column
+					headerText="#{bundle.col_restricoescons}"
+					width="30">
+					
+					<xcp:commandLink
+					  action="#{esfingeConsultaEnvioBacking.actionGetRestricoesCons(row)}"
+					  rendered="#{row.temrestricoescons == 1}"
+					  update=":frmFor">
+					  <xcp:outputSimple
+					    value="Restrições" />
+					</xcp:commandLink>					
+					
+				</p:column>
+				
+				<p:column
+					headerText="#{bundle.col_dtcancelamento}"
+					width="30">
+					<xcp:outputSimpleTimestamp value="#{row.datacancelamento}" />
+				</p:column>
+				
+											
+			</p:dataTable>
+		</xcp:panelContent>		
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+	  <p:dialog
+	    header="#{bundle.title_msg}"
+	    modal="true"
+	    id="dlgFor"
+	    widgetVar="wMsg">
+	    <xcp:form id="frmFor">
+	      <p:inputTextarea
+	        value="#{esfingeConsultaEnvioBacking.restricoescons}"
+	        cols="120"
+	        rows="40"
+	        autoResize="false" />
+	    </xcp:form>
+	  </p:dialog>
+	</ui:define>
+	
+</ui:composition>

@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(16)}"
+			escape="false" />
+
+		<xcp:panelFuncionario
+			id="Trienios"
+			backing="#{trieniosBacking}"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc)}">
+
+			<ui:define name="barraLista">
+				<p:column>
+					<xcp:commandButton
+						id="btn_inserir_periodos"
+						icon="ui-icon-gear"
+						value="#{bundle.btn_inserir_periodos}"
+						action="#{trieniosBacking.actionInserirPeriodos}"
+						update="@form" />
+				</p:column>
+
+				<p:column>
+					<xcp:commandButton
+						id="btn_atualizar_trienios"
+						icon="ui-icon-gear"
+						value="#{bundle.btn_atualizar_trienios}"
+						action="#{trieniosBacking.actionAtualizarTrienios}"
+						update="@form" />
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+
+				<xcp:column
+					headerText="#{bundle.col_dtvcto}"
+					value="#{row.dtvcto}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.dtvcto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_percent}"
+					value="#{row.qtd}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.qtd}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diaspro}"
+					value="#{row.diaspro}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diaspro}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasper}"
+					value="#{row.diasper}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasper}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diaslic}"
+					value="#{row.diaslic}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diaslic}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diaspen}"
+					value="#{row.diaspen}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diaspen}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasfal}"
+					value="#{row.diasfal}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasfal}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasaux}"
+					value="#{row.diasaux}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasaux}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipodoc}"
+					value="#{row.tipodocFk.descricao}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.tipodocFk.descricao}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datadoc}"
+					value="#{row.datadoc}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datadoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_portaria}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.processoFk.processo}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtvcto"
+						required="true"
+						value="#{trieniosBacking.entity.dtvcto}"
+						label="#{bundle.lbl_dtvcto}"
+						readonly="#{not trieniosBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDatalc"
+						value="#{trieniosBacking.entity.datalc}"
+						label="#{bundle.lbl_datalc}" />
+
+					<xcp:number
+						id="txtQtd"
+						label="#{bundle.lbl_qtd}"
+						required="true"
+						value="#{trieniosBacking.entity.qtd}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDiaspro"
+						label="#{bundle.lbl_diaspro}"
+						value="#{trieniosBacking.entity.diaspro}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDiasper"
+						label="#{bundle.lbl_diasper}"
+						value="#{trieniosBacking.entity.diasper}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDiaslic"
+						label="#{bundle.lbl_diaslic}"
+						value="#{trieniosBacking.entity.diaslic}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDiaspen"
+						label="#{bundle.lbl_diaspen}"
+						value="#{trieniosBacking.entity.diaspen}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDiasfal"
+						label="#{bundle.lbl_diasfal}"
+						value="#{trieniosBacking.entity.diasfal}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtDiasaux"
+						label="#{bundle.lbl_diasaux}"
+						value="#{trieniosBacking.entity.diasaux}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{trieniosBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_tri"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento"
+						params="#{trieniosBacking.paramsTipoDoc}"
+						selectionListener="#{trieniosBacking.selectTipodocumento}"
+						size="5" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{trieniosBacking.entity.registroFk}"
+						params="#{trieniosBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_registro}"
+						query="documentosman"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento"
+						readonly="#{trieniosBacking.readOnlyDoc}"
+						size="18"
+						selectionListener="#{trieniosBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{trieniosBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{trieniosBacking.readOnlyProc}"
+						required="#{trieniosBacking.requiredProc}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{trieniosBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(trieniosBacking.entity.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{trieniosBacking.newdocmodel.actionOpenVisDialog(trieniosBacking.entity.registro)}"
+										process="@this" />
+								</p:splitButton>
+
+							</p:column>
+							<p:column>
+								<xcp:commandButton
+									id="btnNewDoc"
+									value="#{bundle.btn_newdoc}"
+									action="#{trieniosBacking.newdocmodel.actionOpenNewDoc(trieniosBacking.entity.tipodocFk)}"
+									immediate="true"
+									icon="ui-icon-plusthick"
+									process="@this"
+									disabled="#{trieniosBacking.readOnlyTipdoc}" />
+							</p:column>
+							<p:column>
+								<xcp:commandButton
+									id="btnRemDoc"
+									value="#{bundle.btn_removerdoc}"
+									action="#{trieniosBacking.newdocmodel.actionRemover(trieniosBacking.entity.registro)}"
+									immediate="true"
+									icon="ui-icon-minusthick"
+									process="@this"
+									disabled="#{trieniosBacking.readOnlyTipdoc || trieniosBacking.entity.registro == null}">
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+								</xcp:commandButton>
+							</p:column>
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty trieniosBacking.entity.tipodocFk.instrucoes}" />
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{trieniosBacking.entity.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:date
+						id="txtDatadoc"
+						value="#{trieniosBacking.entity.datadoc}"
+						label="#{bundle.lbl_datadoc}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{trieniosBacking.entity.obs}"
+						size="400" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<ui:include src="DocManual/NewDocDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{trieniosBacking.newdocmodel}" />
+		</ui:include>
+
+	</ui:define>
+
+
+</ui:composition>

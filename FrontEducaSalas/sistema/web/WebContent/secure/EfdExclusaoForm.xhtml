@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipoEvento"
+					value="#{efdExclusaoBacking.helper.esocTipoEvento}"
+					label="#{bundle.lbl_evento}"
+					required="true"
+					query="efd_tipo_evento"
+					size="3"
+					update=":form"
+					selectionListener="#{efdExclusaoBacking.selectTipoEvento}" />
+
+				<xcp:text
+					id="txtDesPk"
+					value="#{efdExclusaoBacking.helper.desPk}"
+					label="#{bundle.lbl_desPk}"
+					required="true"
+					rendered="#{efdExclusaoBacking.eventoBasico}"
+					size="20" />
+
+				<xcp:cpf
+					id="txtCpf"
+					value="#{efdExclusaoBacking.helper.desCpf}"
+					label="#{bundle.lbl_cpf}"
+					rendered="#{efdExclusaoBacking.eventoPeriodico}" />
+
+				<xcp:cnpj
+					id="txtCnpj"
+					value="#{efdExclusaoBacking.helper.desCnpj}"
+					label="#{bundle.lbl_cnpj}"
+					rendered="#{efdExclusaoBacking.eventoPeriodico}" />
+
+				<xcp:date
+					id="txtDtApuracao"
+					value="#{efdExclusaoBacking.helper.dtApuracao}"
+					required="true"
+					label="#{bundle.lbl_dtapuracao}"
+					rendered="#{efdExclusaoBacking.eventoPeriodico}">
+					<p:ajax
+						event="change"
+						listener="#{efdExclusaoBacking.selectDataApuracao}"
+						update="txtDesRecibo"
+						process="@this txtCpf txtCnpj" />
+					<p:ajax
+						event="dateSelect"
+						listener="#{efdExclusaoBacking.selectDataApuracao}"
+						update="txtDesRecibo"
+						process="@this txtCpf txtCnpj" />
+				</xcp:date>
+
+				<xcp:text
+					id="txtDesRecibo"
+					value="#{efdExclusaoBacking.helper.desRecibo}"
+					label="#{bundle.lbl_desRecibo}"
+					required="true"
+					rendered="#{efdExclusaoBacking.eventoPeriodico}"
+					size="30" />
+
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="txtExecutar"
+						value="#{bundle.btn_executar}"
+						action="#{efdExclusaoBacking.actionExecutar}"
+						disabled="#{efdExclusaoBacking.helper.esocTipoEvento == null}" />
+				</f:facet>
+			</p:toolbar>
+
+			<script>
+			  var el = document.getElementById('form');
+			  var divs = el.getElementsByTagName('div');
+	
+			  for(i = 0;i &lt;  divs.length; i++) {
+				 var currEl = divs[i];
+				 if(currEl.childNodes.length == 0 ){
+					 currEl.parentNode.style.padding = '0px';
+			     }
+			  }
+		</script>
+
+
+		</xcp:panelContent>
+
+
+	</ui:define>
+</ui:composition>

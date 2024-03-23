@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags">
+	
+		<style type="text/css">
+		
+		.ui-outputpanel > div.anexo-documento,
+		.ui-outputpanel.anexo-documento {
+			position: relative;
+			padding-right: 25px;
+		}
+
+		.ui-outputpanel > div.anexo-documento::after,
+		.ui-outputpanel.anexo-documento::after {
+	        content: '\f0c6';
+		    color: rgb(0, 136, 204);
+		    position: absolute;
+		    top: -1px;
+		    right: -5px;
+		    font-size: 14px;
+		    font-family: 'FontAwesome';
+		    font-weight: normal;
+		    padding: 5px 7px;
+		    border-radius: 50%;
+		}
+		
+		.ui-fieldset.anexo-documento {
+		    position: relative;
+		}
+		
+		.ui-fieldset.anexo-documento::after {
+			content: '\f0c6';
+		    color: rgb(0, 136, 204);
+		    position: absolute;
+		    top: 8px;
+		    right: -3px;
+		    font-size: 14px;
+		    font-family: 'FontAwesome';
+		    font-weight: normal;
+		    padding: 5px 7px;
+		    border-radius: 50%;
+   		}
+   		
+		.ui-outputpanel > div.anexo-documento.anexo-ausente::after,
+		.ui-outputpanel.anexo-documento.anexo-ausente::after,
+		.ui-fieldset.anexo-documento.anexo-ausente::after {
+		    color: rgb(175,175,175);
+   		}
+
+   		.panel-grid-deficiencia .ui-outputpanel.anexo-documento {
+   			padding-right: 0;
+		}
+		   		
+   		.panel-grid-deficiencia .ui-outputpanel.anexo-documento::after {
+		    right: -55px;
+   		} 
+		
+		</style>
+
+	
+
+	<!-- Upload/Download Documentos -->
+	<xcpfunc:menuDocumento
+		idComponente="txtCpfInc"
+		tipdocumento="4" />
+
+	<xcpfunc:menuDocumento
+		idComponente="txtCpfInc_l"
+		tipdocumento="4" />
+	
+	<xcpfunc:menuDocumento
+		idComponente="txtNomeCabInc"
+		tipdocumento="12" />
+
+	<xcpfunc:menuDocumento
+		idComponente="txtNomeCabInc_l"
+		tipdocumento="12" />
+
+	<h:panelGrid columns="2">
+
+		<h:panelGrid
+			columns="4"
+			columnClasses="form_label,form_content,form_label,form_content"
+			styleClass="tabela_alinhamento">
+
+			<p:outputLabel
+				id="lblMat"
+				value="#{bundle.lbl_matricula}" />
+
+			<p:outputPanel>
+				<xcp:number
+					id="txtMatriculaCabInc"
+					label="#{bundle.lbl_matricula}"
+					value="#{funcionariosBacking.entity.matricula}"
+					readonly="#{!funcionariosBacking.helper.novo or !funcionariosBacking.informaMatricula}"
+					size="10"
+					simple="true"
+					maxValue="9999999999"
+					rendered="#{!funcionariosBacking.telaCopiarCandidato}">
+				</xcp:number>
+
+				<xcp:number
+					id="txtMatriculaNova"
+					label="#{bundle.lbl_matricula}"
+					value="#{funcionariosBacking.helper.matriculaNova}"
+					size="10"
+					simple="true"
+					maxValue="9999999999"
+					required="#{funcionariosBacking.informaMatricula}"
+					readonly="#{!funcionariosBacking.informaMatricula}"
+					rendered="#{funcionariosBacking.telaCopiarCandidato}">
+					<p:ajax
+						event="change"
+						listener="#{funcionariosBacking.validaMatricula}"
+						update="txtMatriculaNova,txtMatriculaNova_l" />
+				</xcp:number>
+			</p:outputPanel>
+
+			<xcp:date
+				id="txtAdmissaoInc"
+				required="true"
+				value="#{funcionariosBacking.entity.admissao}"
+				label="#{bundle.lbl_dtadmissao}"
+				readonly="#{!funcionariosBacking.entity.novo}">
+				<p:ajax
+					event="change"
+					update=":#{p:component('txtDtbasets')},:#{p:component('txtDtbasets_l')},:#{p:component('brdEstagiario')},:#{p:component('lovConvAdi')},:#{p:component('lovConv')}"
+					listener="#{funcionariosBacking.changeDtaAdmissao}" />
+				<p:ajax
+					event="dateSelect"
+					update=":#{p:component('txtDtbasets')},:#{p:component('txtDtbasets_l')},:#{p:component('brdEstagiario')},:#{p:component('lovConvAdi')},:#{p:component('lovConv')}"
+					listener="#{funcionariosBacking.changeDtaAdmissao}" />
+			</xcp:date>
+
+			<xcp:text
+				id="txtNomeCabInc"
+				label="#{bundle.lbl_nome}"
+				inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(12) }"
+				required="true"
+				value="#{funcionariosBacking.entity.nome}"
+				size="60"
+				style="margin-left: 5px;"
+				readonly="#{funcionariosBacking.readOnlyCamposMov}" />
+
+			<xcp:lov
+				id="lovTipmovInc"
+				value="#{funcionariosBacking.entity.tipmovFk}"
+				label="#{bundle.lbl_tipmov}"
+				query="#{funcionariosBacking.lov}"
+				size="4"
+				required="true"
+				readonly="#{funcionariosBacking.telaCopiarCandidato || (!(funcionariosBacking.helper.inativos || funcionariosBacking.helper.preContrato || (funcionariosBacking.helper.estatutario and funcionariosBacking.helper.classificacao == 0)) and funcionariosBacking.entity.empresa == 1)}" />
+
+			<xcp:cpf
+				id="txtCpfInc"
+				label="#{bundle.lbl_cpf}"
+				inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(4) }"
+				required="true"
+				value="#{funcionariosBacking.entity.cpf}"
+				size="26"
+				style="margin-left: 5px;"
+				rendered="#{empty show_cpf or show_cpf}">
+				<p:ajax
+					event="blur"
+					listener="#{funcionariosBacking.buscaDuplovinculo}"
+					update=":#{p:component('txtMtoutrovinc')},txtCpfInc,:#{p:component('brdEstagiario')}" />
+			</xcp:cpf>
+
+			<xcp:date
+				id="txtDtmovInc"
+				value="#{funcionariosBacking.entity.dtmov}"
+				label="#{bundle.lbl_dtmov}" 
+				readonly="#{!(funcionariosBacking.helper.inativos || funcionariosBacking.helper.preContrato) and funcionariosBacking.entity.empresa == 1}"/>
+		</h:panelGrid>
+
+		<p:panel
+			style="border:none;"
+			id="panelFoto"
+			rendered="#{!funcionariosBacking.entity.novo}">
+
+			<xcp:commandLink
+				id="btn_selecao_foto"
+				immediate="true"
+				oncomplete="PF('dlgFoto_w').show()"
+				disabled="#{consulta || funcionariosBacking.disabledGravar}">
+				<f:setPropertyActionListener
+					target="#{funcionariosBacking.tipdocumentoUpload}"
+					value="1" />
+				<p:fieldset
+					style="width:85px; height:110px; border:1px solid #cccccc; margin-bottom:10px; text-align: center; line-height: 110px; ">
+					<p:graphicImage
+						id="imgFoto"
+						value="#{funcionariosBacking.getDesPathDoc(1)}"
+						cache="false"
+						style="max-width:85px; max-height:110px ;padding:0px; border:none; vertical-align: middle;" />
+				</p:fieldset>
+			</xcp:commandLink>
+		</p:panel>
+
+	</h:panelGrid>
+</ui:composition>

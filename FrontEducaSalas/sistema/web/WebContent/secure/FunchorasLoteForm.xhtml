@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent backing="#{funchorasLoteBacking}">
+			<p:outputPanel id="panelGeral">
+				<xcp:panelForm>
+					<p:blockUI
+						widgetVar="wBlock_panelGeral"
+						block="panelGeral"
+						trigger="btn_excluir_banco,btn_gerar_banco,btn_buscar,btn_limpar">
+						<!-- <p:graphicImage value="/resources/img/ajaxloadingbar.gif" /> -->
+					</p:blockUI>
+
+					<h:panelGroup
+						id="panelTransf"
+						layout="block">
+						<xcp:border
+							id="brd_dados_geracao"
+							header="#{bundle.tit_dados_geracao}">
+
+							<xcp:lov
+								id="lovAcordo"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.acordoFk}"
+								label="#{bundle.lbl_acordo}"
+								required="true"
+								query="bancohoras"
+								selectionListener="#{funchorasLoteBacking.selectAcordo}"
+								update="txtQtdtrab,txtQtdtrab_l,txtQtdfolga,txtQtdfolga_l,lovJornada,lovJornada_l,tblFuncionarios,lovSetorLanc,lovSetorLanc_l"
+								size="5" />
+
+							<xcp:date
+								id="txtDtinicio"
+								required="true"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.dtinicio}"
+								label="#{bundle.lbl_dtinicio}" />
+
+							<xcp:date
+								id="txtDtfim"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.dtfim}"
+								label="#{bundle.lbl_dtfim}" />
+
+							<xcp:lov
+								id="lovSetorLanc"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.setorFk}"
+								label="#{bundle.lbl_setor}"
+								rendered="#{funchorasLoteBacking.helper.dadosGeracao.acordoFk.tipoLancamento == 2}"
+								query="setores"
+								size="10" />
+
+							<xcp:lov
+								id="lovTipodoc"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.tipodocFk}"
+								selectionListener="#{funchorasLoteBacking.selectTipodocumento}"
+								size="5"
+								update="lovProcesso,lovProcesso_l"
+								label="#{bundle.lbl_tipodoc}"
+								query="tipodocumento_inf_fu" />
+
+							<xcp:lov
+								id="lovProcesso"
+								rendered="#{funchorasLoteBacking.helper.dadosGeracao.tipodocFk != null}"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.processoFk}"
+								label="#{bundle.lbl_processo}"
+								query="processos"
+								size="25" />
+
+							<xcp:timeNumber
+								id="txtQtdtrab"
+								label="#{bundle.lbl_qtdtrab}"
+								size="11"
+								required="true"
+								rendered="#{funchorasLoteBacking.renderedQtdTrab}"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.qtdtrab}"
+								precision="8"
+								scale="2" />
+
+							<xcp:lov
+								id="lovJornada"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.jornadaFk}"
+								label="#{bundle.lbl_jornada}"
+								required="true"
+								rendered="#{!funchorasLoteBacking.renderedQtdTrab}"
+								query="jornadas"
+								size="4" />
+
+							<xcp:timeNumber
+								id="txtQtdfolga"
+								label="#{bundle.lbl_qtdfolga}"
+								size="11"
+								rendered="#{funchorasLoteBacking.renderedQtdTrab}"
+								value="#{funchorasLoteBacking.helper.dadosGeracao.qtdfolga}"
+								precision="8"
+								scale="2" />
+						</xcp:border>
+
+						<p:fieldset legend="#{bundle.tit_dados_filtro}">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovOrgao"
+									value="#{funchorasLoteBacking.helper.orgao}"
+									label="#{bundle.lbl_orgao}"
+									query="orgaos"
+									size="10" />
+
+								<xcp:lov
+									id="lovDivisao"
+									value="#{funchorasLoteBacking.helper.divisao}"
+									params="#{funchorasLoteBacking.paramsDivisao}"
+									label="#{bundle.lbl_divisao}"
+									query="divisoes_orgao"
+									size="10" />
+
+								<xcp:lov
+									id="lovSetor"
+									value="#{funchorasLoteBacking.helper.setor}"
+									label="#{bundle.lbl_setor}"
+									params="#{funchorasLoteBacking.paramsSetor}"
+									query="set_div_validade"
+									size="10" />
+
+								<xcp:lov
+									id="lovFuncoes"
+									value="#{funchorasLoteBacking.helper.funcoes}"
+									label="#{bundle.lbl_funcoes}"
+									query="funcoes"
+									size="10" />
+
+							</xcp:panelForm>
+
+							<xcp:commandButton
+								id="btn_buscar"
+								value="#{bundle.btn_buscar}"
+								style="margin-top:10px;margin-bottom:10px"
+								icon="ui-icon-search"
+								action="#{funchorasLoteBacking.actionBuscar}"
+								update="tblFuncionarios" />
+
+
+						</p:fieldset>
+
+						<p:spacer width="5" />
+
+						<p:fieldset legend="#{bundle.tit_individual}">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovMatricula"
+									value="#{funchorasLoteBacking.helper.funcionariosTipMov}"
+									label="#{bundle.lbl_funcionario}"
+									query="funcionariosLovFuncH"
+									params="#{funchorasLoteBacking.paramsFunc}"
+									update="tblFuncionarios"
+									size="6" />
+							</xcp:panelForm>
+
+							<xcp:commandButton
+								id="btn_adicionar"
+								style="margin-top:10px;margin-bottom:10px"
+								value="#{bundle.btn_buscar}"
+								icon="ui-icon-search"
+								action="#{funchorasLoteBacking.actionAdicionaFuncionario}"
+								update="lovMatricula tblFuncionarios" />
+						</p:fieldset>
+
+						<p:spacer width="5" />
+
+						<p:fieldset>
+
+							<xcp:commandButton
+								id="btn_limpar"
+								value="#{bundle.btn_limparSelecao}"
+								style="margin-top:10px;margin-bottom:10px"
+								icon="ui-icon-search"
+								action="#{funchorasLoteBacking.actionLimparSelecao}"
+								update="tblFuncionarios" />
+
+							<p:dataTable
+								id="tblFuncionarios"
+								var="row"
+								rowKey="#{row}"
+								value="#{funchorasLoteBacking.helper.listaFuncionarios}"
+								selection="#{funchorasLoteBacking.helper.listaFuncionariosSel}"
+								sortMode="multiple"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								scrollable="true"
+								filteredValue="#{funchorasLoteBacking.helper.listaFiltrados}"
+								widgetVar="tblFunc_w">
+
+								<p:column
+									selectionMode="multiple"
+									style="width:1%;text-align:center" />
+
+								<p:ajax
+									event="filter"
+									oncomplete="refresh();" />
+
+								<xcp:column
+									headerText="#{bundle.col_matricula}"
+									value="#{row.matricula}"
+									type="Number"
+									size="8">
+									<xcp:outputSimpleNumber
+										value="#{row.matricula}"
+										precision="10"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_descricao}"
+									value="#{row.nome}"
+									type="String"
+									size="20">
+									<xcp:outputSimple value="#{row.nome}" />
+								</xcp:column>
+
+
+								<xcp:column
+									headerText="#{bundle.col_hrAut}"
+									value="#{row.hrAut}"
+									rendered="#{funchorasLoteBacking.renderedQtdTrab}"
+									type="Number"
+									size="10">
+									<xcp:outputSimpleTimeNumber value="#{row.hrAut}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_codJornada}"
+									value="#{row.jornadaFk.jornada}"
+									rendered="#{!funchorasLoteBacking.renderedQtdTrab}"
+									type="Number"
+									size="8">
+									<xcp:outputSimpleNumber
+										value="#{row.jornadaFk.jornada}"
+										precision="8"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desJornada}"
+									value="#{row.jornadaFk.desJornada}"
+									rendered="#{!funchorasLoteBacking.renderedQtdTrab}"
+									type="String"
+									size="10">
+									<xcp:outputSimple value="#{row.jornadaFk.desJornada}" />
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									size="2"
+									headerText="#{bundle.col_editar}">
+									<xcp:commandButton
+										icon="icon-editar"
+										id="btn_editar_concurso"
+										oncomplete="PF('dlgNovaQtd_w').show();"
+										update=":frmNovaData">
+										<f:setPropertyActionListener
+											target="#{funchorasLoteBacking.helper.rowEdit}"
+											value="#{row}" />
+									</xcp:commandButton>
+								</xcp:column>
+							</p:dataTable>
+						</p:fieldset>
+
+					</h:panelGroup>
+
+
+
+					<p:spacer width="5" />
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_gerar_banco"
+								value="#{bundle.btn_gerar_banco}"
+								update="tblFuncionarios"
+								action="#{funchorasLoteBacking.actionGerar}"
+								icon="ui-icon-gear" />
+
+							<xcp:commandButton
+								id="btn_excluir_banco"
+								update="tblFuncionarios"
+								value="#{bundle.btn_excluir_banco}"
+								action="#{funchorasLoteBacking.actionExcluirBanco}"
+								icon="ui-icon-gear" />
+
+						</f:facet>
+					</p:toolbar>
+
+
+				</xcp:panelForm>
+			</p:outputPanel>
+		</xcp:panelContent>
+
+		<script type="text/javascript">
+			function refresh() {
+				var value = document.getElementById("hiddenField").value;
+				if(value == '0') {
+					document.getElementById("hiddenField").value = '1';
+					PF('tblFunc_w').filter();
+                }else{
+                	document.getElementById("hiddenField").value = '0';
+                }
+			}
+			</script>
+
+
+		<h:inputHidden
+			id="hiddenField"
+			value="0" />
+	</ui:define>
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_novaQtd}"
+			modal="true"
+			id="dlgNovaQtd"
+			widgetVar="dlgNovaQtd_w">
+
+			<xcp:form id="frmNovaData">
+				<xcp:panelForm>
+
+					<xcp:timeNumber
+						id="txtHrAut"
+						required="true"
+						rendered="#{funchorasLoteBacking.renderedQtdTrab}"
+						value="#{funchorasLoteBacking.helper.rowEdit.hrAut}"
+						label="#{bundle.lbl_horasAut}" />
+
+					<xcp:lov
+						id="lovJornadaDlg"
+						value="#{funchorasLoteBacking.helper.rowEdit.jornadaFk}"
+						label="#{bundle.lbl_jornada}"
+						required="true"
+						rendered="#{!funchorasLoteBacking.renderedQtdTrab}"
+						query="jornadas"
+						size="4" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok"
+							update=":form:tblFuncionarios"
+							onclick="PF('dlgNovaQtd_w').hide();"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_ok}" />
+
+						<xcp:commandButton
+							id="btn_sair"
+							onclick="PF('dlgNovaQtd_w').hide();"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:blockUI
+					block=":form"
+					trigger="btn_ok">
+					<!-- <p:graphicImage value="/resources/img/ajaxloadingbar.gif" /> -->
+				</p:blockUI>
+
+				<p:remoteCommand
+					name="closeDlg"
+					oncomplete="PF('dlgNovaQtd_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgErros"
+			header="#{bundle.tit_dlgErrosMat}"
+			widgetVar="wDlgErros"
+			width="600"
+			resizable="true"
+			modal="true">
+
+			<h:panelGroup
+				id="mypanel"
+				layout="block"
+				style="padding-bottom: 10px;font-weight: bold;">
+				<h:outputText value="#{bundle.tit_alguns_erros}" />
+			</h:panelGroup>
+
+			<xcp:form id="formErros">
+				<p:inputTextarea
+					value="#{funchorasLoteBacking.listErrosStr}"
+					cols="110"
+					autoResize="false"
+					rows="20" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

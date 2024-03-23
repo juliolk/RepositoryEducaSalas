@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="XcpTabelaColuna"
+		backing="#{xcpTabelaColunaBacking}"
+		masterId="XcpTabela">
+
+		<ui:define name="colunas">
+			<xcp:column
+				headerText="#{bundle.col_numOrdem}"
+				value="#{row.numOrdem}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.numOrdem}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desColuna}"
+				value="#{row.desColuna}"
+				type="String"
+				size="15">
+				<xcp:outputSimple value="#{row.desColuna}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desLabel}"
+				value="#{row.desLabel}"
+				type="String"
+				size="15">
+				<xcp:outputSimple value="#{row.desLabel}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_seqParametro}"
+				value="#{row.seqParametroFk.tipParametro}"
+				itens="#{xcpTipoCampoBacking.itensTipParametro}"
+				type="String"
+				size="10">
+				<xcp:outputSimple
+					value="#{row.seqParametroFk.tipParametro}"
+					itens="#{xcpTipoCampoBacking.itensTipParametro}" />
+			</xcp:column>
+			
+			<!-- 
+				<xcp:column
+					headerText="#{bundle.col_numGrupo}"
+					value="#{row.numGrupo}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.numGrupo}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indObrigatorio}"
+					value="#{row.indObrigatorio}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.indObrigatorio}"
+						precision="1"
+						scale="0" />
+				</xcp:column>
+ -->
+
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:text
+					id="txtDesColuna"
+					label="#{bundle.lbl_desColuna}"
+					required="true"
+					value="#{xcpTabelaColunaBacking.entity.desColuna}"
+					size="20"
+					readonly="#{not xcpTabelaColunaBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDesLabel"
+					label="#{bundle.lbl_desLabel}"
+					required="true"
+					value="#{xcpTabelaColunaBacking.entity.desLabel}"
+					size="30" />
+
+				<xcp:lov
+					id="lovSeqParametro"
+					value="#{xcpTabelaColunaBacking.entity.seqParametroFk}"
+					label="#{bundle.lbl_seqParametro}"
+					required="true"
+					query="xcp_tipo_campo"
+					size="10" />
+
+				<xcp:number
+					id="txtNumGrupo"
+					label="#{bundle.lbl_numGrupo}"
+					required="true"
+					value="#{xcpTabelaColunaBacking.entity.numGrupo}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtNumOrdem"
+					label="#{bundle.lbl_numOrdem}"
+					required="true"
+					value="#{xcpTabelaColunaBacking.entity.numOrdem}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:radio
+					id="radioIndObrigatorio"
+					value="#{xcpTabelaColunaBacking.entity.indObrigatorio}"
+					label="#{bundle.lbl_indObrigatorio}"
+					required="true"
+					itens="#{xcpTabelaColunaBacking.itensIndSimNao}" />
+
+				<xcp:radio
+					id="radioIndDisponivelRecadastramento"
+					value="#{xcpTabelaColunaBacking.entity.indDisponivelRecadastramento}"
+					label="#{bundle.lbl_disponivel_recadastramento}"
+					required="true"
+					itens="#{xcpTabelaColunaBacking.itensIndSimNao}"
+					rendered="#{xcpTabelaBacking.entity.desTabela.equals('FUNCIONARIOS')}">
+					<p:ajax update="radioIndSolicitaAnexo" event="change"/>
+				</xcp:radio>
+
+				<xcp:radio
+					id="radioIndSolicitaAnexo"
+					value="#{xcpTabelaColunaBacking.entity.indSolicitaAnexo}"
+					label="#{bundle.lbl_solicita_anexo}"
+					rendered="#{xcpTabelaBacking.entity.desTabela.equals('FUNCIONARIOS')}"
+					readonly="#{xcpTabelaColunaBacking.entity.indDisponivelRecadastramento == 0}"
+					itens="#{xcpTabelaColunaBacking.itensIndSimNao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

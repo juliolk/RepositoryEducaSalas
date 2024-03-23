@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent multipart="true">
+
+			<style>
+#form\:txtData_l label {
+	font-size: 20px !important;
+}
+
+#form\:txtData {
+	font-size: 20px !important;
+}
+</style>
+
+			<xcp:panelForm>
+				<xcp:outputDate
+					id="txtData"
+					label="#{bundle.lbl_referencia}:"
+					value="#{reservaPortalBacking.helper.referencia}" />
+			</xcp:panelForm>
+
+			<p:dataTable
+				id="tbl"
+				var="row"
+				value="#{reservaPortalBacking.helper.list}"
+				filteredValue="#{reservaPortalBacking.helper.listFiltrados}"
+				rows="10"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				paginatorPosition="bottom"
+				selectionMode="single"
+				resizableColumns="true"
+				rowKey="#{row}"
+				widgetVar="tbl_w">
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					type="Number"
+					value="#{row.matricula}">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="String"
+					value="#{row.nome}">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cpf}"
+					type="String"
+					value="#{row.cpf}">
+					<xcp:outputSimpleCpf value="#{row.cpf}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valormargem}"
+					type="Number"
+					value="#{row.valor}">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_reservado}"
+					type="Number"
+					value="#{row.reservado}">
+					<xcp:outputSimpleNumber
+						value="#{row.reservado}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<p:column headerText="#{bundle.col_acoes}">
+					<xcp:commandButton
+						id="btn_editarSel"
+						icon="icon-navegar"
+						update=":frmReservas"
+						action="#{reservaPortalBacking.actionOpenDialogReservas(row)}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgReservas"
+			modal="true"
+			widgetVar="dlgReservas_w"
+			header="#{bundle.title_dlgReservas}"
+			width="500px">
+			<xcp:form id="frmReservas">
+				<p:dataTable
+					id="tbl"
+					var="row"
+					value="#{reservaPortalBacking.helper.listReservas}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{row}">
+
+					<p:column
+						headerText="#{bundle.col_consig}"
+						style="text-align: center;">
+						<xcp:outputSimple value="#{row.consigFk.nome}" />
+					</p:column>
+
+					<p:column
+						headerText="#{bundle.col_valor}"
+						style="text-align: center;">
+						<xcp:outputSimpleNumber
+							value="#{row.valor}"
+							precision="8"
+							scale="2" />
+					</p:column>
+
+					<p:column
+						headerText="#{bundle.col_acoes}"
+						style="text-align: center;">
+						<xcp:commandButton
+							id="btn_editarSel"
+							icon="icon-navegar"
+							update=":frmReserva"
+							action="#{reservaPortalBacking.actionEditReserva(row)}"
+							rendered="#{reservaPortalBacking.canModify(row)}" />
+						<xcp:commandButton
+							id="btn_excluir"
+							icon="ui-icon-trash"
+							update="tbl :form:tbl"
+							action="#{reservaPortalBacking.actionRemoveReserva(row)}"
+							rendered="#{reservaPortalBacking.canModify(row)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</p:column>
+
+				</p:dataTable>
+				<center>
+					<xcp:commandButton
+						id="btn_novo"
+						icon="ui-icon-document"
+						value="#{bundle.btn_novo}"
+						action="#{reservaPortalBacking.actionNovaReserva}"
+						process="@form"
+						update=":frmReserva" />
+				</center>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgReserva"
+			modal="true"
+			widgetVar="dlgReserva_w"
+			header="#{bundle.title_dlgReserva}"
+			width="500px">
+			<xcp:form id="frmReserva">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						value="#{reservaPortalBacking.helper.reserva.valor}"
+						size="10"
+						precision="8"
+						scale="2" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarNovaMat"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":frmReservas :form"
+							action="#{reservaPortalBacking.actionGravaReserva}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

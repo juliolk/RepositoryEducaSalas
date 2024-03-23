@@ -1,0 +1,2023 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+    template="#{xcp:getLayout('manut')}">
+    <ui:define name="conteudo">
+
+        <style type="text/css">
+.header-photo-container .header-photo-link.ui-state-disabled {
+    opacity: 1 !important;
+}
+
+.txt-uppercase {
+    text-transform: uppercase !important;
+}
+</style>
+
+        <div class="content_bg-gray">
+
+            <xcp:panelContent>
+
+                <p:outputPanel
+                    class="section-header section-header-photo secondary-bgcolor ui-content-no-space-top ui-content-no-space-bottom">
+                    <div class="section-info">
+                        <div class="header-photo-container">
+                            <xcp:commandLink
+                                id="#{ solicitacoesPortalBacking.isPermitidoAlterarFoto() ? 'btn_selecao_foto' : 'btn_selecao_foto_desabilitado' }"
+                                immediate="true"
+                                disabled="#{not solicitacoesPortalBacking.isPermitidoAlterarFoto()}"
+                                styleClass="header-photo-link"
+                                oncomplete="PF('dlgFoto_w').show()">
+                                <f:setPropertyActionListener
+                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                    value="1" />
+                                <p:graphicImage
+                                    id="imgFoto"
+                                    styleClass="header-photo-img"
+                                    value="#{solicitacoesPortalBacking.getDesPathDoc(1)}"
+                                    cache="false" />
+                            </xcp:commandLink>
+                        </div>
+                        <div>
+                            <h1>#{solicitacoesPortalBacking.entity.nome}</h1>
+                            <p>CPF: #{solicitacoesPortalBacking.cpfFuncionario}</p>
+                        </div>
+                    </div>
+
+                </p:outputPanel>
+
+                <p:outputPanel class="shadow-top-inset ui-content-full-width">
+
+                    <div class="main-actions-container"></div>
+
+                    <p:outputPanel
+                        rendered="#{solicitacoesPortalBacking.ultimaSolicitacao != null}">
+                        <div
+                            class="alert #{ solicitacoesPortalBacking.getAlertaSituacaoUltimaSolicitacao() } nomargins shadow-top-inset"
+                            role="alert">
+
+                            <i class="fa fa-fw fa-info-circle alert-icon"></i>
+
+                            <h5>
+                                Última solicitação:
+                                <xcp:outputSimple
+                                    value="#{solicitacoesPortalBacking.getDataUltimaSolicitacao()}" />
+                                -
+                                <xcp:outputSimple
+                                    value="#{solicitacoesPortalBacking.getMensagemSituacaoUltimaSolicitacao()}" />
+                            </h5>
+                        </div>
+                    </p:outputPanel>
+
+                    <div class="datacard-container">
+
+                        <xcp:panelVinculoEval
+                            value="#{solicitacoesPortalBacking.vinculoFuncionario}">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p:outputPanel>
+                                        <h1 class="datacard-container-title">#{bundle.tit_pessoais}</h1>
+                                    </p:outputPanel>
+
+                                    <div class="datacard-listcontainer">
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">
+                                                #{bundle.tit_informacoes_gerais}</div>
+                                            <p:outputPanel
+                                                id="pnl_dados_geral"
+                                                class="datacard-content">
+
+                                                <xcp:panelForm
+                                                    id="form_dados_geral"
+                                                    floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:text
+                                                                id="txtNomePortal"
+                                                                label="#{bundle.lbl_nome}"
+                                                                value="#{solicitacoesPortalBacking.entity.nome}"
+                                                                class="txt-uppercase"
+                                                                readonly="#{ not solicitacoesPortalBacking.isPermitidoAlterarNome() }"
+                                                                size="60" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:cpf
+                                                                id="txtCpfIncPortal"
+                                                                label="#{bundle.lbl_cpf}"
+                                                                readonly="true"
+                                                                value="#{solicitacoesPortalBacking.entity.cpf}"
+                                                                size="26" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel id="pnlcompcpf">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(4)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_cpf}"
+                                                                        data-content="#{bundle.msg_comprovante_cpf}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_cpf}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="4" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(4)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:date
+                                                                id="txtDtnascimentoPortal"
+                                                                readonly="#{ not solicitacoesPortalBacking.isPermitidoAlterarDataNascimento() }"
+                                                                value="#{solicitacoesPortalBacking.entity.dtnascimento}"
+                                                                label="#{bundle.lbl_dtnascimento}"
+                                                                size="10" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:combo
+                                                                id="cboSexoPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.sexo}"
+                                                                required="true"
+                                                                noFloat="true"
+                                                                label="#{bundle.lbl_sexo}"
+                                                                itens="#{solicitacoesPortalBacking.itensSexo}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:pis
+                                                                id="txtPisPortal"
+                                                                label="#{bundle.lbl_pis}"
+                                                                value="#{solicitacoesPortalBacking.entity.pis}"
+                                                                size="26" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:combo
+                                                                id="cboSetorPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.setor}"
+                                                                required="true"
+                                                                label="#{bundle.lbl_setor}"
+                                                                itens="#{solicitacoesPortalBacking.itensSetor}"
+                                                                rendered="#{solicitacoesPortalBacking.canRenderSetor()}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel
+                                                                id="pnlcompset"
+                                                                rendered="#{solicitacoesPortalBacking.canRenderSetor()}">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(13)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_setor}"
+                                                                        data-content="#{bundle.msg_comprovante_setor}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_setor}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="13" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(13)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:combo
+                                                                id="cboECPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.ec}"
+                                                                required="true"
+                                                                label="#{bundle.lbl_ec}"
+                                                                itens="#{solicitacoesPortalBacking.itensECFuncNull}">
+                                                                <p:ajax
+                                                                    event="change"
+                                                                    update="pnl_dados_filiacao pnl_uniao :form:pnluniaoupl"
+                                                                    listener="#{solicitacoesPortalBacking.actionAlteraEstadoCivil}" />
+                                                            </xcp:combo>
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel id="pnlcompestcivil">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(7)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_estado_civil}"
+                                                                        data-content="#{bundle.msg_comprovante_estado_civil}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_estado_civil}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="7" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(7)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel id="pnl_uniao">
+                                                                <xcp:combo
+                                                                    id="cboUniaoEstPortal"
+                                                                    value="#{solicitacoesPortalBacking.entity.uniaoestavel}"
+                                                                    required="true"
+                                                                    label="#{bundle.lbl_uniaoestavel}"
+                                                                    itens="#{solicitacoesPortalBacking.itensIndSimNaoNull}"
+                                                                    rendered="#{solicitacoesPortalBacking.renderedUniaoEstavel}">
+                                                                    <p:ajax
+                                                                        event="change"
+                                                                        listener="#{solicitacoesPortalBacking.actionAlteraEstadoCivil}"
+                                                                        update="pnl_dados_filiacao :form:pnluniaoupl" />
+                                                                </xcp:combo>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel id="pnluniaoupl">
+                                                                <p:outputPanel
+                                                                    rendered="#{solicitacoesPortalBacking.renderedUniaoEstavel and solicitacoesPortalBacking.entity.uniaoestavel == 1}">
+                                                                    <div class="doc-upload-container">
+                                                                        <div
+                                                                            class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(17)}"
+                                                                            data-container="body"
+                                                                            data-toggle="popover"
+                                                                            data-trigger="hover"
+                                                                            title="#{bundle.lbl_comprovante_uniaoestavel}"
+                                                                            data-content="#{bundle.msg_comprovante_uniaoestavel}">
+
+                                                                            <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                            <div class="doc-upload-title">#{bundle.lbl_comprovante_uniaoestavel}</div>
+                                                                            <div class="doc-upload-content">
+                                                                                <p:commandButton
+                                                                                    value="Enviar"
+                                                                                    oncomplete="PF('dlgFoto_w').show()"
+                                                                                    update=":formfoto">
+                                                                                    <f:setPropertyActionListener
+                                                                                        target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                        value="17" />
+                                                                                </p:commandButton>
+                                                                                <p:button
+                                                                                    value="Visualizar"
+                                                                                    styleClass="btn-visualizar-doc"
+                                                                                    href="#{solicitacoesPortalBacking.getDesPathDoc(17)}"
+                                                                                    target="_blank" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </p:outputPanel>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:fone
+                                                                id="txtFonePortal"
+                                                                label="#{bundle.lbl_fone}"
+                                                                value="#{solicitacoesPortalBacking.entity.fone}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:fone
+                                                                id="txtCelularPortal"
+                                                                label="#{bundle.lbl_celular}"
+                                                                value="#{solicitacoesPortalBacking.entity.celular}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:email
+                                                                id="txtEmailPortal"
+                                                                label="#{bundle.lbl_email}"
+                                                                value="#{solicitacoesPortalBacking.entity.email}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:combo
+                                                                id="cboGrauInstPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.grauinst}"
+                                                                required="true"
+                                                                label="#{bundle.lbl_GrauInst}"
+                                                                itens="#{solicitacoesPortalBacking.itensGrauInst}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel id="pnlcompgrau">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(11)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_grau_instrucao}"
+                                                                        data-content="#{bundle.msg_comprovante_grau_instrucao}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_grau_instrucao}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="11" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(11)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:text
+                                                                id="txtReservistaPortal"
+                                                                label="#{bundle.lbl_reservista}"
+                                                                value="#{solicitacoesPortalBacking.entity.reservista}"
+                                                                maxlength="14" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel id="pnlcompreser">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(16)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_reservista}"
+                                                                        data-content="#{bundle.msg_comprovante_reservista}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_reservista}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="16" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(16)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:number
+                                                                id="txtReservistacatPortal"
+                                                                label="#{bundle.lbl_reservistacat}"
+                                                                value="#{solicitacoesPortalBacking.entity.reservistacat}"
+                                                                maxlength="2"
+                                                                maxValue="99" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:combo
+                                                                id="cboCorPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.cor}"
+                                                                required="true"
+                                                                label="#{bundle.lbl_cor}"
+                                                                itens="#{solicitacoesPortalBacking.itensCor}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:combo
+                                                                id="cboDeficienciasPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.deficiente}"
+                                                                required="true"
+                                                                label="#{bundle.lbl_deficiencias}"
+                                                                itens="#{solicitacoesPortalBacking.itensDeficiencias}" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <p:outputPanel id="pnlcompdef">
+                                                                <div
+                                                                    id="uploadcomprovantedeficiencia"
+                                                                    class="doc-upload-container"
+                                                                    style="display:#{solicitacoesPortalBacking.entity.deficiente == 0 ? 'none' : 'block'};">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(14)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_deficiencia}"
+                                                                        data-content="#{bundle.msg_comprovante_deficiencia}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_deficiencia}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="14" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(14)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:lov
+                                                                id="lovCidadeNaturalPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.naturalFk}"
+                                                                label="#{bundle.lbl_natural}"
+                                                                query="cidades"
+                                                                size="8"
+                                                                sizeDesc="48" />
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-6"></div>
+                                                    </div>
+
+
+                                                </xcp:panelForm>
+
+                                            </p:outputPanel>
+                                        </div>
+
+
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">
+                                                #{bundle.lbl_titulo_emails_adic}
+
+                                                <h:commandLink
+                                                    id="btn_add_email"
+                                                    href="#"
+                                                    immediate="true"
+                                                    rendered="#{solicitacoesPortalBacking.statusTela == 1}"
+                                                    action="#{solicitacoesPortalBacking.actionNovoEmail}"
+                                                    styleClass="datacard-icon-action"
+                                                    title="Adicionar #{bundle.lbl_email}">
+
+                                                    <p:ajax
+                                                        update=":frmDlgEmail"
+                                                        onstart="PF('w_dlgXcpExecStatus').show();"
+                                                        oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgEmail_w').show();" />
+
+                                                    <i class="fa fa-fw fa-plus"></i> Adicionar
+                                                    </h:commandLink>
+
+                                            </div>
+                                            <p:outputPanel
+                                                id="pnl_dados_email"
+                                                class="datacard-content">
+
+                                                <ui:fragment
+                                                    rendered="#{empty solicitacoesPortalBacking.listaEmail}">
+                                                    <div class="datacard-empty-message">Nenhum email
+                                                        informado.</div>
+                                                </ui:fragment>
+
+                                                <ul class="datacard-itemslist-container">
+                                                    <ui:repeat
+                                                        id="repeademail"
+                                                        var="email"
+                                                        value="#{solicitacoesPortalBacking.listaEmail}">
+                                                        <li class="datacard-item container-fluid">
+                                                            <div class="datacard-item-actions">
+                                                                <h:commandLink
+                                                                    id="lnkeditaremail"
+                                                                    href="#"
+                                                                    title="Editar">
+                                                                    <p:ajax
+                                                                        update=":dlgEmail :frmDlgEmail"
+                                                                        oncomplete="PF('dlgEmail_w').show();" />
+                                                                    <f:setPropertyActionListener
+                                                                        target="#{solicitacoesPortalBacking.emailSelecionado}"
+                                                                        value="#{email}" />
+                                                                    <i class="fa fa-fw fa-pencil fa-lg"></i>
+                                                                </h:commandLink>
+                                                                <xcp:commandLink
+                                                                    id="lnkrememail"
+                                                                    title="Remover"
+                                                                    update=":#{p:component('pnl_dados_email')}"
+                                                                    action="#{solicitacoesPortalBacking.actionRemoveEmail(email)}">
+                                                                    <p:confirm
+                                                                        header="#{bundle.tit_confirma_remover} #{bundle.lbl_email}"
+                                                                        message="#{bundle.tit_confirma_exclusao}"
+                                                                        icon="ui-icon-alert" />
+
+                                                                    <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                </xcp:commandLink>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <div class="datacard-item-highlight">
+                                                                        #{email.email}</div>
+                                                                </div>
+                                                                <div class="col-md-3 datacard-item-info">
+                                                                    <span> <small>Tipo: </small> <xcp:outputSimple
+                                                                            id="outTipoEmail"
+                                                                            value="#{email.tipo}"
+                                                                            itens="#{solicitacoesPortalBacking.itensEmails}" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ui:repeat>
+                                                </ul>
+                                            </p:outputPanel>
+                                        </div>
+
+                                        <c:forEach
+                                            items="#{solicitacoesPortalBacking.gruposOrdenados}"
+                                            var="grupo">
+
+                                            <div class="datacard datacard-grouped">
+                                                <div class="datacard-title">
+                                                    #{solicitacoesPortalBacking.getTraducao('tit_FUNCIONARIOS_grp_'.concat(grupo.toString()))}
+                                                </div>
+                                                <p:outputPanel
+                                                    id="pnl_dados_campos_complementares_grupo_#{grupo}"
+                                                    class="datacard-content">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:panelForm
+                                                                id="form_dados_campos_complementares_grupo_#{grupo}"
+                                                                floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+                                                                <c:forEach
+                                                                    items="#{solicitacoesPortalBacking.xcpTabelaColunaVO.getListaParametros(grupo)}"
+                                                                    var="row">
+                                                                    <c:if test="#{row.indMostrar}">
+                                                                        <xcp:creator index="#{row.seqObjetoParametro}" />
+                                                                    </c:if>
+                                                                </c:forEach>
+
+                                                            </xcp:panelForm>
+                                                        </div>
+                                                        <div class="col-lg-7 col-md-6">
+                                                            <div class="doc-upload-list">
+
+
+                                                                <c:forEach
+                                                                    items="#{solicitacoesPortalBacking.xcpTabelaColunaVO.getListaParametros(grupo)}"
+                                                                    var="entry">
+
+                                                                    <ui:fragment
+                                                                        rendered="#{solicitacoesPortalBacking.labelsAnexosCamposComplementares.containsKey(entry.desParametroSql)}">
+
+                                                                        <div
+                                                                            class="doc-upload-container"
+                                                                            style="display: block">
+                                                                            <div
+                                                                                class="doc-upload-popover-container #{solicitacoesPortalBacking.getStatusAnexoCampoComplementar(entry.desParametroSql)}"
+                                                                                data-container="body"
+                                                                                data-toggle="popover"
+                                                                                data-trigger="hover"
+                                                                                title="#{solicitacoesPortalBacking.getTraducao('lbl_comprovante_col_'.concat(entry.desParametroSql))}"
+                                                                                data-content="#{solicitacoesPortalBacking.getTraducao('msg_comprovante_col_'.concat(entry.desParametroSql))}">
+
+                                                                                <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                                <div class="doc-upload-title">#{solicitacoesPortalBacking.getTraducao('lbl_comprovante_col_'.concat(entry.desParametroSql))}</div>
+                                                                                <div class="doc-upload-content">
+                                                                                    <p:commandButton
+                                                                                        value="Enviar"
+                                                                                        onclick="PF('dlgUploadAnexoCamposComplementares_w').show()">
+                                                                                        <f:setPropertyActionListener
+                                                                                            target="#{solicitacoesPortalBacking.uploadCampoComplementarColuna}"
+                                                                                            value="#{entry.desParametroSql}" />
+                                                                                    </p:commandButton>
+                                                                                    <p:button
+                                                                                        value="Visualizar"
+                                                                                        styleClass="btn-visualizar-doc"
+                                                                                        href="#{solicitacoesPortalBacking.getUrlAnexoCampoComplementar(entry.desParametroSql)}"
+                                                                                        target="_blank" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </ui:fragment>
+
+                                                                </c:forEach>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p:outputPanel>
+                                            </div>
+
+                                        </c:forEach>
+
+
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">#{bundle.tit_endereco}</div>
+                                            <p:outputPanel
+                                                id="pnl_dados_endereco"
+                                                class="datacard-content">
+                                                <div class="row">
+                                                    <div class="col-lg-5 col-md-6 datacard-endereco">
+                                                        <xcp:enderecoPortal
+                                                            id="logradouroPortal"
+                                                            floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+                                                            value="#{solicitacoesPortalBacking.entity.endereco}" />
+                                                    </div>
+                                                    <div class="col-lg-7 col-md-6">
+                                                        <div class="doc-upload-list">
+                                                            <div class="doc-upload-container">
+                                                                <div
+                                                                    class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(2)}"
+                                                                    data-container="body"
+                                                                    data-toggle="popover"
+                                                                    data-trigger="hover"
+                                                                    title="#{bundle.lbl_comprovante_residencia}"
+                                                                    data-content="#{bundle.msg_comprovante_residencia}">
+
+                                                                    <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                    <div class="doc-upload-title">#{bundle.lbl_comprovante_residencia}</div>
+                                                                    <div class="doc-upload-content">
+                                                                        <p:commandButton
+                                                                            value="Enviar"
+                                                                            oncomplete="PF('dlgFoto_w').show()"
+                                                                            update=":formfoto">
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                value="2" />
+                                                                        </p:commandButton>
+                                                                        <p:button
+                                                                            value="Visualizar"
+                                                                            styleClass="btn-visualizar-doc"
+                                                                            href="#{solicitacoesPortalBacking.getDesPathDoc(2)}"
+                                                                            target="_blank" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </div>
+
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">
+                                                #{bundle.tit_dados_identidade}</div>
+                                            <p:outputPanel
+                                                id="pnl_identidade"
+                                                class="datacard-content">
+                                                <div class="row">
+                                                    <div class="col-lg-5 col-md-6">
+                                                        <xcp:panelForm
+                                                            id="form_identidade"
+                                                            floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+                                                            <xcp:text
+                                                                id="txtIdentidadePortal"
+                                                                label="#{bundle.lbl_identidade}"
+                                                                value="#{solicitacoesPortalBacking.entity.identidade}"
+                                                                size="13"
+                                                                maxlength="15" />
+                                                            <xcp:date
+                                                                id="txtDtidentidadePortal"
+                                                                value="#{solicitacoesPortalBacking.entity.dtidentidade}"
+                                                                label="#{bundle.lbl_cpdtemissao}"
+                                                                size="8" />
+                                                            <xcp:text
+                                                                id="txtOrgaoexpPortal"
+                                                                label="#{bundle.lbl_orgaoexp}"
+                                                                value="#{solicitacoesPortalBacking.entity.orgaoexp}"
+                                                                size="13"
+                                                                maxlength="16" />
+                                                            <xcp:combo
+                                                                id="cboIdentidadeufPortal"
+                                                                noFloat="true"
+                                                                value="#{solicitacoesPortalBacking.entity.identidadeuf}"
+                                                                label="#{bundle.lbl_identidadeuf}"
+                                                                itens="#{solicitacoesPortalBacking.itensUfNull}" />
+                                                        </xcp:panelForm>
+                                                    </div>
+                                                    <div class="col-lg-7 col-md-6">
+                                                        <div class="doc-upload-list">
+                                                            <div class="doc-upload-container">
+                                                                <div
+                                                                    class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(5)}"
+                                                                    data-container="body"
+                                                                    data-toggle="popover"
+                                                                    data-trigger="hover"
+                                                                    title="#{bundle.lbl_comprovante_carteira_identidade}"
+                                                                    data-content="#{bundle.msg_comprovante_carteira_identidade}">
+
+                                                                    <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                    <div class="doc-upload-title">#{bundle.lbl_comprovante_carteira_identidade}</div>
+                                                                    <div class="doc-upload-content">
+                                                                        <p:commandButton
+                                                                            id="btnEnviarIdent"
+                                                                            value="Enviar"
+                                                                            oncomplete="PF('dlgFoto_w').show()"
+                                                                            update=":formfoto">
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                value="5" />
+                                                                        </p:commandButton>
+                                                                        <p:button
+                                                                            id="btnVisIdent"
+                                                                            value="Visualizar"
+                                                                            styleClass="btn-visualizar-doc"
+                                                                            href="#{solicitacoesPortalBacking.getDesPathDoc(5)}"
+                                                                            target="_blank" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </div>
+
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">
+                                                #{bundle.tit_dados_ident_prof}</div>
+                                            <p:outputPanel
+                                                id="pnl_dados_ident_prof"
+                                                class="datacard-content">
+                                                <div class="row">
+                                                    <div class="col-lg-5 col-md-6">
+                                                        <xcp:panelForm
+                                                            id="form_ident_prof"
+                                                            floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+                                                            <xcp:text
+                                                                id="txtCredencialPortal"
+                                                                label="#{bundle.lbl_credencial}"
+                                                                value="#{solicitacoesPortalBacking.entity.credencial}"
+                                                                maxlength="20"
+                                                                size="12" />
+
+                                                            <xcp:combo
+                                                                id="cboCredenciadorPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.credenciador}"
+                                                                label="#{bundle.lbl_credenciador}"
+                                                                itens="#{solicitacoesPortalBacking.itensCredenciadoresNull}"
+                                                                noFloat="true" />
+
+                                                            <xcp:combo
+                                                                id="cboCredencialsitPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.credencialsit}"
+                                                                label="#{bundle.lbl_credencialsit}"
+                                                                itens="#{solicitacoesPortalBacking.itensCredencialSit}"
+                                                                noFloat="true" />
+
+                                                            <xcp:combo
+                                                                id="cboCredencialufPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.credencialuf}"
+                                                                label="#{bundle.lbl_credencialuf}"
+                                                                itens="#{solicitacoesPortalBacking.itensUfNull}"
+                                                                noFloat="true" />
+
+                                                        </xcp:panelForm>
+                                                    </div>
+                                                    <div class="col-lg-7 col-md-6">
+                                                        <div class="doc-upload-list">
+                                                            <p:outputPanel id="pnlcompidentprof">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(8)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_identidade_prof}"
+                                                                        data-content="#{bundle.msg_comprovante_identidade_prof}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_identidade_prof}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="8" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(8)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </div>
+
+
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">
+                                                #{bundle.tit_dados_carteira_prof}</div>
+                                            <p:outputPanel
+                                                id="pnl_dados_carteira_prof"
+                                                class="datacard-content">
+                                                <div class="row">
+                                                    <div class="col-lg-5 col-md-6">
+                                                        <xcp:panelForm
+                                                            id="form_dados_carteira_prof"
+                                                            floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+                                                            <xcp:number
+                                                                id="txtCpnumeroPortal"
+                                                                label="#{bundle.lbl_cpnumero}"
+                                                                value="#{solicitacoesPortalBacking.entity.cpnumero}"
+                                                                maxlength="8"
+                                                                maxValue="99999999"
+                                                                size="10" />
+                                                            <xcp:text
+                                                                id="txtCpseriePortal"
+                                                                label="#{bundle.lbl_cpserie}"
+                                                                value="#{solicitacoesPortalBacking.entity.cpserie}"
+                                                                size="15"
+                                                                maxlength="20" />
+                                                            <xcp:combo
+                                                                id="cboCpufPortal"
+                                                                noFloat="true"
+                                                                value="#{solicitacoesPortalBacking.entity.cpuf}"
+                                                                label="#{bundle.lbl_cpuf}"
+                                                                itens="#{solicitacoesPortalBacking.itensUfNull}" />
+                                                            <xcp:date
+                                                                id="txtCpdtemissaoPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.cpdtemissao}"
+                                                                label="#{bundle.lbl_cpdtemissao}" />
+                                                        </xcp:panelForm>
+                                                    </div>
+                                                    <div class="col-lg-7 col-md-6">
+                                                        <div class="doc-upload-list">
+                                                            <p:outputPanel id="pnlcarteiratrab">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(10)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_carteira_trabalho}"
+                                                                        data-content="#{bundle.msg_comprovante_carteira_trabalho}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_carteira_trabalho}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="10" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(10)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </div>
+
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">#{bundle.tit_dados_titulo}</div>
+                                            <p:outputPanel
+                                                id="pnl_dados_titulo"
+                                                class="datacard-content">
+                                                <div class="row">
+                                                    <div class="col-lg-5 col-md-6">
+                                                        <xcp:panelForm
+                                                            id="form_dados_titulo"
+                                                            floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+                                                            <xcp:number
+                                                                id="txtTituloPortal"
+                                                                label="#{bundle.lbl_titulo}"
+                                                                value="#{solicitacoesPortalBacking.entity.titulo}"
+                                                                size="12"
+                                                                maxValue="999999999999" />
+                                                            <xcp:number
+                                                                id="txtZonaPortal"
+                                                                label="#{bundle.lbl_zona}"
+                                                                value="#{solicitacoesPortalBacking.entity.zona}"
+                                                                size="3"
+                                                                maxValue="999" />
+                                                            <xcp:text
+                                                                id="txtSessaoPortal"
+                                                                label="#{bundle.lbl_sessao}"
+                                                                value="#{solicitacoesPortalBacking.entity.sessao}"
+                                                                size="5"
+                                                                maxValue="99999" />
+                                                            <xcp:combo
+                                                                id="cboTituloufPortal"
+                                                                noFloat="true"
+                                                                value="#{solicitacoesPortalBacking.entity.titulouf}"
+                                                                label="#{bundle.lbl_titulouf}"
+                                                                itens="#{solicitacoesPortalBacking.itensUfNull}" />
+                                                        </xcp:panelForm>
+                                                    </div>
+                                                    <div class="col-lg-7 col-md-6">
+                                                        <div class="doc-upload-list">
+                                                            <p:outputPanel id="pnltituloeleit">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(9)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_titulo_eleitor}"
+                                                                        data-content="#{bundle.msg_comprovante_titulo_eleitor}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_titulo_eleitor}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="9" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(9)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </div>
+
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">#{bundle.tit_cnh}</div>
+                                            <p:outputPanel
+                                                id="pnl_dados_cnh"
+                                                class="datacard-content">
+                                                <div class="row">
+                                                    <div class="col-lg-5 col-md-6">
+                                                        <xcp:panelForm
+                                                            id="form_dados_cnh"
+                                                            floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+                                                            <xcp:number
+                                                                id="txtCnhPortal"
+                                                                label="#{bundle.lbl_cnh}"
+                                                                value="#{solicitacoesPortalBacking.entity.cnh}"
+                                                                size="11"
+                                                                maxValue="99999999999" />
+                                                            <xcp:text
+                                                                id="txtCategoriacnhPortal"
+                                                                label="#{bundle.lbl_categoriacnh}"
+                                                                value="#{solicitacoesPortalBacking.entity.categoriacnh}"
+                                                                size="2" />
+                                                            <xcp:date
+                                                                id="txtDtvenccnhPortal"
+                                                                value="#{solicitacoesPortalBacking.entity.dtvenccnh}"
+                                                                label="#{bundle.lbl_dtvenccnh}"
+                                                                size="8" />
+                                                            <xcp:combo
+                                                                id="cboCnhufPortal"
+                                                                noFloat="true"
+                                                                value="#{solicitacoesPortalBacking.entity.cnhuf}"
+                                                                label="#{bundle.lbl_cnhuf}"
+                                                                itens="#{solicitacoesPortalBacking.itensUfNull}" />
+                                                        </xcp:panelForm>
+                                                    </div>
+                                                    <div class="col-lg-7 col-md-6">
+                                                        <div class="doc-upload-list">
+                                                            <p:outputPanel id="pnlcnh">
+                                                                <div class="doc-upload-container">
+                                                                    <div
+                                                                        class="doc-upload-popover-container #{solicitacoesPortalBacking.statusUploadDocumento(15)}"
+                                                                        data-container="body"
+                                                                        data-toggle="popover"
+                                                                        data-trigger="hover"
+                                                                        title="#{bundle.lbl_comprovante_cnh}"
+                                                                        data-content="#{bundle.msg_comprovante_cnh}">
+
+                                                                        <div class="fa fa-file-text-o doc-upload-icon"></div>
+                                                                        <div class="doc-upload-title">#{bundle.lbl_comprovante_cnh}</div>
+                                                                        <div class="doc-upload-content">
+                                                                            <p:commandButton
+                                                                                value="Enviar"
+                                                                                oncomplete="PF('dlgFoto_w').show()"
+                                                                                update=":formfoto">
+                                                                                <f:setPropertyActionListener
+                                                                                    target="#{solicitacoesPortalBacking.tipdocumentoUpload}"
+                                                                                    value="15" />
+                                                                            </p:commandButton>
+                                                                            <p:button
+                                                                                value="Visualizar"
+                                                                                styleClass="btn-visualizar-doc"
+                                                                                href="#{solicitacoesPortalBacking.getDesPathDoc(15)}"
+                                                                                target="_blank" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </div>
+
+                                        <ui:fragment
+                                            rendered="#{ solicitacoesPortalBacking.isPermitidoAlterarDadosBancarios() }">
+                                            <div class="datacard datacard-grouped">
+                                                <div class="datacard-title">#{bundle.tit_banco_pgto}</div>
+                                                <p:outputPanel
+                                                    id="pnl_dados_bancarios"
+                                                    class="datacard-content">
+                                                    <div class="row">
+                                                        <div class="col-lg-5 col-md-6">
+                                                            <xcp:panelForm
+                                                                id="form_dados_bancarios"
+                                                                floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+                                                                <xcp:combo
+                                                                    id="cboBancoPortal"
+                                                                    noFloat="true"
+                                                                    value="#{solicitacoesPortalBacking.entity.bcopgto}"
+                                                                    label="#{bundle.lbl_banco_pgto}"
+                                                                    readonly="#{ solicitacoesPortalBacking.possuiBancoPadrao() }"
+                                                                    itens="#{solicitacoesPortalBacking.itensBancos}">
+                                                                    <p:ajax
+                                                                        event="change"
+                                                                        update="cboAgenciaPortal"
+                                                                        listener="#{solicitacoesPortalBacking.actionAlteraBanco}"
+                                                                        onstart="PF('w_dlgXcpExecStatus').show();"
+                                                                        oncomplete="PF('w_dlgXcpExecStatus').hide();" />
+                                                                </xcp:combo>
+                                                                <xcp:combo
+                                                                    id="cboAgenciaPortal"
+                                                                    noFloat="true"
+                                                                    value="#{solicitacoesPortalBacking.entity.agenciapgto}"
+                                                                    label="#{bundle.lbl_agencia_pgto}"
+                                                                    itens="#{solicitacoesPortalBacking.itensAgencias}" />
+                                                                <xcp:combo
+                                                                    id="cboTipoContaPortal"
+                                                                    noFloat="true"
+                                                                    value="#{solicitacoesPortalBacking.entity.tipocontapgto}"
+                                                                    label="#{bundle.lbl_tipocontapgto}"
+                                                                    itens="#{solicitacoesPortalBacking.itensTipoContaPgto}" />
+                                                                <xcp:text
+                                                                    id="txtContapgtoPortal"
+                                                                    label="#{bundle.lbl_contapgto}"
+                                                                    value="#{solicitacoesPortalBacking.entity.contapgto}"
+                                                                    style="width: 120px;"
+                                                                    maxlength="20" />
+                                                            </xcp:panelForm>
+                                                        </div>
+                                                    </div>
+                                                </p:outputPanel>
+                                            </div>
+                                        </ui:fragment>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p:outputPanel rendered="#{solicitacoesPortalBacking.renderedDependentes}">
+                                <div class="row">
+                                    <div class="col-xs-12">
+
+                                        <p:outputPanel>
+                                            <h1 class="datacard-container-title">#{bundle.tit_dados_dependentes}</h1>
+                                        </p:outputPanel>
+
+                                        <div class="datacard-listcontainer">
+                                            <div class="datacard datacard-grouped">
+                                                <div class="datacard-title">#{bundle.tit_filhacao}</div>
+                                                <p:outputPanel
+                                                    id="pnl_dados_filiacao"
+                                                    class="datacard-content">
+
+                                                    <ui:fragment
+                                                        rendered="#{empty solicitacoesPortalBacking.listaFiliacao }">
+                                                        <div class="datacard-empty-message">Nenhum
+                                                            dependente informado.</div>
+                                                    </ui:fragment>
+
+                                                    <ul class="datacard-itemslist-container">
+                                                        <ui:repeat
+                                                            id="repeatfiliacao"
+                                                            var="filiacao"
+                                                            value="#{solicitacoesPortalBacking.listaFiliacao}">
+                                                            <li
+                                                                class="datacard-item tipo_solicitacao_#{filiacao.tipo} container-fluid">
+                                                                <div class="datacard-item-actions">
+                                                                    <div class="item-action-col">
+                                                                        <xcp:commandLink
+                                                                            id="lnkanexossolport"
+                                                                            href="#"
+                                                                            title="Anexos"
+                                                                            styleClass="big-item-action"
+                                                                            update=":frmDepAnex">
+                                                                            <p:ajax
+                                                                                update=":dlgDepAnex :frmDepAnex"
+                                                                                oncomplete="PF('dlgDepAnexo_w').show();" />
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.dependenteSelecionado}"
+                                                                                value="#{filiacao}" />
+                                                                            <i class="fa fa-paperclip item-action-icon"></i>
+                                                                            <span class="item-action-text">#{bundle.btn_anexo}</span>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+                                                                    <div class="item-action-col">
+                                                                        <h:commandLink
+                                                                            id="lnkeditarsolport"
+                                                                            href="#"
+                                                                            title="Editar">
+                                                                            <p:ajax
+                                                                                update=":dlgDep :frmDlgDep"
+                                                                                oncomplete="PF('dlgDep_w').show();" />
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.dependenteSelecionado}"
+                                                                                value="#{filiacao}" />
+                                                                            <i class="fa fa-fw fa-pencil fa-lg"></i>
+                                                                        </h:commandLink>
+                                                                        <xcp:commandLink
+                                                                            id="lnkremsolport"
+                                                                            title="Remover"
+                                                                            rendered="#{filiacao.tipo != 3}"
+                                                                            update=":#{p:component('pnl_dados_filiacao')}"
+                                                                            action="#{solicitacoesPortalBacking.actionRemoveDependente(filiacao)}">
+                                                                            <p:confirm
+                                                                                header="#{bundle.tit_confirma_remover} #{bundle.tit_filhacao}"
+                                                                                message="#{bundle.tit_confirma_exclusao}"
+                                                                                icon="ui-icon-alert" />
+
+                                                                            <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="row">
+
+
+
+                                                                    <div class="col-md-4 col-xs-11">
+                                                                        <div class="datacard-item-highlight">
+                                                                            #{filiacao.nome}</div>
+                                                                        <div class="datacard-item-info">
+                                                                            <span> #{filiacao.getGrauFk().descricao} </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3 datacard-item-info">
+                                                                        <ui:fragment
+                                                                            rendered="#{filiacao.familiarServidor == 0}">
+                                                                            <span> <small>#{bundle.lbl_cpf}: </small> <h:outputText
+                                                                                    value="#{filiacao.cpf}"
+                                                                                    converter="xcpFormatCpf" />
+                                                                            </span>
+                                                                            <br />
+                                                                            <span><small>#{bundle.lbl_dtn}:</small>&#160;<xcp:outputSimpleDate
+                                                                                    id="outDtn"
+                                                                                    value="#{filiacao.dtn}" /></span>
+                                                                            <br />
+                                                                        </ui:fragment>
+                                                                        <ui:fragment
+                                                                            rendered="#{filiacao.familiarServidor == 1}">
+                                                                            <span><small>#{bundle.lbl_matricula}:</small>&#160;<h:outputText
+                                                                                    value="#{filiacao.matriculaFamiliar}" /> </span>
+                                                                            <br />
+                                                                            <span><small>#{bundle.lbl_cargo}:</small>&#160;<h:outputText
+                                                                                    value="#{solicitacoesPortalBacking.getFuncionarioFamiliarCargo(filiacao)}" /></span>
+                                                                            <br />
+                                                                        </ui:fragment>
+
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ui:repeat>
+                                                    </ul>
+                                                </p:outputPanel>
+                                            </div>
+
+                                            <div class="datacard datacard-grouped">
+                                                <div class="datacard-title">
+                                                    #{bundle.tit_filhos_outros}
+
+                                                    <h:commandLink
+                                                        id="btn_add_filhos_outros"
+                                                        href="#"
+                                                        rendered="#{solicitacoesPortalBacking.statusTela == 1}"
+                                                        action="#{solicitacoesPortalBacking.actionNovoDependente}"
+                                                        styleClass="datacard-icon-action"
+                                                        title="Adicionar #{bundle.tit_dependente}">
+
+                                                        <p:ajax
+                                                            update=":dlgDep :frmDlgDep"
+                                                            onstart="PF('w_dlgXcpExecStatus').show();"
+                                                            oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgDep_w').show();" />
+
+                                                        <i class="fa fa-fw fa-plus"></i> Adicionar
+                                            </h:commandLink>
+
+                                                </div>
+                                                <p:outputPanel
+                                                    id="pnl_dados_filhos_outros"
+                                                    class="datacard-content">
+
+
+
+
+                                                    <ui:fragment
+                                                        rendered="#{empty solicitacoesPortalBacking.listaFiliacao }">
+                                                        <div class="datacard-empty-message">Nenhum
+                                                            dependente informado.</div>
+                                                    </ui:fragment>
+
+                                                    <ul class="datacard-itemslist-container">
+                                                        <ui:repeat
+                                                            id="repeatoutros"
+                                                            var="outrosDep"
+                                                            value="#{solicitacoesPortalBacking.listaOutrosDependentes}">
+                                                            <li
+                                                                class="datacard-item tipo_solicitacao_#{outrosDep.tipo} container-fluid">
+                                                                <div class="datacard-item-actions">
+                                                                    <div class="item-action-col">
+                                                                        <xcp:commandLink
+                                                                            id="lnkanexosoutros"
+                                                                            href="#"
+                                                                            title="Anexos"
+                                                                            styleClass="big-item-action"
+                                                                            update=":frmDepAnex">
+                                                                            <p:ajax
+                                                                                update=":dlgDepAnex :frmDepAnex"
+                                                                                oncomplete="PF('dlgDepAnexo_w').show();" />
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.dependenteSelecionado}"
+                                                                                value="#{outrosDep}" />
+                                                                            <i class="fa fa-paperclip item-action-icon"></i>
+                                                                            <span class="item-action-text">#{bundle.btn_anexo}</span>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+                                                                    <div class="item-action-col">
+                                                                        <h:commandLink
+                                                                            id="lnkeditaroutros"
+                                                                            href="#"
+                                                                            title="Editar">
+                                                                            <p:ajax
+                                                                                update=":dlgDep :frmDlgDep"
+                                                                                oncomplete="PF('dlgDep_w').show();" />
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.dependenteSelecionado}"
+                                                                                value="#{outrosDep}" />
+                                                                            <i class="fa fa-fw fa-pencil fa-lg"></i>
+                                                                        </h:commandLink>
+                                                                        <xcp:commandLink
+                                                                            id="lnkremoutros"
+                                                                            title="Remover"
+                                                                            rendered="#{outrosDep.tipo != 3}"
+                                                                            update=":#{p:component('pnl_dados_filhos_outros')}"
+                                                                            action="#{solicitacoesPortalBacking.actionRemoveDependente(outrosDep)}">
+                                                                            <p:confirm
+                                                                                header="#{bundle.tit_confirma_remover} #{bundle.tit_filhacao}"
+                                                                                message="#{bundle.tit_confirma_exclusao}"
+                                                                                icon="ui-icon-alert" />
+
+                                                                            <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="row">
+
+                                                                    <h:commandLink href="#">
+                                                                        <p:ajax
+                                                                            update=":dlgDep :frmDlgDep"
+                                                                            oncomplete="PF('dlgDep_w').show();" />
+                                                                        <f:setPropertyActionListener
+                                                                            target="#{solicitacoesPortalBacking.dependenteSelecionado}"
+                                                                            value="#{outrosDep}" />
+
+                                                                        <div class="col-md-4 col-xs-11">
+                                                                            <div class="datacard-item-highlight">
+                                                                                #{outrosDep.nome}</div>
+                                                                            <div class="datacard-item-info">
+                                                                                <span> #{outrosDep.getGrauFk().descricao} </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-2 datacard-item-info">
+                                                                            <ui:fragment
+                                                                                rendered="#{outrosDep.familiarServidor == 0}">
+                                                                                <span> <small>#{bundle.lbl_cpf}: </small> <h:outputText
+                                                                                        value="#{outrosDep.cpf}"
+                                                                                        converter="xcpFormatCpf" />
+                                                                                </span>
+                                                                                <br />
+                                                                                <span><small>#{bundle.lbl_dtn}:</small>&#160;<xcp:outputSimpleDate
+                                                                                        id="outDtn"
+                                                                                        value="#{outrosDep.dtn}" /></span>
+                                                                                <br />
+                                                                            </ui:fragment>
+                                                                            <ui:fragment
+                                                                                rendered="#{outrosDep.familiarServidor == 1}">
+                                                                                <span><small>#{bundle.lbl_matricula}:</small>&#160;<h:outputText
+                                                                                        value="#{outrosDep.matriculaFamiliar}" /> </span>
+                                                                                <br />
+                                                                                <span><small>#{bundle.lbl_cargo}:</small>&#160;<h:outputText
+                                                                                        value="#{solicitacoesPortalBacking.getFuncionarioFamiliarCargo(outrosDep)}" /></span>
+                                                                                <br />
+                                                                            </ui:fragment>
+
+                                                                        </div>
+                                                                        <div class="col-md-2 datacard-item-info">
+                                                                            <span> <small>#{bundle.lbl_dependenteir}:
+                                                                            </small> <xcp:outputSimple
+                                                                                    id="outDependenteir"
+                                                                                    value="#{outrosDep.dependenteir}"
+                                                                                    itens="#{solicitacoesPortalBacking.itensDependentesIRRF}" />
+                                                                            </span><br /> <span> <small>#{bundle.lbl_beneficiario}:
+                                                                            </small> <xcp:outputSimple
+                                                                                    id="outBeneficiario"
+                                                                                    value="#{outrosDep.beneficiario}"
+                                                                                    itens="#{solicitacoesPortalBacking.itensDependentesIRRF}" />
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="col-md-2 datacard-item-info">
+                                                                            <ui:fragment
+                                                                                rendered="#{solicitacoesPortalBacking.renderedBeneficiarioPrevDep}">
+                                                                                <span> <small>#{bundle.lbl_benprev}:
+                                                                                </small> <xcp:outputSimple
+                                                                                        id="outBenPrev"
+                                                                                        value="#{outrosDep.beneficiarioprev}"
+                                                                                        itens="#{solicitacoesPortalBacking.itensBeneficiarioPrev}" />
+                                                                                </span>
+                                                                            </ui:fragment>
+                                                                        </div>
+                                                                    </h:commandLink>
+                                                                </div>
+                                                            </li>
+                                                        </ui:repeat>
+                                                    </ul>
+                                                </p:outputPanel>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </p:outputPanel>
+
+                            <p:fragment
+                                rendered="#{solicitacoesPortalBacking.canRenderCompetencias()}">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p:outputPanel>
+                                            <h1 class="datacard-container-title">#{bundle.tit_competencias}</h1>
+                                        </p:outputPanel>
+
+                                        <div class="datacard-listcontainer">
+
+                                            <div class="datacard datacard-grouped">
+                                                <div class="datacard-title">
+                                                    #{bundle.lbl_titulo_cursoscapacitacao}
+
+                                                    <h:commandLink
+                                                        id="btn_add_formacao"
+                                                        href="#"
+                                                        immediate="true"
+                                                        rendered="#{solicitacoesPortalBacking.statusTela == 1}"
+                                                        action="#{solicitacoesPortalBacking.actionOpenFormacao}"
+                                                        styleClass="datacard-icon-action"
+                                                        title="Adicionar #{bundle.tit_formacao}">
+
+                                                        <p:ajax
+                                                            update=":dlgFor"
+                                                            onstart="PF('w_dlgXcpExecStatus').show();"
+                                                            oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgFor_w').show();" />
+
+                                                        <i class="fa fa-fw fa-plus"></i> Adicionar
+                                                </h:commandLink>
+
+
+                                                </div>
+                                                <p:outputPanel
+                                                    id="pnl_dados_formacao"
+                                                    class="datacard-content">
+
+                                                    <ui:fragment
+                                                        rendered="#{empty solicitacoesPortalBacking.listaFormacao }">
+                                                        <div class="datacard-empty-message">Nenhuma formação
+                                                            informada.</div>
+                                                    </ui:fragment>
+
+                                                    <ul class="datacard-itemslist-container">
+                                                        <ui:repeat
+                                                            id="repeatformacao"
+                                                            var="formacao"
+                                                            value="#{solicitacoesPortalBacking.listaFormacao}">
+                                                            <li
+                                                                class="datacard-item tipo_solicitacao_#{formacao.tipoSolicitacao} container-fluid">
+                                                                <div class="datacard-item-actions">
+                                                                    <div class="item-action-col">
+                                                                        <xcp:commandLink
+                                                                            id="lnkanexosformacao"
+                                                                            href="#"
+                                                                            title="Anexos"
+                                                                            styleClass="big-item-action"
+                                                                            update=":frmForAnex">
+                                                                            <p:ajax
+                                                                                update=":dlgForAnex :frmForAnex"
+                                                                                oncomplete="PF('dlgFormAnexo_w').show();" />
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.formacaoSelecionada}"
+                                                                                value="#{formacao}" />
+                                                                            <i class="fa fa-paperclip item-action-icon"></i>
+                                                                            <span class="item-action-text">#{bundle.btn_anexo}</span>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+                                                                    <div class="item-action-col">
+                                                                        <h:commandLink
+                                                                            id="lnkeditarformacao"
+                                                                            href="#"
+                                                                            title="Editar">
+                                                                            <p:ajax
+                                                                                update=":dlgFor :frmFor"
+                                                                                oncomplete="PF('dlgFor_w').show();" />
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.formacaoSelecionada}"
+                                                                                value="#{formacao}" />
+                                                                            <i class="fa fa-fw fa-pencil fa-lg"></i>
+                                                                        </h:commandLink>
+                                                                        <xcp:commandLink
+                                                                            id="lnkremformacao"
+                                                                            title="Remover"
+                                                                            rendered="#{formacao.tipoSolicitacao != 3}"
+                                                                            update=":#{p:component('pnl_dados_formacao')}"
+                                                                            action="#{solicitacoesPortalBacking.actionRemoveFormacao(formacao)}">
+                                                                            <p:confirm
+                                                                                header="#{bundle.tit_confirma_remover} #{bundle.lbl_formacao}"
+                                                                                message="#{bundle.tit_confirma_exclusao}"
+                                                                                icon="ui-icon-alert" />
+
+                                                                            <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-4 col-xs-11">
+                                                                        <div class="datacard-item-highlight">
+                                                                            #{formacao.cursoFk.descricao}</div>
+                                                                        <div class="datacard-item-info">
+                                                                            <span> <small>#{bundle.lbl_instituicao}</small><br />
+                                                                                #{formacao.instituicaoFk.descricao}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-3 datacard-item-info">
+                                                                        <span> <small>#{bundle.col_areaCurso}</small><br />
+                                                                            #{formacao.cursoacadFk != null ?
+                                                                            formacao.cursoacadFk.descricao : formacao.area}
+                                                                        </span><br /> <span>#{bundle.lbl_inicio}:&#160;<xcp:outputSimpleDate
+                                                                                value="#{formacao.dtinicio}" /></span><br /> <span>#{bundle.lbl_fim}:&#160;<xcp:outputSimpleDate
+                                                                                value="#{formacao.dtfim}" /></span><br />
+                                                                    </div>
+                                                                    <div class="col-sm-3 datacard-item-info">
+                                                                        <span> <small>#{bundle.lbl_situacao}</small><br />
+                                                                            <xcp:outputSimple
+                                                                                value="#{formacao.situacaoFk.descricao}" />
+                                                                        </span><br /> <span> <small>#{bundle.lbl_carga}</small><br />
+                                                                            <p:outputPanel rendered="#{formacao.qtdhoras != null}">
+                                                                                <xcp:outputSimple value="#{formacao.qtdhoras}" />&#160;horas 
+                                                                            </p:outputPanel> <p:outputPanel rendered="#{formacao.qtdhoras == null}">
+                                                                                <xcp:outputSimple value="---" />
+                                                                            </p:outputPanel>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ui:repeat>
+                                                    </ul>
+                                                </p:outputPanel>
+                                            </div>
+                                            <p:fragment
+                                                rendered="#{solicitacoesPortalBacking.avaliacaoRecadastramento != null}">
+                                                <div class="datacard datacard-grouped">
+                                                    <div class="datacard-title">
+                                                        #{bundle.lbl_titulo_conhecimentos}
+
+                                                        <h:commandLink
+                                                            id="btn_add_conhecimento"
+                                                            href="#"
+                                                            immediate="true"
+                                                            rendered="#{solicitacoesPortalBacking.statusTela == 1}"
+                                                            action="#{solicitacoesPortalBacking.actionNovoConhecimento}"
+                                                            styleClass="datacard-icon-action"
+                                                            title="Adicionar #{bundle.lbl_conhecimento}">
+
+                                                            <p:ajax
+                                                                update=":frmDlgConhecimento"
+                                                                onstart="PF('w_dlgXcpExecStatus').show();"
+                                                                oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgConhecimento_w').show();" />
+
+                                                            <i class="fa fa-fw fa-plus"></i> Adicionar
+                                                    </h:commandLink>
+
+                                                    </div>
+                                                    <p:outputPanel
+                                                        id="pnl_dados_conhecimentos"
+                                                        class="datacard-content">
+
+                                                        <ui:fragment
+                                                            rendered="#{empty solicitacoesPortalBacking.listaConhecimento }">
+                                                            <div class="datacard-empty-message">Nenhum
+                                                                conhecimento informado.</div>
+                                                        </ui:fragment>
+
+                                                        <ul class="datacard-itemslist-container">
+                                                            <ui:repeat
+                                                                id="repeadconhec"
+                                                                var="conhecimento"
+                                                                value="#{solicitacoesPortalBacking.listaConhecimento}">
+                                                                <li class="datacard-item container-fluid">
+                                                                    <div class="datacard-item-actions">
+                                                                        <h:commandLink
+                                                                            id="lnkeditarconhec"
+                                                                            href="#"
+                                                                            title="Editar">
+                                                                            <p:ajax
+                                                                                update=":dlgConhecimento :frmDlgConhecimento"
+                                                                                oncomplete="PF('dlgConhecimento_w').show();" />
+                                                                            <f:setPropertyActionListener
+                                                                                target="#{solicitacoesPortalBacking.conhecimentoSelecionado}"
+                                                                                value="#{conhecimento}" />
+                                                                            <i class="fa fa-fw fa-pencil fa-lg"></i>
+                                                                        </h:commandLink>
+                                                                        <xcp:commandLink
+                                                                            id="lnkremconhec"
+                                                                            title="Remover"
+                                                                            update=":#{p:component('pnl_dados_conhecimentos')}"
+                                                                            action="#{solicitacoesPortalBacking.actionRemoveConhecimento(conhecimento)}">
+                                                                            <p:confirm
+                                                                                header="#{bundle.tit_confirma_remover} #{bundle.lbl_conhecimento}"
+                                                                                message="#{bundle.tit_confirma_exclusao}"
+                                                                                icon="ui-icon-alert" />
+
+                                                                            <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <div class="datacard-item-highlight">
+                                                                                #{conhecimento.conhecimentoFk.descricao}</div>
+                                                                        </div>
+                                                                        <div class="col-sm-6 datacard-item-obs">
+                                                                            <small>Observação:</small><br />
+                                                                            <h:outputText
+                                                                                value="#{fn:replace(conhecimento.obs,'\\n','&lt;br/&gt;')}"
+                                                                                escape="false" />
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ui:repeat>
+                                                        </ul>
+                                                    </p:outputPanel>
+                                                </div>
+                                            </p:fragment>
+
+                                            <!-- <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">
+                                                #{bundle.tit_idiomas}
+                                                
+                                                <h:commandLink
+                                                    id="btn_add_idioma" 
+                                                    href="#" 
+                                                    immediate="true"                                                    
+                                                    rendered="#{solicitacoesPortalBacking.statusTela == 1}"
+                                                    action="#{solicitacoesPortalBacking.actionNovoIdioma}"
+                                                    styleClass="datacard-icon-action"  title="Adicionar #{bundle.lbl_idioma}">
+                                                    
+                                                    <p:ajax update=":frmDlgIdioma" 
+                                                        onstart="PF('w_dlgXcpExecStatus').show();"
+                                                        oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgIdioma_w').show();" />
+                                                    
+                                                        <i class="fa fa-fw fa-plus"></i> Adicionar
+                                                </h:commandLink>
+                                                                                            
+                                            </div>
+                                            <p:outputPanel id="pnl_dados_idiomas" class="datacard-content">                                         
+                                            
+                                                <ui:fragment rendered="#{empty solicitacoesPortalBacking.listaIdioma }">
+                                                    <div class="datacard-empty-message">
+                                                        Nenhum idioma informado.
+                                                    </div>
+                                                </ui:fragment>
+                                            
+                                                <ul class="datacard-itemslist-container">
+                                                    <ui:repeat var="idioma" value="#{solicitacoesPortalBacking.listaIdioma}">
+                                                        <li class="datacard-item container-fluid">
+                                                            <div class="datacard-item-actions">
+                                                                <h:commandLink href="#" title="Editar"> 
+                                                                    <p:ajax update=":frmDlgIdioma" oncomplete="PF('dlgIdioma_w').show();" />
+                                                                    <f:setPropertyActionListener
+                                                                        target="#{solicitacoesPortalBacking.idiomaSelecionado}"
+                                                                        value="#{idioma}" />
+                                                                    <i class="fa fa-fw fa-pencil fa-lg"></i>
+                                                                </h:commandLink>
+                                                                <xcp:commandLink title="Remover"
+                                                                    update=":#{p:component('pnl_dados_idiomas')}"
+                                                                    action="#{solicitacoesPortalBacking.actionRemoveIdioma(idioma)}">
+                                                                    <p:confirm
+                                                                        header="#{bundle.tit_confirma_remover} #{bundle.lbl_idioma}"
+                                                                        message="#{bundle.tit_confirma_exclusao}"
+                                                                        icon="ui-icon-alert" />
+                                                                            
+                                                                    <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                </xcp:commandLink>
+                                                            </div>
+                                                            <div class="row">
+                                                                <h:commandLink href="#">    
+                                                                    <p:ajax update=":frmDlgIdioma" oncomplete="PF('dlgIdioma_w').show();" />
+                                                                    <f:setPropertyActionListener
+                                                                        target="#{solicitacoesPortalBacking.idiomaSelecionado}"
+                                                                        value="#{idioma}" />
+                                                                    <div class="col-sm-4 col-xs-11">
+                                                                        <div class="datacard-item-highlight">
+                                                                            #{idioma.idiomaFk.descricao}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="datacard-item-info">
+                                                                            <span>
+                                                                                <small>#{bundle.lbl_instituicao}: </small>
+                                                                                #{idioma.instituicaoFk.descricao}
+                                                                            </span><br/>
+                                                                            <span>
+                                                                                <small>#{bundle.lbl_tipocurso}: </small>
+                                                                                <xcp:outputSimple
+                                                                                    value="#{idioma.tipocurso}"
+                                                                                    itens="#{solicitacoesPortalBacking.itensTipoCurso}" />
+                                                                                
+                                                                            </span><br/>
+                                                                            <span>
+                                                                                <small>#{bundle.lbl_conclusao}: </small>
+                                                                                <xcp:outputSimpleDate value="#{idioma.conclusao}"/>
+                                                                            </span><br/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="datacard-item-info">
+                                                                            <span><small>Entendimento: </small> 
+                                                                                <xcp:outputSimple
+                                                                                    value="#{idioma.entende}"
+                                                                                    itens="#{solicitacoesPortalBacking.itensFluencia}" /></span>
+                                                                            <br/>
+                                                                            <span><small>Leitura: </small> 
+                                                                                <xcp:outputSimple
+                                                                                    value="#{idioma.leitura}"
+                                                                                    itens="#{solicitacoesPortalBacking.itensFluencia}" /></span>
+                                                                            <br/>
+                                                                            <span><small>Fala: </small> 
+                                                                                <xcp:outputSimple
+                                                                                    value="#{idioma.fala}"
+                                                                                    itens="#{solicitacoesPortalBacking.itensFluencia}" /></span>
+                                                                            <br/>
+                                                                            <span><small>Escrita: </small> 
+                                                                                <xcp:outputSimple
+                                                                                    value="#{idioma.escreve}"
+                                                                                    itens="#{solicitacoesPortalBacking.itensFluencia}" /></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </h:commandLink>
+                                                            </div>
+                                                        </li>
+                                                    </ui:repeat>
+                                                </ul>
+                                                                                                                                    
+                                            </p:outputPanel>
+                                        </div> -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </p:fragment>
+                        </xcp:panelVinculoEval>
+                    </div>
+
+                    <p:toolbar styleClass="xcp_pmanut_form_toolbar">
+                        <f:facet name="left">
+
+                            <div class="alert alert-info">
+                                <p class="declaracao-autenticidade">#{bundle.msg_declaracao_autenticidade}</p>
+                            </div>
+
+                            <xcp:commandButton
+                                id="btn_GravarSolicitacao"
+                                rendered="#{solicitacoesPortalBacking.statusTela == 1}"
+                                styleClass="btn-main-action"
+                                value="#{bundle.btn_gravar_solicitacao}"
+                                process="@form"
+                                update="@form"
+                                oncomplete="$(this).eachHasValue();"
+                                action="#{solicitacoesPortalBacking.actionGravaSolicitacao}"
+                                icon="ui-icon-disk" />
+
+                            <xcp:commandButton
+                                id="btn_listar"
+                                value="Imprimir Histï¿½rico de Solicitaï¿½ï¿½es"
+                                action="#{solicitacoesPortalBacking.imprimirHistorico}"
+                                icon="ui-icon-print"
+                                style="display: none;">
+                            </xcp:commandButton>
+
+
+                        </f:facet>
+                    </p:toolbar>
+                    <script type="text/javascript">
+                        $(function(){
+                            $("[data-toggle=popover]").popover();
+                             
+                            $('body').on('click', '.ui-widget-overlay',  function(){
+                                PF('dlgDep_w').hide();
+                                PF('dlgIdioma_w').hide();
+                                PF('dlgConhecimento_w').hide();
+                                PF('dlgFor_w').hide();
+                                PF('dlgFormAnexo_w').hide();
+                            });
+
+                            $("[name='form:cboDeficienciasPortal_c_input']").on('change', function(){
+                                if($(this).val() == 0) { 
+                                    $('#uploadcomprovantedeficiencia').slideUp(); 
+                                } else {
+                                    $('#uploadcomprovantedeficiencia').slideDown(); 
+                                };
+                            });                     
+                            
+                        });
+
+
+                        document.addEventListener('DOMContentLoaded', function() {
+                              const elements = document.querySelectorAll(`[id^="form:cboCreator_"]`);
+                            
+                              Array.from(elements).forEach(function(element) {
+                                const selectMenu = element.querySelector('.ui-selectonemenu');
+                            
+                                if (selectMenu) {
+                                  element.classList.add('input-has-value');
+                            
+                                  element.addEventListener('focusout', function() {
+                                    element.classList.add('input-has-value');
+                                  });
+                                }
+                              });
+                            });
+
+                    </script>
+                </p:outputPanel>
+            </xcp:panelContent>
+        </div>
+    </ui:define>
+
+
+    <ui:define name="modalPanelArea">
+        <p:dialog
+            header="#{solicitacoesPortalBacking.isFiliacao(solicitacoesPortalBacking.dependenteSelecionado.grau) ? solicitacoesPortalBacking.dependenteSelecionado.getGrauFk().descricao : bundle.tit_dependente}"
+            modal="true"
+            id="dlgDep"
+            widgetVar="dlgDep_w"
+            dynamic="true"
+            closeOnEscape="true"
+            styleClass="full-page-dialog rightside-dialog"
+            resizable="false"
+            draggable="false"
+            closable="false"
+            onShow="$(this).eachHasValue();">
+            <xcp:form id="frmDlgDep">
+                <ui:include src="SolicitacoesPortalForm/SolPortalDepForm.xhtml" />
+                <p:remoteCommand
+                    name="closeDlg"
+                    update=":#{p:component('pnl_dados_filiacao')} :#{p:component('pnl_dados_filhos_outros')}"
+                    oncomplete="PF('dlgDep_w').hide();" />
+            </xcp:form>
+        </p:dialog>
+
+        <p:dialog
+            id="dlgFoto"
+            modal="true"
+            widgetVar="dlgFoto_w"
+            header="#{bundle.title_importar_foto}">
+            <xcp:form
+                id="formfoto"
+                multipart="true">
+                <xcp:panelForm>
+                    <xcp:inputFile
+                        label="#{bundle.msg_upload_arquivo}"
+                        id="inpFile"
+                        value="#{solicitacoesPortalBacking.uploadFoto}"
+                        sizeLimit="#{solicitacoesPortalBacking.limiteTamanhoArquivoUpload}"
+                        required="true" />
+                </xcp:panelForm>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <xcp:commandButton
+                            id="btn_upload"
+                            value="#{bundle.btn_upload}"
+                            ajax="false"
+                            icon="ui-icon-gear"
+                            action="#{solicitacoesPortalBacking.actionSalvarFoto}" />
+                    </f:facet>
+                </p:toolbar>
+            </xcp:form>
+        </p:dialog>
+
+        <p:dialog
+            id="dlgUploadAnexoCamposComplementares"
+            modal="true"
+            widgetVar="dlgUploadAnexoCamposComplementares_w"
+            header="#{bundle.title_importar_foto}">
+            <xcp:form
+                id="formAnexoCamposComplementares"
+                multipart="true">
+                <xcp:panelForm>
+                    <xcp:inputFile
+                        label="#{bundle.msg_upload_arquivo}"
+                        id="inpFile_anexocamposcomplementares"
+                        value="#{solicitacoesPortalBacking.arquivoAnexo}"
+                        sizeLimit="#{solicitacoesPortalBacking.limiteTamanhoArquivoUpload}"
+                        required="true" />
+                </xcp:panelForm>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <xcp:commandButton
+                            id="btn_upload_anexocamposcomplementares"
+                            value="#{bundle.btn_upload}"
+                            ajax="false"
+                            icon="ui-icon-gear"
+                            action="#{solicitacoesPortalBacking.actionSalvarAnexoCamposComplementares}" />
+                    </f:facet>
+                </p:toolbar>
+            </xcp:form>
+        </p:dialog>
+
+        <p:dialog
+            header="#{bundle.lbl_titulo_conhecimentos}"
+            modal="true"
+            id="dlgConhecimento"
+            widgetVar="dlgConhecimento_w"
+            dynamic="true"
+            closeOnEscape="true"
+            styleClass="full-page-dialog rightside-dialog"
+            resizable="false"
+            draggable="false"
+            closable="false"
+            onShow="$(this).eachHasValue();">
+            <xcp:form id="frmDlgConhecimento">
+                <ui:include
+                    src="SolicitacoesPortalForm/SolicitacoesPortalConhecimentoForm.xhtml" />
+                <p:remoteCommand
+                    name="closeDlgConhecimento"
+                    update=":#{p:component('pnl_dados_conhecimentos')}"
+                    oncomplete="PF('dlgConhecimento_w').hide();" />
+            </xcp:form>
+        </p:dialog>
+
+        <p:dialog
+            header="#{bundle.tit_idiomas}"
+            modal="true"
+            id="dlgIdioma"
+            widgetVar="dlgIdioma_w"
+            dynamic="true"
+            closeOnEscape="true"
+            styleClass="full-page-dialog rightside-dialog"
+            resizable="false"
+            draggable="false"
+            closable="false"
+            onShow="$(this).eachHasValue();">
+            <xcp:form id="frmDlgIdioma">
+                <ui:include
+                    src="SolicitacoesPortalForm/SolicitacoesPortalIdiomaForm.xhtml" />
+                <p:remoteCommand
+                    name="closeDlgIdioma"
+                    update=":#{p:component('pnl_dados_idiomas')}"
+                    oncomplete="PF('dlgIdioma_w').hide();" />
+            </xcp:form>
+        </p:dialog>
+
+        <p:dialog
+            header="#{bundle.tit_email}"
+            modal="true"
+            id="dlgEmail"
+            widgetVar="dlgEmail_w"
+            dynamic="true"
+            closeOnEscape="true"
+            styleClass="full-page-dialog rightside-dialog"
+            resizable="false"
+            draggable="false"
+            closable="false"
+            onShow="$(this).eachHasValue();">
+            <xcp:form id="frmDlgEmail">
+                <ui:include
+                    src="SolicitacoesPortalForm/SolicitacoesPortalEmailForm.xhtml" />
+                <p:remoteCommand
+                    name="closeDlgEmail"
+                    update=":#{p:component('pnl_dados_email')}"
+                    oncomplete="PF('dlgEmail_w').hide();" />
+            </xcp:form>
+        </p:dialog>
+
+
+
+        <ui:include
+            src="SolicitacoesPortalForm/SolicitacoesPortalFormacaoDialog.xhtml" />
+        <ui:include
+            src="SolicitacoesPortalForm/SolicitacoesPortalFormacaoAnexoDialog.xhtml" />
+        <ui:include src="SolicitacoesPortalForm/SolPortalDepAnexoDialog.xhtml" />
+
+    </ui:define>
+
+</ui:composition>

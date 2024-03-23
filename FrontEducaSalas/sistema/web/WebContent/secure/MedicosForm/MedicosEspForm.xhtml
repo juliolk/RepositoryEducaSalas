@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="MedicosEsp"
+		backing="#{medicosEspBacking}"
+		masterId="Medicos">
+
+		<ui:define name="colunas">
+			<xcp:column
+				headerText="#{bundle.col_funcao}"
+				value="#{row.funcao}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.funcao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.funcaoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.funcaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_principal}"
+				value="#{row.principal}"
+				type="Number"
+				size="1">
+				<xcp:outputSimple
+					value="#{row.principal}"
+					itens="#{medicosEspBacking.itensIndSimNao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovFuncao_MedicosEsp"
+					value="#{medicosEspBacking.entity.funcaoFk}"
+					label="#{bundle.lbl_funcao}"
+					required="true"
+					query="funcoes"
+					size="6"
+					readonly="#{not medicosEspBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboPrincipal_MedicosEsp"
+					value="#{medicosEspBacking.entity.principal}"
+					label="#{bundle.lbl_principal}"
+					required="true"
+					itens="#{medicosEspBacking.itensIndSimNao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

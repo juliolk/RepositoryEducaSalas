@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		modal="true"
+		id="dlgAcidentestrabparte"
+		header="#{bundle.title_partes}"
+		widgetVar="dlgAcidentestrabparte_w">
+		<xcp:form id="frmAcidentestrabparte">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovParte_Acidentestrabparte"
+					value="#{acidentestrabparteBacking.entity.parteFk}"
+					label="#{bundle.lbl_parte}"
+					query="partescorpo"
+					required="true"
+					size="9"
+					params="#{acidentestrabparteBacking.paramsParte}" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						update="@form :form:tabGeral:table_Acidentestrabparte"
+						value="#{bundle.btn_gravar}"
+						action="#{acidentestrabparteBacking.actionGravar('Acidentestrabparte')}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgAcidentestrabparte_w').hide(); return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+
+</ui:composition>

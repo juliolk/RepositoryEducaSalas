@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Edital"
+			backing="#{editalPromoBacking}">
+
+			<ui:define name="colunas">
+
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{row.numero}"
+					type="Number"
+					size="8">
+					<xcp:outputSimple value="#{row.numero}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_tipEdital}"
+					value="#{row.descricao}"
+					type="String"
+					size="10"
+					itens="#{editalPromoBacking.itensTipEdital}">
+					<xcp:outputSimple
+						value="#{row.tipEdital}"
+						itens="#{editalPromoBacking.itensTipEdital}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="20"
+					itens="#{editalPromoBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{editalPromoBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_responsavel}"
+					value="#{row.responsavel}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.responsavel}" />
+				</xcp:column>
+
+
+
+
+
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtEdital"
+						label="#{bundle.lbl_edital}"
+						required="true"
+						value="#{editalPromoBacking.entity.numero}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not editalPromoBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboTipEdital"
+						value="#{editalPromoBacking.entity.tipEdital}"
+						label="#{bundle.lbl_tipEdital}"
+						required="true"
+						itens="#{editalPromoBacking.itensTipEdital}"
+						readonly="#{not editalBacking.entity.novo}">
+						<p:ajax
+							update=":form:lovParaTiposReajustesAnt :form:lovParaTiposReajustesAnt_l :form:lovParaTiposReajustes :form:lovParaTiposReajustes_l :form:lovMotivoTransf :form:lovMotivoTransf_l"
+							process="@this" />
+					</xcp:combo>
+
+					<xcp:text
+						id="txtDescricaoEdital"
+						required="true"
+						label="#{bundle.lbl_descricao_edital}"
+						value="#{editalPromoBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{editalPromoBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						itens="#{editalPromoBacking.itensSituacao}"
+						required="true"
+						readonly="true" />
+
+					<xcp:date
+						id="txtDataEdital"
+						required="true"
+						value="#{editalPromoBacking.entity.data}"
+						label="#{bundle.lbl_data_edital}" />
+
+					<xcp:text
+						id="txtResponsavel"
+						label="#{bundle.lbl_responsavel}"
+						required="true"
+						value="#{editalPromoBacking.entity.responsavel}"
+						size="60" />
+
+					<xcp:text
+						id="txtNumDiarioOficial"
+						label="#{bundle.lbl_numDiarioOficial}"
+						value="#{editalPromoBacking.entity.numDiarioOficial}"
+						size="60"
+						maxlength="100" />
+
+					<xcp:lov
+						id="lovParaTiposReajustesAnt"
+						value="#{editalPromoBacking.entity.motvacFk}"
+						label="#{bundle.lbl_motvagaant}"
+						query="tiporeajustes_vac"
+						required="true"
+						rendered="#{editalPromoBacking.renderedMotivo}"
+						size="5" />
+
+					<xcp:lov
+						id="lovParaTiposReajustes"
+						value="#{editalPromoBacking.entity.motprovFk}"
+						label="#{bundle.lbl_motivo_cargos}"
+						query="tiporeajustes_prov"
+						required="true"
+						rendered="#{editalPromoBacking.renderedMotivo}"
+						size="5"
+						params="#{editalPromoBacking.paramsTipoReajuste}" />
+
+					<xcp:lov
+						id="lovMotivoTransf"
+						value="#{editalPromoBacking.entity.mottransfFk}"
+						label="#{bundle.lbl_motivoTransf}"
+						query="motivo_transf"
+						size="10"
+						required="true"
+						rendered="#{editalPromoBacking.renderedMotivoTransf}"
+						params="#{editalPromoBacking.paramsMotivoTransf}" />
+
+
+				</xcp:panelForm>
+				<p:spacer width="3px" />
+				<div style="width: 1000px;">
+					<p:tabView id="tabView">
+						<p:tab
+							id="tabDados"
+							title="#{bundle.tit_dados}">
+
+							<p:fieldset
+								id="brd_periodo"
+								legend="#{bundle.tit_periodo_inscricao}">
+								<h:panelGrid
+									columns="4"
+									styleClass="tabela_alinhamento">
+
+									<xcp:date
+										id="txtDtinicio"
+										value="#{editalPromoBacking.entity.dtinicio}"
+										label="#{bundle.lbl_dtinicio}" />
+
+									<xcp:date
+										id="txtDtfim"
+										value="#{editalPromoBacking.entity.dtfim}"
+										label="#{bundle.lbl_dtfimEdital}" />
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:spacer width="3px" />
+
+							<xcp:panelForm>
+
+								<xcp:text
+									id="txtDesUrlDiario"
+									label="#{bundle.lbl_desUrlDiario}"
+									value="#{editalPromoBacking.entity.desUrlDiario}"
+									maxlength="500"
+									size="60" />
+
+								<xcp:memo
+									id="txtDivulgacao"
+									label="#{bundle.lbl_divulgacao}"
+									value="#{editalPromoBacking.entity.divulgacao}"
+									cols="60"
+									size="4000" />
+
+								<xcp:memo
+									id="txtObs"
+									cols="60"
+									label="#{bundle.lbl_obs}"
+									value="#{editalPromoBacking.entity.obs}"
+									size="4000" />
+							</xcp:panelForm>
+
+						</p:tab>
+
+						<p:tab
+							id="tabConcursos"
+							rendered="#{not editalPromoBacking.entity.novo}"
+							title="#{bundle.tit_vagasrem}">
+							<ui:include src="EditalPromoForm/ConcursoForm.xhtml" />
+						</p:tab>
+
+
+					</p:tabView>
+				</div>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgConcurso"
+			width="800px"
+			height="120px"
+			header="#{bundle.tit_vagas}"
+			widgetVar="dlgConcurso_w">
+			<xcp:form id="frmConcurso">
+				<ui:include src="EditalPromoForm/ConcursosManutForm.xhtml" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

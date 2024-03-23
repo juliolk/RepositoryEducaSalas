@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.combo select {
+	width: 200px !important;
+}
+
+.combo  label {
+	width: 191px !important;
+}
+
+.mytable {
+	width: auto !important;
+	margin: 0px !important;
+}
+
+.mytable td {
+	border: none !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	padding-left: 0px !important;
+}
+
+.colleft {
+	text-align: right;
+}
+
+.colright {
+	text-align: left;
+}
+
+.ui-selectonemenu.cmb_aval {
+	width: 98% !important;
+}
+
+.ui-selectonemenu-label.cmb_aval {
+	width: 99% !important;
+}
+</style>
+
+		<xcp:panelContent>
+			<h:panelGroup id="panelGeral">
+				<h:panelGroup
+					id="panelSemPesquisa"
+					rendered="#{revisaoAvaliacoesBacking.statusTela == 0}">
+					<xcp:panelForm>
+						<xcp:outputSimple value="#{bundle.msg_sem_revisoes}" />
+					</xcp:panelForm>
+				</h:panelGroup>
+
+				<h:panelGroup
+					id="panelPesquisas"
+					rendered="#{revisaoAvaliacoesBacking.statusTela == 1}">
+
+					<p:dataTable
+						id="tableBoletinsPendentes"
+						var="row"
+						value="#{revisaoAvaliacoesBacking.listaBoletim}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="false"
+						resizableColumns="true"
+						selectionMode="single"
+						selection="#{revisaoAvaliacoesBacking.boletimSelecionado}"
+						rowKey="#{row.PK}">
+
+						<p:ajax
+							event="rowSelect"
+							resetValues="true"
+							update=":#{p:component('panelGeral')}"
+							listener="#{revisaoAvaliacoesBacking.actionMontaBoletim}" />
+
+						<xcp:column
+							type="Number"
+							size="2"
+							headerText="#{bundle.col_matricula}">
+							<xcp:outputSimpleNumber
+								value="#{row.funcionarioFk.matricula}"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="22"
+							headerText="#{bundle.col_nome}">
+							<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+						</xcp:column>
+
+						<xcp:column
+							type="Date"
+							size="10"
+							headerText="#{bundle.col_tipo}">
+							<xcp:outputSimple
+								value="#{row.probatorioFk.origem}"
+								itens="#{revisaoAvaliacoesBacking.itensOrigem}" />
+						</xcp:column>
+
+						<xcp:column
+							type="Date"
+							size="3"
+							headerText="#{bundle.col_numeroBol}">
+							<xcp:outputSimpleNumber
+								value="#{row.numero}"
+								scale="0"
+								precision="5" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_ini_boletim}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.dataini}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_fim_boletim}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.datafim}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtresposta}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.dtrespostarevisao}" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="10">
+
+							<xcp:commandButton
+								id="btnFormulario"
+								ajax="false"
+								immediate="true"
+								action="#{revisaoAvaliacoesBacking.actionDownloadFormulario(row)}"
+								rendered="#{revisaoAvaliacoesBacking.isRenderedRelatorios(row)}"
+								value="#{bundle.btn_relatorios}" />
+
+						</xcp:column>
+
+
+					</p:dataTable>
+				</h:panelGroup>
+
+				<h:panelGroup
+					id="panelPesquisa"
+					rendered="#{revisaoAvaliacoesBacking.statusTela == 2}">
+					<xcp:panelForm>
+
+						<xcp:text
+							id="txtNome"
+							label="#{bundle.lbl_nome}"
+							value="#{revisaoAvaliacoesBacking.boletimSelecionado.funcionarioFk.nome}"
+							readonly="true"
+							size="70" />
+
+						<xcp:combo
+							id="optTipo"
+							label="#{bundle.lbl_tipo}"
+							value="#{revisaoAvaliacoesBacking.boletimSelecionado.probatorioFk.origem}"
+							itens="#{revisaoAvaliacoesBacking.itensOrigem}"
+							readonly="true"
+							size="70" />
+
+						<xcp:dateRange
+							id="data"
+							label="#{bundle.lbl_data}"
+							valueStart="#{revisaoAvaliacoesBacking.boletimSelecionado.dataini}"
+							valueEnd="#{revisaoAvaliacoesBacking.boletimSelecionado.datafim}"
+							readonly="true" />
+
+					</xcp:panelForm>
+
+					<p:dataTable
+						id="tabNotas"
+						value="#{revisaoAvaliacoesBacking.listaBoletinNotas}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						var="row"
+						paginator="false">
+
+						<xcp:column
+							type="String"
+							size="40"
+							headerText="#{bundle.col_conhecimento}">
+
+							<xcp:commandLink
+								actionListener="#{revisaoAvaliacoesBacking.abreHelp(row)}"
+								immediate="true"
+								update=":frmDlgHelp"
+								id="btn_help">
+
+								<h:graphicImage
+									value="/resources/img/ajuda.png"
+									styleClass="xcp_fav_icon2" />
+							</xcp:commandLink>
+
+							<h:outputText
+								value="#{row.descricao}"
+								escape="false" />
+
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="30"
+							headerText="#{bundle.col_respostas}">
+
+							<p:selectOneMenu
+								id="cmbNotaReadOnly"
+								styleClass="cmb_aval"
+								label="#{row.boletimNotaReadOnly.conhecimentoFk.descricao}"
+								value="#{row.boletimNotaReadOnly.nota}"
+								rendered="#{row.tipResposta == 2}"
+								required="#{row.boletimNotaReadOnly.conhecimentoFk.obrigatorio == 1}"
+								disabled="true">
+								<f:selectItems
+									value="#{row.listaNotas}"
+									var="it"
+									itemValue="#{it.nota}"
+									itemLabel="#{it.descricao}" />
+							</p:selectOneMenu>
+
+							<xcp:memo
+								id="txtDescritivaReadOnly"
+								label="#{row.boletimNotaReadOnly.conhecimentoFk.descricao}"
+								required="#{row.boletimNotaReadOnly.conhecimentoFk.obrigatorio == 1}"
+								simple="true"
+								rendered="#{row.tipResposta != 2}"
+								value="#{row.boletimNotaReadOnly.obs}"
+								size="4000"
+								cols="28"
+								readonly="true" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="30"
+							headerText="#{bundle.col_recurso}">
+							<xcp:memo
+								id="txtRecurso"
+								simple="true"
+								cols="32"
+								value="#{row.desDefesaRecurso}"
+								size="4000"
+								readonly="true"
+								rendered="#{!row.emptyDesDefesaRecurso}" />
+						</xcp:column>
+
+
+						<xcp:column
+							type="String"
+							size="30"
+							headerText="#{bundle.col_defesa}">
+							<xcp:memo
+								id="txtDefesaRecurso"
+								simple="true"
+								cols="32"
+								value="#{row.desDefesa}"
+								size="4000"
+								readonly="true"
+								rendered="#{!row.emptyDesDefesa}" />
+
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="40"
+							headerText="#{bundle.col_revisao}">
+							<h:panelGrid
+								columns="2"
+								border="0"
+								styleClass="mytable"
+								columnClasses="colleft,colright">
+								<h:outputText
+									style="font-weight :bold"
+									value="#{bundle.lbl_nota}:"
+									rendered="#{row.tipResposta == 2 and (!row.emptyDesDefesaRecurso or !row.emptyDesDefesa)}" />
+								<p:selectOneMenu
+									id="cmbNota"
+									styleClass="cmb_aval"
+									value="#{row.boletimNota.nota}"
+									rendered="#{row.tipResposta == 2 and (!row.emptyDesDefesaRecurso or !row.emptyDesDefesa)}"
+									required="#{row.boletimNota.conhecimentoFk.obrigatorio == 1}">
+									<f:selectItems
+										value="#{row.listaNotas}"
+										var="it"
+										itemValue="#{it.nota}"
+										itemLabel="#{it.descricao}" />
+								</p:selectOneMenu>
+								<xcp:memo
+									id="txtDescritiva"
+									label="#{bundle.lbl_nota}:"
+									required="#{row.boletimNota.conhecimentoFk.obrigatorio == 1}"
+									rendered="#{row.tipResposta != 2 and (!row.emptyDesDefesaRecurso or !row.emptyDesDefesa)}"
+									value="#{row.boletimNota.obs}"
+									size="4000"
+									cols="32" />
+
+								<xcp:memo
+									id="txtDefesa"
+									cols="32"
+									label="#{bundle.lbl_justificativa}:"
+									value="#{row.boletimNota.defesa}"
+									rendered="#{!row.emptyDesDefesaRecurso or !row.emptyDesDefesa}"
+									size="4000" />
+							</h:panelGrid>
+
+						</xcp:column>
+
+					</p:dataTable>
+
+					<p:fieldset
+						legend="#{bundle.title_anexos}"
+						rendered="#{revisaoAvaliacoesBacking.avalExperiencia}"
+						style="padding-top: 2px;">
+						<p:dataTable
+							id="tabAnex"
+							value="#{revisaoAvaliacoesBacking.listAnx}"
+							var="row"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							rowKey="#{row}">
+
+							<xcp:column
+								headerText="#{bundle.col_desArquivo}"
+								type="String"
+								size="50">
+								<xcp:outputSimple
+									id="outNome"
+									value="#{row.desArquivo}" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="1">
+								<xcp:commandLink
+									immediate="true"
+									id="btn_download_anex"
+									update="tabAnex"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									ajax="false">
+									<h:graphicImage
+										value="/resources/img/download.png"
+										style="margin-top:3px;" />
+									<p:fileDownload
+										value="#{revisaoAvaliacoesBacking.getAnexo(row)}"
+										contentDisposition="attachment" />
+								</xcp:commandLink>
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="1">
+								<xcp:commandLink
+									immediate="true"
+									id="btn_remove_lin"
+									update=":frmAnexo :form:tabAnex"
+									action="#{revisaoAvaliacoesBacking.actionRemoverAnexo(row)}">
+									<h:graphicImage
+										title="#{bundle.hint_remover}"
+										value="/resources/img/remover.png"
+										style="margin-top:3px;" />
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+								</xcp:commandLink>
+							</xcp:column>
+
+						</p:dataTable>
+
+						<h:panelGroup
+							layout="block"
+							style="text-align:center;margin-top:5px;margin-bottom:5px">
+							<xcp:commandButton
+								id="btn_novo_anexo"
+								process="@this"
+								icon="ui-icon-plusthick"
+								value="#{bundle.btn_novo}"
+								oncomplete="PF('w_anexo').show()" />
+						</h:panelGroup>
+
+					</p:fieldset>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_voltar"
+								value="#{bundle.btn_voltar}"
+								process="@form"
+								update="@form"
+								immediate="true"
+								action="#{revisaoAvaliacoesBacking.setStatusTela(1)}"
+								icon="ui-icon-arrowreturnthick-1-w" />
+
+							<xcp:commandButton
+								id="btn_FinalizaPesquisa"
+								value="#{bundle.btn_finalizar_pesquisa}"
+								process="@form"
+								update="@form"
+								action="#{revisaoAvaliacoesBacking.actionFinalizaBoletim}"
+								icon="ui-icon-disk" />
+						</f:facet>
+					</p:toolbar>
+				</h:panelGroup>
+			</h:panelGroup>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgHelp"
+			width="950"
+			height="500"
+			header="#{bundle.title_ajuda}"
+			widgetVar="dlgHelp_w">
+			<xcp:form id="frmDlgHelp">
+
+				<h:panelGrid columns="1">
+					<h:outputText
+						style="font-weight: bold;"
+						value="#{revisaoAvaliacoesBacking.boletimNotasSelecionado.boletimNota.conhecimentoFk.obs}" />
+				</h:panelGrid>
+
+				<p:dataTable
+					id="tabConceiros"
+					value="#{revisaoAvaliacoesBacking.boletimNotasSelecionado.listaNotas}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="rowResp"
+					paginator="false">
+
+					<xcp:column
+						type="String"
+						size="20"
+						headerText="#{bundle.col_respostas}">
+						<xcp:outputSimple value="#{rowResp.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="50"
+						headerText="#{bundle.col_obs}">
+						<xcp:memo
+							simple="true"
+							id="obsResp"
+							readonly="true"
+							value="#{rowResp.obs}"
+							cols="100"
+							size="600" />
+					</xcp:column>
+
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true"
+			dynamic="true">
+			<xcp:form id="frmAnexo">
+				<p:outputPanel>
+
+					<p:fileUpload
+						mode="advanced"
+						auto="true"
+						label="#{bundle.btn_upload}"
+						fileUploadListener="#{revisaoAvaliacoesBacking.actionUploadAnexo}"
+						update=":form:tabAnex" />
+				</p:outputPanel>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

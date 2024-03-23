@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<center>
+		<p:dataTable
+			id="tblHorarios"
+			value="#{operadoresBacking.listaHorarios}"
+			var="row"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			styleClass="tabeladependentes"
+			selection="#{operadoresBacking.listaSelHorarios}"
+			rowKey="#{row}">
+
+			<p:column
+				selectionMode="multiple"
+				style="width:3%;text-align:center" />
+
+			<p:column
+				headerText="#{bundle.col_diaSemana}"
+				style="width:100px;">
+				<xcp:outputSimple
+					id="outDia"
+					value="#{row.dia}"
+					itens="#{operadoresBacking.itensDia}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_hrinicio}"
+				style="width:50px;">
+				<xcp:outputTime
+					id="outHrInicio"
+					simple="true"
+					value="#{row.hrInicio}" />
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_hrfim}"
+				style="width:50px;">
+				<xcp:outputTime
+					id="outHrFim"
+					simple="true"
+					value="#{row.hrFim}" />
+			</p:column>
+		</p:dataTable>
+
+		<xcp:commandButton
+			id="btn_adicionar"
+			value="#{bundle.btn_adicionar}"
+			update=":frmHor"
+			oncomplete="PF('dlgHor_w').show();"
+			icon="ui-icon-plusthick">
+			<f:setPropertyActionListener
+				target="#{operadoresBacking.horario}"
+				value="#{null}" />
+		</xcp:commandButton>
+
+		<xcp:commandButton
+			id="btn_removerSel"
+			value="#{bundle.btn_removerSel}"
+			action="#{operadoresBacking.actionRemoverSel}"
+			update="tblHorarios"
+			icon="ui-icon-trash">
+
+			<p:confirm
+				header="#{bundle.tit_confirma_remover}"
+				message="#{bundle.msg_confirma_remover}"
+				icon="ui-icon-alert" />
+
+		</xcp:commandButton>
+
+	</center>
+
+</ui:composition>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<xcp:panelForm>
+			<xcp:outputNumber
+				id="txtSeqExecucao"
+				label="#{bundle.lbl_seqExecucao}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.seqExecucao}"
+				size="10"
+				precision="10"
+				scale="0" />
+
+			<xcp:output
+				id="txtCodObjeto"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.codObjeto}"
+				label="#{bundle.lbl_codObjeto}"
+				size="50" />
+
+			<xcp:output
+				id="txtDesObjeto"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.codObjetoFk.desObjeto}"
+				label="#{bundle.lbl_desObjeto}"
+				size="50" />
+
+			<xcp:output
+				id="txtDesModelo"
+				rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.seqModeloFk!=null}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.seqModeloFk.desModelo}"
+				label="#{bundle.lbl_seqModelo}"
+				size="20" />
+
+			<xcp:output
+				id="txtOperador"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.operadorFk.nome}"
+				label="#{bundle.lbl_operador}"
+				size="15" />
+
+			<xcp:outputTimestamp
+				id="txtDthExecucao"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.dthExecucao}"
+				label="#{bundle.lbl_dthExecucao}"
+				pattern="dd/MM/yyyy HH:mm:ss" />
+
+			<xcp:outputTimestamp
+				id="txtDthFinalizacao"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.dthFinalizacao}"
+				label="#{bundle.lbl_dthFinalizacao}"
+				pattern="dd/MM/yyyy HH:mm:ss" />
+
+			<xcp:output
+				id="txtTipFormato"
+				label="#{bundle.lbl_tipFormato}"
+				rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.tipFormato!=null}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.tipFormato}"
+				size="10" />
+
+			<xcp:output
+				id="txtIpAcesso"
+				label="#{bundle.lbl_ipAcesso}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.desIp}" />
+
+			<xcp:output
+				id="txtIp"
+				label="#{bundle.lbl_ipServidor}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.desServidor}" />
+
+			<xcp:outputNumber
+				id="txtPorta"
+				label="#{bundle.lbl_numPorta}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.numPorta}"
+				precision="5"
+				scale="0" />
+
+			<xcp:output
+				id="txtTipSituacao"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.tipSituacao}"
+				label="#{bundle.lbl_tipSituacao}"
+				itens="#{xcpExecucaoConsultaBacking.itensTipSituacao}">
+			</xcp:output>
+
+			<xcp:output
+				id="txtDesHash"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.desHash}"
+				label="#{bundle.lbl_desHash}" />
+
+			<xcp:outputNumber
+				id="txtQtdLinhasProcessadas"
+				label="#{bundle.lbl_qtdLinhasProcessadas}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.qtdLinhasProcessadas}"
+				rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.qtdTotalLinhas!=null}"
+				size="10"
+				precision="10"
+				scale="0"
+				maxValue="9999999999" />
+
+			<xcp:outputNumber
+				id="txtQtdTotalLinhas"
+				label="#{bundle.lbl_qtdTotalLinhas}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.qtdTotalLinhas}"
+				rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.qtdTotalLinhas!=null}"
+				size="10"
+				precision="10"
+				scale="0" />
+		</xcp:panelForm>
+
+		<!-- 	<xcp:memo
+				id="txtTxtErro"
+				readonly="true"
+				rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtErro!=null}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtErro}"
+				label="#{bundle.lbl_txtErro}" /> -->
+
+
+
+		<!-- 	<xcp:memo
+				id="txtTxtSqlErro"
+				readonly="true"
+				rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtSqlErro!=null}"
+				value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtSqlErro}"
+				label="#{bundle.lbl_txtSqlErro}" /> -->
+
+		<p:growl id="growl" />
+		<p:poll
+			interval="1"
+			stop="#{xcpExecucaoConsultaBacking.helper.finalizado}"
+			listener="#{xcpExecucaoConsultaBacking.actionAtualizaBarra}"
+			update="panelGeral" />
+
+		<p:panelGrid>
+			<p:row>
+				<p:column style="width: 600px;">
+					<p:outputLabel
+						value="#{bundle.lbl_txtErro}#{viewUtil.labelSufix}"
+						for="txtTxtErro"
+						rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtErro!=null}" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column style="width: 600px;">
+					<p:inputTextarea
+						id="txtTxtErro"
+						value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtErro}"
+						label="#{bundle.lbl_txtErro}"
+						rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtErro!=null}"
+						readonly="true"
+						rows="20"
+						cols="60"
+						autoResize="false"
+						style="height:100px; width:100%; resize:none; font-family: monospace; white-space: nowrap;" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column style="width: 600px;">
+					<p:outputLabel
+						value="#{bundle.lbl_txtSqlErro}#{viewUtil.labelSufix}"
+						for="txtTxtSqlErro"
+						rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtSqlErro!=null}" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column style="width: 600px;">
+					<p:inputTextarea
+						id="txtTxtSqlErro"
+						value="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtSqlErro}"
+						label="#{bundle.lbl_txtSqlErro}"
+						rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.txtSqlErro!=null}"
+						readonly="true"
+						rows="20"
+						cols="60"
+						autoResize="false"
+						style="height:100px; width:100%; resize:none; font-family: monospace; white-space: nowrap;" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column style="width: 600px;">
+					<p:progressBar
+						id="barra"
+						widgetVar="pbAjax"
+						ajax="true"
+						value="#{xcpExecucaoConsultaBacking.helper.percentualExecutado}"
+						labelTemplate="#{xcpExecucaoConsultaBacking.helper.labelExecutado}"
+						styleClass="animated"
+						global="false">
+						<p:ajax
+							event="complete"
+							listener="#{progressBarView.onComplete}"
+							update="growl" />
+					</p:progressBar>
+				</p:column>
+				<p:column>
+					<xcp:commandLink
+						icon="ui-icon-trash"
+						immediate="true"
+						rendered="#{xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.tipSituacao == 1 or xcpExecucaoConsultaBacking.xcpExecucaoConsultaDet.tipSituacao == 4}"
+						id="btn_cancela_execucao"
+						update="panelGeral"
+						action="#{xcpExecucaoConsultaBacking.actionFinalizarExecucao}">
+						<h:graphicImage
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" />
+						<p:confirm
+							header="#{bundle.tit_confirma_cancelamento}"
+							message="#{bundle.msg_confirma_cancelamento}"
+							icon="ui-icon-alert" />
+					</xcp:commandLink>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:outputPanel>
+</ui:composition>

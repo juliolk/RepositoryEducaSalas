@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Bancohoras"
+			backing="#{bancohorasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_acordo}"
+					value="#{row.acordo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.acordo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipoAcordo}"
+					value="#{row.tipoAcordo}"
+					itens="#{bancohorasBacking.itensTipoAcordo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipoAcordo}"
+						itens="#{bancohorasBacking.itensTipoAcordo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_periodo}"
+					value="#{row.periodo}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.periodo}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_totalhrcomp}"
+					value="#{row.totalhrcomp}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.totalhrcomp}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtiniciocomp}"
+					value="#{row.dtiniciocomp}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtiniciocomp}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtAcordo"
+						label="#{bundle.lbl_acordo}"
+						required="true"
+						value="#{bancohorasBacking.entity.acordo}"
+						size="10"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not bancohorasBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{bancohorasBacking.entity.descricao}"
+						size="40" />
+
+					<xcp:date
+						id="txtDtinicio"
+						required="true"
+						value="#{bancohorasBacking.entity.dtinicio}"
+						label="#{bundle.lbl_dtinicio}" />
+
+					<xcp:combo
+						id="cboIndPortal"
+						value="#{bancohorasBacking.entity.indPortal}"
+						label="#{bundle.lbl_indPortal}"
+						itens="#{bancohorasBacking.itensSimNaoAvulso}"
+						required="true" />
+
+					<xcp:combo
+						id="cboIndTermino"
+						value="#{bancohorasBacking.entity.indTermino}"
+						label="#{bundle.lbl_indTermino}"
+						required="true"
+						itens="#{bancohorasBacking.itensIndSimNaoNull}" />
+
+					<xcp:combo
+						id="cboTipoAcordo"
+						value="#{bancohorasBacking.entity.tipoAcordo}"
+						label="#{bundle.lbl_tipoAcordo}"
+						required="true"
+						readonly="#{!bancohorasBacking.entity.novo}"
+						itens="#{bancohorasBacking.itensTipoAcordo}">
+						<p:ajax
+							event="change"
+							update="lovAcordoComplemento,lovAcordoComplemento_l,txtPeriodo,txtPeriodo_l,txtTotalhrcomp,txtTotalhrcomp_l,txtDtiniciocomp,txtDtiniciocomp_l,cboEstavel,cboEstavel_l,panelInclude" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovAcordoComplemento"
+						value="#{bancohorasBacking.entity.acordoComplementoFk}"
+						label="#{bundle.lbl_acordo_complemnto}"
+						required="true"
+						rendered="#{bancohorasBacking.entity.tipoAcordo==2}"
+						query="bancohoras_normal"
+						size="5" />
+
+
+					<xcp:number
+						id="txtPeriodo"
+						label="#{bundle.lbl_periodo}"
+						value="#{bancohorasBacking.entity.periodo}"
+						size="10"
+						rendered="#{bancohorasBacking.entity.tipoAcordo!=2}"
+						precision="6"
+						scale="2" />
+
+					<xcp:number
+						id="txtTotalhrcomp"
+						label="#{bundle.lbl_totalhrcomp}"
+						size="10"
+						value="#{bancohorasBacking.entity.totalhrcomp}"
+						rendered="#{bancohorasBacking.entity.tipoAcordo!=2}"
+						precision="6"
+						scale="2" />
+
+					<xcp:date
+						id="txtDtiniciocomp"
+						value="#{bancohorasBacking.entity.dtiniciocomp}"
+						rendered="#{bancohorasBacking.entity.tipoAcordo!=2}"
+						label="#{bundle.lbl_dtiniciocomp}" />
+
+					<xcp:combo
+						id="cboEstavel"
+						value="#{bancohorasBacking.entity.estavel}"
+						label="#{bundle.lbl_estavel}"
+						required="true"
+						rendered="#{bancohorasBacking.entity.tipoAcordo!=2}"
+						itens="#{bancohorasBacking.itensEstavel}" />
+
+					<xcp:combo
+						id="cboTipoLcto"
+						value="#{bancohorasBacking.entity.tipoLancamento}"
+						label="#{bundle.lbl_tipoLancBanco}"
+						required="true"
+						itens="#{bancohorasBacking.itensTipoLancamento}" />
+						
+					<xcp:combo
+						id="cboIndOrgao"
+						value="#{bancohorasBacking.entity.indOrgao}"
+						label="#{bundle.lbl_indOrgao}"
+						itens="#{bancohorasBacking.itensSimNaoAvulso}"
+						required="true" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+
+			<ui:define name="detalhes">
+				<h:panelGroup id="panelInclude">
+					<h:panelGroup rendered="#{bancohorasBacking.entity.tipoAcordo!=2}">
+						<ui:include src="BancohorasForm/BancohorasRestricoesForm.xhtml" />
+						<ui:include src="BancohorasForm/BancohorasRestricoesCodForm.xhtml" />
+						<ui:include src="BancohorasForm/BancohorasRestricoesQtdForm.xhtml" />
+					</h:panelGroup>
+				</h:panelGroup>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

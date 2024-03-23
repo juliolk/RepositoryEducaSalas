@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Natureza"
+			backing="#{naturezaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_natureza}"
+					value="#{row.natureza}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.natureza}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_caged}"
+					value="#{row.caged}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.caged}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fgts}"
+					value="#{row.fgts}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.fgts}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_rais}"
+					value="#{row.rais}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.rais}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtNatureza"
+						label="#{bundle.lbl_natureza}"
+						required="true"
+						value="#{naturezaBacking.entity.natureza}"
+						size="10"
+						maxValue="99999999"
+						readonly="#{not naturezaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{naturezaBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:text
+						id="txtCaged"
+						label="#{bundle.lbl_caged}"
+						required="true"
+						value="#{naturezaBacking.entity.caged}"
+						size="10" />
+
+					<xcp:text
+						id="txtFgts"
+						label="#{bundle.lbl_fgts}"
+						required="true"
+						value="#{naturezaBacking.entity.fgts}"
+						size="10" />
+
+					<xcp:text
+						id="txtRais"
+						label="#{bundle.lbl_rais}"
+						required="true"
+						value="#{naturezaBacking.entity.rais}"
+						size="10" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

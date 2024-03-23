@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	
+	<style type="text/css">
+		.help-text {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+	</style>
+	
+	<xcp:panelManutDetalhes id="EstacaoPontoIps"
+		backing="#{estacaoPontoIpsBacking}" masterId="EstacaoPonto">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.col_codigo}" value="#{row.codigo}"
+				type="Number" width="5%">
+				<xcp:outputSimpleNumber value="#{row.codigo}" precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_nomemaquina}"
+				value="#{row.nomeMaquina}" type="String" width="20%">
+				<xcp:outputSimple value="#{row.nomeMaquina}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_ipInicial}"
+				value="#{row.ipInicial}" type="String" width="20%">
+				<xcp:outputSimple value="#{row.ipInicial}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_ipFinal}" value="#{row.ipFinal}"
+				type="String" width="20%">
+				<xcp:outputSimple value="#{row.ipFinal}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+				<xcp:text id="txtNomeMaquina_EstacaoPontoIps"
+					label="#{bundle.col_nomemaquina}"
+					value="#{estacaoPontoIpsBacking.entity.nomeMaquina}" size="50" />
+
+				<xcp:text id="txtIpInicial_EstacaoPontoIps"
+					label="#{bundle.col_ipInicial}"
+					value="#{estacaoPontoIpsBacking.entity.ipInicial}" size="20" />
+
+				<xcp:text id="txtIpFinal_EstacaoPontoIps"
+					label="#{bundle.col_ipFinal}"
+					value="#{estacaoPontoIpsBacking.entity.ipFinal}" size="20" />
+
+			</xcp:panelForm>
+			<p:outputPanel styleClass="help-text">#{ bundle.msg_cadastroestacaoips }</p:outputPanel>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

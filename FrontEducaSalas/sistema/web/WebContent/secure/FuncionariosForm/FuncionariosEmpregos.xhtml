@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:outputText
+		value="#{tipodocCoresBacking.getCores(11)}"
+		escape="false" />
+
+	<p:dataTable
+		id="tabListaEmpregos"
+		value="#{funcionariosBacking.listaEmpregos}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="empregos"
+		rowKey="#{empregos.PK}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		styleClass="tabelaEmpregos"
+		selectionMode="single"
+		selection="#{funcionariosBacking.empregoSel}"
+		rowStyleClass="#{tipodocCoresBacking.getStyelclass(empregos.tipodoc,empregos.dtcancelamento)}">
+
+		<p:ajax
+			event="rowSelect"
+			listener="#{funcionariosBacking.actionEditEmprego}" />
+
+		<p:column style="width:16px">
+			<p:rowToggler rendered="#{empregos.detalhes}" />
+		</p:column>
+
+		<xcp:column
+			headerText="#{bundle.col_nomeempresa}"
+			type="String"
+			size="20">
+			<xcp:outputSimple value="#{empregos.nomeempresa}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtadm}"
+			type="Date"
+			size="5">
+			<xcp:outputSimpleDate value="#{empregos.dtadm}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtdem}"
+			type="Date"
+			size="5">
+			<xcp:outputSimpleDate value="#{empregos.dtdem}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_totdias}"
+			type="Number"
+			size="3">
+			<xcp:outputSimpleNumber
+				value="#{empregos.totdias}"
+				precision="5"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_faltas}"
+			type="Number"
+			size="5">
+			<xcp:outputSimpleNumber
+				value="#{empregos.faltas}"
+				precision="5"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_afastamentos}"
+			type="Number"
+			size="5">
+			<xcp:outputSimpleNumber
+				value="#{empregos.afastamentos}"
+				precision="5"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_obs}"
+			type="String"
+			size="37">
+			<xcp:outputSimple value="#{empregos.obsLivre}" />
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="5">
+			<h:panelGroup layout="block">
+				<xcp:commandButton
+					id="btn_removerSel_emprego"
+					immediate="true"
+					disabled="#{funcionariosBacking.disabledExcluir}"
+					action="#{funcionariosBacking.actionRemoverEmprego(empregos)}"
+					update="tabListaEmpregos"
+					icon="ui-icon-trash">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+
+			</h:panelGroup>
+		</xcp:column>
+
+		<p:rowExpansion>
+			<p:dataTable
+				id="tabDoc"
+				var="rowDoc"
+				value="#{empregos.listaEmpregosDoc}"
+				rowKey="#{rowDoc.PK}"
+				paginator="true"
+				selectionMode="single"
+				paginatorPosition="bottom"
+				selection="#{funcionariosBacking.empregoDocSel}"
+				rows="#{viewUtil.tableRows}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				style="margin-bottom:0;" 
+				rowIndexVar="idx">
+
+				<p:ajax
+					event="rowSelect"
+					update=":dlgEmpDoc"
+					oncomplete="PF('dlgEmpDoc_w').show();" />
+				
+				<ui:include src="../DocManual/DocUnificadoDetalhesDoc.xhtml">
+					<ui:param
+						name="rowDoc"
+						value="#{rowDoc}" />
+					<ui:param
+						name="rowPrincipal"
+						value="#{empregos}" />
+					<ui:param
+						name="actionExclusao"
+						value="#{funcionariosBacking.modelEmp}" />
+				</ui:include>
+
+			</p:dataTable>
+		</p:rowExpansion>
+
+
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adic_emprego"
+		immediate="true"
+		action="#{funcionariosBacking.actionOpenEmprego}"
+		value="#{bundle.btn_adicionar}"
+		icon="ui-icon-plusthick"
+		disabled="#{funcionariosBacking.disabledNovo}" />
+
+</ui:composition>

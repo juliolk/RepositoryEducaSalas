@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="ClimaPesquisa"
+			backing="#{climaPesquisaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_pesquisa}"
+					value="#{row.pesquisa}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.pesquisa}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipoQuestionario}"
+					value="#{row.tipoQuestionario}"
+					itens="#{climaPesquisaBacking.itensTipoQuestionarioSelecao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple
+						value="#{row.tipoQuestionario}"
+						itens="#{climaPesquisaBacking.itensTipoQuestionario}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_selecao}"
+					value="#{row.selecaoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimpleNumber value="#{row.selecaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.publicacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.publicacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{row.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.termino}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_sigilosa}"
+					value="#{row.sigilosa}"
+					itens="#{climaPesquisaBacking.itensSigilosa}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.sigilosa}"
+						itens="#{climaPesquisaBacking.itensSigilosa}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtPesquisa"
+						label="#{bundle.lbl_pesquisa}"
+						required="true"
+						value="#{climaPesquisaBacking.entity.pesquisa}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not climaPesquisaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{climaPesquisaBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:combo
+						id="cboTipoQuestionario"
+						value="#{climaPesquisaBacking.entity.tipoQuestionario}"
+						label="#{bundle.lbl_tipoQuestionario}"
+						required="true"
+						itens="#{climaPesquisaBacking.itensTipoQuestionario}" />
+
+					<xcp:lov
+						id="lovSelecao"
+						value="#{climaPesquisaBacking.entity.selecaoFk}"
+						label="#{bundle.lbl_selecao}"
+						required="true"
+						query="clima_selecao"
+						size="4" />
+
+					<xcp:memo
+						id="txtObjetivo"
+						label="#{bundle.lbl_objetivo}"
+						value="#{climaPesquisaBacking.entity.objetivo}"
+						size="2000" />
+
+					<xcp:date
+						id="txtPublicacao"
+						required="true"
+						value="#{climaPesquisaBacking.entity.publicacao}"
+						label="#{bundle.lbl_inicio}" />
+
+					<xcp:date
+						id="txtTermino"
+						value="#{climaPesquisaBacking.entity.termino}"
+						label="#{bundle.lbl_termino}" />
+
+					<xcp:combo
+						id="cboSigilosa"
+						value="#{climaPesquisaBacking.entity.sigilosa}"
+						label="#{bundle.lbl_sigilosa}"
+						required="true"
+						itens="#{climaPesquisaBacking.itensSigilosa}" />
+					
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="ClimaPesquisaForm/ClimaQuestionarioForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

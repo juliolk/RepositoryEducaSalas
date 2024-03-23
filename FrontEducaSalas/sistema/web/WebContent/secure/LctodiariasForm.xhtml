@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionarioLazy
+			id="Lctodiarias"
+			backing="#{lctodiariasBacking}"
+			scrollable="false">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtsaida}"
+					value="#{row.dtsaida}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtsaida}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtchegada}"
+					value="#{row.dtchegada}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtchegada}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qp1}"
+					value="#{row.qp1}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.qp1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_p1}"
+					value="#{row.p1}"
+					type="Number"
+					size="11"
+					rendered="#{lctodiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.p1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qr1}"
+					value="#{row.qr1}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.qr1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_r1}"
+					value="#{row.r1}"
+					type="Number"
+					size="11"
+					rendered="#{lctodiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.r1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_nivel}"
+					value="#{row.nivel}"
+					type="String"
+					itens="#{lctodiariasBacking.itensDiariasNiveisNull}"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.nivel}"
+						itens="#{lctodiariasBacking.itensDiariasNiveisNull}"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codlocal}"
+					value="#{row.codlocal}"
+					itens="#{lctodiariasBacking.itensCodLocalNull}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.codlocal}"
+						itens="#{lctodiariasBacking.itensCodLocal}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_total}"
+					value="#{row.total}"
+					type="Number"
+					size="11"
+					rendered="#{lctodiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.total}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_origem}"
+					value="#{row.origemFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.origemFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_destino}"
+					value="#{row.destinoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.destinoFk.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_pa}"
+					value="#{row.pa}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.pa}" />
+				</xcp:column>
+				
+			
+
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+					<xcp:date
+						id="txtDtsaida"
+						required="true"
+						value="#{lctodiariasBacking.entity.dtsaida}"
+						label="#{bundle.lbl_dtsaida}"
+						readonly="#{not lctodiariasBacking.entity.novo}">
+						<p:ajax
+							event="change"
+							process="@this"
+							listener="#{lctodiariasBacking.actionChangeData}"
+							update="txtQp1,txtQr1" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							listener="#{lctodiariasBacking.actionChangeData}"
+							update="txtQp1,txtQr1" />
+					</xcp:date>
+
+					<xcp:date
+						id="txtDtchegada"
+						required="true"
+						value="#{lctodiariasBacking.entity.dtchegada}"
+						label="#{bundle.lbl_dtchegada}"
+						readonly="#{not lctodiariasBacking.entity.novo}">
+						<p:ajax
+							event="change"
+							process="@this"
+							listener="#{lctodiariasBacking.actionChangeDataChegada}"
+							update="txtQp1,txtQr1,txtNivel,txtNivel_l" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							listener="#{lctodiariasBacking.actionChangeDataChegada}"
+							update="txtQp1,txtQr1,txtNivel,txtNivel_l" />
+					</xcp:date>
+
+					<xcp:combo
+						id="txtCodlocal"
+						value="#{lctodiariasBacking.entity.codlocal}"
+						label="#{bundle.lbl_codlocal}"
+						required="true"
+						readonly="#{not lctodiariasBacking.entity.novo}"
+						itens="#{lctodiariasBacking.itensCodLocal}"
+						width="120px">
+						<p:ajax
+							update="txtVlrdolar,txtVlrdolar_l,txtDtPrazo,txtDtPrazo_l,txtNivel,txtNivel_l"
+							process="@this"
+							listener="#{lctodiariasBacking.actionChangeLocal}" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="txtNivel"
+						value="#{lctodiariasBacking.entity.nivel}"
+						label="#{bundle.lbl_nivel}"
+						required="true"
+						readonly="#{not lctodiariasBacking.entity.novo}"
+						itens="#{lctodiariasBacking.itensDiariasNiveis}"
+						width="120px"
+						rendered="#{lctodiariasBacking.entity.dtchegada != null and lctodiariasBacking.entity.codlocal != null}">
+						<p:ajax
+							process="@this"
+							update="txtDtPrazo,txtDtPrazo_l"
+							listener="#{lctodiariasBacking.actionCalculaPrazo}" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtQp1"
+						label="#{bundle.lbl_qtd_diarias_dia_semana}"
+						value="#{lctodiariasBacking.entity.qp1}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not lctodiariasBacking.entity.novo}"
+						required="true"
+						rendered="#{lctodiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQr1"
+						label="#{bundle.lbl_qtd_diarias_final_semana}"
+						value="#{lctodiariasBacking.entity.qr1}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not lctodiariasBacking.entity.novo}"
+						required="true"
+						rendered="#{lctodiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQp1s"
+						label="#{bundle.lbl_qtd_diarias_dia_semana_s}"
+						value="#{lctodiariasBacking.entity.qp1s}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not lctodiariasBacking.entity.novo}"
+						rendered="#{lctodiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQr1s"
+						label="#{bundle.lbl_qtd_diarias_final_semana_s}"
+						value="#{lctodiariasBacking.entity.qr1s}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not lctodiariasBacking.entity.novo}"
+						rendered="#{lctodiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQtdAjuda"
+						label="#{bundle.lbl_qtdajuda}"
+						size="11"
+						value="#{lctodiariasBacking.entity.qtdajuda}"
+						precision="8"
+						scale="2" />
+
+					<xcp:combo
+						id="cboIndUrgencia"
+						value="#{lctodiariasBacking.entity.indUrgencia}"
+						label="#{bundle.lbl_indUrgencia}"
+						itens="#{lctodiariasBacking.itensIndSimNao}"
+						required="true" />
+
+					<xcp:number
+						id="txtVlrdolar"
+						label="#{bundle.lbl_vlrdolar}"
+						size="11"
+						value="#{lctodiariasBacking.entity.vlrdolar}"
+						precision="8"
+						scale="2"
+						required="true"
+						rendered="#{lctodiariasBacking.entity.codlocal == 3}" />
+
+					<xcp:combo
+						id="txtTransporte"
+						value="#{lctodiariasBacking.entity.transporte}"
+						label="#{bundle.lbl_transporte}"
+						required="true"
+						itens="#{lctodiariasBacking.itensTransporte}"
+						width="120px" />
+
+					<xcp:lov
+						id="lovOrigem"
+						value="#{lctodiariasBacking.entity.origemFk}"
+						label="#{bundle.lbl_origem}"
+						required="true"
+						query="cidades"
+						size="8"
+						update="txtQtdKm"
+						selectionListener="#{lctodiariasBacking.selectCidadeOrig}" />
+
+					<xcp:lov
+						id="lovDestino"
+						value="#{lctodiariasBacking.entity.destinoFk}"
+						label="#{bundle.lbl_destino}"
+						required="true"
+						query="cidades"
+						size="8"
+						update="txtQtdKm"
+						selectionListener="#{lctodiariasBacking.selectCidadeDest}" />
+
+					<xcp:number
+						id="txtQtdKm"
+						label="#{bundle.lbl_qtdKm}"
+						size="11"
+						value="#{lctodiariasBacking.entity.qtdkm}"
+						precision="9"
+						readonly="#{lctodiariasBacking.deslocamentoMultiplo}"
+						scale="3" />
+
+					<xcp:text
+						id="txtLocal"
+						label="#{bundle.lbl_local}"
+						value="#{lctodiariasBacking.entity.local}"
+						size="100" />
+
+					<xcp:date
+						id="txtDtlcto"
+						value="#{lctodiariasBacking.entity.dtlcto}"
+						label="#{bundle.lbl_dtlcto}">
+
+						<p:ajax
+							event="change"
+							process="@this"
+							listener="#{lctodiariasBacking.actionCalculaPrazo}"
+							update="txtDtPrazo,txtDtPrazo_l" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							listener="#{lctodiariasBacking.actionCalculaPrazo}"
+							update="txtDtPrazo,txtDtPrazo_l" />
+
+					</xcp:date>
+
+					<xcp:date
+						id="txtDtPrazo"
+						value="#{lctodiariasBacking.entity.dtaPrazo}"
+						label="#{bundle.lbl_dtaprazo}"
+						readonly="true" />
+
+					<xcp:memo
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						value="#{lctodiariasBacking.entity.motivo}"
+						size="500" />
+
+					<xcp:lov
+						id="lovPa"
+						value="#{lctodiariasBacking.entity.paFk}"
+						label="#{bundle.lbl_pa}"
+						query="processos"
+						size="25" />
+
+					<xcp:combo
+						id="cboComprovado"
+						value="#{lctodiariasBacking.entity.comprovada}"
+						label="#{bundle.lbl_comprovado}"
+						required="true"
+						rendered="#{lctodiariasBacking.renderedPar2}"
+						itens="#{lctodiariasBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboPago"
+						value="#{lctodiariasBacking.entity.pago}"
+						label="#{bundle.lbl_pago}"
+						required="true"
+						rendered="#{lctodiariasBacking.renderedPar3}"
+						itens="#{lctodiariasBacking.itensIndSimNao}" />
+					
+					<xcp:number
+						id="txtVlrReembolso" 
+						label="#{bundle.lbl_vlrReembolso}" 
+						size="11"
+						value="#{lctodiariasBacking.entity.vlrReembolso}" 
+						precision="8"
+						scale="2"	/>
+										
+					<xcp:date
+						id="txtDtpgtoReemb" 
+						value="#{lctodiariasBacking.entity.dtpgtoReemb}"
+						label="#{bundle.lbl_dtpgtoReemb}"/>
+										
+					<xcp:number
+						id="txtVlrComplementar" 
+						label="#{bundle.lbl_vlrComplementar}" 
+						size="11"
+						value="#{lctodiariasBacking.entity.vlrComplementar}" 
+						precision="8"
+						scale="2"/>
+										
+					<xcp:date
+						id="txtDtpgtoComp" 
+						value="#{lctodiariasBacking.entity.dtpgtoComp}"
+						label="#{bundle.lbl_dtpgtoComp}"/>
+
+				</xcp:panelForm>
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{lctodiariasBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					oncomplete="PF('w_anexos').show()" />
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<p:outputPanel rendered="#{lctodiariasBacking.deslocamentoMultiplo}">
+					<ui:include src="LctodiariasForm/LctodiariasKmForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{lctodiariasBacking.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{lctodiariasBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{lctodiariasBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo"
+							action="#{lctodiariasBacking.actionEditarAnexo(rowAnex)}">
+
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update="tblAnex :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{lctodiariasBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{lctodiariasBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{lctodiariasBacking.anexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{lctodiariasBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{lctodiariasBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+
+</ui:composition>

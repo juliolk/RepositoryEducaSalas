@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+			<div style="padding-top: 15px; padding-bottom: 15px">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovMatricula_Origem"
+						value="#{permutaBacking.helper.funcOrigem}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="funcionarios_lib"
+						selectionListener="#{permutaBacking.selectMatriculaOrigem}"
+						update="lovSetor_Origem,lovFuncao_Origem,lovCargo_Origem"
+						size="8" />
+
+					<xcp:lov
+						id="lovSetor_Origem"
+						query=""
+						value="#{permutaBacking.helper.setoresOrigem}"
+						label="#{bundle.lbl_setor}"
+						readonly="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovFuncao_Origem"
+						value="#{permutaBacking.helper.funcaoOrigem}"
+						query=""
+						label="#{bundle.lbl_funcao}"
+						readonly="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovCargo_Origem"
+						value="#{permutaBacking.helper.cargoOrigem}"
+						query=""
+						label="#{bundle.lbl_cargo}"
+						readonly="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovTipodocOrigem"
+						value="#{permutaBacking.helper.tipoDocOrigemFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_transf"
+						readonly="#{permutaBacking.readOnlyTipdocOrigem}"
+						params="#{permutaBacking.paramsTipoDoc}"
+						selectionListener="#{permutaBacking.selectTipodocumentoOrigem}"
+						update="lovDocOrigem,lovProcessoOrigem,lovProcessoOrigem_l,btnDownloadDocumentoOrigem"
+						size="8" />
+
+					<xcp:lov
+						id="lovDocOrigem"
+						value="#{permutaBacking.helper.registroOrigemFk}"
+						params="#{permutaBacking.paramsDocOrigem}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						readonly="#{permutaBacking.readOnlyDocOrigem}"
+						size="8"
+						update="lovProcessoOrigem,lovProcessoOrigem_l,btnDownloadDocumentoOrigem"
+						selectionListener="#{permutaBacking.selectDocumentoOrigem}" />
+
+
+					<xcp:lov
+						id="lovProcessoOrigem"
+						value="#{permutaBacking.helper.processoOrigemFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{permutaBacking.readOnlyProcOrigem}"
+						required="#{permutaBacking.requiredProcOrigem}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<xcp:commandButton
+						id="btnDownloadDocumentoOrigem"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{permutaBacking.helper.registroOrigemFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(permutaBacking.helper.registroOrigemFk.registro)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+
+					<p:spacer
+						height="5"
+						width="5" />
+					<p:spacer
+						height="5"
+						width="5" />
+
+					<xcp:lov
+						id="lovMatricula_Dest"
+						value="#{permutaBacking.helper.funcDest}"
+						label="#{bundle.lbl_matriculaTroca}"
+						required="true"
+						selectionListener="#{permutaBacking.selectMatriculaDest}"
+						update="lovSetor_Dest,lovFuncao_Dest,lovCargo_Dest"
+						query="funcionarios_lib"
+						size="8" />
+
+					<xcp:lov
+						id="lovSetor_Dest"
+						value="#{permutaBacking.helper.setoresDest}"
+						label="#{bundle.lbl_setor}"
+						query=""
+						readonly="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovFuncao_Dest"
+						value="#{permutaBacking.helper.funcaoDest}"
+						query=""
+						label="#{bundle.lbl_funcao}"
+						readonly="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovCargo_Dest"
+						value="#{permutaBacking.helper.cargoDest}"
+						query=""
+						label="#{bundle.lbl_cargo}"
+						readonly="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovTipodocDest"
+						value="#{permutaBacking.helper.tipoDocDestFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_transf"
+						readonly="#{permutaBacking.readOnlyTipdocDest}"
+						params="#{permutaBacking.paramsTipoDoc}"
+						selectionListener="#{permutaBacking.selectTipodocumentoDest}"
+						update="lovDocDest,lovProcessoDest,lovProcessoDest_l,btnDownloadDocumentoDest"
+						size="8" />
+
+					<xcp:lov
+						id="lovDocDest"
+						value="#{permutaBacking.helper.registroDestFk}"
+						params="#{permutaBacking.paramsDocDest}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						readonly="#{permutaBacking.readOnlyDocDest}"
+						size="8"
+						update="lovProcessoDest,lovProcessoDest_l,btnDownloadDocumentoDest"
+						selectionListener="#{permutaBacking.selectDocumentoDest}" />
+
+					<xcp:lov
+						id="lovProcessoDest"
+						value="#{permutaBacking.helper.processoDestFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{permutaBacking.readOnlyProcDest}"
+						required="#{permutaBacking.requiredProcDest}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<xcp:commandButton
+						id="btnDownloadDocumentoDest"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{permutaBacking.helper.registroDestFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(permutaBacking.helper.registroDestFk.registro)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+
+					<p:spacer
+						height="5"
+						width="5" />
+
+					<p:spacer
+						height="5"
+						width="5" />
+
+					<xcp:date
+						id="txtDtaTroca"
+						rendered="true"
+						required="true"
+						value="#{permutaBacking.helper.dtaTroca}"
+						label="#{bundle.lbl_dtaTroca}" />
+
+					<xcp:date
+						id="txtDtPrevRetorno"
+						rendered="true"
+						value="#{permutaBacking.helper.dtaRet}"
+						label="#{bundle.lbl_dtprevretorno}" />
+
+					<xcp:combo
+						id="cboTipoPermuta"
+						value="#{permutaBacking.helper.tipoPermuta}"
+						label="#{bundle.lbl_tipoPermuta}"
+						required="true"
+						itens="#{permutaBacking.itensPermuta}" />
+
+					<xcp:combo
+						id="cboIndtemp"
+						value="#{permutaBacking.helper.indtemp}"
+						label="#{bundle.lbl_indtemp}"
+						required="true"
+						itens="#{permutaBacking.itensIndSimNao}"
+						rendered="#{permutaBacking.vagaIndividual}" />
+
+					<xcp:lov
+						id="lovSituacaovaga"
+						value="#{permutaBacking.helper.situacaovagaFk}"
+						label="#{bundle.lbl_situacaovaga}"
+						query="sitvagaocu"
+						size="10"
+						required="true"
+						rendered="#{permutaBacking.vagaIndividual}" />
+
+					<xcp:lov
+						id="lovMotivoTransf"
+						value="#{permutaBacking.helper.motivoTransfFk}"
+						label="#{bundle.lbl_motivoTransf}"
+						query="motivo_transf"
+						size="10"
+						rendered="#{permutaBacking.vagaIndividual}"
+						required="true"
+						params="#{permutaBacking.paramsMotivoTransf}" />
+
+
+				</xcp:panelForm>
+			</div>
+
+			<p:toolbar
+				styleClass="xcp_pmanut_form_toolbar"
+				id="barraBotoes">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_trocar"
+						value="#{bundle.btn_trocar}"
+						process="@form"
+						update="@form"
+						action="#{permutaBacking.actionGeraPermuta}" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

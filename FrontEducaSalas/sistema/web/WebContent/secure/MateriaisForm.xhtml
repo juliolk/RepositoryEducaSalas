@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Materiais"
+			backing="#{materiaisBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_durabilidade}"
+					value="#{row.durabilidade}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.durabilidade}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo_operacao}"
+					value="#{row.procedimentoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.procedimentoFk.descricao}" />
+				</xcp:column>
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datafim}"
+					value="#{row.datafim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datafim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datafim2}"
+					value="#{row.datafim2}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datafim2}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fabricante}"
+					value="#{row.fabricante}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.fabricante}" />
+				</xcp:column>
+ -->
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{materiaisBacking.entity.codigo}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"
+						readonly="#{not materiaisBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{materiaisBacking.entity.descricao}"
+						maxlength="100"
+						size="77" />
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{materiaisBacking.entity.tipoFk}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						query="tipomateriais"
+						size="5"
+						update="txtDtcasco txtDtcasco_l"
+						selectionListener="#{materiaisBacking.selectTipo}" />
+
+					<xcp:number
+						id="txtDurabilidade"
+						label="#{bundle.lbl_durabilidade}"
+						required="true"
+						value="#{materiaisBacking.entity.durabilidade}"
+						size="5"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<xcp:lov
+						id="lovProcedimento"
+						required="true"
+						value="#{materiaisBacking.entity.procedimentoFk}"
+						label="#{bundle.lbl_tipo_operacao}"
+						query="tipooperacao"
+						size="5" />
+
+					<xcp:date
+						id="txtData"
+						value="#{materiaisBacking.entity.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:date
+						id="txtDatafim"
+						value="#{materiaisBacking.entity.datafim}"
+						label="#{bundle.lbl_datafim}" />
+
+					<xcp:date
+						id="txtDatafim2"
+						value="#{materiaisBacking.entity.datafim2}"
+						label="#{bundle.lbl_datafim2}" />
+
+					<xcp:text
+						id="txtFabricante"
+						label="#{bundle.lbl_fabricante}"
+						value="#{materiaisBacking.entity.fabricante}"
+						size="77"
+						maxlength="100" />
+
+					<xcp:date
+						id="txtDtcasco"
+						value="#{materiaisBacking.entity.dtcasco}"
+						label="#{bundle.lbl_dtcasco}"
+						rendered="#{materiaisBacking.renderedCasco}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

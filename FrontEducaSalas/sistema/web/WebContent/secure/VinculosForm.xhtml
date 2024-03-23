@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Vinculos"
+			backing="#{vinculosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_vinculo}"
+					value="#{row.vinculo}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.vinculo}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="35">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_rais}"
+					value="#{row.rais}"
+					type="String"
+					itens="#{vinculosBacking.itensRais}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.rais}"
+						itens="#{vinculosBacking.itensRais}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_caged}"
+					value="#{row.caged}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.caged}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fgts}"
+					value="#{row.fgts}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.fgts}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtVinculo"
+						label="#{bundle.lbl_vinculo}"
+						required="true"
+						value="#{vinculosBacking.entity.vinculo}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not vinculosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{vinculosBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:combo
+						id="cboRais"
+						label="#{bundle.lbl_rais}"
+						required="true"
+						value="#{vinculosBacking.entity.rais}"
+						itens="#{vinculosBacking.itensRais}">
+
+						<p:ajax
+							event="change"
+							update="txtDiasFimContrato txtDiasFimContrato_l txtDiasProrrog txtDiasProrrog_l" />
+
+					</xcp:combo>
+
+
+					<xcp:text
+						id="txtCaged"
+						label="#{bundle.lbl_caged}"
+						required="true"
+						value="#{vinculosBacking.entity.caged}"
+						size="4" />
+
+					<xcp:text
+						id="txtFgts"
+						label="#{bundle.lbl_fgts}"
+						required="true"
+						value="#{vinculosBacking.entity.fgts}"
+						size="4" />
+
+					<xcp:lov
+						id="lovPrevidencia"
+						value="#{vinculosBacking.entity.previdenciaFk}"
+						label="#{bundle.lbl_previdencia}"
+						query="regimeprev"
+						required="true"
+						size="1" />
+
+					<xcp:lov
+						id="lovCategoria"
+						value="#{vinculosBacking.entity.categoriaFk}"
+						label="#{bundle.lbl_categoria}"
+						required="true"
+						query="categoria_trab"
+						size="4" />
+
+					<xcp:lov
+						id="lovRegime"
+						value="#{vinculosBacking.entity.regimeFk}"
+						label="#{bundle.lbl_regime}"
+						required="true"
+						query="regime_juridico"
+						size="4" />
+
+					<xcp:lov
+						id="lovFormaprov"
+						value="#{vinculosBacking.entity.codprovFk}"
+						label="#{bundle.lbl_formaprov}"
+						required="true"
+						query="formaprov"
+						size="4"
+						rendered="#{vinculosBacking.vagaIndividual}" />
+
+					<xcp:number
+						id="txtDiasFimContrato"
+						label="#{bundle.lbl_diasFim}"
+						size="5"
+						value="#{vinculosBacking.entity.diasfimcontrato}"
+						precision="5"
+						rendered="#{vinculosBacking.entity.rais == 10 || vinculosBacking.entity.rais == 35 || vinculosBacking.entity.rais == 97 || vinculosBacking.entity.rais == 99}" />
+
+					<xcp:number
+						id="txtDiasProrrog"
+						label="#{bundle.lbl_diasProrrog}"
+						size="5"
+						value="#{vinculosBacking.entity.diasfimprorrog}"
+						precision="5"
+						rendered="#{vinculosBacking.entity.rais == 10 || vinculosBacking.entity.rais == 35 || vinculosBacking.entity.rais == 97 || vinculosBacking.entity.rais == 99}" />
+
+					<xcp:border
+						id="brdCalcular"
+						header="#{bundle.brd_calcular}"
+						stylefieldset="margin-left:0px !important;">
+						<xcp:radio
+							id="cboTpfolha1"
+							value="#{vinculosBacking.entity.tpfolha1}"
+							label="#{bundle.lbl_tpfolha1}"
+							itens="#{vinculosBacking.itensIndSimNao}" />
+
+						<xcp:radio
+							id="cboTpfolha2"
+							value="#{vinculosBacking.entity.tpfolha2}"
+							label="#{bundle.lbl_tpfolha2}"
+							itens="#{vinculosBacking.itensIndSimNao}" />
+					</xcp:border>
+
+					<xcp:combo
+						id="cboRecadobrig"
+						value="#{vinculosBacking.entity.recadobrig}"
+						label="#{bundle.lbl_recadobrig}"
+						required="true"
+						itens="#{vinculosBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndPadrao"
+						value="#{vinculosBacking.entity.indPadraoprov}"
+						label="#{bundle.lbl_indPadraoprov}"
+						required="true"
+						itens="#{vinculosBacking.itensIndSimNao}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{vinculosBacking.entity.obs}"
+						size="400" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="VinculosForm/VinculosPerfisForm.xhtml" />
+
+				<ui:include src="VinculosForm/VinculosCamposcadForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

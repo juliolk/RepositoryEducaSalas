@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="EstacaoPontoAdmin"
+			backing="#{estacaoPontoAdminBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.lbl_estacao_ponto}"
+					value="#{row.estacaoPontoFk.descricao}" type="String" size="30">
+					<xcp:outputSimple value="#{row.estacaoPontoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.lbl_matricula}"
+					value="#{row.matriculaFk.matricula}" type="String" size="10">
+					<xcp:outputSimple value="#{row.matriculaFk.matricula}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.lbl_funcionario}"
+					value="#{row.matriculaFk.nome}" type="String" size="50">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_inicioval}"
+					value="#{row.dataInicioValidade}" type="Date" size="10">
+					<xcp:outputSimpleDate value="#{row.dataInicioValidade}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_fimval}"
+					value="#{row.dataFimValidade}" type="Date" size="10">
+					<xcp:outputSimpleDate value="#{row.dataFimValidade}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov id="lovCodEstacaoPonto"
+						value="#{estacaoPontoAdminBacking.entity.estacaoPontoFk}"
+						label="#{bundle.lbl_estacao_ponto}" required="true"
+						query="estacao_ponto" size="8" />
+
+					<xcp:lov id="lovMatricula"
+						value="#{estacaoPontoAdminBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}" required="true"
+						query="funcionarios" size="8" />
+
+					<xcp:date id="txtDataInicioValidade"
+						value="#{estacaoPontoAdminBacking.entity.dataInicioValidade}"
+						label="#{bundle.col_inicioval}" />
+
+					<xcp:date id="txtDataFimValidade"
+						value="#{estacaoPontoAdminBacking.entity.dataFimValidade}"
+						label="#{bundle.col_fimval}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

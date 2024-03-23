@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+.subtabela {
+	width: auto !important;
+}
+
+.subtabela td {
+	border: none !important;
+}
+</style>
+		<xcp:panelContent>
+
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovMatricula_empregos"
+					value="#{lancLoteAverbacaoBacking.helper.funcionario}"
+					label="#{bundle.lbl_matricula}"
+					required="true"
+					query="funcionariosLov"
+					size="14" />
+
+				<xcp:lov
+					id="lovCategoria_empregos"
+					value="#{lancLoteAverbacaoBacking.helper.empregosCab.categoriaFk}"
+					label="#{bundle.lbl_categoria}"
+					query="empregos_categoria"
+					required="true"
+					update="tabEmpregos"
+					selectionListener="#{lancLoteAverbacaoBacking.selectCategoria}"
+					size="14" />
+
+
+				<xcp:lov
+					id="lovTipodoc_empregos"
+					value="#{lancLoteAverbacaoBacking.helper.empregosCab.tipodocFk}"
+					selectionListener="#{lancLoteAverbacaoBacking.selectTipodocumentoEmpregos}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_aver"
+					params="#{lancLoteAverbacaoBacking.paramsTipoDoc}"
+					size="14"
+					update="lovDocumento_empregos,lovProcesso_empregos,lovProcesso_empregos_l,btnDownloadDocumento" />
+
+				<xcp:lov
+					id="lovDocumento_empregos"
+					value="#{lancLoteAverbacaoBacking.helper.empregosCab.registroFk}"
+					params="#{lancLoteAverbacaoBacking.paramsTipodocumentoEmpregos}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					size="14"
+					update="lovProcesso_empregos,lovProcesso_empregos_l,btnDownloadDocumento" />
+
+				<xcp:lov
+					id="lovProcesso_empregos"
+					value="#{lancLoteAverbacaoBacking.helper.empregosCab.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					required="#{lancLoteAverbacaoBacking.requiredProcEmp}"
+					size="25" />
+
+
+				<xcp:number
+					id="txtNumerocert"
+					label="#{bundle.lbl_numerocert}"
+					value="#{lancLoteAverbacaoBacking.helper.empregosCab.numerocert}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<xcp:commandButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{lancLoteAverbacaoBacking.helper.empregosCab.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(lancLoteAverbacaoBacking.helper.empregosCab.registro)}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{lancLoteAverbacaoBacking.helper.obs}"
+					size="2000" />
+
+			</xcp:panelForm>
+
+
+			<p:dataTable
+				id="tabEmpregos"
+				var="row"
+				widgetVar="dlgEmp_w"
+				rowIndexVar="idx"
+				value="#{lancLoteAverbacaoBacking.helper.listaEmpregos}"
+				editable="true">
+
+				<p:ajax
+					event="rowEdit"
+					update=":form:upHints :form:totgeral" />
+
+				<p:ajax
+					event="rowEditCancel"
+					update=":form:upHints" />
+
+
+				<p:column style="width:16px">
+					<p:rowToggler
+						rendered="#{lancLoteAverbacaoBacking.renderedReflexos}" />
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.col_nomeEmp}"
+					style="width: 40%; text-align: center">
+					<p:cellEditor>
+						<f:facet name="output">
+							<xcp:outputSimple
+								id="txtNomeEmpOut"
+								value="#{row.nomeempresa}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText
+								id="txtNomeEmp"
+								value="#{row.nomeempresa}"
+								label="#{bundle.lbl_nomeempresa}"
+								size="70">
+								<p:ajax
+									event="change"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,0)}"
+									update="txtTotDiasOut :form:totgeral" />
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.col_dtAdm}"
+					style="text-align: center;width: 20%">
+					<p:cellEditor>
+						<f:facet name="output">
+							<xcp:outputSimpleDate
+								id="txtDtadmOut"
+								value="#{row.dtadm}" />
+						</f:facet>
+						<f:facet name="input">
+							<xcp:date
+								id="txtDtadm"
+								simple="true"
+								value="#{row.dtadm}">
+								<p:ajax
+									event="change"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,0)}"
+									update="txtTotDiasOut :form:totgeral" />
+
+								<p:ajax
+									event="dateSelect"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,0)}"
+									update="txtTotDiasOut :form:totgeral" />
+
+							</xcp:date>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.col_dtDem}"
+					style="text-align: center;width: 20%">
+					<p:cellEditor>
+						<f:facet name="output">
+							<xcp:outputSimpleDate
+								id="txtDtdemOut"
+								value="#{row.dtdem}"
+								precision="5"
+								scale="0" />
+						</f:facet>
+						<f:facet name="input">
+							<xcp:date
+								id="txtDtdem"
+								simple="true"
+								value="#{row.dtdem}">
+								<p:ajax
+									event="change"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,0)}"
+									update="txtTotDiasOut :form:totgeral" />
+
+								<p:ajax
+									event="dateSelect"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,0)}"
+									update="txtTotDiasOut :form:totgeral" />
+
+							</xcp:date>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.col_faltas}"
+					style="text-align: center;width: 8%">
+					<p:cellEditor>
+						<f:facet name="output">
+							<xcp:outputSimpleNumber
+								id="txtFaltasOut"
+								value="#{row.faltas}"
+								precision="5"
+								scale="0" />
+						</f:facet>
+						<f:facet name="input">
+							<xcp:number
+								size="8"
+								precision="5"
+								scale="0"
+								maxValue="99999"
+								id="txtFaltas"
+								simple="true"
+								value="#{row.faltas}">
+								<p:ajax
+									event="change"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,0)}"
+									update="txtTotDiasOut :form:totgeral" />
+							</xcp:number>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column
+					headerText="#{bundle.col_afastamentos}"
+					style="text-align: center;width: 8%">
+					<p:cellEditor>
+						<f:facet name="output">
+							<xcp:outputSimpleNumber
+								id="txtAfastamentosOut"
+								value="#{row.afastamentos}"
+								precision="5"
+								scale="0" />
+						</f:facet>
+						<f:facet name="input">
+							<xcp:number
+								size="8"
+								precision="5"
+								scale="0"
+								maxValue="99999"
+								id="txtAfastamentos"
+								simple="true"
+								value="#{row.afastamentos}">
+								<p:ajax
+									event="change"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,0)}"
+									update="txtTotDiasOut :form:totgeral" />
+							</xcp:number>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+
+				<p:column
+					headerText="#{bundle.col_totDias}"
+					style="text-align: center;width: 5%">
+					<p:cellEditor>
+						<f:facet name="output">
+							<xcp:outputSimple
+								id="txtTotOut"
+								value="#{row.totdias}"
+								style="width:96%" />
+						</f:facet>
+						<f:facet name="input">
+							<xcp:number
+								id="txtTotDiasOut"
+								value="#{row.totdias}"
+								label="#{bundle.col_totdias}"
+								size="5"
+								simple="true">
+								<p:ajax
+									event="change"
+									listener="#{lancLoteAverbacaoBacking.changeRow(row,1)}"
+									update="txtTotDiasOut :form:totgeral" />
+							</xcp:number>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column style="width:3%">
+					<xcp:commandLink
+						immediate="true"
+						update="tabEmpregos"
+						action="#{lancLoteAverbacaoBacking.actionRemoverLinha(idx)}">
+						<h:graphicImage
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" />
+
+					</xcp:commandLink>
+				</p:column>
+
+
+				<p:column style="width:3%;text-align:right">
+					<p:rowEditor />
+				</p:column>
+
+
+				<p:rowExpansion>
+					<center>
+						<p:outputPanel id="pnlref">
+							<h:panelGrid
+								border="0"
+								columns="2"
+								styleClass="subtabela">
+								<xcp:lov
+									id="lovTipoReflexoEmp"
+									value="#{lancLoteAverbacaoBacking.empReflexo}"
+									label="#{bundle.lbl_reflexo}"
+									query="empreflexo"
+									size="14"
+									selectionListener="#{lancLoteAverbacaoBacking.selectEmpReflexo}"
+									rowindex="#{idx}" />
+							</h:panelGrid>
+							<p:dataTable
+								id="tblref"
+								value="#{row.listReflexo}"
+								var="rowref"
+								style="max-width: 600px;">
+								<f:facet name="header">#{bundle.tit_reflexos}</f:facet>
+
+								<p:column
+									headerText="#{bundle.col_reflexo}"
+									type="String"
+									width="25">
+									<xcp:outputSimple value="#{rowref.reflexoFk.descricao}" />
+								</p:column>
+
+								<p:column
+									width="1"
+									headerText="#{bundle.col_remover}">
+
+									<p:commandButton
+										icon="ui-icon-trash"
+										id="btn_remover"
+										update="tblref"
+										action="#{lancLoteAverbacaoBacking.actionRemoverReflexo(row,rowref)}"
+										immediate="true" />
+
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</center>
+				</p:rowExpansion>
+
+
+			</p:dataTable>
+
+			<div
+				style="text-align: right; font-weight: bold; font-size: 13px; padding-right: 5px">
+				<h:outputText
+					id="totgeral"
+					value="Total de dias: #{lancLoteAverbacaoBacking.helper.totdias}" />
+			</div>
+
+			<xcp:tableHints
+				id="upHints"
+				tableId="form:tabEmpregos" />
+
+			<h:panelGroup
+				layout="block"
+				id="pnlTeste"
+				style="padding:5px;text-align:center">
+
+				<xcp:commandButton
+					id="btn_adicionar"
+					value="#{bundle.btn_adicionar}"
+					update="tabEmpregos"
+					icon="ui-icon-plusthick"
+					action="#{lancLoteAverbacaoBacking.actionNovaLinha}" />
+
+			</h:panelGroup>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gerar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gerar}"
+						update="@form :formErros"
+						action="#{lancLoteAverbacaoBacking.actionGravar}">
+						<p:confirm
+							header="#{bundle.tit_confirma_gravar}"
+							message="#{bundle.msg_confirma_gravar}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgErros"
+			header="#{bundle.tit_dlgErrosEmp}"
+			widgetVar="wDlgErros"
+			width="700"
+			resizable="true"
+			modal="true">
+
+			<h:panelGroup
+				id="mypanel"
+				layout="block"
+				style="padding-bottom: 10px;font-weight: bold;">
+				<h:outputText value="#{bundle.tit_alguns_averbac}" />
+			</h:panelGroup>
+
+			<xcp:form id="formErros">
+				<p:inputTextarea
+					value="#{lancLoteAverbacaoBacking.listErrosStr}"
+					cols="90"
+					autoResize="false"
+					rows="20" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

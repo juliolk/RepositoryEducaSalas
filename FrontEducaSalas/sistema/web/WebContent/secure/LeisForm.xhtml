@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Leis"
+			backing="#{leisBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_nro}"
+					value="#{row.nro}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.nro}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="45">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtNro"
+						label="#{bundle.lbl_nro}"
+						required="true"
+						value="#{leisBacking.entity.nro}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"
+						readonly="#{not leisBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{leisBacking.entity.descricao}"
+						size="50" />
+					
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"						
+						value="#{leisBacking.entity.obs}"
+						size="4000" />
+<!-- Se necessário
+					<xcp:number
+						id="txtVagas"
+						label="#{bundle.lbl_totalVagas}"
+						value="#{leisBacking.qtdVagasCriadas}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"
+						readonly="true" />
+ -->
+					<xcp:border
+						id="brd_validade_lei"
+						header="#{bundle.lbl_validade_lei}"
+						stylefieldset="margin-left: 0px !important">
+						<xcp:date
+							id="txtDtinicio"
+							required="true"
+							value="#{leisBacking.entity.dtinicio}"
+							label="#{bundle.lbl_dtinicio}" />
+
+						<xcp:date
+							id="txtDtfim"
+							required="true"
+							value="#{leisBacking.entity.dtfim}"
+							label="#{bundle.lbl_dtfim}" />
+					</xcp:border>
+
+					<xcp:border
+						id="brd_prorrogacao_lei"
+						header="#{bundle.lbl_prorrogacao_lei}"
+						stylefieldset="margin-left: 0px !important">
+						<xcp:date
+							id="txtDtprorog"
+							value="#{leisBacking.entity.dtprorog}"
+							label="#{bundle.lbl_dtprorog}" />
+
+						<xcp:date
+							id="txtDtfimprorog"
+							value="#{leisBacking.entity.dtfimprorog}"
+							label="#{bundle.lbl_dtfimprorog}" />
+
+					</xcp:border>
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="LeisForm/CargosLeiForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

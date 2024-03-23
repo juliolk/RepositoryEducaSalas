@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tabFormacao"
+		var="row"
+		value="#{socialBacking.listaFormacao}"
+		rowKey="#{rowExame.PK}"
+		filteredValue="#{socialBacking.listaFormacaoFiltrados}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="#{viewUtil.tableRows}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		style="margin-bottom:0;">
+		<f:facet name="header">#{bundle.tit_formacao}</f:facet>
+
+		<xcp:column
+			headerText="#{bundle.col_curso}"
+			type="String"
+			size="20">
+			<xcp:outputSimple
+				value="#{row.curso}"
+				itens="#{socialBacking.itensFormacaoCurso}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_area}"
+			type="String"
+			size="20">
+			<xcp:outputSimpleDate value="#{row.area}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtinicio}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.dtinicio}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtfim}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.dtfim}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_pontos}"
+			type="Number"
+			size="15">
+			<xcp:outputSimple value="#{row.pontos}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_situacao}"
+			type="String"
+			size="15">
+			<xcp:outputSimple value="#{row.situacaoFk.descricao}" />
+		</xcp:column>
+
+	</p:dataTable>
+</ui:composition>

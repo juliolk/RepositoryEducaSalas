@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+
+			<p:blockUI
+				block=":form"
+				widgetVar="blockForm_w">
+				<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+			</p:blockUI>
+
+			<h:panelGroup
+				id="filtroSelecao"
+				rendered="#{consultaDocumentosBacking.telaPesquisa}">
+				<p:fieldset
+					id="brd_opcoes"
+					style="width: 800px"
+					legend="#{bundle.title_dados}">
+					<xcp:panelForm>
+
+						<xcp:numberRange
+							id="txtDoc"
+							label="#{bundle.lbl_numPortaria}"
+							valueStart="#{consultaDocumentosBacking.helper.nrDocIni}"
+							valueEnd="#{consultaDocumentosBacking.helper.nrDocFim}" />
+
+						<xcp:numberRange
+							id="txtLivro"
+							label="#{bundle.lbl_numLivro}"
+							valueStart="#{consultaDocumentosBacking.helper.numLivroIni}"
+							valueEnd="#{consultaDocumentosBacking.helper.numLivroFim}" />
+
+						<xcp:dateRange
+							id="txtDtpublicacao"
+							required="true"
+							valueStart="#{consultaDocumentosBacking.helper.dtpublicacaoIni}"
+							valueEnd="#{consultaDocumentosBacking.helper.dtpublicacaoFim}"
+							label="#{bundle.lbl_dtpublicacao_doc}" />
+					</xcp:panelForm>
+
+				</p:fieldset>
+
+				<p:fieldset
+					id="brd_modelos"
+					legend="#{bundle.tit_filtros_modelos}"
+					style="width: 800px">
+
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovTipodoc"
+							value="#{consultaDocumentosBacking.helper.tipodocFk}"
+							label="#{bundle.lbl_tipodoc}"
+							query="tipodocumento"
+							size="15" />
+					</xcp:panelForm>
+
+					<xcp:commandButton
+						id="btn_add_comiss"
+						style="margin-top:5px;margin-bottom:5px;"
+						action="#{consultaDocumentosBacking.actionAdicionarModelo}"
+						value="#{bundle.btn_adicionar}"
+						icon="ui-icon-plusthick"
+						update="brd_modelos" />
+
+					<xcp:commandButton
+						id="btn_limpar_mod"
+						value="#{bundle.btn_limpar}"
+						style="margin-top:10px;margin-bottom:10px"
+						icon="ui-icon-trash"
+						action="#{consultaDocumentosBacking.actionLimparModelo}"
+						update="modelos" />
+
+					<p:dataTable
+						id="modelos"
+						var="row"
+						value="#{consultaDocumentosBacking.helper.listaModelos}"
+						selection="#{consultaDocumentosBacking.helper.listaModelosSelecionados}"
+						rowKey="#{row}"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+
+						<p:column
+							selectionMode="multiple"
+							style="width:20px;text-align:center" />
+
+						<xcp:column
+							headerText="#{bundle.col_tipodoc}"
+							type="Number"
+							size="20">
+							<xcp:outputSimpleNumber
+								value="#{row.tipo}"
+								precision="8"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_descricao}"
+							type="String"
+							size="70">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</xcp:column>
+					</p:dataTable>
+				</p:fieldset>
+
+
+				<p:fieldset
+					id="brd_matriculas"
+					legend="#{bundle.tit_filtros_matriculas}"
+					style="width: 800px">
+
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovMatricula"
+							value="#{consultaDocumentosBacking.helper.funcionariosLov}"
+							label="#{bundle.lbl_funcionario}"
+							query="funcionariosLov"
+							update="tblFuncionarios"
+							size="15" />
+					</xcp:panelForm>
+
+					<xcp:commandButton
+						id="btn_add_mat"
+						style="margin-top:5px;margin-bottom:5px;"
+						action="#{consultaDocumentosBacking.actionAdicionarFuncionario}"
+						value="#{bundle.btn_adicionar}"
+						icon="ui-icon-plusthick"
+						update="brd_matriculas" />
+
+					<xcp:commandButton
+						id="btn_limpar_mat"
+						value="#{bundle.btn_limpar}"
+						style="margin-top:10px;margin-bottom:10px"
+						icon="ui-icon-trash"
+						action="#{consultaDocumentosBacking.actionLimparFuncionario}"
+						update="tblFuncionarios" />
+
+					<p:dataTable
+						id="tblFuncionarios"
+						var="rowF"
+						value="#{consultaDocumentosBacking.helper.listFuncionarios}"
+						selection="#{consultaDocumentosBacking.helper.listFuncionariosSelecionados}"
+						rowKey="#{rowF}"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+
+						<p:column
+							selectionMode="multiple"
+							style="width:20px;text-align:center" />
+
+						<xcp:column
+							headerText="#{bundle.col_matricula}"
+							type="Number"
+							size="20">
+							<xcp:outputSimpleNumber
+								value="#{rowF.matricula}"
+								precision="8"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_nome}"
+							type="String"
+							size="70">
+							<xcp:outputSimple value="#{rowF.nome}" />
+						</xcp:column>
+					</p:dataTable>
+				</p:fieldset>
+
+				<p:commandButton
+					id="btn_pesquisar"
+					style="margin-left:5px;margin-top:15px;margin-bottom:5px;"
+					action="#{consultaDocumentosBacking.actionPesquisar}"
+					value="#{bundle.btn_pesquisar}"
+					icon="ui-icon-search"
+					update="@form"
+					onstart="PF('blockForm_w').show();"
+					oncomplete="PF('blockForm_w').hide();" />
+			</h:panelGroup>
+
+			<p:fieldset
+				id="brd_pesquisa"
+				legend="#{bundle.tit_documentos}"
+				rendered="#{consultaDocumentosBacking.telaListagem}">
+
+				<p:commandButton
+					id="btn_voltar"
+					style="margin-top:15px;margin-bottom:5px;"
+					action="#{consultaDocumentosBacking.actionVoltar}"
+					value="#{bundle.btn_voltar}"
+					icon="ui-icon-arrowreturnthick-1-w"
+					update="@form" />
+
+				<xcp:commandButton
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)">
+					<p:fileDownload
+						value="#{consultaDocumentosBacking.downloadDocumento}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+
+				<p:dataTable
+					id="table_resultado"
+					var="row"
+					value="#{consultaDocumentosBacking.helper.lista}"
+					filteredValue="#{consultaDocumentosBacking.helper.listaFiltrados}"
+					rows="#{viewUtil.tableRows}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					filterMap="#{consultaDocumentosBacking.filterMap}"
+					paginatorPosition="bottom"
+					resizableColumns="true"
+					rowKey="#{row}">
+
+					<xcp:column size="3">
+						<p:selectBooleanCheckbox
+							value="#{row.checked}"
+							disabled="#{row.indDocumento == 0}">
+							<p:ajax process="@this" />
+						</p:selectBooleanCheckbox>
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nrdoc}"
+						value="#{row.nrdoc}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.nrdoc}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipo}"
+						value="#{row.descTipDoc}"
+						type="String"
+						size="20">
+						<xcp:outputSimple value="#{row.descTipDoc}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_origem}"
+						value="#{row.origem}"
+						itens="#{consultaDocumentosBacking.itensOrigem}"
+						type="String"
+						size="10">
+						<xcp:outputSimple
+							value="#{row.origem}"
+							itens="#{consultaDocumentosBacking.itensOrigem}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtpublicacao}"
+						value="#{row.dtpublicacao}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtpublicacao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtini}"
+						value="#{row.dtini}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtini}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtfim}"
+						value="#{row.dtfim}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtfim}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_processo}"
+						value="#{row.processo}"
+						type="String"
+						size="20">
+						<xcp:outputSimple value="#{row.processo}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dthexclusao}"
+						value="#{row.dthexclusao}"
+						type="Date"
+						size="10">
+						<xcp:outputSimpleTimestamp value="#{row.dthexclusao}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+				<script type="text/javascript">
+			function downloadFileStart() {
+				PF('w_dlgXcpExecStatus').show();
+			}
+	
+			function downloadFileStop() {
+				PF('w_dlgXcpExecStatus').hide();
+			}
+		</script>
+			</p:fieldset>
+
+
+
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

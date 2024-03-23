@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_conjuge}"
+		modal="true"
+		id="dlgConj"
+		widgetVar="dlgConj_w"
+		dynamic="true"
+		onShow="XCUtil.selecttab('tabFuncionarios_w','tabDadosFilhacao')">
+		<xcp:form id="frmConj">
+
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDtaini"
+					required="true"
+					value="#{funcionariosBacking.conjuge.dtinicio}"
+					label="#{bundle.lbl_dtaini}" />
+
+				<xcp:date
+					id="txtDtafim"
+					required="true"
+					value="#{funcionariosBacking.conjuge.dtafim}"
+					label="#{bundle.lbl_dtafim}" />
+
+				<xcp:text
+					id="txtNome"
+					required="true"
+					label="#{bundle.lbl_nome}"
+					value="#{funcionariosBacking.conjuge.nome}"
+					size="60" />
+
+				<xcp:date
+					id="txtDtn"
+					required="true"
+					value="#{funcionariosBacking.conjuge.dtn}"
+					label="#{bundle.lbl_dtn}" />
+
+				<xcp:combo
+					id="cboDependenteir"
+					value="#{funcionariosBacking.conjuge.dependenteir}"
+					label="#{bundle.lbl_dependenteir}"
+					itens="#{funcionariosBacking.itensDependentesIRRF}" />
+
+				<xcp:cpf
+					id="txtCpf"
+					label="#{bundle.lbl_cpf}"
+					value="#{funcionariosBacking.conjuge.cpf}" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{funcionariosBacking.conjuge.obs}"/>
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						update="@form"
+						value="#{bundle.btn_gravar}"
+						action="#{funcionariosBacking.actionGravarConjuge}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgConj_w').hide();return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+</ui:composition>

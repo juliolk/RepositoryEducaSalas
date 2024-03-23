@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<h:outputStylesheet name="/font-awesome/css/font-awesome.min.css"
+			library="lib" />
+
+		<style type="text/css">
+			#form\:brd_anexos, #form\:brd_cid {
+			   width: 550px;
+			}
+	
+	        .ui-confirm-dialog {
+		       width: 500px !important;
+	        }
+	        situacaoanalisemedica:before {
+				content: "\f0f0";
+				color: var(--positive-color) !important;
+			}
+        </style>
+
+
+		<xcp:panelManutLazy id="EfetivaSolPortalAtestados"
+			renderedRemover="false" 
+			renderedGravar="#{efetivaSolPortalAtestadosBacking.entity.situacao != 2}" 
+			renderedNovo="false"
+			renderedAtualizar="false"
+			backing="#{efetivaSolPortalAtestadosBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset id="brdPesq" legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange id="dtaSolicitacao"
+							valueStart="#{efetivaSolPortalAtestadosBacking.dtaIni}"
+							valueEnd="#{efetivaSolPortalAtestadosBacking.dtaFim}"
+							label="#{bundle.lbl_data}" />
+
+						<xcp:lov id="lovFuncionario"
+							value="#{efetivaSolPortalAtestadosBacking.funcionarioLov}"
+							label="#{bundle.lbl_funcionario}" query="funcionariosLovAll"
+							size="10" maxlength="8" />
+						
+						<xcp:lov id="lovAssistFiltro" 
+							value="#{efetivaSolPortalAtestadosBacking.assistenciaLov}"
+							label="#{bundle.lbl_assistencia_social}" 
+							query="assistenciaPortal"
+						 	size="10" />
+
+					</xcp:panelForm>
+					<p:fieldset id="brdSelecao" legend="#{bundle.tit_situacao}"
+						style="width: 100px">
+						
+						<p:panelGrid styleClass="tabela_alinhamento">
+							<p:row>
+								<p:column>
+									<xcp:panelForm>
+										<xcp:check id="txtSitPendente"
+											label="#{bundle.opt_situacao_solportalatestado_1}"
+											value="#{efetivaSolPortalAtestadosBacking.situacaoPendente}" />
+										<xcp:check id="txtSitHomologada"
+											label="#{bundle.opt_situacao_solportalatestado_2}"
+											value="#{efetivaSolPortalAtestadosBacking.situacaoHomologada}" />
+										<xcp:check id="txtSitNaoHomologada"
+											label="#{bundle.opt_situacao_solportalatestado_3}"
+											value="#{efetivaSolPortalAtestadosBacking.situacaoNaoHomologada}" />
+									</xcp:panelForm>
+								</p:column>
+								<p:column>
+									<xcp:panelForm>							
+										<xcp:check id="txtSitAgendamentoPericia"
+											label="#{bundle.opt_situacao_solportalatestado_4}"
+											value="#{efetivaSolPortalAtestadosBacking.situacaoAgendamentoPericia}" />
+										<xcp:check id="txtSitAnaliseMedica"
+											label="#{bundle.opt_situacao_solportalatestado_5}"
+											value="#{efetivaSolPortalAtestadosBacking.situacaoAnaliseMedica}" />
+										<xcp:check id="txtSitComplementoInformacoes"
+											label="#{bundle.opt_situacao_solportalatestado_6}"
+											value="#{efetivaSolPortalAtestadosBacking.situacaoComplementoInformacoes}" />
+							
+						</xcp:panelForm>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						
+						
+					</p:fieldset>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton id="btn_pesquisar" icon="icon-pesquisar_azul"
+					value="#{bundle.btn_pesquisar}" update="table_#{id}"
+					onclick="PF('table_#{id}_w').filter()" />
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton id="btn_efetiva_solicitacao"
+					icon="ui-icon-arrowthickstop-1-s"
+					disabled="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2 or efetivaSolPortalAtestadosBacking.entity.situacao == 3}"
+					action="#{efetivaSolPortalAtestadosBacking.actionAceitaSolicitacao}"
+					value="#{bundle.btn_aceita_solicitacao}" update=":dlgMsg" />
+
+				<xcp:commandButton id="btn_rejeita_solicitacao"
+					icon="ui-icon-cancelar"
+					actionListener="#{efetivaSolPortalAtestadosBacking.actionRejeitaSolicitacao}"
+					value="#{bundle.btn_rejeita_solicitacao}" update=":dlgMsg"
+					disabled="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2 or efetivaSolPortalAtestadosBacking.entity.situacao == 3}" />
+
+				<xcp:commandButton id="btn_agendar_pericia" icon="ui-icon-calendar"
+					disabled="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2 or efetivaSolPortalAtestadosBacking.entity.situacao == 3 or efetivaSolPortalAtestadosBacking.entity.situacao == 4}"
+					action="#{efetivaSolPortalAtestadosBacking.actionAgendarPericia}"
+					value="#{bundle.btn_agendar_pericia}" update=":dlgMsgPericia"/>
+				
+				<xcp:commandButton id="btn_analise_medica" icon="fa fa-fw fa-user-md" 
+					disabled="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2 or efetivaSolPortalAtestadosBacking.entity.situacao == 3 or efetivaSolPortalAtestadosBacking.entity.situacao == 5}"
+					action="#{efetivaSolPortalAtestadosBacking.actionAnaliseMedica}"
+					value="#{bundle.btn_analise_medica}" update=":dlgMsg"/>
+					
+				<xcp:commandButton id="btn_complemento_informacoes" icon="fa fa-fw fa-envelope-open" image="true"
+					disabled="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2 or efetivaSolPortalAtestadosBacking.entity.situacao == 3 or efetivaSolPortalAtestadosBacking.entity.situacao == 6}"
+					action="#{efetivaSolPortalAtestadosBacking.actionComplementoInformacoes}"
+					value="#{bundle.btn_complemento_informacoes}" update=":dlgMsg"/>
+								
+				<xcp:commandButton id="btn_historico" 
+					icon="ui-icon-gear" 
+					action="#{efetivaSolPortalAtestadosBacking.actionConsultaHistorico}"
+					value="#{bundle.btn_consulta_historico}" update=":dlgHistorico"/>
+
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column headerText="#{bundle.col_data}" type="Date" width="10%"
+					sortBy="datasolicitacao">
+					<xcp:outputSimpleTimestamp value="#{row.datasolicitacao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_matricula}" type="Number"
+					width="7%" sortBy="matricula">
+					<xcp:outputSimpleNumber value="#{row.matricula}" precision="10"
+						scale="0" />
+				</xcp:column>
+				
+				<xcp:column headerText="#{bundle.lbl_funcionario}"
+					type="String" width="20%" sortBy="row.funcionariosFk.nome">
+					<xcp:outputSimple value="#{row.funcionariosFk.nome}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.lbl_assistencia_social}"
+					type="String" width="20%" sortBy="row.assistenciaFk.descricao">
+					<xcp:outputSimple value="#{row.assistenciaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_dtinicio}" type="Date"
+					width="7%">
+					<xcp:outputSimpleDate value="#{row.datainicio}" />
+				</xcp:column>
+				<xcp:column headerText="#{bundle.col_dttermino}" type="Date"
+					width="7%">
+					<xcp:outputSimpleDate value="#{row.datatermino}" />
+				</xcp:column>
+				<xcp:column headerText="#{bundle.col_medico}" type="String"
+					width="25%">
+					<xcp:outputSimple value="#{row.medico}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_situacao}" type="String"
+					width="15%">
+					<xcp:outputSimple value="#{row.situacao}"
+						itens="#{efetivaSolPortalAtestadosBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+			
+			<ui:define name="form">
+				<xcp:panelForm>
+					<h:panelGroup layout="block" style="padding-bottom: 7px;">
+						<p:outputLabel
+							value="#{bundle.lbl_NomeFuncionario}:"
+							style="font-weight: bold;" />
+							</h:panelGroup>
+
+					<h:panelGroup layout="block" style="padding-bottom: 7px;">
+						<h:outputText value="#{efetivaSolPortalAtestadosBacking.funcionarioSolicitacao.nome}" />
+
+						<!-- Matricula: -->
+						<p:outputLabel
+							value="#{bundle.lbl_numMatFunc}:"
+							style="padding-left: 10px;font-weight: bold;" />
+
+						<h:outputText
+							value="#{efetivaSolPortalAtestadosBacking.funcionarioSolicitacao.matricula}"
+							style="padding-left: 2px;" />
+
+						<!-- -Vinculo: -->
+						<p:outputLabel
+							value="#{bundle.lbl_numVincFunc}:"
+							style="padding-left: 10px;font-weight: bold;" />
+
+						<h:outputText
+							value="#{efetivaSolPortalAtestadosBacking.funcionarioSolicitacao.vinculoFk.descricao}"
+							style="padding-left: 2px; " />
+					</h:panelGroup>
+				
+					<xcp:lov id="lovAssistencia"
+						value="#{efetivaSolPortalAtestadosBacking.entity.assistenciaFk}"
+						label="#{bundle.lbl_assistencia_social}" 
+						readonly="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2}"
+						query="assistencia_afast" size="10" />
+
+					<xcp:date id="txtDtinicio"
+						value="#{efetivaSolPortalAtestadosBacking.entity.datainicio}"
+						label="#{bundle.col_dtinicio}" 
+						readonly="#{!(efetivaSolPortalAtestadosBacking.entity.situacao == 1)}">
+						<p:ajax event="dateSelect"
+								listener="#{efetivaSolPortalAtestadosBacking.calcDiasAtestado}"
+								update="txtDiasAtestado" />
+					</xcp:date>
+
+					<xcp:date id="txtDttermino" 
+						value="#{efetivaSolPortalAtestadosBacking.entity.datatermino}"
+						label="#{bundle.lbl_dttermino}" 
+						readonly="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2}">
+						<p:ajax event="dateSelect"
+								listener="#{efetivaSolPortalAtestadosBacking.calcDiasAtestado}"
+								update="txtDiasAtestado" />
+					</xcp:date>
+
+					<xcp:number id="txtDiasAtestado"
+						value="#{efetivaSolPortalAtestadosBacking.qtdDiasAtestado}"
+						label="#{bundle.lbl_diasAfastamento}" size="10" precision="5"
+						scale="0" readonly="true">
+					</xcp:number>
+					
+					<xcp:memo id="txtObservacoes" label="#{bundle.lbl_observacoes}"
+						value="#{efetivaSolPortalAtestadosBacking.entity.observacoes}"
+						size="4000" style="width:470px;" 
+						readonly="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2}" />
+
+					<xcp:memo id="txtMedico" label="#{bundle.lbl_medico}"
+						value="#{efetivaSolPortalAtestadosBacking.entity.medico}"
+						size="4000" style="width:470px;" 
+						readonly="#{efetivaSolPortalAtestadosBacking.entity.situacao == 2}" />
+
+				</xcp:panelForm>
+
+                <xcp:border id="brd_cid" header="#{bundle.tit_cid}">
+
+                    <p:dataTable id="tabCid"
+                        value="#{efetivaSolPortalAtestadosBacking.entity.listCid}"
+                        var="rowCid" emptyMessage="#{bundle.msg_sem_resultado}"
+                        rowKey="#{rowCid}" size="10">
+                       
+                        <xcp:column headerText="#{bundle.lbl_codigo}"
+                            type="String" size="5">
+                            <xcp:outputSimple id="outCidCodigo" value="#{rowCid.cid}" />
+                        </xcp:column>
+
+                        <xcp:column headerText="#{bundle.lbl_descricao}"
+                            type="String" size="40">
+                            <xcp:outputSimple id="outCidDesc" value="#{rowCid.cidFk.descricao}" />
+                        </xcp:column>
+                        
+                        <xcp:column type="String" size="10" >
+							<f:facet name="header">
+								<h:commandLink id="btn_add_cid" immediate="true"
+                                     styleClass="datacard-icon-action"
+                                     onclick="PF('w_cid').show(); return false;"
+                                     process="@this" 
+                                     rendered="#{efetivaSolPortalAtestadosBacking.entity.situacao != 2}">
+                                     <h:graphicImage value="/resources/img/novo.png"
+										style="margin-top:3px;" />
+									 #{bundle.lbl_adicionar_cid}
+                                 </h:commandLink>
+							</f:facet>
+							
+							<xcp:commandLink title="Remover"
+                                 rendered="#{efetivaSolPortalAtestadosBacking.entity.situacao != 2}"
+                                 ajax="true" immediate="true">
+                                 <p:confirm
+                                     header="#{bundle.tit_confirma_remover_cid}"
+                                     message="#{bundle.tit_confirma_exclusao}"
+                                     icon="ui-icon-alert" />
+                                 <p:ajax
+                                     listener="#{efetivaSolPortalAtestadosBacking.actionRemoverCid(rowCid)}"
+                                     update=":form:tabCid" />
+                                 <h:graphicImage value="/resources/img/remover.png"
+									style="margin-top:3px; margin-left:10px;" />
+                             </xcp:commandLink>
+						</xcp:column>
+                    </p:dataTable>
+                </xcp:border>
+                
+				<xcp:border id="brd_anexos" header="#{bundle.lbl_anexos}">
+
+					<p:dataTable id="tabAnex"
+						value="#{efetivaSolPortalAtestadosBacking.entity.listAnexos}"
+						var="rowAnex" emptyMessage="#{bundle.msg_sem_resultado}"
+						rowKey="#{rowAnex}" size="10">
+
+						<xcp:column headerText="#{bundle.nome_arquivo_doc_anexo}"
+							type="String" size="40">
+							<xcp:outputSimple id="outNome" value="#{rowAnex.nomeanexo}" />
+						</xcp:column>
+
+						<xcp:column type="String" size="10" >
+							<f:facet name="header">
+								<xcp:commandLink id="btn_add_anexo" immediate="true" 
+									styleClass="datacard-icon-action"
+									onclick="PF('w_anexo').show(); return false;"
+									process="@this" update=":frmAnexo" 
+									rendered="#{efetivaSolPortalAtestadosBacking.entity.situacao != 2}">
+									<h:graphicImage value="/resources/img/novo.png"
+										style="margin-top:3px;" />
+									 #{bundle.tit_dlgAnexo}
+	                            </xcp:commandLink>
+							</f:facet>
+							<xcp:commandLink immediate="true" id="btn_download_anex"
+								update="tabAnex"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								ajax="false">
+								<h:graphicImage value="/resources/img/download.png"
+									style="margin-top:3px;" />
+								<p:fileDownload
+									value="#{efetivaSolPortalAtestadosBacking.downloadAnexo(rowAnex)}"
+									contentDisposition="attachment" />
+							</xcp:commandLink>
+							
+							<xcp:commandLink title="Remover" update="tabAnex"
+								rendered="#{efetivaSolPortalAtestadosBacking.entity.situacao != 2}"
+								ajax="false" >
+								<h:graphicImage value="/resources/img/remover.png"
+									style="margin-top:3px; margin-left:10px;" />
+								<p:confirm
+									header="#{bundle.tit_confirma_remover} #{bundle.lbl_anexo}"
+									message="#{bundle.tit_confirma_exclusao}"
+									icon="ui-icon-alert"
+									 />
+								<p:ajax
+									listener="#{efetivaSolPortalAtestadosBacking.actionRemoverAnexo(rowAnex)}"
+									update=":form:tabAnex" />
+							</xcp:commandLink>
+
+						</xcp:column>
+
+					</p:dataTable>
+				</xcp:border>
+
+			</ui:define>
+
+		</xcp:panelManutLazy>
+
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		
+		<p:dialog id="dlgCid" widgetVar="w_cid"
+		    header="#{bundle.lbl_adicionar_cid}" modal="true"
+		    width="800px" dynamic="true">
+		
+		    <h:form>
+		        <p:dataTable
+		            id="table_cid"
+		            var="row"
+		            value="#{efetivaSolPortalAtestadosBacking.listaCid}"
+		            filteredValue="#{efetivaSolPortalAtestadosBacking.filtredCid}"
+		            selection="#{efetivaSolPortalAtestadosBacking.cidSelecionado}"
+		            widgetVar="table_cid_w"
+		            rows="#{viewUtil.tableRows}"
+		            emptyMessage="#{bundle.msg_sem_resultado}"
+		            paginator="true"
+		            paginatorPosition="bottom"
+		            selectionMode="single"
+		            resizableColumns="true"
+		            rowKey="#{row.PK}"
+		            style="width: 750px"
+		            tableStyle="width: 750px">
+		            
+		            <p:ajax
+		                event="rowSelect"
+		                update="table_cid"/>
+		            
+		         <xcp:column headerText="#{bundle.lbl_cid}" filterBy="#{row.cid}"
+		             type="String" sortBy="cid" value="#{row.cid}" width="5%">
+		             <xcp:outputSimple value="#{row.cid}" />
+		         </xcp:column>
+		         
+		            <xcp:column headerText="#{bundle.lbl_descricao}" filterBy="#{row.descricao}"
+		                type="String" sortBy="descricao" value="#{row.descricao}" width="50%">
+		                <xcp:outputSimple value="#{row.descricao}" />
+		            </xcp:column> 
+		            
+		        </p:dataTable>
+		    </h:form>
+		
+		
+		    <p:toolbar>
+		        <f:facet name="left">
+		            <xcp:commandButton id="btn_dlg_cid_add" immediate="true"
+		                process="@this" value="#{bundle.btn_add}"
+		                update=":form:tabCid"
+		                action="#{efetivaSolPortalAtestadosBacking.actionAdicionarCid}"
+		                oncomplete="PF('w_cid').hide();" />
+		            <xcp:commandButton id="btn_dlg_cid_voltar" immediate="true"
+		                process="@this" value="#{bundle.btn_cancelar}"
+		                oncomplete="PF('w_cid').hide();" />
+		        </f:facet>
+		    </p:toolbar>
+		</p:dialog>
+	        
+		<p:dialog id="dlgAnexo" widgetVar="w_anexo"
+				header="#{bundle.tit_dlgAnexo}" modal="true">
+				<xcp:form id="frmAnexo">
+	
+					<p:fileUpload mode="advanced" auto="true"
+						label="#{bundle.tit_dlgAnexo}"
+						sizeLimit="#{efetivaSolPortalAtestadosBacking.limiteTamanhoArquivoUpload}"
+						fileUploadListener="#{efetivaSolPortalAtestadosBacking.actionAddAnexo}"
+						update=":form:tabAnex"
+						invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+						requiredMessage='#{ empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+						validator="xcpInputFileValidator" />
+	
+	
+					<p:toolbar>
+						<f:facet name="left">
+							<xcp:commandButton id="btn_voltar_anexo" immediate="true"
+								process="@this" value="#{bundle.btn_cancelar}"
+								oncomplete="PF('w_anexo').hide();" />
+	
+						</f:facet>
+					</p:toolbar>
+				</xcp:form>
+			</p:dialog>
+	
+        <p:dialog header="#{efetivaSolPortalAtestadosBacking.msgDialogHeader}"
+            modal="true" id="dlgMsgPericia" widgetVar="dlgMsgPericia_w" dynamic="true"
+            resizable="false">
+            <xcp:form id="frmMsgPericia">
+
+                <p:outputPanel id="panelGeral">
+                    <xcp:panelForm>
+                        <xcp:dateTime id="dataPericia" label="#{bundle.lbl_data_pericia}"
+                            value="#{efetivaSolPortalAtestadosBacking.entity.datapericia}" />
+                        <xcp:memo id="documentosPericia" label="#{bundle.lbl_documentos_necessarios}"
+                            value="#{efetivaSolPortalAtestadosBacking.entity.documentospericia}" size="4000" />
+                    </xcp:panelForm>
+
+                    <p:toolbar styleClass="xcp_pmanut_form_toolbar">
+                        <f:facet name="left">
+                            <xcp:commandButton id="btn_gravar_pericia"
+                                value="#{efetivaSolPortalAtestadosBacking.msgDialogHeader}"
+                                icon="#{efetivaSolPortalAtestadosBacking.msgDialogButtonIcon}"
+                                process="@form"
+			                    action="#{efetivaSolPortalAtestadosBacking.actionMsgAgendarPericia}"
+			                    update=":dlgMsg"
+                                oncomplete="PF('dlgMsgPericia_w').hide();"
+                            />
+                        </f:facet>
+                    </p:toolbar>
+
+                </p:outputPanel>
+            </xcp:form>
+        </p:dialog>
+		
+		<p:dialog header="#{efetivaSolPortalAtestadosBacking.msgDialogHeader}"
+			modal="true" id="dlgMsg" widgetVar="dlgMsg_w" dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo id="obsMsg" label="#{bundle.lbl_mensagem}"
+							value="#{efetivaSolPortalAtestadosBacking.mensagem}" size="2000" />
+
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton id="btn_finalizar_aceite"
+								value="#{efetivaSolPortalAtestadosBacking.msgDialogButton}"
+								process="@form"
+								action="#{efetivaSolPortalAtestadosBacking.actionFinalizar}"
+								icon="#{efetivaSolPortalAtestadosBacking.msgDialogButtonIcon}"
+								update=":#{p:component('panelManut_EfetivaSolPortalAtestados')}"
+								oncomplete="PF('dlgMsg_w').hide();" />
+
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+				<p:remoteCommand name="closeDlgMsg"
+					oncomplete="PF('dlgMsg_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+		
+		<p:dialog id="dlgHistorico" widgetVar="dlgHistorico_w"
+		    header="#{bundle.lbl_historico}" modal="true"
+		    width="800px" dynamic="true">
+		
+		    <h:form>
+		    <!--
+		        <p:dataTable
+		            id="table_historico"
+		            var="row" 
+		            value="#{efetivaSolPortalAtestadosBacking.listaHistorico}"
+		            widgetVar="table_historico_w"
+		            rows="#{viewUtil.tableRows}"
+		            emptyMessage="#{bundle.msg_sem_resultado}"
+		            paginator="true"
+		            paginatorPosition="bottom"
+		            resizableColumns="true"
+		            rowKey="#{row.PK}"
+		            lazy="true" >
+		            
+			         <p:column headerText="#{bundle.lbl_data}" width="15%">
+			             <xcp:outputSimpleTimestamp id="datahistorico" value="#{row.datahistorico}"  />
+			         </p:column>
+		         
+		            <p:column headerText="#{bundle.lbl_descricao}"  width="85%" >
+		                <xcp:outputSimple #{row.descricao} />
+		            </p:column> 
+		            
+		        </p:dataTable> 
+		      -->  
+		        <p:dataScroller value="#{efetivaSolPortalAtestadosBacking.listaHistorico}" 
+		        	var="row" mode="inline" scrollHeight="300">
+					<p>
+						<xcp:outputSimpleTimestamp id="datahistorico" value="#{row.datahistorico}"  /> - 
+						<xcp:outputSimple value="#{row.descricao}"	/>	
+					</p>			
+				</p:dataScroller>
+				
+		    </h:form>
+		
+		
+		    <p:toolbar>
+		        <f:facet name="left">		            
+		            <xcp:commandButton id="btn_dlg_historico_voltar" immediate="true"
+		                process="@this" value="#{bundle.btn_fechar}"
+		                oncomplete="PF('dlgHistorico_w').hide();" />
+		        </f:facet>
+		    </p:toolbar>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

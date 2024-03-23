@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags" template="#{xcp:getLayout('manut')}">
+	
+		
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+		
+		<p:toolbar id="toolbar">
+				<f:facet name="left">
+					<xcp:panelForm id="form cancel">
+						<xcp:memo id="txtQuery" autoResize="false"
+						    rows="10" cols="175" size="4000"
+						    required="true" label="Query" 
+							value="#{esfingeCancelaEnvioLoteBacking.query}"/>
+						<xcp:output label="Obs." id="lblObs"
+						value="Enviar uma consulta nativa que retorne apenas o codigoRegistroInformação. Exemplo select codigoregistroinformacao from esfinge_pendencia_envio where codigoregistroinformacao is not null and situacao in (2,4)" />
+						
+						<xcp:commandButton 
+							id="btn_cancelar"
+							value="#{bundle.btn_cancelar}"
+							update="toolbar :formComfirmar"
+							icon="ui-icon-gear"
+							action="#{esfingeCancelaEnvioLoteBacking.actionConfirmaCancelarLote()}">
+						</xcp:commandButton>
+					</xcp:panelForm>	
+				</f:facet>
+	
+			</p:toolbar>
+		
+			
+		</xcp:panelContent>		
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+	  	  
+	  <p:confirmDialog
+			widgetVar="dlgConf"
+			message="#{bundle.msg_confirma_cancelar_envio}"
+			header="#{bundle.tit_confirma_cancelar_envio}">
+			<h:form id="formComfirmar">
+			
+				<xcp:text 
+			        value="#{esfingeCancelaEnvioLoteBacking.justificativa}"
+			        id="txtJus"
+			        label="Justificativa"
+			        size="150"
+			        required="true"
+		        />
+		        
+				<p:commandButton
+					value="#{bundle.btn_sim}"
+					styleClass="ui-confirmdialog-yes"
+					onclick="PF('w_dlgXcpExecStatus2').show()"
+					action="#{esfingeCancelaEnvioLoteBacking.actionCancelarLote()}"
+					icon="ui-icon-check" 
+					update=":formComfirmar dlgXcpExecStatus2"/>
+
+				<p:commandButton
+					value="#{bundle.btn_nao}"
+					type="button"
+					onclick="PF('dlgConf').hide()"
+					styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close"
+					update=":formComfirmar" />
+					
+				
+
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog
+			id="dlgXcpExecStatus2"
+			modal="true"
+			widgetVar="w_dlgXcpExecStatus2"
+			header="#{bundle.title_executandoRelatorio}"
+			draggable="false"
+			closable="false"
+			resizable="false">
+			<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+		</p:dialog>
+	  
+	</ui:define>	
+	
+</ui:composition>

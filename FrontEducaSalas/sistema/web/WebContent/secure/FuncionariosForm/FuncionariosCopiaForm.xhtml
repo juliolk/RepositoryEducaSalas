@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelGrid
+		columns="2"
+		rendered="#{!funcionariosBacking.helper.telaCopiar}"
+		columnClasses="form_content">
+
+		<xcp:commandButton
+			id="btn_digitar_novo"
+			value="#{bundle.btn_digitar_novo}"
+			action="#{funcionariosBacking.actionNovo('Funcionarios')}"
+			immediate="true"
+			update="@form" />
+
+		<xcp:commandButton
+			id="btn_importar_existente"
+			value="#{bundle.btn_importar_existente}"
+			action="#{funcionariosBacking.actionTelaCopiar}"
+			immediate="true"
+			update="@form" />
+
+	</xcp:panelGrid>
+
+	<h:panelGroup id="panelCopiar">
+		<h:panelGroup rendered="#{funcionariosBacking.helper.telaCopiar}">
+			<xcp:panelGrid columns="5">
+				<xcp:commandButton
+					id="btn_copiaFuncionario"
+					value="#{bundle.btn_copiaFuncionario}"
+					immediate="true"
+					action="#{funcionariosBacking.actionSelecaoTela(funcionariosBacking.helper.copiaFuncionario)}"
+					update="@form" />
+				<xcp:commandButton
+					id="btn_copiaCandidato"
+					value="#{bundle.btn_copiaCandidato}"
+					immediate="true"
+					action="#{funcionariosBacking.actionSelecaoTela(funcionariosBacking.helper.copiaCandidato)}"
+					update="@form" />
+				<xcp:commandButton
+					id="btn_copiaGeral"
+					value="#{bundle.btn_copiaGeral}"
+					immediate="true"
+					action="#{funcionariosBacking.actionSelecaoTela(funcionariosBacking.helper.copiaGeral)}"
+					update="@form" />
+				<xcp:commandButton
+					id="btn_copiaProposta"
+					value="#{bundle.btn_copiaProposta}"
+					immediate="true"
+					action="#{funcionariosBacking.actionSelecaoTela(funcionariosBacking.helper.copiaProposta)}"
+					update="@form" />
+				<xcp:commandButton
+					id="btn_copiaInativo"
+					value="#{bundle.btn_copiaInativo}"
+					immediate="true"
+					rendered="#{funcionariosBacking.empresaSessao == 1}"
+					action="#{funcionariosBacking.actionSelecaoTela(funcionariosBacking.helper.copiaInativo)}"
+					update="@form" />
+			</xcp:panelGrid>
+
+			<p:outputPanel
+				id="panelTelaCopiaFuncionario"
+				rendered="#{funcionariosBacking.helper.telaSelecionada == funcionariosBacking.helper.copiaFuncionario}">
+				<ui:include src="FuncionariosCopiaFuncionario.xhtml" />
+			</p:outputPanel>
+
+			<p:outputPanel
+				id="panelTelaCopiaCandidato"
+				rendered="#{funcionariosBacking.helper.telaSelecionada == funcionariosBacking.helper.copiaCandidato}">
+				<ui:include src="FuncionariosCopiaCandidato.xhtml" />
+			</p:outputPanel>
+
+			<p:outputPanel
+				id="panelTelaCopiaGeral"
+				rendered="#{funcionariosBacking.helper.telaSelecionada == funcionariosBacking.helper.copiaGeral}">
+				<ui:include src="FuncionariosCopiaGeral.xhtml" />
+			</p:outputPanel>
+
+			<p:outputPanel
+				id="panelTelaCopiaProposta"
+				rendered="#{funcionariosBacking.helper.telaSelecionada == funcionariosBacking.helper.copiaProposta}">
+				<ui:include src="FuncionariosCopiaProposta.xhtml" />
+			</p:outputPanel>
+
+			<p:outputPanel
+				id="panelTelaCopiaInativo"
+				rendered="#{funcionariosBacking.helper.telaSelecionada == funcionariosBacking.helper.copiaInativo}">
+				<ui:include src="FuncionariosCopiaInativo.xhtml" />
+			</p:outputPanel>
+
+		</h:panelGroup>
+	</h:panelGroup>
+</ui:composition>

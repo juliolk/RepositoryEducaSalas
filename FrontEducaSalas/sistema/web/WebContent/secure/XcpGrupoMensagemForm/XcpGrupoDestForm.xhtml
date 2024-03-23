@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="XcpGrupoDest"
+		backing="#{xcpGrupoDestBacking}"
+		masterId="XcpGrupoMensagem">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_oper}"
+				value="#{row.operador}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					value="#{row.operador}"
+					precision="15"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.nome}"
+				type="Number"
+				size="12">
+				<xcp:outputSimple value="#{row.operadorFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.matricula}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.matriculaFk.nome}"
+				type="String"
+				size="15">
+				<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desEmailAlt}"
+				value="#{row.desEmailAlt}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.desEmailAlt}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:combo
+					id="cboTipDest_XcpGrupoDest"
+					value="#{xcpGrupoDestBacking.entity.tipDest}"
+					label="#{bundle.lbl_tipDest}"
+					required="true"
+					itens="#{xcpGrupoDestBacking.itensTipDest}">
+					<p:ajax
+						update="lovOperador_Dest,lovOperador_Dest_l,lovMatricula_Dest,lovMatricula_Dest_l" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovOperador_Dest"
+					value="#{xcpGrupoDestBacking.entity.operadorFk}"
+					label="#{bundle.lbl_operador}"
+					query="operadores"
+					size="15"
+					required="true"
+					rendered="#{xcpGrupoDestBacking.entity.tipDest == 1}" />
+
+				<xcp:lov
+					id="lovMatricula_Dest"
+					value="#{xcpGrupoDestBacking.entity.matriculaFk}"
+					label="#{bundle.lbl_matricula}"
+					query="funcionarios"
+					size="8"
+					required="true"
+					rendered="#{xcpGrupoDestBacking.entity.tipDest == 2}" />
+
+				<xcp:text
+					id="txtDesEmailAlt_Dest"
+					label="#{bundle.lbl_desEmailAlt}"
+					value="#{xcpGrupoDestBacking.entity.desEmailAlt}"
+					size="100" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

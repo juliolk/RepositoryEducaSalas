@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panelGrid>
+		<p:row>
+			<p:column styleClass="alinhatopo">
+				<xcp:tableMultiSelect
+					header="#{bundle.tit_rotinas_disponives}"
+					id="checkRotinas"
+					filteredValue="#{operadoresBacking.listaFiltrados3}"
+					value="#{operadoresBacking.listaRotinasDisponiveis}"
+					selection="#{operadoresBacking.listaRotinasSelecionadas}"
+					rowKey="#{rowMult.PK}">
+
+					<xcp:column
+						value="#{rowMult.descricao}"
+						size="60"
+						type="String"
+						headerText="#{bundle.col_rotinas}">
+						<xcp:outputSimple value="#{rowMult.descricao} (#{rowMult.rotina})" />
+					</xcp:column>
+
+					<f:facet name="footer">
+						<xcp:commandButton
+							id="btn_adicionar"
+							process="checkRotinas :#{p:component('checkPermissao')}"
+							update="checkRotinas :#{p:component('checkPermissao')}"
+							actionListener="#{operadoresBacking.actionAdicionaSelecionadas}"
+							value="#{bundle.btn_adicionar_selecao}"
+							icon="ui-icon-document">
+						</xcp:commandButton>
+					</f:facet>
+				</xcp:tableMultiSelect>
+			</p:column>
+
+			<p:column styleClass="alinhatopo">
+				<xcp:tableMultiSelect
+					id="checkPermissao"
+					rowKey="#{rowMult.PK}"
+					value="#{operadoresBacking.listaPermissao}"
+					header="#{bundle.tit_rotinas_perfil}"
+					selection="#{operadoresBacking.listaRotinasExcluir}"
+					filteredValue="#{operadoresBacking.listaFiltrados4}">
+
+					<xcp:column
+						value="#{rowMult.rotinaFk.descricao}"
+						size="60"
+						type="String"
+						headerText="#{bundle.col_rotinas}">
+						<xcp:outputSimple value="#{rowMult.rotinaFk.descricao} (#{rowMult.rotina})" />
+					</xcp:column>
+
+					<xcp:column
+						size="5"
+						type="Center"
+						headerText="#{bundle.col_incluir}">
+						<xcp:check
+							id="chk_incluir"
+							simple="true"
+							value="#{rowMult.indIncluir}" />
+					</xcp:column>
+
+					<xcp:column
+						size="5"
+						type="Center"
+						headerText="#{bundle.col_alterar}">
+						<xcp:check
+							id="chk_alterar"
+							simple="true"
+							value="#{rowMult.indAlterar}" />
+					</xcp:column>
+
+					<xcp:column
+						size="5"
+						type="Center"
+						headerText="#{bundle.col_excluir}">
+						<xcp:check
+							id="chk_excluir"
+							simple="true"
+							value="#{rowMult.indExcluir}" />
+					</xcp:column>
+
+					<f:facet name="footer">
+						<xcp:commandButton
+							id="btn_remover_sel"
+							process="checkPermissao :#{p:component('checkRotinas')}"
+							update="checkPermissao :#{p:component('checkRotinas')}"
+							actionListener="#{operadoresBacking.actionRemoveRotinasSelecionadas}"
+							value="#{bundle.btn_remover_sel}"
+							icon="ui-icon-trash">
+						</xcp:commandButton>
+					</f:facet>
+				</xcp:tableMultiSelect>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+</ui:composition>

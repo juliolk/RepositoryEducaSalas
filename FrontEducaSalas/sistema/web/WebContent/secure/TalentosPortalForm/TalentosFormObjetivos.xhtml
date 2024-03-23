@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<p:outputPanel>
+				<h1 class="datacard-container-title"><a class="datacard-icon-action" data-toggle="collapse" data-target="#pnlcolobj"><i class='fa fa-minus-square-o'/></a>#{bundle.tit_objetivos}</h1>
+			</p:outputPanel>
+			
+			<div id="pnlcolobj" class="collapse in">
+				<div class="datacard-listcontainer">
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_areas_int}
+	
+							<h:commandLink href="#" 
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_area_int}">
+								
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.areainteresse}"
+									value="#{null}" />			
+																		
+								<p:ajax update=":frmDlgAreaInt" 
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgAreaInt_w').show();" />
+								
+									<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+							
+						</div>
+						<p:outputPanel id="listaAreaInteresse" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listArea }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhuma_area_int}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="area" value="#{talentosPortalBacking.helper.listArea}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink 
+												href="#">	
+												<p:ajax 
+													update=":frmDlgAreaInt" 
+													oncomplete="PF('dlgAreaInt_w').show()"/>
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.areainteresse}"
+													value="#{area}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverAreaInt(area)}">
+												<p:ajax update=":#{p:component('listaAreaInteresse')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{area.sequencia}&#160;-&#160;#{area.codigoFk.descricao}
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_setor}:&#160;<xcp:outputSimple value="#{area.setorFk.descricao}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_descricao}:</small><br/>
+												<h:outputText value="#{fn:replace(area.descricao,'\\n','&lt;br/&gt;')}" escape="false"/>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_obj_curacad}
+							
+							<h:commandLink href="#" 
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_curso}">
+								
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.objetivoacad}"
+									value="#{null}" />
+									
+								<p:ajax
+									update=":frmDlgCurAcad" 
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgAreaCurAcad_w').show();" />
+								
+									<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+																		
+						</div>
+						<p:outputPanel id="listaCursoAcademico" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listObjAcad }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_curso_acad}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="cursoAcademico" value="#{talentosPortalBacking.helper.listObjAcad}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink 
+												href="#">	
+												<p:ajax 
+													update=":frmDlgCurAcad" 
+													oncomplete="PF('dlgAreaCurAcad_w').show()"/>
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.objetivoacad}"
+													value="#{cursoAcademico}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverObjAcad(cursoAcademico)}">
+												<p:ajax update=":#{p:component('listaCursoAcademico')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="datacard-item-highlight">
+													#{cursoAcademico.sequencia}&#160;-&#160;#{cursoAcademico.codigoFk.descricao}
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_obj_prof}
+							
+							<h:commandLink href="#" 
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_obj_prof}">
+								
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.objetivoprofissional}"
+									value="#{null}" />
+									
+								<p:ajax
+									update=":frmDlgObjProf" 
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgObjProf_w').show();" />
+								
+									<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+																		
+						</div>
+						<p:outputPanel id="listaCursoProf" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listObjProf }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_curso_prof}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="cursoProf" value="#{talentosPortalBacking.helper.listObjProf}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink 
+												href="#">	
+												<p:ajax 
+													update=":frmDlgObjProf" 
+													oncomplete="PF('dlgObjProf_w').show()"/>
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.objetivoprofissional}"
+													value="#{cursoProf}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverObjProf(cursoProf)}">
+												<p:ajax update=":#{p:component('listaCursoProf')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="datacard-item-highlight">
+													#{cursoProf.sequencia}&#160;-&#160;
+													<h:outputText value="#{fn:replace(cursoProf.descricao,'\\n','&lt;br/&gt;')}" escape="false"/>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_obj_curso}
+							<h:commandLink href="#" 
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_curso}">
+								
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.objetivocurso}"
+									value="#{null}" />
+									
+								<p:ajax
+									update=":frmDlgCurso" 
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgObjCurso_w').show();" />
+								
+									<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+																		
+						</div>
+						<p:outputPanel id="listaOutrosCursos" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listObjCursos }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_curso_inf}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="cursoOutro" value="#{talentosPortalBacking.helper.listObjCursos}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink 
+												href="#">	
+												<p:ajax 
+													update=":frmDlgCurso" 
+													oncomplete="PF('dlgObjCurso_w').show()"/>
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.objetivocurso}"
+													value="#{cursoOutro}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverObjCurso(cursoOutro)}">
+												<p:ajax update=":#{p:component('listaOutrosCursos')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="datacard-item-highlight">
+													#{cursoOutro.sequencia}&#160;-&#160;
+													<h:outputText value="#{fn:replace(cursoOutro.curso,'\\n','&lt;br/&gt;')}" escape="false"/>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							Idiomas
+							
+							<h:commandLink href="#" 
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_idioma}">
+								
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.objetivoidiomas}"
+									value="#{null}" />
+									
+								<p:ajax
+									update=":frmDlgOutIdi" 
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgObjIdi_w').show();" />
+								
+									<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+																		
+						</div>
+						<p:outputPanel id="listaObjIdioma" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listObjIdiomas }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_idioma}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="objIdioma" value="#{talentosPortalBacking.helper.listObjIdiomas}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverObjIdiomas(objIdioma)}">
+												<p:ajax update=":#{p:component('listaObjIdioma')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="datacard-item-highlight">
+													#{objIdioma.codigoFk.descricao}
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>				
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_instrutoria}
+							
+							<h:commandLink href="#" 
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_instrutoria}">
+								
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.objetivoinstrutoria}"
+									value="#{null}" />
+									
+								<p:ajax
+									update=":frmDlgObjInstrutoria" 
+									onstart="PF('dlgObjInstrutoria_w').show();"
+									oncomplete="PF('dlgObjInstrutoria_w').hide(); PF('dlgObjInstrutoria_w').show();" />
+								
+									<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+																		
+						</div>
+						<p:outputPanel id="listaObjInstrutoria" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listObjInstrut}">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhuma_instrutoria}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="obj" value="#{talentosPortalBacking.helper.listObjInstrut}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink 
+												href="#">	
+												<p:ajax 
+													update=":frmDlgObjInstrutoria" 
+													oncomplete="PF('dlgObjInstrutoria_w').show()"/>
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.objetivoinstrutoria}"
+													value="#{obj}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverObjInstrutoria(obj)}">
+												<p:ajax update=":#{p:component('listaObjInstrutoria')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="col-sm-4">
+											<div class="datacard-item-highlight">
+												#{obj.areaintFk.descricao}
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>	
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_obj_vida}
+							
+							<h:commandLink href="#" 
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_qual_vida}">
+								
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.objetivovida}"
+									value="#{null}" />
+									
+								<p:ajax
+									update=":frmDlgObjVida" 
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgObjVida_w').show();" />
+								
+									<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+																		
+						</div>
+						<p:outputPanel id="listaObjVida" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listObjVida }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhuma_atividade}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="objVida" value="#{talentosPortalBacking.helper.listObjVida}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink 
+												href="#">	
+												<p:ajax 
+													update=":frmDlgObjVida" 
+													oncomplete="PF('dlgObjVida_w').show()"/>
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.objetivovida}"
+													value="#{objVida}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverObjVida(objVida)}">
+												<p:ajax update=":#{p:component('listaObjVida')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+												    <h:outputText value="#{fn:replace(objVida.cursos,'\\n','&lt;br/&gt;')}" escape="false"/>
+												</div>
+											</div>
+											<div class="col-sm-8 datacard-item-obs">
+												<small>#{bundle.lbl_atividades}:</small><br/>
+												<h:outputText value="#{fn:replace(objVida.atividades,'\\n','&lt;br/&gt;')}" escape="false"/>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+				
+				</div>
+									
+			</div>
+		</div>
+	</div>
+	
+
+</ui:composition>

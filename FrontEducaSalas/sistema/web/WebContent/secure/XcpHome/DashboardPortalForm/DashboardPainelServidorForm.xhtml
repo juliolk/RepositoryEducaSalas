@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<style type="text/css">
+	
+		.painel-servidor .grupo-container {
+			background-color: white;
+		    box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.15);
+		    border-radius: 3px;
+		    padding: 0;
+  		}		
+
+		.painel-servidor .grupo-container + .grupo-container {
+			margin-top: 20px;
+		}
+
+		.painel-servidor .grupo-titulo {
+			display: flex;
+		    padding: 20px 15px 10px 15px;
+		    font-size: 1.75rem;
+		    border-bottom: 1px solid #eaeaea;
+		    font-weight: 500;
+   		}	
+   		
+   		.painel-servidor .grupo-titulo .titulo-icone {
+   			margin-right: 10px;
+   		}
+
+		.painel-servidor .grupo-conteudo {
+			padding: 15px;
+			font-size: 1.5rem;
+		}	
+		
+		.painel-servidor a.sem-link {
+			cursor: default;
+		}
+		
+		.painel-servidor a,
+		.painel-servidor a:focus,
+		.painel-servidor a:visited,
+		.painel-servidor a:active  {
+			color: inherit;
+			display: block;
+			text-decoration: none;	
+		}
+		
+		.painel-servidor .item-container {
+			background-color: #fff;
+		}
+
+		.painel-servidor a.com-link:hover .item-container  {
+			filter: brightness(0.95);
+		}
+
+		/* TIPO TABELA  */
+
+		.painel-servidor .tipo-tabela .item-container {
+		    display: flex;
+		    padding: 10px 0;
+		}
+
+		.painel-servidor .tipo-tabela  a + a {
+		    border-top: 1px solid #eaeaea;
+		}
+		
+		.painel-servidor .tipo-tabela .item-icone {
+			flex: 0 0 auto;
+    		margin-right: 5px;
+		}
+		
+		.painel-servidor .tipo-tabela .item-conteudo {
+		    display: flex;
+			flex: 1 1 auto;
+		}
+
+		.painel-servidor .tipo-tabela .item-descricao {
+			flex: 1 1 auto;
+		    margin-right: 5px;
+		}
+		
+		.painel-servidor .tipo-tabela .item-valor {
+			flex: 0 0 calc(50% - 5px);
+			font-weight: 300;
+		}
+				
+		.painel-servidor .tipo-tabela .item-valor.alinhamento-direita {
+			text-align: right;
+		}
+		.painel-servidor .tipo-tabela .item-valor.alinhamento-centralizado {
+			text-align: center;
+		}
+		.painel-servidor .tipo-tabela .item-valor.alinhamento-esquerda {
+			text-align: left;
+		}
+		
+		/* TIPO LISTA HORIZONTAL  */
+		
+		.painel-servidor .grupo-conteudo.tipo-lista-horizontal {
+		    display: flex;
+		    flex-wrap: wrap;
+		}		
+		
+		.painel-servidor .tipo-lista-horizontal .item-container {
+		    display: flex;
+		    padding: 10px 20px;
+		    align-items: center;
+		    flex-direction: column;
+		}
+		
+		.painel-servidor .tipo-lista-horizontal .item-icone {
+		    font-size: 5rem;
+		    line-height: 1.2;
+		}
+		
+		.painel-servidor .tipo-lista-horizontal .item-conteudo {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		}
+		
+		.painel-servidor .tipo-lista-horizontal .item-valor {
+		    font-size: 3rem;
+		    font-weight: 600;
+		    margin-right: 0.9rem;
+   		}						
+
+		/* TIPO LISTA HORIZONTAL  */
+	
+		.painel-servidor .tipo-lista-vertical  a + a {
+		    border-top: 1px solid #eaeaea;
+		}
+		
+		.painel-servidor .tipo-lista-vertical .item-container {
+		    display: flex;
+		    flex-direction: row;
+		    align-items: center;
+		    padding: 10px;
+		}
+		
+		.painel-servidor .tipo-lista-vertical .item-icone {
+		    font-size: 4.5rem;
+		    margin-right: 1rem;
+		}
+	
+		.painel-servidor .tipo-lista-vertical .item-valor {
+		    font-weight: 600;
+		    font-size: 1.75rem;
+		}
+		
+		
+			
+	</style>
+		
+	<div class="painel-servidor content_bg-gray">
+		<h1>Painel do Servidor</h1>	
+	
+		<div class="painel-servidor-container">
+			<ui:repeat var="grupo" value="#{ painelServidorBacking.grupos }">
+				<div class="grupo-container">
+					<div class="grupo-titulo">
+						<div class="titulo-icone">
+							<i class="fa fa-fw #{ grupo.icone }"></i>
+						</div>
+						<div class="titulo-nome">
+							#{grupo.nome}
+						</div>
+					</div>
+					<div class="grupo-conteudo #{ grupo.classeTipo }">
+						<ui:repeat var="item" value="#{ grupo.items }">
+							<a href="#{ item.hasLink() ? item.link : 'javascript:void(0)' }" 
+								class="#{ item.hasLink() ? 'com-link' : 'sem-link' }">
+								<div class="item-container" style="color: #{ item.corTexto }; background-color: #{ item.corFundo };">
+									<div class="item-icone">
+										<i class="fa fa-fw #{ item.icone }"></i>
+									</div>
+									<div class="item-conteudo">
+										<div class="item-descricao">
+											#{ item.descricao }
+										</div>
+										<div class="item-valor #{ item.classeAlinhamento }">
+											#{ item.valor }
+										</div>
+									</div>
+								</div>
+							</a>
+						</ui:repeat>
+					</div>
+				</div>
+			</ui:repeat>
+		</div>	
+	</div>
+
+</ui:composition>

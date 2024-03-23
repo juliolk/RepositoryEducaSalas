@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.tit_adddoc}"
+		modal="true"
+		id="dlgDocAdd#{model.id}"
+		widgetVar="dlgDocAdd#{model.id}_w">
+		<xcp:form id="frmDlgAddDoc#{model.id}">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipodocAdd"
+					value="#{model.docvo.tipoDocFk}"
+					selectionListener="#{model.selectTipodocumentoAdd}"
+					size="5"
+					update="lovDocumentoAdd,lovDocumentoAdd_l,lovProcessoAdd,lovProcessoAdd_l"
+					label="#{bundle.lbl_tipodocdlg}"
+					params="#{model.paramsTipoDoc}"
+					query="#{model.queryTipoDoc}"
+					required="true" />
+
+				<xcp:lov
+					id="lovDocumentoAdd"
+					value="#{model.docvo.registroFk}"
+					params="#{model.paramsDocumentoAdd}"
+					label="#{bundle.lbl_documento}"
+					update="lovProcessoAdd,lovProcessoAdd_l"
+					query="documentosman"
+					size="5"
+					required="true"
+					selectionListener="#{model.selectDocumentoAdd}" />
+
+				<xcp:lov
+					id="lovProcessoAdd"
+					value="#{model.docvo.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					required="#{model.requiredProcAdd}"
+					size="25" />
+
+			</xcp:panelForm>
+
+			<p:outputPanel
+				style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+				<xcp:commandButton
+					id="btn_add_add"
+					action="#{model.actionAdicionarDocAdd}"
+					value="#{bundle.btn_add}"
+					update="@form"
+					process="@this lovTipodocAdd lovDocumentoAdd"
+					icon="ui-icon-plusthick"
+					resetValues="true" />
+			</p:outputPanel>
+
+			<p:dataTable
+				id="tbl#{model.id}"
+				value="#{model.listDocVo}"
+				var="row"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				resizableColumns="true"
+				style="max-width:780px;font-size: 12px;">
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.tipoDocFk.tipo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_tipodocumento}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.tipoDocFk.descricao}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.registroFk.registro}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_documento}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.registroFk.descricao}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="1">
+					<xcp:outputSimpleNumber value="#{row.processoFk.processo}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_dtcriacao}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.processoFk.dtcriacao}" />
+				</xcp:column>
+
+				<xcp:column size="1">
+					<xcp:commandButton
+						action="#{model.actionRemoverDocAdd(row)}"
+						icon="ui-icon-trash"
+						immediate="true"
+						update="@form"
+						process="@this" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:spacer height="2px" />
+
+			<p:toolbar id="pnlacoes">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_add_gravar"
+						action="#{model.actionGravarDocAdd}"
+						value="#{bundle.btn_gravar}"
+						icon="ui-icon-disk"
+						process="@this tbl#{model.id}"
+						immediate="true"
+						disabled="#{model.disabledGravarDocAdd}" />
+					<xcp:commandButton
+						id="btn_sair_add"
+						immediate="true"
+						oncomplete="#{model.dialogHide}"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_sair}" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>
+

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<h:panelGroup id="panelGeral">
+				<h:panelGroup
+					id="panelSemAptidao"
+					rendered="#{aptidaoResBacking.statusTela == 0}">
+					<xcp:panelForm>
+						<xcp:outputSimple value="#{bundle.msg_sem_pesquisa}" />
+					</xcp:panelForm>
+				</h:panelGroup>
+
+				<h:panelGroup
+					id="panelAptidaoSelecao"
+					rendered="#{aptidaoResBacking.statusTela == 1}">
+
+					<p:dataTable
+						id="tableAptidaoPendentes"
+						var="row"
+						value="#{aptidaoResBacking.listaAptidao}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="false"
+						resizableColumns="true"
+						selectionMode="single"
+						selection="#{aptidaoResBacking.aptidaoSelecionada}"
+						rowKey="#{row.PK}">
+						<p:ajax
+							event="rowSelect"
+							update=":#{p:component('panelGeral')}"
+							listener="#{aptidaoResBacking.selectRow}" />
+
+						<xcp:column
+							headerText="#{bundle.col_numMatricula}"
+							type="Number"
+							width="10">
+							<xcp:outputSimpleNumber
+								value="#{row.matricula}"
+								precision="10"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="20"
+							headerText="#{bundle.col_nome}">
+							<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtenvio}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtenvio}" />
+						</xcp:column>
+
+					</p:dataTable>
+				</h:panelGroup>
+				<h:panelGroup
+					id="panelAptidao"
+					rendered="#{aptidaoResBacking.statusTela == 2}">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovMatricula"
+							required="true"
+							value="#{aptidaoResBacking.entity.matriculaFk}"
+							readonly="true"
+							label="#{bundle.lbl_matricula}"
+							query="funcionariosLov"
+							size="10" />
+
+						<xcp:date
+							id="txtDtenvio"
+							readonly="true"
+							required="true"
+							value="#{aptidaoResBacking.entity.dtenvio}"
+							label="#{bundle.lbl_dtenvio}" />
+
+
+						<xcp:lov
+							id="lovOrgao"
+							value="#{aptidaoResBacking.entity.orgaoFk}"
+							label="#{bundle.lbl_orgao}"
+							readonly="true"
+							query="orgaos"
+							rendered="#{!aptidaoResBacking.renderedVagaIndividual}"
+							size="10" />
+
+						<xcp:combo
+							id="cboSituacaoAptidao"
+							value="#{aptidaoResBacking.entity.situacao}"
+							label="#{bundle.lbl_situacao}"
+							required="true"
+							itens="#{aptidaoResBacking.itensSituacaoAptidaoManut}">
+							<p:ajax
+								event="change"
+								update="panelAptidao" />
+
+						</xcp:combo>
+
+						<xcp:lov
+							id="lovHorario"
+							value="#{aptidaoResBacking.entity.horarioFk}"
+							label="#{bundle.lbl_horario}"
+							required="true"
+							query="horarios"
+							rendered="#{aptidaoResBacking.renderedHorario}"
+							size="10" />
+
+						<xcp:lov
+							id="lovHoramp"
+							value="#{aptidaoResBacking.entity.horampFk}"
+							label="#{bundle.lbl_horamp}"
+							query="horarios_amp"
+							rendered="#{!aptidaoResBacking.renderedVagaIndividual}"
+							size="10" />
+
+						<xcp:date
+							id="txtNomeacao"
+							value="#{aptidaoResBacking.entity.nomeacao}"
+							label="#{bundle.lbl_nomeacao}"
+							readonly="true" />
+
+						<xcp:date
+							id="txtPrazoPosse"
+							value="#{aptidaoResBacking.helper.dtPrazoPosse}"
+							label="#{bundle.lbl_prazoPosse}"
+							readonly="true" />
+
+						<xcp:date
+							id="txtDtposse"
+							value="#{aptidaoResBacking.entity.dtposse}"
+							rendered="#{aptidaoResBacking.renderedVagaIndividual}"
+							required="true"
+							label="#{bundle.lbl_dtposse}" />
+
+						<xcp:date
+							id="txtDtinicio"
+							value="#{aptidaoResBacking.entity.dtinicio}"
+							required="true"
+							rendered="#{aptidaoResBacking.entity.situacao == 2}"
+							label="#{bundle.lbl_dtinicio}" />
+
+						<xcp:lov
+							id="lovSetor"
+							value="#{aptidaoResBacking.entity.setorFk}"
+							rendered="#{aptidaoResBacking.entity.situacao == 2 and !aptidaoResBacking.renderedVagaIndividual}"
+							label="#{bundle.lbl_setor}"
+							required="true"
+							params="#{aptidaoResBacking.paramsSetor}"
+							query="setores_orgao"
+							size="10" />
+
+						<xcp:lov
+							id="lovSetorVaga"
+							value="#{aptidaoResBacking.helper.setoresFk}"
+							rendered="#{aptidaoResBacking.renderedVagaIndividual}"
+							label="#{bundle.lbl_setor}"
+							params="#{aptidaoResBacking.paramsSetor}"
+							query="setores_orgao"
+							size="10"
+							readonly="true" />
+
+						<xcp:lov
+							id="lovCargoVaga"
+							value="#{aptidaoResBacking.entity.numSeqVagaFk}"
+							label="#{bundle.lbl_vaga}"
+							query="cargosvagasatucri"
+							rendered="#{aptidaoResBacking.renderedVagaIndividual}"
+							params="#{aptidaoResBacking.paramsCargosVagas}"
+							size="10"
+							required="true"
+							readonly="true" />
+
+						<xcp:lov
+							id="lovPadrao"
+							value="#{aptidaoResBacking.entity.padraoFk}"
+							label="#{bundle.lbl_padraop}"
+							required="true"
+							query="cargos_padroes"
+							rendered="#{aptidaoResBacking.renderedPadrao}"
+							params="#{aptidaoResBacking.paramsPadrao}"
+							size="10"
+							selectionListener="#{aptidaoResBacking.selectPadrao}"
+							update="cboNivel" />
+
+						<xcp:combo
+							id="cboNivel"
+							label="#{bundle.lbl_nivel}"
+							value="#{aptidaoResBacking.entity.nivel}"
+							required="true"
+							itens="#{aptidaoResBacking.helper.listNiveis}"
+							rendered="#{aptidaoResBacking.renderedPadrao}" />
+
+						<xcp:lov
+							id="lovVinculo"
+							value="#{aptidaoResBacking.entity.vinculoFk}"
+							label="#{bundle.lbl_vinculo}"
+							rendered="#{aptidaoResBacking.renderedHorario}"
+							query="vinculos_tipocargo"
+							required="true"
+							readonly="#{aptidaoResBacking.readOnlyVinculo}"
+							size="10"
+							params="#{aptidaoResBacking.paramsVinculo}" />
+
+						<xcp:lov
+							id="lovMatriculaChefia"
+							required="true"
+							value="#{aptidaoResBacking.entity.matriculaChefiaFk}"
+							rendered="#{aptidaoResBacking.entity.situacao == 2 and !aptidaoResBacking.renderedVagaIndividual}"
+							label="#{bundle.lbl_matriculaChefia}"
+							query="funcionariosLov"
+							size="10" />
+
+					</xcp:panelForm>
+
+					<p:fieldset
+						legend="#{bundle.title_anexos}"
+						rendered="#{not aptidaoResBacking.entity.novo}"
+						style="width:800px">
+
+						<p:dataTable
+							id="tblAnex"
+							value="#{aptidaoResBacking.listAnexos}"
+							var="rowAnex"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							rowKey="#{rowAnex}">
+
+							<xcp:column
+								headerText="#{bundle.col_nome}"
+								type="String"
+								size="50">
+								<xcp:outputSimple
+									id="outNome"
+									value="#{rowAnex.nome}" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="1">
+								<xcp:commandLink
+									immediate="true"
+									id="btn_download_anex"
+									update="tblAnex"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									ajax="false">
+									<h:graphicImage
+										value="/resources/img/download.png"
+										style="margin-top:3px;" />
+									<p:fileDownload
+										value="#{aptidaoResBacking.getArquivoAnexo(rowAnex)}"
+										contentDisposition="attachment" />
+								</xcp:commandLink>
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="2">
+								<xcp:commandButton
+									immediate="true"
+									id="btn_removerSel"
+									update="tblAnex"
+									icon="ui-icon-trash"
+									action="#{aptidaoResBacking.actionRemoveFile(rowAnex)}">
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+								</xcp:commandButton>
+							</xcp:column>
+						</p:dataTable>
+						<div style="text-align: center">
+							<xcp:commandButton
+								id="btn_novo_anexo"
+								style="margin-top:5px"
+								process="@this"
+								update=":frmAnexo"
+								icon="ui-icon-plusthick"
+								value="#{bundle.btn_novo}"
+								oncomplete="PF('w_anexo').show()" />
+						</div>
+
+					</p:fieldset>
+
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_GravarPesquisa"
+								value="#{bundle.btn_gravar}"
+								process="@form"
+								update="@form :frmNovaMat"
+								action="#{aptidaoResBacking.actionGravaAptidao}"
+								icon="ui-icon-disk" />
+
+							<xcp:commandButton
+								id="btnVoltar_#{id}"
+								icon="ui-icon-arrowreturnthick-1-w"
+								value="#{bundle.btn_voltar}"
+								action="#{aptidaoResBacking.actionVoltar()}"
+								process="@this"
+								update="@form" />
+						</f:facet>
+					</p:toolbar>
+				</h:panelGroup>
+			</h:panelGroup>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{aptidaoResBacking.actionFileUpload}"
+					update=":form:tblAnex" />
+			</xcp:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_anexo').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgNovaMat"
+			modal="true"
+			widgetVar="dlgNovaMat_w"
+			header="#{bundle.title_dlgNovaMat}">
+			<xcp:form id="frmNovaMat">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtNovaMatricula"
+						label="#{bundle.lbl_matricula}"
+						value="#{aptidaoResBacking.helper.novaMatricula}"
+						size="10"
+						maxValue="9999999999"
+						required="true">
+					</xcp:number>
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnGravarNovaMat"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-gear"
+							update=":form, @form"
+							action="#{aptidaoResBacking.actionGravaAptidaoDlg}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

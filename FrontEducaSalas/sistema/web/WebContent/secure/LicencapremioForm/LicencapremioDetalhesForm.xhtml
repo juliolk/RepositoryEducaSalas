@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelForm>
+
+
+		<xcp:date
+			id="txtDtvctoIni"
+			required="true"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.dtvctoIni}"
+			label="#{bundle.lbl_dtvctoIni}"
+			readonly="#{not licencapremioBacking.helper.licencapremioDocSelecionada.novo}" />
+
+		<xcp:date
+			id="txtDtvcto"
+			required="true"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.dtvcto}"
+			label="#{bundle.lbl_dtvcto}"
+			readonly="#{not licencapremioBacking.helper.licencapremioDocSelecionada.novo}" />
+
+		<xcp:number
+			id="cboSeq"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.seq}"
+			label="#{bundle.lbl_seq}"
+			required="true"
+			size="2"
+			precision="2"
+			scale="0"
+			maxValue="9999" />
+
+
+		<p:outputLabel value=" " />
+		<xcp:panelGrid style="margin-left:-10px;">
+			<p:row>
+				<p:column>
+
+					<xcp:border
+						id="brd_licenca"
+						header="#{bundle.tit_licenca}">
+
+						<xcp:date
+							id="txtDtgozo"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.dtgozo}"
+							label="#{bundle.lbl_dtgozo}">
+						</xcp:date>
+
+						<xcp:date
+							id="txtDtretorno"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.dtretorno}"
+							label="#{bundle.lbl_dtretorno}">
+						</xcp:date>
+
+						<xcp:number
+							id="txtDiaslicenca"
+							label="#{bundle.lbl_diaslicenca}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diaslicenca}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999">
+						</xcp:number>
+
+						<xcp:number
+							id="txtDiaspagos"
+							label="#{bundle.lbl_diaspagos}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diaspagos}"
+							size="4"
+							precision="3"
+							scale="0"
+							maxValue="999" />
+
+						<xcp:date
+							id="txtDtpgto"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.dtpgto}"
+							label="#{bundle.lbl_dtpgto}" />
+
+						<xcp:number
+							id="txtDiasServico"
+							label="#{bundle.lbl_diasServico}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diasServico}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+						<xcp:number
+							id="txtDiasAvancoGratif"
+							label="#{bundle.lbl_diasAvancoGratif}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diasAvancoGratif}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+					</xcp:border>
+				</p:column>
+				<p:column>
+					<xcp:border
+						id="brd_dia_licenca"
+						header="#{bundle.tit_dia_licenca}">
+						<!-- 
+						<xcp:number
+							id="txtDiasdireito"
+							label="#{bundle.lbl_diasdireito}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diasdireito}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+ -->
+						<xcp:number
+							id="txtDiasfalta"
+							label="#{bundle.lbl_diasfalta}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diasfalta}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+						<xcp:number
+							id="txtDiaslicsaude"
+							label="#{bundle.lbl_diaslicsaude}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diaslicsaude}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+						<xcp:number
+							id="txtDiasafastamento"
+							label="#{bundle.lbl_diasafastamento}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diasafastamento}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+						<xcp:number
+							id="txtDiaspenalidade"
+							label="#{bundle.lbl_diaspenalidade}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diaspenalidade}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+						<xcp:number
+							id="txtDiasprorrog"
+							label="#{bundle.lbl_diasprorrog}"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.diasprorrog}"
+							size="4"
+							precision="4"
+							scale="0"
+							maxValue="9999" />
+
+					</xcp:border>
+				</p:column>
+			</p:row>
+		</xcp:panelGrid>
+
+		<xcp:date
+			id="txtDatadoc"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.datadoc}"
+			label="#{bundle.lbl_datadoc}" />
+
+
+		<xcp:lov
+			id="lovTipodoc"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.tipodocFk}"
+			readonly="true"
+			size="2"
+			label="#{bundle.lbl_tipodoc}"
+			query="tipodocumento" />
+
+		<xcp:lov
+			id="lovDocumento"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.registroFk}"
+			label="#{bundle.lbl_documento}"
+			readonly="true"
+			query="documentos"
+			size="20" />
+
+		<xcp:lov
+			id="lovProcesso"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.processoFk}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			size="25"
+			readonly="true" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+		<p:panelGrid>
+			<p:row>
+				<p:column>
+					<p:splitButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{licencapremioBacking.helper.licencapremioDocSelecionada.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(licencapremioBacking.helper.licencapremioDocSelecionada.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{licencapremioBacking.model.actionOpenVisDialog(licencapremioBacking.helper.licencapremioDocSelecionada.registro)}"
+							process="@this" />
+
+					</p:splitButton>
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:dateTime
+							id="txtRetificacao"
+							value="#{licencapremioBacking.helper.licencapremioDocSelecionada.retificacao}"
+							label="#{bundle.lbl_retificacao}"
+							rendered="#{licencapremioBacking.helper.licencapremioDocSelecionada.retificacao!=null}"
+							readonly="true" />
+					</xcp:panelForm>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+		<xcp:memo
+			id="txtObs"
+			label="#{bundle.lbl_obs}"
+			value="#{licencapremioBacking.helper.licencapremioDocSelecionada.obs}"
+			size="400" />
+	</xcp:panelForm>
+</ui:composition>

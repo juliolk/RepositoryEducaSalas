@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ConcessoesPonto"
+		backing="#{concessoesPontoBacking}"
+		masterId="Concessoes">
+
+		<ui:define name="colunas">
+			<xcp:column
+				headerText="#{bundle.col_tipoponto}"
+				value="#{row.tipopontoFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.tipopontoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipoCol}"
+				type="String"
+				size="20"
+				rendered="#{concessoesBacking.entity.tipo!=1}"
+				itens="#{concessoesPontoBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipoCol}"
+					itens="#{concessoesPontoBacking.itensTipo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diasMinimo}"
+				value="#{row.diasMinimoCol}"
+				type="Number"
+				rendered="#{concessoesBacking.entity.tipo!=1}"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.diasMinimoCol}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diasMaximo}"
+				value="#{row.diasMaximoCol}"
+				type="Number"
+				rendered="#{concessoesBacking.entity.tipo!=1}"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.diasMaximoCol}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipoponto_ConcessoesPonto"
+					value="#{concessoesPontoBacking.entity.tipopontoFk}"
+					label="#{bundle.lbl_tipoponto}"
+					required="true"
+					query="tipopontoqtd"
+					params="#{concessoesPontoBacking.parEsp}"
+					size="4"
+					readonly="#{not concessoesPontoBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboTipoSoma_ConcessoesPonto"
+					value="#{concessoesPontoBacking.entity.tipoSoma}"
+					label="#{bundle.lbl_tipoSoma}"
+					required="true"
+					rendered="#{concessoesBacking.entity.tipo!=1}"
+					itens="#{concessoesPontoBacking.itensTipoSoma}"
+					readonly="#{not concessoesPontoBacking.entity.novo}">
+					<p:ajax
+						event="change"
+						update="cboTipo_ConcessoesPonto,cboTipo_ConcessoesPonto_l,lovAgrupador_ConcessoesPonto,lovAgrupador_ConcessoesPonto_l,txtDiasMinimo_ConcessoesPonto,txtDiasMinimo_ConcessoesPonto_l,txtDiasMaximo_ConcessoesPonto,txtDiasMaximo_ConcessoesPonto_l,cboIndIniciaapos,cboIndIniciaapos_l" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovAgrupador_ConcessoesPonto"
+					value="#{concessoesPontoBacking.entity.agrupadorFk}"
+					label="#{bundle.lbl_agrupador}"
+					required="true"
+					rendered="#{concessoesPontoBacking.entity.tipoSoma == 2 and concessoesBacking.entity.tipo!=1}"
+					params="#{concessoesPontoBacking.paramsAgrupador}"
+					query="concessoes_limites"
+					size="5" />
+
+				<xcp:combo
+					id="cboTipo_ConcessoesPonto"
+					value="#{concessoesPontoBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					rendered="#{concessoesPontoBacking.entity.tipoSoma == 1}"
+					itens="#{concessoesPontoBacking.itensTipo}">
+					<p:ajax
+						event="change"
+						update="cboIndIniciaapos cboIndIniciaapos_l" />
+				</xcp:combo>
+
+
+				<xcp:combo
+					id="cboIndIniciaapos"
+					value="#{concessoesPontoBacking.entity.indIniciaapos}"
+					label="#{bundle.lbl_indIniciaapos}"
+					required="true"
+					rendered="#{concessoesBacking.entity.tipo == 2 and concessoesPontoBacking.entity.tipoSoma == 1 and concessoesPontoBacking.entity.tipo == 4}"
+					itens="#{concessoesPontoBacking.itensIndSimNao}">
+					<p:ajax
+						event="change"
+						update="txtDiasRetorno_ConcessoesMvto,txtDiasRetorno_ConcessoesMvto_l" />
+				</xcp:combo>
+
+				<xcp:number
+					id="txtDiasMinimo_ConcessoesPonto"
+					label="#{bundle.lbl_diasMinimo}"
+					value="#{concessoesPontoBacking.entity.diasMinimo}"
+					rendered="#{concessoesPontoBacking.entity.tipoSoma == 1}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					required="true" />
+
+				<xcp:number
+					id="txtDiasMaximo_ConcessoesPonto"
+					label="#{bundle.lbl_diasMaximo}"
+					value="#{concessoesPontoBacking.entity.diasMaximo}"
+					rendered="#{concessoesBacking.entity.tipo!=1 and concessoesPontoBacking.entity.tipoSoma == 1}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="9999"
+					required="true" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

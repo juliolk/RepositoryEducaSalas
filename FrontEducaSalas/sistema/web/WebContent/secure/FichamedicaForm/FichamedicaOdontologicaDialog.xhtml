@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog header="#{bundle.tit_fichaodontologica}" modal="true"
+		id="dlgFichaOdonto" widgetVar="dlgFichaOdonto_w" dynamic="true"
+		onShow="XCUtil.selecttab('tabFuncionarios_w','tabFichaOdonto')">
+		<xcp:form id="frmFichaOdonto">
+			<p:outputPanel style="max-height: 700px; overflow-y: scroll;">
+				
+				<xcp:panelForm>
+					<h:panelGrid columns="2" styleClass="tabela_alinhamento">
+						<h:panelGroup>
+
+							<h:panelGrid columns="2"
+								columnClasses="form_label,form_content_adic"
+								styleClass="tabela_alinhamento">
+								<xcp:date id="txtData" required="true"
+									value="#{fichamedicaBacking.fichaOdontoSel.dtexame}"
+									label="#{bundle.lbl_dtexame}">
+									<p:ajax process="@this" update="@none" event="change" />
+									<p:ajax update="@none" event="dateSelect" process="@this" />
+								</xcp:date>
+							</h:panelGrid>
+
+							<p:fieldset legend="#{bundle.tit_fichaodontologica}">
+
+								<h:panelGrid columns="4"
+									columnClasses="form_label,form_content_adic"
+									styleClass="tabela_alinhamento">
+
+									<xcp:combo id="cboAlergia"
+										value="#{fichamedicaBacking.fichaOdontoSel.indAlergia}"
+										label="#{bundle.lbl_alergia}" width="100px" required="true"
+										itens="#{fichamedicaBacking.itensIndSimNao}">
+										<p:ajax event="change"
+											listener="#{fichamedicaBacking.fichaOdontoSel.setDesAlergia('')}"
+											update="txtDesAlergia,txtDesAlergia_l">
+										</p:ajax>
+									</xcp:combo>
+									<xcp:memo id="txtDesAlergia" label="#{bundle.lbl_descricao}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desAlergia}"
+										required="#{fichamedicaBacking.fichaOdontoSel.indAlergia==1}"
+										readonly="#{fichamedicaBacking.fichaOdontoSel.indAlergia!=1}"
+										size="100" rows="2"/>
+
+									<xcp:combo id="cboHipertensao"
+										value="#{fichamedicaBacking.fichaOdontoSel.indHipertensao}"
+										label="#{bundle.lbl_hipertensao}" width="100px"
+										required="true" itens="#{fichamedicaBacking.itensIndSimNao}">
+										<p:ajax event="change"
+											listener="#{fichamedicaBacking.fichaOdontoSel.setDesHipertensao('')}"
+											update="txtDesHipertensao,txtDesHipertensao_l">
+										</p:ajax>
+									</xcp:combo>
+									<xcp:memo id="txtDesHipertensao"
+										label="#{bundle.lbl_descricao}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desHipertensao}"
+										required="#{fichamedicaBacking.fichaOdontoSel.indHipertensao==1}"
+										readonly="#{fichamedicaBacking.fichaOdontoSel.indHipertensao!=1}"
+										size="100" rows="2"/>
+
+									<xcp:combo id="cboDiabetes"
+										value="#{fichamedicaBacking.fichaOdontoSel.indDiabetes}"
+										label="#{bundle.lbl_diabetes}" width="100px" required="true"
+										itens="#{fichamedicaBacking.itensIndSimNao}">
+										<p:ajax event="change"
+											listener="#{fichamedicaBacking.fichaOdontoSel.setDesDiabetes('')}"
+											update="txtDesDiabetes,txtDesDiabetes_l">
+										</p:ajax>
+									</xcp:combo>
+									<xcp:memo id="txtDesDiabetes" label="#{bundle.lbl_descricao}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desDiabetes}"
+										required="#{fichamedicaBacking.fichaOdontoSel.indDiabetes==1}"
+										readonly="#{fichamedicaBacking.fichaOdontoSel.indDiabetes!=1}"
+										size="100" rows="2"/>
+
+									<xcp:combo id="cboSangramentogengiva"
+										value="#{fichamedicaBacking.fichaOdontoSel.indSangramentogengiva}"
+										label="#{bundle.lbl_sangramentogengiva}" width="100px"
+										required="true" itens="#{fichamedicaBacking.itensIndSimNao}">
+										<p:ajax event="change"
+											listener="#{fichamedicaBacking.fichaOdontoSel.setDesSangramentogengiva('')}"
+											update="txtDesSangramentogengiva,txtDesSangramentogengiva_l">
+										</p:ajax>
+									</xcp:combo>
+									<xcp:memo id="txtDesSangramentogengiva"
+										label="#{bundle.lbl_descricao}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desSangramentogengiva}"
+										required="#{fichamedicaBacking.fichaOdontoSel.indSangramentogengiva==1}"
+										readonly="#{fichamedicaBacking.fichaOdontoSel.indSangramentogengiva!=1}"
+										size="100" rows="2"/>
+
+									<xcp:combo id="cboSensibilidadedentes"
+										value="#{fichamedicaBacking.fichaOdontoSel.indSensibilidadedentes}"
+										label="#{bundle.lbl_sensibilidadedentes}" width="100px"
+										required="true" itens="#{fichamedicaBacking.itensIndSimNao}">
+										<p:ajax event="change"
+											listener="#{fichamedicaBacking.fichaOdontoSel.setDesSensibilidadedentes('')}"
+											update="txtDesSensibilidadedentes,txtDesSensibilidadedentes_l">
+										</p:ajax>
+									</xcp:combo>
+									<xcp:memo id="txtDesSensibilidadedentes"
+										label="#{bundle.lbl_descricao}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desSensibilidadedentes}"
+										required="#{fichamedicaBacking.fichaOdontoSel.indSensibilidadedentes==1}"
+										readonly="#{fichamedicaBacking.fichaOdontoSel.indSensibilidadedentes!=1}"
+										size="100" rows="2"/>
+
+									<xcp:combo id="cboMedicamento"
+										value="#{fichamedicaBacking.fichaOdontoSel.indMedicamento}"
+										label="#{bundle.lbl_medicamento}" width="100px"
+										required="true" itens="#{fichamedicaBacking.itensIndSimNao}">
+										<p:ajax event="change"
+											listener="#{fichamedicaBacking.fichaOdontoSel.setDesMedicamento('')}"
+											update="txtDesMedicamento,txtDesMedicamento_l">
+										</p:ajax>
+									</xcp:combo>
+									<xcp:memo id="txtDesMedicamento"
+										label="#{bundle.lbl_descricao}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desMedicamento}"
+										required="#{fichamedicaBacking.fichaOdontoSel.indMedicamento==1}"
+										readonly="#{fichamedicaBacking.fichaOdontoSel.indMedicamento!=1}"
+										size="100" rows="2"/>
+
+									<xcp:combo id="cboProblemasaude"
+										value="#{fichamedicaBacking.fichaOdontoSel.indProblemasaude}"
+										label="#{bundle.lbl_problemassaude}" width="100px"
+										required="true" itens="#{fichamedicaBacking.itensIndSimNao}">
+										<p:ajax event="change"
+											listener="#{fichamedicaBacking.fichaOdontoSel.setDesProblemasaude('')}"
+											update="txtDesProblemasaude,txtDesProblemasaude_l">
+										</p:ajax>
+									</xcp:combo>
+									<xcp:memo id="txtDesProblemasaude"
+										label="#{bundle.lbl_descricao}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desProblemasaude}"
+										required="#{fichamedicaBacking.fichaOdontoSel.indProblemasaude==1}"
+										readonly="#{fichamedicaBacking.fichaOdontoSel.indProblemasaude!=1}"
+										size="100" rows="2"/>
+
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset legend="#{bundle.tit_odontograma}">
+								<h:panelGrid columns="2"
+									columnClasses="form_label,form_content_adic"
+									styleClass="tabela_alinhamento">
+									<xcp:memo id="txtDesOdontograma"
+										label="#{bundle.lbl_odontograma}"
+										value="#{fichamedicaBacking.fichaOdontoSel.desOdontograma}"
+										size="130" />
+
+									<xcp:memo id="txtPlanoTratamento"
+										label="#{bundle.lbl_planoTratamento}"
+										value="#{fichamedicaBacking.fichaOdontoSel.planoTratamento}"
+										size="130" />
+								</h:panelGrid>
+							</p:fieldset>
+						</h:panelGroup>
+					</h:panelGrid>
+
+				</xcp:panelForm>
+				<p:toolbar id="toolform">
+					<f:facet name="left">
+						<xcp:commandButton id="btn_ok_fichaOdonto" icon="ui-icon-disk"
+							disabled="#{fichamedicaBacking.disabledGravar}"
+							action="#{fichamedicaBacking.actionGravarFichaOdonto}"
+							value="#{bundle.btn_gravar}" />
+
+					</f:facet>
+				</p:toolbar>
+				
+			</p:outputPanel>
+		</xcp:form>
+
+	</p:dialog>
+
+</ui:composition>

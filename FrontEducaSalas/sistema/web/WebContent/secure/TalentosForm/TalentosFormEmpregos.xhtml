@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	
+	<p:dataTable
+		id="tabListaEmpregos"
+		value="#{talentosBacking.helper.listaEmpregos}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="row"
+		rowKey="#{row.PK}"
+		emptyMessage="#{bundle.msg_sem_resultado}">
+
+		<xcp:column
+			headerText="#{bundle.col_nomeempresa}"
+			type="String"
+			size="20">
+			<xcp:outputSimple value="#{row.nomeempresa}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtadm}"
+			type="Date"
+			size="5">
+			<xcp:outputSimpleDate value="#{row.dtadm}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtdem}"
+			type="Date"
+			size="5">
+			<xcp:outputSimpleDate value="#{row.dtdem}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_totdias}"
+			type="Number"
+			size="2">
+			<xcp:outputSimpleNumber
+				value="#{row.totdias}"
+				precision="4"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_faltas}"
+			type="Number"
+			size="5">
+			<xcp:outputSimpleNumber
+				value="#{row.faltas}"
+				precision="5"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_afastamentos}"
+			type="Number"
+			size="5">
+			<xcp:outputSimpleNumber
+				value="#{row.afastamentos}"
+				precision="5"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_obs}"
+			type="String"
+			size="37">
+			<xcp:outputSimple value="#{empregos.obs}" />
+		</xcp:column>
+	</p:dataTable>
+
+</ui:composition>

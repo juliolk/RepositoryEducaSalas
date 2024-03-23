@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:panel
+		id="pnlAssistPsicoMot"
+		styleClass="xcp_pmanut_detalhes"
+		rendered="#{not assistPsicoSetorBacking.helper.entity.novo}">
+
+		<f:facet name="header">
+			<xcp:panelGrid>
+				<p:row>
+					<p:column>
+						<p:outputPanel autoUpdate="true">
+							<xcp:commandLink
+								id="lnkVoltar_mot"
+								value="#{bundle.lbl_listagem}"
+								action="#{assistPsicoMotSetorBacking.actionVoltar}"
+								process="@this"
+								update="pnlAssistPsicoMot tollbarprinc"
+								rendered="#{assistPsicoMotSetorBacking.tipTela == 2}">
+								<p:resetInput target="pnlAssistPsicoMot tollbarprinc" />
+							</xcp:commandLink>
+
+							<h:outputText
+								value="|"
+								escape="false"
+								rendered="#{assistPsicoMotSetorBacking.tipTela == 2}" />
+						</p:outputPanel>
+					</p:column>
+					<p:column styleClass="manut_content_header_title">
+						<ui:insert name="headerTitle">
+							<h:outputText value="#{bundle.title_AssistPsicoSetorMot}" />
+						</ui:insert>
+					</p:column>
+				</p:row>
+			</xcp:panelGrid>
+		</f:facet>
+
+		<h:panelGroup rendered="#{assistPsicoMotSetorBacking.tipTela == 2}">
+			<xcp:panelGrid styleClass="xcp_pmanut_form">
+				<p:row>
+					<p:column styleClass="xcp_pmanut_form_cell_frm">
+						<p:fieldset>
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="txtMotivo_Assistenciasocialmot"
+									value="#{assistPsicoMotSetorBacking.entity.assistenciamotivoFk}"
+									label="#{bundle.lbl_motivo}"
+									params="#{assistPsicoBacking.paramsAssistencia}"
+									required="true"
+									query="assistenciamotivo"
+									readonly="#{not assistPsicoMotSetorBacking.entity.novo}"
+									size="5" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</xcp:panelGrid>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btnGravar_mot"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						action="#{assistPsicoMotSetorBacking.actionGravar}"
+						process="pnlAssistPsicoMot"
+						update="pnlAssistPsicoMot tollbarprinc" />
+
+					<xcp:commandButton
+						id="btnRemover_mot"
+						icon="ui-icon-trash"
+						value="#{bundle.btn_remover}"
+						action="#{assistPsicoMotSetorBacking.actionRemover}"
+						disabled="#{assistPsicoMotSetorBacking.entity.novo}"
+						process="@this"
+						update="pnlAssistPsicoMot">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+						<p:resetInput target="pnlAssistPsicoMot tollbarprinc" />
+					</xcp:commandButton>
+
+					<xcp:commandButton
+						id="btnVoltar_mot"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						action="#{assistPsicoMotSetorBacking.actionVoltar}"
+						process="@this"
+						update="pnlAssistPsicoMot tollbarprinc">
+						<p:resetInput target="pnlAssistPsicoMot tollbarprinc" />
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+		</h:panelGroup>
+
+
+		<h:panelGroup rendered="#{assistPsicoMotSetorBacking.tipTela == 1}">
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						icon="ui-icon-document"
+						value="#{bundle.btn_novo}"
+						action="#{assistPsicoMotSetorBacking.actionNovo}"
+						process="pnlAssistPsicoMot"
+						update="pnlAssistPsicoMot">
+						<p:resetInput target="pnlAssistPsicoMot tollbarprinc" />
+					</xcp:commandButton>
+
+					<xcp:commandButton
+						id="btnAtualizar_mot"
+						icon="ui-icon-refresh"
+						value="#{bundle.btn_atualizar}"
+						action="#{assistPsicoMotSetorBacking.actionPesquisar}"
+						process="@this"
+						update="pnlAssistPsicoMot" />
+
+					<ui:insert name="barraListaDet" />
+				</f:facet>
+			</p:toolbar>
+
+			<p:dataTable
+				id="table_mot"
+				var="row"
+				resizableColumns="true"
+				value="#{assistPsicoMotSetorBacking.list}"
+				filteredValue="#{assistPsicoMotSetorBacking.listFiltrados}"
+				rows="8"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				paginatorPosition="bottom"
+				selectionMode="single"
+				selection="#{assistPsicoMotSetorBacking.entity}"
+				rowKey="#{row.PK}">
+
+				<p:ajax
+					event="rowSelect"
+					update=":form:pnlAssistPsicoMot :form:tollbarprinc"
+					listener="#{assistPsicoMotSetorBacking.actionSelectMot}" />
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					value="#{row.motivo}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.motivo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					value="#{row.assistenciamotivoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.assistenciamotivoFk.descricao}" />
+				</xcp:column>
+
+			</p:dataTable>
+		</h:panelGroup>
+
+	</p:panel>
+</ui:composition>

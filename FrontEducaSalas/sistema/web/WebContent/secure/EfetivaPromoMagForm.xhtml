@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManutLazy
+			id="EfetivaSolParfuncPortal"
+			renderedRemover="false"
+			renderedGravar="false"
+			renderedNovo="false"
+			renderedAtualizar="false"
+			backing="#{efetivaPromoMagBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					id="brdPesq"
+					legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="dtaSolicitacao"
+							valueStart="#{efetivaPromoMagBacking.dtaIni}"
+							valueEnd="#{efetivaPromoMagBacking.dtaFim}"
+							label="#{bundle.lbl_data}" />
+
+						<xcp:lov
+							id="lovFuncionario"
+							value="#{efetivaPromoMagBacking.funcionarioLov}"
+							label="#{bundle.lbl_matricula}"
+							query="funcionariosLovAll"
+							size="15"
+							maxlength="8" />
+
+						<xcp:lov
+							id="lovEdital"
+							value="#{efetivaPromoMagBacking.editalFk}"
+							label="#{bundle.lbl_edital}"
+							query="editalmag"
+							size="15" />
+
+					</xcp:panelForm>
+					<p:fieldset
+						id="brdSelecao"
+						legend="#{bundle.tit_situacao}"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtSitSolicitada"
+								label="#{bundle.opt_tipProgressaoMag_1}"
+								value="#{efetivaPromoMagBacking.situacaoIncluida}" />
+							<xcp:check
+								id="txtSitEfetivada"
+								label="#{bundle.opt_tipProgressaoMag_2}"
+								value="#{efetivaPromoMagBacking.situacaoRecusada}" />
+							<xcp:check
+								id="txtSitNaoAceita"
+								label="#{bundle.opt_tipProgressaoMag_3}"
+								value="#{efetivaPromoMagBacking.situacaoAtendida}" />
+						</xcp:panelForm>
+					</p:fieldset>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_pesquisar"
+					icon="icon-pesquisar_azul"
+					value="#{bundle.btn_pesquisar}"
+					update="table_#{id}"
+					onclick="PF('table_#{id}_w').filter()" />
+			</ui:define>
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_gravar"
+					icon="ui-icon-disk"
+					rendered="#{efetivaPromoMagBacking.renderedDepartamento}"
+					action="#{efetivaPromoMagBacking.actionSalvar}"
+					value="#{bundle.btn_gravar}"
+					update="@form" />
+
+				<xcp:commandButton
+					id="btn_efetiva_solicitacao"
+					icon="ui-icon-arrowthickstop-1-s"
+					disabled="#{efetivaPromoMagBacking.entity.situacao == 3}"
+					action="#{efetivaPromoMagBacking.actionAceitaSolicitacao}"
+					value="#{bundle.btn_aceita_solicitacao}"
+					update=":frmMotivo"
+					rendered="#{not efetivaPromoMagBacking.renderedDepartamento or (efetivaPromoMagBacking.renderedDepartamento and (efetivaPromoMagBacking.depAtual == null or efetivaPromoMagBacking.depAtual == 1))}">
+					<p:confirm
+						header="#{bundle.tit_confirma_inscricao}"
+						message="#{bundle.msg_confirma_inscricao}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_rejeita_solicitacao"
+					icon="ui-icon-cancelar"
+					disabled="#{efetivaPromoMagBacking.entity.situacao != 1}"
+					actionListener="#{efetivaPromoMagBacking.actionRejeitaSolicitacao}"
+					immediate="true"
+					value="#{bundle.btn_rejeita_solicitacao}"
+					update=":frmMotivo"
+					rendered="#{not efetivaPromoMagBacking.renderedDepartamento or (efetivaPromoMagBacking.renderedDepartamento and (efetivaPromoMagBacking.depAtual == null or efetivaPromoMagBacking.depAtual == 1))}">
+					<p:confirm
+						header="#{bundle.tit_confirma_rejeicao_insc}"
+						message="#{bundle.msg_confirma_rejeicao_insc}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="12"
+					sortBy="data">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_departamento}"
+					type="String"
+					size="5"
+					itens="#{efetivaPromoMagBacking.itensDepTodos}"
+					rendered="#{efetivaPromoMagBacking.renderedDepartamento}">
+					<xcp:outputSimple
+						value="#{row.departamento}"
+						itens="#{efetivaPromoMagBacking.itensDepTodos}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					type="Number"
+					size="7"
+					sortBy="matricula">
+					<xcp:outputSimpleNumber
+						value="#{row.editalFk.numero}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					type="String"
+					size="7">
+					<xcp:outputSimple
+						value="#{row.editalFk.tipEdital == 6 or row.editalFk.tipEdital == 8 ? 'Promocao' : row.editalFk.tipEdital == 7 ? 'Remocao' : 'Acesso'}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					type="Number"
+					size="7"
+					sortBy="matricula">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="String"
+					size="50"
+					sortBy="nome">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fone}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.matriculaFk.fone}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{efetivaPromoMagBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtMatricula"
+						label="#{bundle.lbl_matricula}"
+						value="#{efetivaPromoMagBacking.entity.matricula}"
+						size="8"
+						maxValue="99999999"
+						readonly="true" />
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						value="#{efetivaPromoMagBacking.entity.matriculaFk.nome}"
+						size="60"
+						readonly="true" />
+
+					<xcp:dateTime
+						id="txtData"
+						required="true"
+						value="#{efetivaPromoMagBacking.entity.data}"
+						label="#{bundle.col_data}"
+						readonly="true" />
+
+					<xcp:combo
+						id="txtSituacao"
+						value="#{efetivaPromoMagBacking.entity.situacao}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{efetivaPromoMagBacking.itensSituacao}"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboDepartamento"
+						value="#{efetivaPromoMagBacking.entity.departamento}"
+						label="#{bundle.lbl_departamento}"
+						itens="#{efetivaPromoMagBacking.itensDep}"
+						rendered="#{efetivaPromoMagBacking.renderedDepartamento}" />
+
+					<xcp:lov
+						id="lovNumSeqVaga"
+						required="true"
+						label="#{bundle.lbl_numSeqVaga}"
+						value="#{efetivaPromoMagBacking.entity.numSeqVagaFk}"
+						query="cargosvagas"
+						readonly="true" />
+
+					<xcp:memo
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						value="#{efetivaPromoMagBacking.entity.motivo}"
+						size="500"
+						readonly="true"
+						style="width:500px;"
+						rendered="#{efetivaPromoMagBacking.entity.situacao == 2 or efetivaPromoMagBacking.entity.situacao == 3}" />
+
+				</xcp:panelForm>
+
+
+				<p:fieldset
+					id="fldCursos"
+					legend="#{bundle.title_cursos}"
+					rendered="#{efetivaPromoMagBacking.renderedCursos}"
+					style="max-width:850px">
+
+					<p:dataTable
+						id="tblCursos"
+						var="row"
+						value="#{efetivaPromoMagBacking.listFormacao}"
+						rows="#{viewUtil.tableRows}"
+						rowKey="#{row}"
+						paginator="true"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginatorPosition="bottom">
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							size="15"
+							value="#{row.cursoFk.descricao}">
+							<xcp:outputSimple value="#{row.cursoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_curso}"
+							value="#{row.cursoacadFk.descricao}"
+							type="String"
+							size="10">
+							<xcp:outputSimple
+								value="#{row.area}"
+								rendered="#{row.area !=null}" />
+							<xcp:outputSimple
+								value="#{row.cursoacadFk.descricao}"
+								rendered="#{row.cursoacadFk !=null}" />
+						</xcp:column>
+
+
+
+						<xcp:column
+							headerText="#{bundle.col_dtinicio}"
+							value="#{row.dtini}"
+							type="Date"
+							size="2">
+							<xcp:outputSimpleDate value="#{row.dtinicio}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtfim}"
+							value="#{row.dtfim}"
+							type="Date"
+							size="2">
+							<xcp:outputSimpleDate value="#{row.dtfim}" />
+						</xcp:column>
+
+					</p:dataTable>
+				</p:fieldset>
+
+				<p:fieldset
+					legend="#{bundle.title_anexos}"
+					style="max-width:850px">
+					<p:dataTable
+						id="tabAnexos"
+						value="#{efetivaPromoMagBacking.listAnexos}"
+						var="row"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						rowKey="#{row}">
+
+						<xcp:column
+							headerText="#{bundle.col_seq}"
+							type="Number"
+							size="1">
+							<xcp:outputSimpleNumber
+								value="#{row.seqAnx}"
+								precision="5"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							size="5">
+							<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_departamento}"
+							type="String"
+							size="5"
+							itens="#{efetivaPromoMagBacking.itensDepTodos}"
+							rendered="#{efetivaPromoMagBacking.renderedDepartamento}">
+							<xcp:outputSimple
+								value="#{row.departamento}"
+								itens="#{efetivaPromoMagBacking.itensDepTodos}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_acoes}"
+							type="Date"
+							size="7">
+
+							<xcp:commandLink
+								immediate="true"
+								id="btn_download_anex"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								ajax="false">
+								<h:graphicImage
+									value="/resources/img/download.png"
+									style="margin-top:3px;" />
+								<p:fileDownload
+									value="#{efetivaPromoMagBacking.getArquivoAnexo(row)}"
+									contentDisposition="attachment" />
+							</xcp:commandLink>
+
+							<p:spacer width="10px" />
+
+							<xcp:commandLink
+								immediate="true"
+								id="btn_remover"
+								update="tabAnexos "
+								action="#{efetivaPromoMagBacking.actionRemoverAnexo(row)}"
+								disabled="#{efetivaPromoMagBacking.entity.situacao != 1 or (efetivaPromoMagBacking.renderedDepartamento and efetivaPromoMagBacking.depAtual != row.departamento)}">
+								<h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" />
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandLink>
+
+						</xcp:column>
+					</p:dataTable>
+
+					<div style="text-align: center">
+						<xcp:commandButton
+							id="btn_novo"
+							style="margin-top:5px"
+							process="@this"
+							update=":formAnexo"
+							action="#{efetivaPromoMagBacking.actionNovoAnexo}"
+							icon="ui-icon-plusthick"
+							value="#{bundle.btn_novo}"
+							disabled="#{efetivaPromoMagBacking.entity.situacao != 1}" />
+
+						<xcp:commandButton
+							value="#{bundle.btn_download_pdf}"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							immediate="true">
+							<p:fileDownload
+								value="#{efetivaPromoMagBacking.downloadPdfs}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+					</div>
+				</p:fieldset>
+			</ui:define>
+		</xcp:panelManutLazy>
+	</ui:define>
+
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgUpload"
+			modal="true"
+			widgetVar="dlgUpload_w"
+			header="#{bundle.title_anexo}">
+			<xcp:form id="formAnexo">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovTipo"
+						value="#{efetivaPromoMagBacking.anexo.tipoFk}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						query="tipoanexoprom"
+						size="3"
+						params="#{efetivaPromoMagBacking.paramsTipo}" />
+				</xcp:panelForm>
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{efetivaPromoMagBacking.actionUploadAnexo}" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							process="@form"
+							update=":form:tabAnexos"
+							action="#{efetivaPromoMagBacking.actionSalvarAnexo}" />
+
+						<xcp:commandButton
+							id="btn_voltar"
+							value="#{bundle.btn_voltar}"
+							icon="ui-icon-gear"
+							process="@this"
+							update="@none"
+							oncomplete="PF('dlgUpload_w').hide()" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			modal="true"
+			id="dlgMotivo"
+			header="#{bundle.title_motivo}"
+			widgetVar="dlgMotivo_w">
+			<xcp:form id="frmMotivo">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtPendencia"
+						value="#{efetivaPromoMagBacking.entity.motivo}"
+						required="true"
+						label="#{bundle.lbl_motivo}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-check"
+							action="#{efetivaPromoMagBacking.actionFinalizar}"
+							update=":form" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgMotivo_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelForm>
+
+		<xcp:date
+			id="txtDtvcto"
+			required="true"
+			value="#{feriasBacking.helper.feriasDocSelecionada.dtvcto}"
+			label="#{bundle.lbl_dtvcto}"
+			readonly="true" />
+
+		<xcp:number
+			id="cboSeq"
+			value="#{feriasBacking.helper.feriasDocSelecionada.seq}"
+			label="#{bundle.lbl_seq}"
+			required="true"
+			maxValue="99"
+			size="2"
+			readonly="true" />
+		<p:outputLabel value=" " />
+		<xcp:panelGrid style="margin-left:-10px;">
+			<p:row>
+				<p:column>
+					<xcp:border
+						id="brdFerias"
+						header="#{bundle.lbl_ferias}">
+						<xcp:date
+							id="txtDtminima"
+							value="#{feriasBacking.helper.feriasDocSelecionada.dtminima}"
+							rendered="#{feriasBacking.helper.feriasDocSelecionada.dtminima!=null}"
+							readonly="true"
+							label="#{bundle.lbl_dtminima}">
+						</xcp:date>
+						<xcp:date
+							id="txtDtgozo"
+							value="#{feriasBacking.helper.feriasDocSelecionada.dtgozo}"
+							label="#{bundle.lbl_dtgozo}"
+							readonly="true">
+							<p:ajax
+								event="change"
+								listener="#{feriasBacking.calculaDias}"
+								update="txtDiasferias" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{feriasBacking.calculaDias}"
+								update="txtDiasferias" />
+						</xcp:date>
+
+						<xcp:date
+							id="txtDtret"
+							value="#{feriasBacking.helper.feriasDocSelecionada.dtret}"
+							label="#{bundle.lbl_dtret}"
+							readonly="true">
+							<p:ajax
+								event="change"
+								listener="#{feriasBacking.calculaDias}"
+								update="txtDiasferias" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{feriasBacking.calculaDias}"
+								update="txtDiasferias" />
+						</xcp:date>
+
+						<xcp:date
+							id="txtDatapgto"
+							readonly="true"
+							value="#{feriasBacking.helper.feriasDocSelecionada.datapgto}"
+							label="#{bundle.lbl_datapgto}" />
+
+					</xcp:border>
+
+					<xcp:border
+						id="brdPrevisao"
+						header="#{bundle.lbl_previsao}"
+						style="margin-left:-10px;">
+						<xcp:date
+							id="txtDataprevista"
+							value="#{feriasBacking.helper.feriasDocSelecionada.dataprevista}"
+							label="#{bundle.lbl_dataprevista}"
+							readonly="true" />
+						<xcp:number
+							id="txtDiasferprev"
+							label="#{bundle.lbl_diasferprev}"
+							value="#{feriasBacking.helper.feriasDocSelecionada.diasferprev}"
+							size="15"
+							precision="3"
+							scale="0"
+							maxValue="#{feriasBacking.qtdDiasFerias}"
+							readonly="true" />
+						<xcp:number
+							id="cboDiasaboprev"
+							value="#{feriasBacking.helper.feriasDocSelecionada.diasaboprev}"
+							label="#{bundle.lbl_diasaboprev}"
+							size="15"
+							precision="2"
+							scale="0"
+							readonly="true" />
+					</xcp:border>
+				</p:column>
+				<p:column>
+					<xcp:border
+						id="brd_pagamento"
+						header="#{bundle.lbl_dia_pagamento}">
+
+						<xcp:number
+							id="txtDiasMinimo"
+							label="#{bundle.lbl_diasMinimo}"
+							size="3"
+							value="#{feriasBacking.helper.feriasDocSelecionada.diasMinimo}"
+							rendered="#{feriasBacking.helper.feriasDocSelecionada.dtminima!=null}"
+							readonly="true"
+							precision="4"
+							scale="0" />
+
+						<xcp:number
+							id="txtDiasferias"
+							value="#{feriasBacking.helper.feriasDocSelecionada.diasferias}"
+							label="#{bundle.lbl_diasferias}"
+							size="3"
+							maxValue="#{feriasBacking.qtdDiasFerias}"
+							precision="2"
+							scale="0"
+							readonly="true">
+							<p:ajax
+								event="change"
+								listener="#{feriasBacking.calculaDataGozo}"
+								update="txtDtret" />
+						</xcp:number>
+
+						<xcp:number
+							id="txtDiasabono"
+							value="#{feriasBacking.helper.feriasDocSelecionada.diasabono}"
+							label="#{bundle.lbl_diasabono}"
+							size="3"
+							maxValue="10"
+							precision="2"
+							scale="0"
+							readonly="true" />
+
+						<xcp:number
+							id="txtDiasperdidos"
+							label="#{bundle.lbl_diasperdidos}"
+							value="#{feriasBacking.helper.feriasDocSelecionada.diasperdidos}"
+							size="3"
+							precision="3"
+							scale="0"
+							maxValue="999"
+							readonly="true" />
+
+						<xcp:number
+							id="txtDiasprorrog"
+							label="#{bundle.lbl_diasprorrog}"
+							value="#{feriasBacking.helper.feriasDocSelecionada.diasprorrog}"
+							size="3"
+							precision="4"
+							scale="0"
+							maxValue="9999"
+							readonly="true" />
+					</xcp:border>
+				</p:column>
+			</p:row>
+		</xcp:panelGrid>
+
+		<xcp:lov
+			id="lovTipodoc"
+			value="#{feriasBacking.helper.feriasDocSelecionada.tipodocFk}"
+			readonly="true"
+			size="2"
+			label="#{bundle.lbl_tipodoc}"
+			query="tipodocumento" />
+
+		<xcp:lov
+			id="lovDocumento"
+			value="#{feriasBacking.helper.feriasDocSelecionada.registroFk}"
+			label="#{bundle.lbl_documento}"
+			readonly="true"
+			query="documentos"
+			size="20" />
+
+		<xcp:lov
+			id="lovProcesso"
+			value="#{feriasBacking.helper.feriasDocSelecionada.processoFk}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			readonly="true"
+			size="25" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+		<p:panelGrid>
+			<p:row>
+				<p:column>
+
+					<p:splitButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{feriasBacking.helper.feriasDocSelecionada.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(feriasBacking.helper.feriasDocSelecionada.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{feriasBacking.model.actionOpenVisDialog(feriasBacking.helper.feriasDocSelecionada.registro)}"
+							process="@this" />
+					</p:splitButton>
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:dateTime
+							id="txtRetificacao"
+							value="#{feriasBacking.helper.feriasDocSelecionada.retificacao}"
+							label="#{bundle.lbl_retificacao}"
+							rendered="#{feriasBacking.helper.feriasDocSelecionada.retificacao!=null}"
+							readonly="true" />
+					</xcp:panelForm>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+		<xcp:radio
+			id="txtGera13"
+			label="#{bundle.lbl_gera13}"
+			required="true"
+			value="#{feriasBacking.helper.feriasDocSelecionada.gera13}"
+			itens="#{feriasBacking.itensIndSimNao}"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovSituacaoFerias"
+			readonly="true"
+			value="#{feriasBacking.helper.feriasDocSelecionada.situacaoFk}"
+			label="#{bundle.lbl_situacao_ferias}"
+			query="tipoferias"
+			size="3" />
+			
+		<xcp:lov
+			id="lovProcessointerrup"
+			value="#{feriasBacking.helper.feriasDocSelecionada.processointerrupFk}"
+			label="#{bundle.lbl_processointerrup}"
+			query="processos"
+			size="25"
+			readonly="true"/>
+			
+		<xcp:number
+			id="txtDiaspagos"
+			label="#{bundle.lbl_diaspagos}"
+			value="#{feriasBacking.helper.feriasDocSelecionada.diaspagos}"
+			size="3"
+			precision="3"
+			scale="0"
+			maxValue="999"
+			readonly="true"/>
+
+		<xcp:memo
+			id="txtObs"
+			label="#{bundle.lbl_obs}"
+			readonly="true"
+			value="#{feriasBacking.helper.feriasDocSelecionada.obs}"
+			size="100" />
+
+	</xcp:panelForm>
+
+</ui:composition>

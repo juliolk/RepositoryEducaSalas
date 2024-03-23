@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Orgaos"
+			backing="#{orgaosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="9"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fone}"
+					value="#{row.fone}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.fone}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{orgaosBacking.entity.codigo}"
+						size="20"
+						maxlength="9"
+						precision="9"
+						scale="0"
+						maxValue="99999999"
+						readonly="#{not orgaosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{orgaosBacking.entity.descricao}"
+						size="190" />
+
+					<xcp:cnpj
+						id="txtCgccei"
+						label="#{bundle.lbl_cnpj}"
+						value="#{orgaosBacking.entity.cgccei}" />
+
+					<xcp:fone
+						id="txtFone"
+						label="#{bundle.lbl_fone}"
+						value="#{orgaosBacking.entity.fone}"
+						size="20" />
+
+					<xcp:combo
+						id="cboEntrancia"
+						value="#{orgaosBacking.entity.entrancia}"
+						label="#{bundle.lbl_entrancia}"
+						itens="#{orgaosBacking.itensEntrancia}"
+						rendered="#{orgaosBacking.tribunal}" />
+
+					<xcp:lov
+						id="lovZona"
+						value="#{orgaosBacking.entity.zonaFk}"
+						label="#{bundle.lbl_zona}"
+						query="zonajudiciaria"
+						size="8"
+						rendered="#{orgaosBacking.tribunal}" />
+
+					<xcp:lov
+						id="lovNucleo"
+						value="#{orgaosBacking.entity.nucleoFk}"
+						label="#{bundle.lbl_nucleo}"
+						query="nucleo"
+						size="8"
+						rendered="#{orgaosBacking.tribunal}" />
+
+					<xcp:lov
+						id="lovOrgaoSup"
+						value="#{orgaosBacking.entity.orgaoSupFk}"
+						label="#{bundle.lbl_orgaosup}"
+						query="orgaossup"
+						size="8"
+						params="#{orgaosBacking.paramsOrgaoSup}"
+						rendered="#{!orgaosBacking.entity.novo}" />
+
+
+				</xcp:panelForm>
+				<xcp:panelForm>
+					<xcp:endereco
+						id="empresa"
+						value="#{orgaosBacking.entity.endereco}"
+						stylefieldset="margin-left:0px !important" />
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="detalhes">
+		<p:outputPanel rendered="#{orgaosBacking.tribunal}">
+			<ui:include src="OrgaosForm/ElevacaoorgaosForm.xhtml" />
+			<ui:include src="OrgaosForm/OrgaosTransformacaoForm.xhtml" />
+		</p:outputPanel>
+	</ui:define>
+
+</ui:composition>

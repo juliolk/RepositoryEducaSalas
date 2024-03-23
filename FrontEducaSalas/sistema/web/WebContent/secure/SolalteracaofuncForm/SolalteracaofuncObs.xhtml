@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:memo
+		id="txtObs_#{id}"
+		label="#{solalteracaofuncBacking.atividade ? bundle.lbl_atividades : bundle.lbl_obs}"
+		value="#{solalteracaofuncBacking.entity.obs}"
+		size="1000" />
+
+</ui:composition>

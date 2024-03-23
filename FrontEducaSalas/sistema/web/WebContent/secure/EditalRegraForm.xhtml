@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="EditalRegra"
+			backing="#{editalRegraBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_regra}"
+					value="#{row.regra}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.regra}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="60"
+					itens="#{editalRegraBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{editalRegraBacking.itensTipo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtRegra"
+						label="#{bundle.lbl_seqregra}"
+						required="true"
+						value="#{editalRegraBacking.entity.regra}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"
+						readonly="#{not editalRegraBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{editalRegraBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{editalRegraBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{editalRegraBacking.itensTipo}"
+						readonly="#{not editalRegraBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{editalRegraBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="EditalRegraForm/EditalRegraDistForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

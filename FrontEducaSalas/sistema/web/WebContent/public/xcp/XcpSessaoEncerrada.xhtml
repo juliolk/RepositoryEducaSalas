@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:p="http://primefaces.org/ui"
+	template="#{xcp:getLayout('login')}">
+	<ui:define name="conteudo">
+
+		<center style="margin-bottom: 5px">
+			<h:outputText value="#{bundle.msg_sessao_encerrada}" />
+		</center>
+
+		<xcp:commandButton
+			action="login"
+			ajax="false"
+			id="btn_voltar"
+			value="#{bundle.btn_voltar}" />
+
+	</ui:define>
+</ui:composition>

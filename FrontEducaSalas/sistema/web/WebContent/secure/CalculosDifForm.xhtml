@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+#form\:tblleft tr {
+	border: none;
+}
+
+#form\:tblleft td {
+	text-align: left;
+}
+
+div#form\:cboTiposFolhas_c {
+	width: 100%;
+}
+</style>
+
+		<xcp:panelFuncionarioLazy
+			id="CalculosDif"
+			apresentaIndice="true"
+			backing="#{calculosDifBacking}"
+			scrollable="false">
+
+			<ui:define name="filtros">
+				<div
+					class="tabela_ocorrencia_fixas"
+					style="width: 245px; padding: 10px; padding-left: 25px;">
+					<h:panelGrid id="tblleft">
+						<p:row>
+							<p:column colspan="5">
+								<xcp:combo
+									id="cboTiposFolhas"
+									label="#{bundle.lbl_tipo_folha}"
+									value="#{calculosDifBacking.tipoFolhaSelecionada}"
+									itens="#{calculosDifBacking.itensTipofolha}"
+									styleClass="combotipofolhas">
+									<p:ajax
+										event="change"
+										update="calReferencia,table_CalculosDif"
+										listener="#{calculosDifBacking.actionTrocaPeriodo}" />
+								</xcp:combo>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="5">
+								<h:outputLabel
+									value="#{bundle.lbl_referencia_folha}"
+									style="position:relative;" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<xcp:commandButton
+									value=" "
+									style="height:24px; width:28px; position:relative; top:7px;"
+									id="btnPeriodoPrimeiro"
+									ajax="true"
+									actionListener="#{calculosDifBacking.buscaPeriodoPrimeiro}"
+									update="btnPesq_CalculosDif,btnNovo_CalculosDif,calReferencia,table_CalculosDif"
+									icon="ui-icon-seek-first" />
+
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoAnterior"
+									ajax="true"
+									actionListener="#{calculosDifBacking.buscaPeriodoAnterior}"
+									update="btnPesq_CalculosDif,btnNovo_CalculosDif,calReferencia,table_CalculosDif"
+									icon="ui-icon-seek-prev"
+									style="height:24px; width:28px; position:relative; top:7px;" />
+								<span class="calendar"> <p:calendar
+										id="calReferencia"
+										pattern="dd/MM/yyyy"
+										size="9"
+										navigator="true"
+										readonlyInput="true"
+										value="#{calculosDifBacking.dataSelecao}"
+										showOn="both">
+										<p:ajax
+											event="dateSelect"
+											update="btnPesq_CalculosDif,btnNovo_CalculosDif,calReferencia,table_CalculosDif"
+											listener="#{calculosDifBacking.actionSelectData}" />
+									</p:calendar></span>
+								<xcp:commandButton
+									value=""
+									id="btnPeriodoProximo"
+									actionListener="#{calculosDifBacking.buscaPeriodoProximo}"
+									update="btnPesq_CalculosDif,btnNovo_CalculosDif,calReferencia,table_CalculosDif"
+									ajax="true"
+									icon="ui-icon-seek-next"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+								<xcp:commandButton
+									value=" "
+									id="btnPeriodoUltimo"
+									ajax="true"
+									actionListener="#{calculosDifBacking.buscaPeriodoUltimo}"
+									update="btnPesq_CalculosDif,btnNovo_CalculosDif,calReferencia,table_CalculosDif"
+									icon="ui-icon-seek-end"
+									style="height:24px; width:28px; position:relative; top:7px; left:2px;" />
+							</p:column>
+
+						</p:row>
+
+					</h:panelGrid>
+				</div>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_conta}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.conta}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_des_conta}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.contaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					value="#{row.processo}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					value="#{row.valor}"
+					type="Number"
+					size="19">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovConta"
+						value="#{calculosDifBacking.entity.contaFk}"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						query="contasativas"
+						size="16" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						size="19"
+						value="#{calculosDifBacking.entity.valor}"
+						precision="16"
+						scale="2" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{calculosDifBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						size="25" />
+
+					<xcp:combo
+						id="cboTpacordo"
+						value="#{calculosDifBacking.entity.tpacordo}"
+						label="#{bundle.lbl_tpacordo}"
+						required="true"
+						itens="#{calculosDifBacking.itensTpAcordo}"
+						rendered="#{calculosDifBacking.renderedAcordo}">
+						<p:ajax
+							update="txtDtacconv txtDtacconv_l txtObjetoProcesso txtObjetoProcesso_l" />
+					</xcp:combo>
+
+					<xcp:memo
+						id="txtObjetoProcesso"
+						label="#{bundle.lbl_objetoprocesso}"
+						value="#{calculosDifBacking.entity.objetoProcesso}"
+						size="#{calculosDifBacking.entity.tpacordo == 99 ? 50 : 100}"
+						required="#{calculosDifBacking.entity.tpacordo == 99}" />
+
+					<xcp:combo
+						id="cboOrigemProcesso"
+						value="#{calculosDifBacking.entity.origemProcesso}"
+						label="#{bundle.lbl_origemprocesso}"
+						itens="#{calculosDifBacking.origemProcesso}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{calculosDifBacking.entity.obs}"
+						size="4000" />
+
+					<xcp:combo
+						id="txtTipolcto"
+						label="#{bundle.lbl_tipolcto}"
+						readonly="true"
+						value="#{calculosDifBacking.entity.tplanc}"
+						itens="#{calculosDifBacking.itensTipolcto}"
+						size="2" />
+
+					<xcp:date
+						id="txtDtacconv"
+						value="#{calculosDifBacking.entity.dtacconv}"
+						label="#{bundle.lbl_dtacconv}"
+						required="#{calculosDifBacking.entity.tpacordo ge 1 and calculosDifBacking.entity.tpacordo le 5}"
+						rendered="#{calculosDifBacking.renderedAcordo}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="CalculosDifForm/CalculosDifLancForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+</ui:composition>

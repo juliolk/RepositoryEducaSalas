@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="CursoacadFaixas"
+		backing="#{cursoacadFaixasBacking}"
+		masterId="Cursoacad">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_dtinicio}"
+				value="#{row.dtinicio}"
+				type="Date"
+				size="3">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfim}"
+				value="#{row.dtfim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_perc}"
+				value="#{row.perc}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.perc}"
+					precision="5"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDtinicio_CursoacadFaixas"
+					required="true"
+					value="#{cursoacadFaixasBacking.entity.dtinicio}"
+					label="#{bundle.lbl_datainicio}" />
+
+				<xcp:date
+					id="txtDtfim_CursoacadFaixas"
+					value="#{cursoacadFaixasBacking.entity.dtfim}"
+					label="#{bundle.lbl_datafim}" />
+
+				<xcp:number
+					id="txtPerc_CursoacadFaixas"
+					label="#{bundle.lbl_perc}"
+					required="true"
+					size="8"
+					value="#{cursoacadFaixasBacking.entity.perc}"
+					precision="5"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

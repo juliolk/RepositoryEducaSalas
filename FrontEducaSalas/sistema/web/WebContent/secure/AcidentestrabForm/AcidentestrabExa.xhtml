@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="table_AcidentestrabExa"
+		var="row"
+		resizableColumns="true"
+		value="#{acidentestrabExaBacking.lista}"
+		filteredValue="#{acidentestrabExaBacking.listaFiltrados}"
+		rows="#{viewUtil.tableRows}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		paginator="true"
+		paginatorPosition="bottom"
+		selection="#{acidentestrabExaBacking.listaSelExa}"
+		rowKey="#{row.PK}">
+
+		<p:column
+			selectionMode="multiple"
+			style="width:3%;text-align:center" />
+
+		<xcp:column
+			headerText="#{bundle.col_exame}"
+			value="#{row.exame}"
+			type="String"
+			size="15">
+			<xcp:outputSimpleNumber
+				value="#{row.exameFk.descricao}"
+				precision="3"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			value="#{row.dataexa}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.dataexa}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_convenio}"
+			value="#{row.medico}"
+			type="String"
+			size="15">
+			<xcp:outputSimpleNumber
+				value="#{row.medicoFk.nome}"
+				precision="8"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_valor}"
+			value="#{row.valor}"
+			type="Number"
+			size="10">
+			<xcp:outputSimpleNumber
+				value="#{row.valor}"
+				precision="18"
+				scale="2" />
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="2">
+			<xcp:commandButton
+				id="btn_edita_AcidentestrabExa"
+				icon="icon-editar"
+				update=":frmAcidentestrabExa"
+				oncomplete="PF('dlgAcidentestrabExa_w').show();">
+				<f:setPropertyActionListener
+					target="#{acidentestrabExaBacking.selectedEntity}"
+					value="#{row}" />
+			</xcp:commandButton>
+		</xcp:column>
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adicionar_AcidentestrabExa"
+		value="#{bundle.btn_adicionar}"
+		update=":frmAcidentestrabExa"
+		oncomplete="PF('dlgAcidentestrabExa_w').show();"
+		icon="ui-icon-plusthick"
+		action="#{acidentestrabExaBacking.actionNovo('AcidentestrabExa')}" />
+
+	<xcp:commandButton
+		id="btn_removerSel_AcidentestrabExa"
+		value="#{bundle.btn_removerSel}"
+		action="#{acidentestrabExaBacking.actionRemoverSel}"
+		update="table_AcidentestrabExa"
+		icon="ui-icon-trash">
+
+		<p:confirm
+			header="#{bundle.tit_confirma_remover}"
+			message="#{bundle.msg_confirma_remover}"
+			icon="ui-icon-alert" />
+
+	</xcp:commandButton>
+
+</ui:composition>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="DistanciasCidades"
+			backing="#{distanciasCidadesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_cidadeOrig}"
+					value="#{row.cidadeOrigFk.descricao}"
+					type="String"
+					size="4">
+					<xcp:outputSimple value="#{row.cidadeOrigFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cidadeDest}"
+					value="#{row.cidadeDestFk.descricao}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.cidadeDestFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_km}"
+					value="#{row.km}"
+					type="Number"
+					size="16">
+					<xcp:outputSimpleNumber
+						value="#{row.km}"
+						precision="12"
+						scale="3" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCidadeOrig"
+						value="#{distanciasCidadesBacking.entity.cidadeOrigFk}"
+						label="#{bundle.lbl_cidadeOrig}"
+						required="true"
+						query="cidades"
+						size="8" />
+
+					<xcp:lov
+						id="lovCidadeDest"
+						value="#{distanciasCidadesBacking.entity.cidadeDestFk}"
+						label="#{bundle.lbl_cidadeDest}"
+						required="true"
+						query="cidades"
+						size="8" />
+
+					<xcp:number
+						id="txtKm"
+						label="#{bundle.lbl_km}"
+						required="true"
+						size="16"
+						value="#{distanciasCidadesBacking.entity.km}"
+						precision="12"
+						scale="3" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{distanciasCidadesBacking.entity.obs}"
+						size="2000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

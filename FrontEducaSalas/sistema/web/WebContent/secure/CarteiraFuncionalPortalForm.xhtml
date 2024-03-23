@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style type="text/css">
+			.carteira-funcional.modo-exibicao {
+				position: fixed;
+			    top: 0;
+			    z-index: 10000;
+			    background-color: #f2f2f2;
+			    left: 0;
+			    bottom: 0;
+			    right: 0;
+			    overflow: auto;
+			    padding-top: 10px;
+			}		
+		
+			.carteira-funcional .section-header .section-info {
+				display: flex;
+	    		align-items: center;
+			}
+			
+			.carteira-funcional .section-header .section-info .logo-empresa {
+			    width: 80px;
+			    height: 80px;
+			    background-position: center center;
+			    background-repeat: no-repeat;
+			    background-size: contain;
+			    flex: 0 0 auto;
+			    margin-right: 20px;
+			    max-width: 100px;
+			    max-height: 100px;
+			}
+			
+			.carteira-funcional .section-header .section-info h1 {
+			    font-size: 28px;
+			    font-weight: 300;
+			    margin: 0;
+			    margin-bottom: 10px;
+			}
+			
+			.carteira-funcional .nome-empresa small {
+				display: block;
+				margin-left: 5px;
+				font-size: 75%;
+			}
+			
+			.carteira-funcional .datacard-listcontainer {
+				margin-top: 20px;
+			}
+			
+			.carteira-funcional .dados-carteira-container {
+				display: flex;
+				flex-direction: row;
+				margin-top: 20px;
+			}
+			
+			.carteira-funcional .nome-funcionario {
+				color: #333;
+			    font-size: calc(14px + 2vw);
+   			}
+			
+			.carteira-funcional .foto {
+				width: 35vw;
+			    height: 45vw;
+			    background-position: center center;
+			    background-size: cover;
+			    border-radius: 5px;
+			    box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.4);
+			    flex: 0 0 auto;
+			    margin-right: 40px;
+			    margin-top: 5px;
+			    max-width: 250px;
+			    max-height: 330px;
+			}
+			
+			.carteira-funcional .dados-container {
+				flex: 1 1 auto;
+			}
+			
+			.carteira-funcional .datacard-title {
+				/* padding-left: 10px; */
+			}
+			
+			.carteira-funcional .datacard-title ~ .datacard-title {
+				margin-top: 30px;
+			}
+			
+			.carteira-funcional .info-funcionario {
+			    margin-bottom: 10px;
+			    font-size: 18px;
+			    /* margin-left: 10px; */
+			}
+			
+			.carteira-funcional .info-funcionario label {
+				display: block;
+			    margin-bottom: 0;
+			    font-size: 14px;
+			    color: var(--lighter-text-color);
+			    font-weight: 300;
+   			}
+			
+			.carteira-funcional .info-funcionario span {
+			    display: block;
+			    background-color: #f2f2f2;
+			    padding-left: 5px;
+			    margin-top: 3px;
+			    padding: 5px 10px;
+			    border-radius: 2px;
+			}
+			
+			.carteira-funcional .info-funcionario.info-composta {
+			    display: flex;
+			    flex-wrap: wrap;
+			}			
+
+			.carteira-funcional .info-funcionario.info-composta div {
+			    flex: 1 1 auto;
+			}
+			
+			.carteira-funcional .info-funcionario.mensagem-carteira {
+				text-align: justify;
+			}
+			
+			.carteira-funcional .codigo-verificacao img {
+				width: 100%;
+				max-width: 500px;
+			}
+			
+			.carteira-funcional .info-modo-exibicao {
+			    text-align: center;
+			    color: #999;
+			    font-weight: 600;
+			    font-size: 12px;
+			    text-transform: uppercase;
+			    padding: 0 10px;
+			}
+
+			@media(max-width: 767px) {
+			
+				.section-header {
+				    padding: 30px 10px 20px;
+				}
+
+				.carteira-funcional .section-header .section-info {
+					text-align: center;
+		    		flex-direction: column;
+				}
+				
+				.carteira-funcional .section-header .section-info .logo-empresa {
+				    margin-right: 0;
+				    align-self: center;
+				    margin-bottom: 20px;
+				    width: 30vw;
+    				height: 40vw;
+				}
+				
+				.carteira-funcional .nome-empresa small {
+					margin-left: 0;
+				}
+			
+				.carteira-funcional .nome-funcionario {
+					text-align: center;
+				}
+
+				.carteira-funcional .foto {
+				    align-self: center;
+				    margin-bottom: 30px;
+				    margin-right: 0;
+				}
+				
+				.carteira-funcional .dados-carteira-container {
+					flex-direction: column;					
+				}
+			
+				.carteira-funcional .section-header .section-info h1 {
+				    font-size: calc(14px + 1.75vw);
+				}
+			}
+			
+			@media(max-width: 479px) {
+			
+				.carteira-funcional .datacard-container {
+					padding: 10px 10px 30px;
+				}
+			
+			}
+			
+			@media(min-width: 950px) {
+				.carteira-funcional .nome-funcionario {
+					font-size: 36px;
+				}
+			}
+			
+			
+		</style>
+	
+		<div class="content_bg-gray carteira-funcional" onclick="$(this).toggleClass('modo-exibicao');">
+	
+			<xcp:panelContent>
+				<p:outputPanel
+					class="section-header secondary-bgcolor ui-content-no-space-top ui-content-no-space-bottom">
+					<div class="section-info">
+						<div class="logo-empresa" style="background-image: url(#{xcpLayoutAppBacking.requestContextPath}#{xcpLayoutAppBacking.desImagemCarteiraFuncional})">
+						</div>
+						<div class="nome-empresa">
+							<h1>#{carteiraFuncionalPortalBacking.desOrgao}</h1>
+							<small>#{ carteiraFuncionalPortalBacking.funcionarioListaView.desOrgao }</small>
+						</div>
+					</div>
+		
+				</p:outputPanel>
+		
+				<p:outputPanel class="shadow-top-inset ui-content-full-width">
+					<div class="datacard-container">
+
+
+						<div class="row">
+							<div class="col-md-12">
+
+								<div class="datacard-listcontainer">
+									<div class="datacard datacard-grouped">
+										<h1 class="nome-funcionario">#{ carteiraFuncionalPortalBacking.funcionario.nome }</h1>
+
+										<div class="dados-carteira-container">
+											<div class="foto" 
+												style="background-image: url(#{xcpLayoutAppBacking.requestContextPath}#{carteiraFuncionalPortalBacking.urlFoto})">
+											</div>
+	
+	
+											<div class="dados-container">
+												<div class="datacard-title">
+													#{ bundle.tit_pessoais }
+												</div>
+											
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_cpf }</label>
+													<span><xcp:outputSimpleCpf value="#{ carteiraFuncionalPortalBacking.funcionario.cpf }"/></span>
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_data_nascimento }</label>
+													<span><xcp:outputSimpleDate value="#{ carteiraFuncionalPortalBacking.funcionario.dtnascimento }"/></span>
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_naturalidade }</label>
+													<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.cidadeNaturalidade }"/></span>
+												</div>
+												<div class="info-funcionario info-composta">
+													<div>
+														<label>#{ bundle.lbl_identidade }</label>
+														<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.identidade }"/></span>
+													</div>
+													<div>
+														<label>#{ bundle.lbl_orgao_emissor }</label>
+														<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.orgaoexp }"/></span>
+													</div>
+												</div>
+												<div class="info-funcionario info-composta">
+													<div>
+														<label>#{ bundle.lbl_titulo_eleitor }</label>
+														<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.titulo }"/></span>
+													</div>
+													<div>
+														<label>#{ bundle.lbl_zona }</label>
+														<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.zona }"/></span>
+													</div>
+													<div>
+														<label>#{ bundle.lbl_secao }</label>
+														<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.sessao }"/></span>
+													</div>
+												</div>
+	
+	
+												<div class="datacard-title">
+													#{ bundle.tit_funcionais }
+												</div>
+											
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_matricula }</label>
+													<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.matricula }"/></span>
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_cargo }</label>
+													<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.cargoFk.descricao }"/></span>
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_funcao }</label>
+													<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.funcionario.funcaoFk.descricao }"/></span>
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_data_admissao }</label>
+													<span><xcp:outputSimpleDate value="#{ carteiraFuncionalPortalBacking.funcionario.admissao }"/></span>
+												</div>
+											
+												<ui:fragment rendered="#{ carteiraFuncionalPortalBacking.mensagens.size() > 0 }">
+													<div class="datacard-title">
+														#{ bundle.lbl_observacoes }
+													</div>
+												
+													<ui:repeat var="msg" value="#{ carteiraFuncionalPortalBacking.mensagens }">
+														<div class="info-funcionario mensagem-carteira">
+															<span><xcp:outputSimple value="#{ msg }"/></span>
+														</div>
+													</ui:repeat>
+												</ui:fragment>	
+												
+												<div class="datacard-title">
+													#{ bundle.tit_filhacao }
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_depend_4 }</label>
+													<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.getNomeDependente(4) }"/></span>
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_depend_3 }</label>
+													<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.getNomeDependente(3) }"/></span>
+												</div>
+												
+												<ui:fragment rendered="#{ carteiraFuncionalPortalBacking.prerrogativas != null }">
+												<div class="datacard-title">
+													#{ bundle.lbl_prerrogativascargo }
+												</div>
+												<div class="info-funcionario">
+													<label>#{ bundle.lbl_prerrogativas }</label>
+													<span><xcp:outputSimple value="#{ carteiraFuncionalPortalBacking.prerrogativas }"/></span>
+												</div>
+												</ui:fragment>
+												
+												<div class="datacard-title">
+													#{ bundle.tit_codigo_verificacao }
+												</div>
+												
+												<div class="codigo-verificacao">	
+													<p:graphicImage
+														id="imgQRCode"
+														value="#{ carteiraFuncionalPortalBacking.urlQRCode }"
+														cache="false" />
+												</div>
+												
+												
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="info-modo-exibicao">
+						#{ bundle.msg_alternar_modo_exibicao }
+					</div>
+					<div class="info-modo-exibicao">
+						#{ bundle.txt_validadenacional }
+					</div>
+				
+				</p:outputPanel>
+			</xcp:panelContent>
+			
+		</div>
+	</ui:define>
+	
+</ui:composition>
+

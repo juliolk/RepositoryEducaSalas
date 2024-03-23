@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Dirfcontabil"
+			backing="#{dirfcontabilBacking}">
+
+			<ui:define name="colunas">
+
+			
+				
+				<xcp:column
+					headerText="#{bundle.col_cpf}"
+					value="#{row.cpf}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.cpf}"
+						precision="11"
+						scale="0" />
+				</xcp:column>
+				
+				
+				
+
+				<xcp:column
+					headerText="#{bundle.col_referencia}"
+					value="#{row.referencia}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>				
+
+				<xcp:column
+					headerText="#{bundle.col_numeroprecatorio}"
+					value="#{row.numeroprecatorio}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.numeroprecatorio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtmesesprecatorio}"
+					value="#{row.qtmesesprecatorio}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.qtmesesprecatorio}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					value="#{row.valor}"
+					type="Number"
+					size="19">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+								<xcp:combo
+									id="cboOrigem"
+									value="#{DirfcontabilBacking.entity.origem}"
+									label="#{bundle.lbl_origem}"
+									itens="#{DirfcontabilBacking.getItensOrigem}" />
+				
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+				
+
+					<xcp:number
+						id="txtCpf"
+						label="#{bundle.lbl_cpf}"
+						required="true"
+						value="#{dirfcontabilBacking.entity.cpf}"
+						size="11"
+						precision="11"
+						scale="0"
+						maxValue="99999999999" />
+
+					<xcp:date
+						id="txtReferencia"
+						required="true"
+						value="#{dirfcontabilBacking.entity.referencia}"
+						label="#{bundle.lbl_referencia}" />
+
+					
+
+					<xcp:text
+						id="txtNumeroprecatorio"
+						label="#{bundle.lbl_numeroprecatorio}"
+						value="#{dirfcontabilBacking.entity.numeroprecatorio}"
+						size="20" />
+
+					<xcp:number
+						id="txtQtmesesprecatorio"
+						label="#{bundle.lbl_qtmesesprecatorio}"
+						value="#{dirfcontabilBacking.entity.qtmesesprecatorio}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						size="19"
+						value="#{dirfcontabilBacking.entity.valor}"
+						precision="16"
+						scale="2" />
+
+
+
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

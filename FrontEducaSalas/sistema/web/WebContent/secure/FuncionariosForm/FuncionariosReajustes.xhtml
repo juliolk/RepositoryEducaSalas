@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:dataTable
+		id="tabListaReajustes"
+		value="#{funcionariosBacking.listaReajustes}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="reajustes"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		styleClass="tabelaReajustes">
+
+		<xcp:column
+			headerText="#{bundle.col_datai}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{reajustes.datai}" />
+		</xcp:column>
+		
+		<xcp:column
+			headerText="#{bundle.col_direito}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{reajustes.direito}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_salario}"
+			type="Number"
+			size="10">
+			<xcp:outputSimpleNumber
+				value="#{reajustes.salario}"
+				precision="10"
+				scale="2" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_salarioant}"
+			type="Number"
+			size="10">
+			<xcp:outputSimpleNumber
+				value="#{reajustes.salarioant}"
+				precision="10"
+				scale="2" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_tiposalario}"
+			type="String"
+			size="13">
+			<xcp:outputSimple
+				itens="#{funcionariosBacking.itensTipoSalBase}"
+				value="#{reajustes.tiposalario}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_motivo}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{reajustes.motivoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_observ}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{reajustes.obs}" />
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="4">
+			<xcp:commandButton
+				id="btn_editarSel_reaj"
+				icon="icon-editar"
+				immediate="true"
+				action="#{funcionariosBacking.actionEditReajuste}">
+				<f:setPropertyActionListener
+					target="#{funcionariosBacking.reajusteSel}"
+					value="#{reajustes}" />
+			</xcp:commandButton>
+		</xcp:column>
+
+	</p:dataTable>
+
+
+</ui:composition>

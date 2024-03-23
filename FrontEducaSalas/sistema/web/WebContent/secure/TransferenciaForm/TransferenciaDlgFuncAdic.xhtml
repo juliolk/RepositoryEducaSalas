@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgFuncAdic"
+		header="#{bundle.title_funcadic}"
+		widgetVar="dlgFuncAdic_w"
+		dynamic="true"
+		modal="true"
+		resizable="false">
+
+		<xcp:form id="formdlgFuncAdic">
+			<xcp:panelForm>
+
+				<h:outputLabel value="#{bundle.lbl_dtini}: *" />
+
+				<xcp:date
+					id="txtdtini"
+					simple="true"
+					readonly="#{transferenciasBacking.readOnlyDatasFuncAdic}"
+					value="#{transferenciasBacking.helper.transfSel.dtinicio}"
+					label="#{bundle.lbl_dtini} *">
+					<p:ajax
+						event="change"
+						process="@this" />
+
+					<p:ajax
+						event="dateSelect"
+						process="@this" />
+				</xcp:date>
+
+				<xcp:date
+					id="txtdttermino"
+					value="#{transferenciasBacking.helper.transfSel.dttermino}"
+					label="#{bundle.lbl_dttermino}"
+					readonly="#{transferenciasBacking.readOnlyDatasFuncAdic}">
+					<p:ajax
+						event="change"
+						process="@this"
+						update="lovMotivoTransfAnt lovMotivoTransfAnt_l"
+						listener="#{transferenciasBacking.changeDtTermino}" />
+
+					<p:ajax
+						event="dateSelect"
+						process="@this"
+						update="lovMotivoTransfAnt lovMotivoTransfAnt_l"
+						listener="#{transferenciasBacking.changeDtTermino}" />
+				</xcp:date>
+
+				<xcp:lov
+					id="lovDe"
+					value="#{transferenciasBacking.helper.transfSelPara}"
+					label="#{bundle.lbl_funcao}"
+					required="true"
+					query="#{transferenciasBacking.queryFuncAdic}"
+					update="lovParaVagaIndiv_l,lovParaVagaIndiv,lovMotivoTransfAnt,lovMotivoTransfAnt_l"
+					selectionListener="#{transferenciasBacking.selectPara}"
+					size="5"
+					readonly="#{transferenciasBacking.readOnlyFields}" />
+
+				<xcp:lov
+					id="lovParaVagaIndiv"
+					value="#{transferenciasBacking.helper.transfSelParaVagaIndiv}"
+					label="#{bundle.lbl_vagaindiv}"
+					query="#{transferenciasBacking.queryVaga}"
+					required="true"
+					rendered="#{transferenciasBacking.renderedCmpVagaIndiv}"
+					readonly="#{transferenciasBacking.readOnlyFields}"
+					size="5"
+					params="#{transferenciasBacking.paramsCargosVagasIndiv}"
+					update="lovMotivoTransf lovMotivoTransf_l lovMotivoTransfAnt lovMotivoTransfAnt_l" />
+
+				<xcp:lov
+					id="lovMotivoTransf"
+					value="#{transferenciasBacking.helper.transfSel.motivoTransfFk}"
+					label="#{bundle.lbl_motivoTransf}"
+					query="#{transferenciasBacking.queryMotivoTransf}"
+					size="10"
+					required="#{transferenciasBacking.requiredMotivos}"
+					params="#{transferenciasBacking.paramsMotivoTransf}" />
+
+				<xcp:lov
+					id="lovMotivoTransfAnt"
+					value="#{transferenciasBacking.helper.transfSel.motivoTransfVacFk}"
+					label="#{bundle.lbl_motvagaantadic}"
+					query="motivo_transf_vac"
+					size="10"
+					rendered="#{transferenciasBacking.renderedMotVagaAnt}"
+					required="true"
+					params="#{transferenciasBacking.paramsMotivoTransf}" />
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{transferenciasBacking.helper.transfSel.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_transf"
+					readonly="#{transferenciasBacking.readOnlyTipdoc}"
+					params="#{transferenciasBacking.paramsTipoDoc}"
+					selectionListener="#{transferenciasBacking.selectTipodocumento}"
+					update="lovDoc,lovProcesso,lovProcesso_l,btnDownloadDocumento,pnlinfotipodoc,txtObs,btnAddDoc"
+					size="5" />
+
+				<xcp:lov
+					id="lovDoc"
+					value="#{transferenciasBacking.helper.transfSel.registroFk}"
+					params="#{transferenciasBacking.paramsDoc}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					readonly="#{transferenciasBacking.readOnlyDoc}"
+					size="5"
+					update="lovProcesso,lovProcesso_l,btnDownloadDocumento"
+					selectionListener="#{transferenciasBacking.selectDocumento}" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{transferenciasBacking.helper.transfSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="#{transferenciasBacking.readOnlyProc}"
+					required="#{transferenciasBacking.requiredProc}"
+					size="25" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:splitButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{transferenciasBacking.helper.transfSel.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(transferenciasBacking.helper.transfSel.registro)}"
+									contentDisposition="attachment" />
+								<p:menuitem
+									value="#{bundle.btn_detalhes_doc}"
+									action="#{transferenciasBacking.model.actionOpenVisDialog(transferenciasBacking.helper.transfSel.registro)}"
+									process="@this" />
+							</p:splitButton>
+						</p:column>
+						<p:column>
+							<xcp:btnAddDocUni
+								id="btnAddDoc"
+								model="#{transferenciasBacking.model}" />
+						</p:column>
+						<p:column>
+							<p:outputPanel id="pnlinfotipodoc">
+								<p:commandButton
+									id="btninst"
+									value="#{bundle.btn_info_tipodoc}"
+									type="button"
+									rendered="#{not empty transferenciasBacking.helper.transfSel.tipodocFk.instrucoes}" />
+
+								<p:overlayPanel
+									for="btninst"
+									style="max-width:600px;text-align: left;">
+									<h:outputText
+										value="#{transferenciasBacking.helper.transfSel.tipodocFk.instrucoes}"
+										escape="false" />
+								</p:overlayPanel>
+							</p:outputPanel>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_txtPort}"
+					value="#{transferenciasBacking.helper.transfSel.obs}"
+					size="2000"
+					styleClass="scrollarea"
+					readonly="#{transferenciasBacking.readOnlyTxtPortaria}">
+					<p:ajax
+						event="change"
+						process="@this" />
+				</xcp:memo>
+
+				<xcp:memo
+					id="txtObsLivre"
+					label="#{bundle.lbl_obsLivre}"
+					size="2000"
+					styleClass="scrollarea"
+					value="#{transferenciasBacking.helper.transfSel.obsLivre}" />
+
+				<xcp:date
+					id="txtDtlancamento"
+					readonly="true"
+					rendered="#{not transferenciasBacking.helper.transfSel.novo and transferenciasBacking.helper.transfSel.dtlancamento != null}"
+					value="#{transferenciasBacking.helper.transfSel.dtlancamento}"
+					label="#{bundle.lbl_dtlancamento}" />
+
+			</xcp:panelForm>
+			<h:panelGroup id="panelBotoesSub">
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							process="@form"
+							id="btnGravar"
+							disabled="#{transferenciasBacking.disabledGravar}"
+							value="#{bundle.btn_gravar}"
+							action="#{transferenciasBacking.actionGravarFuncAdic}" />
+					</f:facet>
+				</p:toolbar>
+			</h:panelGroup>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

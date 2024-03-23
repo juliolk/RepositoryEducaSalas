@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Valores"
+		backing="#{valoresBacking}"
+		masterId="Indicadores">
+
+		<ui:define name="barraListaDet">
+
+			<xcp:commandButton
+				id="btn_atualizar"
+				icon="ui-icon-gear"
+				value="#{bundle.btn_atuind}"
+				action="#{valoresBacking.actionAtualizarIndicadores}" />
+
+		</ui:define>
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.valor}"
+				type="Number"
+				size="15"
+				rendered="#{not valoresBacking.renderedReclamatoria}">
+				<xcp:outputSimpleNumber
+					value="#{row.valor}"
+					precision="12"
+					scale="4" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor_indtrab}"
+				value="#{row.valordec}"
+				type="Number"
+				size="15"
+				rendered="#{valoresBacking.renderedReclamatoria}">
+				<xcp:outputSimpleNumber
+					value="#{row.valordec}"
+					precision="16"
+					scale="14" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData_Valores"
+					required="true"
+					value="#{valoresBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					readonly="#{not valoresBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtValor_Valores"
+					label="#{bundle.lbl_valor}"
+					required="true"
+					size="15"
+					value="#{valoresBacking.entity.valor}"
+					precision="12"
+					scale="4"
+					rendered="#{not valoresBacking.renderedReclamatoria}"
+					minValue="-99999999" />
+
+				<xcp:number
+					id="txtValor_Valores_indtrab"
+					label="#{bundle.lbl_valor_indtrab}"
+					size="15"
+					value="#{valoresBacking.entity.valordec}"
+					precision="16"
+					scale="14"
+					required="true"
+					rendered="#{valoresBacking.renderedReclamatoria}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

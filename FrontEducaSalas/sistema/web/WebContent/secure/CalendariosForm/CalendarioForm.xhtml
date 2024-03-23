@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Calendario"
+		backing="#{calendarioBacking}"
+		masterId="Calendarios">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="12">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="60">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_ponto_facultativo}"
+				value="#{row.ponto}"
+				itens="#{calendarioBacking.itensPonto}"
+				type="String"
+				size="10">
+				<xcp:outputSimple
+					id="cboPonto"
+					value="#{row.ponto}"
+					itens="#{calendarioBacking.itensPonto}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData_Feriados"
+					required="true"
+					value="#{calendarioBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					readonly="#{not calendarioBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_Feriados"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{calendarioBacking.entity.descricao}"
+					size="75" />
+
+				<xcp:combo
+					id="cboPonto"
+					value="#{calendarioBacking.entity.ponto}"
+					label="#{bundle.lbl_ponto}"
+					required="true"
+					itens="#{calendarioBacking.itensPonto}"
+					width="81px !important;" />
+
+				<xcp:lov
+					id="lovSetor"
+					value="#{calendarioBacking.entity.setorFk }"
+					label="#{bundle.lbl_setor}"
+					query="setores"
+					size="10" />
+					
+				<xcp:memo
+					id="txtObservacao"
+					label="#{bundle.lbl_observacao}"
+					value="#{calendarioBacking.entity.observacao}"
+					size="300" />
+
+				<xcp:lov
+					id="lovTipodoc_Feriados"
+					value="#{calendarioBacking.entity.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento"
+					selectionListener="#{calendarioBacking.selectTipodocumento}"
+					update="lovDocumento_Feriados,btnDownloadDocumento"
+					size="6" />
+
+				<xcp:lov
+					id="lovDocumento_Feriados"
+					value="#{calendarioBacking.entity.registroFk}"
+					params="#{calendarioBacking.paramsTipodocumento}"
+					label="#{bundle.lbl_documento}"
+					query="documentos_publica"
+					size="6"
+					update="btnDownloadDocumento" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+				<xcp:commandButton
+					id="btnDownloadDocumento"
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					disabled="#{calendarioBacking.entity.registroFk == null}">
+					<p:fileDownload
+						value="#{documentosBacking.getDownloadDocumento(calendarioBacking.entity.registro)}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:panelGrid
+		id="panelGridCabecalhoInclusao"
+		columns="2">
+		<h:panelGrid
+			title="#{bundle.tit_dados_funcionario}"
+			columns="4"
+			columnClasses="form_label,form_content,form_label,form_content"
+			styleClass="tabela_alinhamento">
+
+			<xcp:number
+				id="txtMatriculaNova"
+				label="#{bundle.lbl_matricula}"
+				value="#{funcionariosBacking.helper.matriculaNova}"
+				required="#{funcionariosBacking.informaMatricula}"
+				readonly="#{!funcionariosBacking.informaMatricula}"
+				size="10"
+				maxValue="9999999999">
+				<p:ajax
+					event="change"
+					listener="#{funcionariosBacking.validaMatricula}"
+					update="txtMatriculaNova,txtMatriculaNova_l" />
+			</xcp:number>
+
+			<xcp:date
+				id="txtAdmissao"
+				required="true"
+				value="#{funcionariosBacking.entity.admissao}"
+				label="#{bundle.lbl_dtadmissao}">
+
+				<p:ajax
+					event="change"
+					listener="#{funcionariosBacking.changeDtaAdmissao}"
+					update="txtDtbasets,txtDtbasets_l,:#{p:component('brdEstagiario')}" />
+				<p:ajax
+					event="dateSelect"
+					listener="#{funcionariosBacking.changeDtaAdmissao}"
+					update="txtDtbasets,txtDtbasets_l,:#{p:component('brdEstagiario')}" />
+
+			</xcp:date>
+
+			<xcp:text
+				id="txtNomeCab"
+				label="#{bundle.lbl_nome}"
+				required="true"
+				value="#{funcionariosBacking.entity.nome}"
+				maxlength="60"
+				size="50" />
+
+			<xcp:lov
+				id="lovTipmov"
+				value="#{funcionariosBacking.entity.tipmovFk}"
+				label="#{bundle.lbl_tipmov}"
+				query="tipomovtos"
+				size="4"
+				required="true" />
+
+			<xcp:cpf
+				id="txtCpf"
+				label="#{bundle.lbl_cpf}"
+				required="true"
+				value="#{funcionariosBacking.entity.cpf}"
+				size="26">
+				<p:ajax
+					event="blur"
+					listener="#{funcionariosBacking.buscaDuplovinculo}"
+					update=":#{p:component('txtMtoutrovinc')},txtCpf,:#{p:component('brdEstagiario')}" />
+			</xcp:cpf>
+
+			<xcp:date
+				id="txtDtmov"
+				value="#{funcionariosBacking.entity.dtmov}"
+				readonly="true"
+				label="#{bundle.lbl_dtmov}" />
+		</h:panelGrid>
+
+		<p:panel
+			style="border:none;"
+			id="panelFoto">
+			<xcp:commandLink
+				id="btn_selecao_foto"
+				immediate="true"
+				oncomplete="PF('dlgFoto_w').show()"
+				disabled="#{consulta || funcionariosBacking.disabledGravar}">
+				<f:setPropertyActionListener
+					target="#{funcionariosBacking.tipdocumentoUpload}"
+					value="1" />
+				<p:fieldset
+					style="width:85px; height:110px; border:1px solid #cccccc; margin-bottom:10px; text-align: center; line-height: 110px; ">
+					<p:graphicImage
+						id="imgFoto"
+						value="#{funcionariosBacking.getDesPathDoc(1)}"
+						cache="false"
+						style="max-width:85px; max-height:110px ;padding:0px; border:none; vertical-align: middle;" />
+				</p:fieldset>
+			</xcp:commandLink>
+		</p:panel>
+
+	</h:panelGrid>
+	<p:spacer height="10" />
+</ui:composition>

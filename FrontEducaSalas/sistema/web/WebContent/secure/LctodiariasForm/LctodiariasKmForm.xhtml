@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="LctodiariasKm"
+		backing="#{lctodiariasKmBacking}"
+		masterId="Lctodiarias"
+		update="form:txtQtdKm_c">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_origem}"
+				value="#{row.origemFk.descricao}"
+				type="String"
+				size="8">
+				<xcp:outputSimple value="#{row.origemFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_destino}"
+				value="#{row.destinoFk.descricao}"
+				type="String"
+				size="8">
+				<xcp:outputSimple value="#{row.destinoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_qtdkm}"
+				value="#{row.qtdkm}"
+				type="Number"
+				size="13">
+				<xcp:outputSimpleNumber
+					value="#{row.qtdkm}"
+					precision="8"
+					scale="3" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovOrigem_LctodiariasKm"
+					value="#{lctodiariasKmBacking.entity.origemFk}"
+					label="#{bundle.lbl_origem}"
+					required="true"
+					query="cidades"
+					size="8"
+					update="txtQtdkm_LctodiariasKm form:txtQtdKm_c"
+					selectionListener="#{lctodiariasKmBacking.selectCidadeOrig}" />
+
+				<xcp:lov
+					id="lovDestino_LctodiariasKm"
+					value="#{lctodiariasKmBacking.entity.destinoFk}"
+					label="#{bundle.lbl_destino}"
+					required="true"
+					query="cidades"
+					size="8"
+					update="txtQtdkm_LctodiariasKm form:txtQtdKm_c"
+					selectionListener="#{lctodiariasKmBacking.selectCidadeDest}" />
+
+				<xcp:number
+					id="txtQtdkm_LctodiariasKm"
+					label="#{bundle.lbl_qtdKm}"
+					required="true"
+					size="13"
+					value="#{lctodiariasKmBacking.entity.qtdkm}"
+					precision="9"
+					scale="3" />
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

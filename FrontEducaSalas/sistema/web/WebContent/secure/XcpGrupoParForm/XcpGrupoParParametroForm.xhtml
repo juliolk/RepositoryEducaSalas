@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="XcpObjetoParametro"
+		backing="#{xcpGrupoParParametroBacking}"
+		masterId="XcpGrupoPar">
+
+		<ui:define name="colunas">
+
+			<!--  <xcp:column
+				headerText="#{bundle.col_numGrupo}"
+				value="#{row.numGrupo}"
+				type="String"
+				size="50">
+				<xcp:outputSimple
+					value="#{bundle[xcpGrupoParParametroBacking.getChaveGrupo(row)]}" />
+			</xcp:column>
+-->
+			<xcp:column
+				headerText="#{bundle.col_numOrdem}"
+				value="#{row.numOrdem}"
+				type="Number"
+				size="5">
+				<xcp:outputSimple value="#{row.numOrdem}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desParametro}"
+				value="#{row.desParametro}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.desParametro}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_seqParametro}"
+				value="#{row.seqParametroFk.desTipoCampo}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.seqParametroFk.desTipoCampo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipParametro}"
+				value="#{row.tipParametro}"
+				type="String"
+				size="15"
+				itens="#{xcpGrupoParParametroBacking.itensTipParametro}">
+				<xcp:outputSimple
+					value="#{row.tipParametro}"
+					itens="#{xcpGrupoParParametroBacking.itensTipParametro}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_indObrigatorio}"
+				value="#{row.indObrigatorio}"
+				type="String"
+				size="15"
+				itens="#{xcpGrupoParParametroBacking.itensIndSimNaoNull}">
+				<xcp:outputSimple
+					value="#{row.indObrigatorio}"
+					itens="#{xcpGrupoParParametroBacking.itensIndSimNao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovSeqParametro_par"
+					value="#{xcpGrupoParParametroBacking.entity.seqParametroFk}"
+					label="#{bundle.lbl_seqParametro}"
+					required="true"
+					query="xcp_tipo_campo"
+					size="10"
+					update="cboTipParametro_par,cboTipParametro_par_l
+					       ,txtDesMetodoEntidade_par,txtDesMetodoEntidade_par_l" />
+
+				<xcp:text
+					id="txtDesParametro_par"
+					label="#{bundle.lbl_desParametro}"
+					required="true"
+					value="#{xcpGrupoParParametroBacking.entity.desParametro}"
+					size="100"
+					maxlength="400" />
+
+				<xcp:text
+					id="txtDesParametroSql_par"
+					label="#{bundle.lbl_desParametroSql}"
+					required="true"
+					value="#{xcpGrupoParParametroBacking.entity.desParametroSql}"
+					size="20" />
+
+				<xcp:combo
+					id="cboTipParametro_par"
+					value="#{xcpGrupoParParametroBacking.entity.tipParametro}"
+					label="#{bundle.lbl_tipParametro}"
+					required="true"
+					itens="#{xcpGrupoParParametroBacking.itensTipParametro}" />
+
+				<xcp:radio
+					id="radIndObrigatorio_par"
+					value="#{xcpGrupoParParametroBacking.entity.indObrigatorio}"
+					label="#{bundle.lbl_indObrigatorio}"
+					itens="#{xcpGrupoParParametroBacking.itensIndSimNao}" />
+
+				<xcp:text
+					id="txtDesMetodoEntidade_par"
+					label="#{bundle.lbl_desMetodoEntidade}"
+					value="#{xcpGrupoParParametroBacking.entity.desMetodoEntidade}"
+					size="50"
+					rendered="#{xcpGrupoParParametroBacking.entity.seqParametroFk.tipParametro == 4}" />
+
+				<xcp:number
+					id="txtNumOrdem_par"
+					label="#{bundle.lbl_numOrdem}"
+					required="true"
+					value="#{xcpGrupoParParametroBacking.entity.numOrdem}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

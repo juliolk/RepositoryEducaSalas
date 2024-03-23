@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="EstoqueCons"
+		backing="#{estoqueConsBacking}"
+		masterId="Estoque"
+		rowStyleClassDet="#{row.saldo le row.estoqueMinimoFk.minimo ? 'old' : null}">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_linha}"
+				value="#{row.linhaFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.linhaFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_entrada}"
+				value="#{row.entrada}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.entrada}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_saida}"
+				value="#{row.saida}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.saida}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_saldo}"
+				value="#{row.saldo}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.saldo}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_minimo}"
+				value="#{row.estoqueMinimoFk.minimo}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.estoqueMinimoFk.minimo}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+				<xcp:number
+					id="txtLcto_Estoque"
+					label="#{bundle.lbl_lcto_estoque}"
+					required="true"
+					value="#{estoqueConsBacking.entity.lcto}"
+					size="10"
+					precision="18"
+					scale="0"
+					maxValue="999999999999999999"
+					readonly="true" />
+
+				<xcp:date
+					id="txtData_Estoque"
+					readonly="true"
+					value="#{estoqueConsBacking.entity.data}"
+					label="#{bundle.lbl_data}" />
+
+				<xcp:lov
+					id="lovLinha_Estoque"
+					value="#{estoqueConsBacking.entity.linhaFk}"
+					label="#{bundle.lbl_linha}"
+					readonly="true"
+					query="linha"
+					size="10" />
+
+				<xcp:number
+					id="txtEntrada_Estoque"
+					label="#{bundle.lbl_entrada}"
+					readonly="true"
+					value="#{estoqueConsBacking.entity.entrada}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtSaida_Estoque"
+					label="#{bundle.lbl_saida}"
+					readonly="true"
+					value="#{estoqueConsBacking.entity.saida}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtSaldo_Estoque"
+					label="#{bundle.lbl_saldo}"
+					readonly="true"
+					value="#{estoqueConsBacking.entity.saldo}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

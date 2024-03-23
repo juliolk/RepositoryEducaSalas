@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:toolbar rendered="#{not empty faixasBacking.rotina.codObjeto}">
+				<f:facet name="left">
+					<xcp:commandButton
+						icon="ui-icon-print"
+						id="btnImprimir"
+						value="#{bundle.btn_relatorio}"
+						action="#{faixasBacking.actionImprimir(id)}"
+						process="@this" />
+				</f:facet>
+			</p:toolbar>
+			<p:panelGrid
+				rendered="#{faixasBacking.modo == faixasBacking.modoLista}">
+				<p:row>
+
+					<p:column
+						style="vertical-align: top;"
+						width="250px">
+						<p:toolbar>
+							<f:facet name="left">
+								<h:outputText value="#{bundle.tit_tipo_faixa}" />
+							</f:facet>
+						</p:toolbar>
+
+						<p:dataTable
+							id="table_tipoFaixa"
+							var="row"
+							value="#{faixasBacking.lista}"
+							filteredValue="#{faixasBacking.listaFiltrados}"
+							rows="#{viewUtil.tableRows}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							paginator="true"
+							paginatorPosition="bottom"
+							selectionMode="single"
+							selection="#{faixasBacking.selectedEntity}"
+							rowKey="#{row.PK}">
+
+							<p:ajax
+								event="rowSelect"
+								update=":#{p:component('table_resumo')},:#{p:component('table_faixas')}"
+								listener="#{faixasBacking.onRowSelect}" />
+
+							<xcp:column
+								headerText="#{bundle.col_descricao}"
+								value="#{row.descricao}"
+								type="String"
+								size="50">
+								<xcp:outputSimple value="#{row.descricao}" />
+							</xcp:column>
+						</p:dataTable>
+
+					</p:column>
+					<p:column style="vertical-align: top;">
+						<p:toolbar>
+							<f:facet name="left">
+								<h:outputText value="#{bundle.tit_data}" />
+							</f:facet>
+						</p:toolbar>
+						<p:dataTable
+							id="table_resumo"
+							var="row"
+							value="#{faixasBacking.listaResumoDatas}"
+							filteredValue="#{faixasBacking.listaFiltrados1}"
+							rows="#{viewUtil.tableRows}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							paginator="true"
+							paginatorPosition="bottom"
+							selectionMode="single"
+							selection="#{faixasBacking.dataSelecionada}"
+							rowKey="#{row}">
+
+							<p:ajax
+								event="rowSelect"
+								update=":#{p:component('table_faixas')}"
+								listener="#{faixasBacking.onDateSelect}" />
+							<xcp:column
+								headerText="#{bundle.col_data_sel}"
+								value="#{row}"
+								type="Date"
+								size="12">
+								<xcp:outputSimpleDate value="#{row}" />
+							</xcp:column>
+						</p:dataTable>
+					</p:column>
+					<p:column style="vertical-align: top;">
+						<p:toolbar>
+							<f:facet name="left">
+								<h:outputText value="#{bundle.tit_faxias_valores}" />
+							</f:facet>
+						</p:toolbar>
+						<p:dataTable
+							id="table_faixas"
+							var="rowFaixas"
+							value="#{faixasBacking.listaFaixas}"
+							filteredValue="#{faixasBacking.listaFiltrados2}"
+							rows="#{viewUtil.tableRows}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							paginator="true"
+							paginatorPosition="bottom"
+							selectionMode="single"
+							selection="#{faixasBacking.faixaManutSelecionada}"
+							rowKey="#{rowFaixas.PK}">
+
+							<p:ajax
+								update="@form"
+								event="rowSelect"
+								listener="#{faixasBacking.onFaixaSelect}" />
+
+							<xcp:column
+								headerText="#{bundle.col_limite}"
+								value="#{rowFaixas.limite}"
+								type="Number"
+								size="19">
+								<xcp:outputSimpleNumber
+									value="#{rowFaixas.limite}"
+									precision="16"
+									scale="2" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_percentual}"
+								value="#{rowFaixas.percentual}"
+								type="Number"
+								size="14">
+								<xcp:outputSimpleNumber
+									value="#{rowFaixas.percentual}"
+									precision="10"
+									scale="3" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_valor}"
+								value="#{rowFaixas.valor}"
+								type="Number"
+								rendered="#{faixasBacking.entity.valor == 1}"
+								size="19">
+								<xcp:outputSimpleNumber
+									value="#{rowFaixas.valor}"
+									precision="16"
+									scale="2" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_deducao}"
+								value="#{rowFaixas.deducao}"
+								type="Number"
+								rendered="#{faixasBacking.entity.deducao == 1}"
+								size="19">
+								<xcp:outputSimpleNumber
+									value="#{rowFaixas.deducao}"
+									precision="16"
+									scale="2" />
+							</xcp:column>
+						</p:dataTable>
+						<p:toolbar
+							styleClass="xcp_pmanut_form_toolbar"
+							rendered="#{not faixasBacking.detailsEdit}">
+							<f:facet name="left">
+
+								<xcp:commandButton
+									id="btn_novo"
+									icon="ui-icon-document"
+									value="#{bundle.btn_novo}"
+									action="#{faixasBacking.actionNovoFormFaixas}"
+									process="@form"
+									update="@form"
+									disabled="#{faixasBacking.disabledNovo}" />
+
+
+							</f:facet>
+						</p:toolbar>
+
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<xcp:panelGrid
+				id="grdForm"
+				styleClass="xcp_pmanut_form"
+				rendered="#{faixasBacking.modo == faixasBacking.modoForm}">
+				<p:row>
+					<p:column styleClass="xcp_pmanut_form_cell_frm">
+						<p:fieldset>
+							<xcp:panelForm>
+								<xcp:text
+									id="txtFaixa"
+									label="#{bundle.lbl_faixa}"
+									value="#{faixasBacking.entity.descricao}"
+									readonly="true" />
+
+								<xcp:date
+									id="txtData_Faixas"
+									required="true"
+									value="#{faixasBacking.faixaManutSelecionada.data}"
+									label="#{bundle.lbl_data}"
+									readonly="#{not faixasBacking.faixaManutSelecionada.novo}" />
+
+								<xcp:number
+									id="txtLimite_Faixas"
+									label="#{bundle.lbl_limite}"
+									required="true"
+									size="19"
+									value="#{faixasBacking.faixaManutSelecionada.limite}"
+									precision="16"
+									scale="2"
+									readonly="#{not faixasBacking.faixaManutSelecionada.novo}" />
+
+								<xcp:number
+									id="txtPercentual_Faixas"
+									label="#{bundle.lbl_percentual}"
+									required="true"
+									size="14"
+									value="#{faixasBacking.faixaManutSelecionada.percentual}"
+									precision="10"
+									scale="3" />
+
+								<xcp:number
+									id="txtValor_Faixas"
+									label="#{bundle.lbl_valor}"
+									size="19"
+									value="#{faixasBacking.faixaManutSelecionada.valor}"
+									rendered="#{faixasBacking.entity.valor == 1}"
+									precision="16"
+									scale="2" />
+
+								<xcp:number
+									id="txtDeducao_Faixas"
+									label="#{bundle.lbl_deducao}"
+									size="19"
+									value="#{faixasBacking.faixaManutSelecionada.deducao}"
+									rendered="#{faixasBacking.entity.deducao == 1}"
+									precision="16"
+									scale="2" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</xcp:panelGrid>
+			<p:outputPanel
+				id="btnsForm_#{id}"
+				rendered="#{faixasBacking.modo == faixasBacking.modoForm}">
+				<p:toolbar
+					styleClass="xcp_pmanut_form_toolbar"
+					rendered="#{not faixasBacking.detailsEdit}">
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_gravar_faixas"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar_faixas}"
+							action="#{faixasBacking.actionGravarFaixa}"
+							process="@form"
+							update="@form"
+							disabled="#{faixasBacking.disabledGravar}" />
+
+						<xcp:commandButton
+							id="btn_remover_faixas"
+							icon="ui-icon-trash"
+							value="#{bundle.btn_remover_faixas}"
+							action="#{faixasBacking.actionRemoverFaixa}"
+							disabled="#{faixasBacking.faixaManutSelecionada.novo or faixaManutSelecionada.disabledExcluir}"
+							rendered="#{(empty renderedRemover) or renderedRemover}"
+							process="@this"
+							update="@form">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btn_voltar_faixas"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar_faixas}"
+							action="#{faixasBacking.actionVoltar('FaixasForm')}"
+							process="@form"
+							immediate="true"
+							update="@form">
+						</xcp:commandButton>
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

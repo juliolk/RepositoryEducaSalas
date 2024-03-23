@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				id="fsPes"
+				legend="#{bundle.title_pesquisar}">
+
+				<xcp:panelForm>
+					<xcp:dateRange
+						id="dtaPesq"
+						valueStart="#{acessosBacking.dtaPesqIni}"
+						valueEnd="#{acessosBacking.dtaPesqFim}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:lov
+						id="lovOper"
+						label="#{bundle.lbl_operador}"
+						query="operadores"
+						value="#{acessosBacking.operador}" />
+
+					<xcp:lov
+						id="lovPesq"
+						label="#{bundle.lbl_rotina}"
+						query="rotinas"
+						size="30"
+						value="#{acessosBacking.rotinaPesq}" />
+
+				</xcp:panelForm>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							value="#{bundle.btn_pesquisar}"
+							process="fsPes"
+							update="tblLogs"
+							action="#{acessosBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+			<p:dataTable
+				id="tblLogs"
+				value="#{acessosBacking.list}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				var="row"
+				paginator="true"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}">
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.operadorFk.nome}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.operadorFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleTimestamp value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_rotina}"
+					value="#{row.rotinasFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple
+						rendered="#{row.rotinasFk.rotina!=null}"
+						value="#{row.rotinasFk.descricao}  (#{row.rotinasFk.rotina})" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_caminho}"
+					value="#{row.rotinasFk.componente}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.rotinasFk.componente}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_ipv4}"
+					value="#{row.ipv4}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.ipv4}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_servidor}"
+					value="#{row.servidor}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.servidor}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_porta}"
+					value="#{row.porta}"
+					type="Number"
+					size="4">
+					<xcp:outputSimple value="#{row.porta}" />
+				</xcp:column>
+
+			</p:dataTable>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

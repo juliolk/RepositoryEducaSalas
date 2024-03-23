@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:tabView id="tblobj">
+		<p:tab
+			id="tabDadosAreaInt"
+			title="#{bundle.tit_areas_int}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabAreaInt"
+					value="#{talentosBacking.helper.listArea}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.lbl_descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.lbl_setor}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.setorFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.lbl_area}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.codigoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgAreaInt"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgAreaInt_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.areainteresse}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverAreaInt(row)}"
+								update=":form:tabFuncionarios:tblobj:tabAreaInt"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_int"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgAreaInt_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmDlgAreaInt">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.areainteresse}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+
+		</p:tab>
+
+		<p:tab
+			id="tabDadosCurAcad"
+			title="#{bundle.tit_obj_curacad}">
+
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabAcad"
+					value="#{talentosBacking.helper.listObjAcad}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.lbl_descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.codigoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgCurAcad"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgAreaCurAcad_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.objetivoacad}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverObjAcad(row)}"
+								update=":form:tabFuncionarios:tblobj:tabAcad"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_acad"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgAreaCurAcad_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmDlgCurAcad">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.objetivoacad}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+
+
+		</p:tab>
+
+		<p:tab
+			id="tabDadosCurProf"
+			title="#{bundle.tit_obj_prof}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabCurPro"
+					value="#{talentosBacking.helper.listObjProf}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.lbl_descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgObjProf"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgObjProf_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.objetivoprofissional}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverObjProf(row)}"
+								update=":form:tabFuncionarios:tblobj:tabCurPro"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_curp"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgObjProf_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmDlgObjProf">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.objetivoprofissional}"
+						value="#{null}" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+
+		</p:tab>
+
+		<p:tab
+			id="tabDadosOutCur"
+			title="#{bundle.tit_obj_curso}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabOutCursos"
+					value="#{talentosBacking.helper.listObjCursos}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.lbl_curso}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.curso}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgCurso"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgObjCurso_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.objetivocurso}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverObjCurso(row)}"
+								update=":form:tabFuncionarios:tblobj:tabOutCursos"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_out_cur"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgObjCurso_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmDlgCurso">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.objetivocurso}"
+						value="#{null}" />
+				</xcp:commandButton>
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosOutIdi"
+			title="#{bundle.tit_obj_idioma}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabOutIdi"
+					value="#{talentosBacking.helper.listObjIdiomas}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.lbl_descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.codigoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverObjIdiomas(row)}"
+								update=":form:tabFuncionarios:tblobj:tabOutIdi"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_out_idi"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgObjIdi_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmDlgOutIdi">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.objetivoidiomas}"
+						value="#{null}" />
+				</xcp:commandButton>
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosIntrut"
+			title="#{bundle.tit_instrutoria}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabOutInstrutoria"
+					value="#{talentosBacking.helper.listObjInstrut}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.lbl_areaint}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.areaintFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgObjInstrutoria"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgObjInstrutoria_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.objetivoinstrutoria}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverObjInstrutoria(row)}"
+								update=":form:tabFuncionarios:tblobj:tabOutInstrutoria"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_instrut"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgObjInstrutoria_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmDlgObjInstrutoria">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.objetivoinstrutoria}"
+						value="#{null}" />
+				</xcp:commandButton>
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosOutVida"
+			title="#{bundle.tit_obj_vida}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabOutVida"
+					value="#{talentosBacking.helper.listObjVida}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.lbl_descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.cursos}" />
+					</xcp:column>
+
+
+					<xcp:column
+						headerText="#{bundle.lbl_atividades}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.atividades}" />
+					</xcp:column>
+
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgObjVida"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgObjVida_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.objetivovida}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverObjVida(row)}"
+								update=":form:tabFuncionarios:tblobj:tabOutVida"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_out_vida"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgObjVida_w').show();"
+					icon="ui-icon-plusthick"
+					update=":frmDlgOutIdi">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.objetivovida}"
+						value="#{null}" />
+				</xcp:commandButton>
+			</h:panelGroup>
+		</p:tab>
+
+		<p:tab
+			id="tabDadosInteresseRemocao"
+			title="#{bundle.tit_interremocao}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabInteresseRemocao"
+					value="#{talentosBacking.helper.listInteresseRem}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_orgao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgInteresse"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgInteresse_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.interesse}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverInteresse(row)}"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_int_rem"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgInteresse_w').show();"
+					icon="ui-icon-plusthick"
+					update=":dlgInteresse">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.interesse}"
+						value="#{null}" />
+
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.interesse.tipo}"
+						value="1" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+
+
+		</p:tab>
+
+		<p:tab
+			id="tabDadosInteressePermuta"
+			title="#{bundle.tit_interpermuta}">
+
+			<h:panelGroup
+				layout="block"
+				style="text-align: center">
+
+				<p:dataTable
+					id="tabInteressePermuta"
+					value="#{talentosBacking.helper.listInteressePerm}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="row">
+
+					<xcp:column
+						headerText="#{bundle.col_orgao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column size="5">
+						<h:panelGroup
+							layout="block"
+							style="text-align:left">
+
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-editar"
+								update=":frmDlgInteresse"
+								style="margin-right: 5px"
+								oncomplete="PF('dlgInteresse_w').show()">
+								<f:setPropertyActionListener
+									target="#{talentosBacking.helper.interesse}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								immediate="true"
+								action="#{talentosBacking.actionRemoverInteresse(row)}"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar_int_perm"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('dlgInteresse_w').show();"
+					icon="ui-icon-plusthick"
+					update=":dlgInteresse">
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.interesse}"
+						value="#{null}" />
+
+					<f:setPropertyActionListener
+						target="#{talentosBacking.helper.interesse.tipo}"
+						value="2" />
+				</xcp:commandButton>
+
+			</h:panelGroup>
+
+
+		</p:tab>
+
+
+	</p:tabView>
+
+</ui:composition>

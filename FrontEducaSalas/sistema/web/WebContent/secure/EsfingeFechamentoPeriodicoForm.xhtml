@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.top_align {
+	vertical-align: top;
+}
+</style>
+		<xcp:panelContent>
+
+			<p:panelGrid>
+				<p:row>
+					<p:column
+						styleClass="alinhatopo"
+						style="width:500px">
+
+						<p:dataTable
+							id="tblComp"
+							var="row"
+							value="#{esfingeFechamentoPeriodicoBacking.listComp}"
+							selection="#{esfingeFechamentoPeriodicoBacking.selComp}"
+							rowKey="#{row}"
+							selectionMode="single"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							paginator="true"
+							rows="10">
+
+							<f:facet name="header">#{bundle.title_competencias}</f:facet>
+
+							<p:ajax
+								event="rowSelect"
+								update=":form:pnlPer :form:pnlAcao"
+								listener="#{esfingeFechamentoPeriodicoBacking.actionSelectComp}" />
+
+							<xcp:column
+								headerText="#{bundle.col_competencia}"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.desCompetencia}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_desSituacaoFolha}"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.desSituacaoFolha}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="Situação Esfinge"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.desSituacaoEsfinge}" />
+							</xcp:column>
+
+
+						</p:dataTable>
+					</p:column>
+					<p:column
+						styleClass="alinhatopo"
+						style="vertical-align: middle">
+						<p:outputPanel id="pnlPer">
+							<p:dataTable
+								id="tblPer"
+								var="row"
+								value="#{esfingeFechamentoPeriodicoBacking.listPer}"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								paginator="true"
+								rows="10">
+								<f:facet name="header">#{bundle.title_periodos}</f:facet>
+								<xcp:column
+									headerText="#{bundle.col_referencia}"
+									value="#{row}"
+									type="Date"
+									size="3">
+									<xcp:outputSimpleDate value="#{row.referencia}" />
+								</xcp:column>
+								<xcp:column
+									headerText="#{bundle.col_tipoFolha}"
+									value="#{row}"
+									type="Number"
+									size="2">
+									<xcp:outputSimpleNumber
+										value="#{row.tipofolha}"
+										scale="0" />
+								</xcp:column>
+								<xcp:column
+									headerText="#{bundle.col_descricao}"
+									value="#{row}"
+									type="String"
+									size="7">
+									<xcp:outputSimple value="#{row.descTipoFolha}" />
+								</xcp:column>
+								<xcp:column
+									headerText="#{bundle.col_retificacao}"
+									value="#{row}"
+									type="Date"
+									size="3">
+									<xcp:outputSimpleDate value="#{row.reabertura}" />
+								</xcp:column>
+							</p:dataTable>
+
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputPanel
+							id="pnlAcao"
+							style="text-align: right">
+							<xcp:commandButton
+								value="#{bundle.btn_gerar_pendencia_esfinge}"
+								action="#{esfingeFechamentoPeriodicoBacking.actionEnviar}"
+								rendered="#{esfingeFechamentoPeriodicoBacking.selComp.renderedEnviar}"
+								icon="ui-icon-gear"
+								update=":form:tblComp :form:pnlPer :form:pnlAcao"
+								>
+								<p:confirm
+									header="#{bundle.tit_confirma_envio}"
+									message="#{bundle.msg_confirma_fechamento_esfinge}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+				
+			</p:panelGrid>
+		</xcp:panelContent>
+	</ui:define>
+
+
+</ui:composition>

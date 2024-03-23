@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Descfuncoes"
+			backing="#{descfuncoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_cargoFuncao}"
+					value="#{row.funcao}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.funcao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.funcaoFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.funcaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_atividade}"
+					value="#{row.atividade}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.atividade}" />
+				</xcp:column>
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_atividade}"
+					value="#{row.atividade}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.atividade}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_autonomia}"
+					value="#{row.autonomia}"
+					type="String"
+					size="3000">
+					<xcp:outputSimple value="#{row.autonomia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_experiencia}"
+					value="#{row.experiencia}"
+					type="Number"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{row.experiencia}"
+						precision="7"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_escolaridade}"
+					value="#{row.escolaridade}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.escolaridade}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_idade}"
+					value="#{row.idade}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.idade}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_credenciador}"
+					value="#{row.credenciador}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.credenciador}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cnh}"
+					value="#{row.cnh}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.cnh}"
+						precision="1"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classe}"
+					value="#{row.classe}"
+					type="String"
+					size="2">
+					<xcp:outputSimple value="#{row.classe}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_formacao}"
+					value="#{row.formacao}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.formacao}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_idademax}"
+					value="#{row.idademax}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.idademax}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_regime}"
+					value="#{row.regime}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.regime}"
+						precision="1"
+						scale="0" />
+				</xcp:column>
+ -->
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelGrid>
+					<p:row>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovFuncao"
+									value="#{descfuncoesBacking.entity.funcaoFk}"
+									label="#{bundle.lbl_cargoFuncao}"
+									required="true"
+									query="funcoes"
+									size="6"
+									readonly="#{not descfuncoesBacking.entity.novo}" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:fieldset
+								id="brdRequisitosProvimento"
+								legend="#{bundle.tit_requisitos_provimento}">
+								<xcp:panelForm>
+
+
+									<xcp:lov
+										id="lovEscolaridade"
+										value="#{descfuncoesBacking.entity.escolaridadeFk}"
+										label="#{bundle.lbl_escolaridade}"
+										query="graus"
+										size="4" />
+
+									<xcp:number
+										id="txtIdade"
+										label="#{bundle.lbl_idade}"
+										value="#{descfuncoesBacking.entity.idade}"
+										maxlength="3"
+										size="4"
+										precision="3"
+										scale="0"
+										maxValue="999" />
+
+									<xcp:number
+										id="txtIdademax"
+										label="#{bundle.lbl_idademax}"
+										value="#{descfuncoesBacking.entity.idademax}"
+										size="4"
+										maxlength="3"
+										precision="3"
+										scale="0"
+										maxValue="999" />
+
+									<xcp:lov
+										id="lovCredenciador"
+										value="#{descfuncoesBacking.entity.credenciadorFk}"
+										label="#{bundle.lbl_credenciador}"
+										query="credenciadores"
+										size="4" />
+
+									<xcp:combo
+										id="cboCNH"
+										value="#{descfuncoesBacking.entity.cnh}"
+										label="#{bundle.lbl_cnh}"
+										required="true"
+										itens="#{descfuncoesBacking.itensCNH}">
+										<p:ajax
+											event="change"
+											update="txtClasse, txtClasse_l" />
+									</xcp:combo>
+
+									<xcp:text
+										id="txtClasse"
+										label="#{bundle.lbl_classe}"
+										required="true"
+										rendered="#{descfuncoesBacking.entity.cnh == 1}"
+										value="#{descfuncoesBacking.entity.classe}"
+										maxlength="2"
+										size="4" />
+
+									<xcp:lov
+										id="lovFormacao"
+										value="#{descfuncoesBacking.cursoFake}"
+										label="#{bundle.lbl_formacao}"
+										query="cursoacad"
+										size="4"
+										update="tblcursos"
+										selectionListener="#{descfuncoesBacking.selectCurso}" />
+
+									<p:spacer width="1" />
+
+									<h:panelGrid
+										columns="2"
+										styleClass="top">
+										<p:dataTable
+											id="tblcursos"
+											value="#{descfuncoesBacking.listCursos}"
+											var="row"
+											rows="10"
+											style="width:400px"
+											scrollHeight="null"
+											emptyMessage="#{bundle.msg_sem_resultado}"
+											scrollRows="400"
+											scrollable="true"
+											rowKey="#{row}"
+											selection="#{descfuncoesBacking.listCursosSel}">
+
+											<p:column
+												selectionMode="multiple"
+												style="width:20px;text-align:center" />
+
+											<p:column headerText="#{bundle.col_descricao}">
+												<xcp:outputSimple value="#{row.cursoFk.descricao}" />
+											</p:column>
+
+										</p:dataTable>
+
+										<p:commandButton
+											action="#{descfuncoesBacking.actionClearCursos}"
+											process="@this tblcursos"
+											icon="icon-limpar"
+											styleClass="lov_btnLimpar"
+											update="tblcursos" />
+
+									</h:panelGrid>
+									
+									
+									<xcp:memo
+										id="txtRequisitoComp"
+										label="#{bundle.lbl_reqcomplementar}"
+										value="#{descfuncoesBacking.entity.reqcomplementar}"
+										size="10000" />
+
+								</xcp:panelForm>
+							</p:fieldset>
+						</p:column>
+
+						<p:column>
+							<p:fieldset
+								id="brdOutrasInformacoes"
+								legend="#{bundle.tit_informacoes}">
+								<xcp:panelForm>
+									<xcp:memo
+										id="txtDefinicao"
+										label="#{bundle.lbl_definicao}"
+										value="#{descfuncoesBacking.entity.definicao}"
+										size="10000" />
+
+									<xcp:memo
+										id="txtAutonomia"
+										label="#{bundle.lbl_autonomia}"
+										value="#{descfuncoesBacking.entity.autonomia}"
+										size="10000" />
+
+									<xcp:memo
+										id="txtAtividade"
+										rows="7"
+										required="true"
+										label="#{bundle.lbl_atividade}"
+										value="#{descfuncoesBacking.entity.atividade}"
+										size="10000" />
+									
+									<xcp:memo
+										id="txtPrerrogativas"
+										label="#{bundle.lbl_prerrogativas}"
+										value="#{descfuncoesBacking.entity.prerrogativas}"
+										size="10000" />
+										
+								</xcp:panelForm>
+							</p:fieldset>
+						</p:column>
+
+					</p:row>
+				</xcp:panelGrid>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<p:tabView
+					id="tabViewDetDescfuncoes"
+					rendered="#{!descfuncoesBacking.entity.novo}">
+
+					<p:tab
+						title="#{bundle.lbl_titulo_conhecimentos}"
+						id="conhecimento">
+						<ui:include src="DescfuncoesForm/RequisitosForm.xhtml">
+							<ui:param
+								name="id"
+								value="conhecimento" />
+							<ui:param
+								name="backing"
+								value="#{requisitosConhecimentoBacking}" />
+						</ui:include>
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_habilidades}"
+						id="habilidade">
+						<ui:include src="DescfuncoesForm/RequisitosForm.xhtml">
+							<ui:param
+								name="id"
+								value="habilidade" />
+							<ui:param
+								name="backing"
+								value="#{requisitosHabilidadeBacking}" />
+						</ui:include>
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_atitude}"
+						id="atitude">
+						<ui:include src="DescfuncoesForm/RequisitosForm.xhtml">
+							<ui:param
+								name="id"
+								value="atitude" />
+							<ui:param
+								name="backing"
+								value="#{requisitosAtitudeBacking}" />
+						</ui:include>
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_requisitos}"
+						id="requisitos">
+						<ui:include src="DescfuncoesForm/RequisitostreinaForm.xhtml" />
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_plano_carreira}"
+						id="plano">
+						<ui:include src="DescfuncoesForm/PlanoCarreiraForm.xhtml" />
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_provimento}"
+						id="provimento">
+						<ui:include src="DescfuncoesForm/FuncoesprovimentoForm.xhtml" />
+					</p:tab>
+
+					<p:tab
+						title="#{bundle.lbl_titulo_descfuncoesreqadic}"
+						id="reqadic">
+						<ui:include src="DescfuncoesForm/DescfuncoesreqadicForm.xhtml" />
+					</p:tab>
+					
+
+				</p:tabView>
+			</ui:define>
+		</xcp:panelManut>
+
+		<script type="text/javascript">
+			function downloadFileStart() {
+				PF('w_dlgXcpExecStatus').show();
+			}
+	
+			function downloadFileStop() {
+				PF('w_dlgXcpExecStatus').hide();
+			}
+		</script>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgUploadDocumento}"
+			widgetVar="wDlgUploadDocumento"
+			modal="true">
+			<xcp:form
+				id="formUpload"
+				multipart="true">
+				<p:fileUpload
+					id="uploadDocumento"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{funcoesprovimentoBacking.actionUploadDocumento}" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

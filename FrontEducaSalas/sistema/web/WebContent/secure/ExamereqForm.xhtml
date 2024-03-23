@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Examereq"
+			backing="#{examereqBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setor}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.setor}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desSetor}"
+					value="#{row.setorFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.setorFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_funcao}"
+					value="#{row.funcao}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.funcao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desFuncao}"
+					value="#{row.funcaoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.funcaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_exame}"
+					value="#{row.exame}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.exame}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desExame}"
+					value="#{row.exameFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.exameFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipexame}"
+					value="#{row.tipexame}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.tipexame}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desTipexame}"
+					value="#{row.tipexameFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.tipexameFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_sexo}"
+					value="#{row.sexo}"
+					type="String"
+					size="10"
+					itens="#{examereqBacking.itensSexoNull}">
+					<xcp:outputSimple
+						itens="#{examereqBacking.itensSexoNull}"
+						value="#{row.sexo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_periodicidade}"
+					value="#{row.periodicidade}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.periodicidade}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{examereqBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						required="true"
+						query="set_validade"
+						size="4"
+						readonly="#{not examereqBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovFuncao"
+						value="#{examereqBacking.entity.funcaoFk}"
+						label="#{bundle.lbl_funcao}"
+						required="true"
+						query="funcoes"
+						size="4"
+						readonly="#{not examereqBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovExame"
+						value="#{examereqBacking.entity.exameFk}"
+						label="#{bundle.lbl_exame}"
+						required="true"
+						query="examesmedicos"
+						size="4"
+						readonly="#{not examereqBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovTipexame"
+						value="#{examereqBacking.entity.tipexameFk}"
+						label="#{bundle.lbl_tipexame}"
+						required="true"
+						query="tipoexame"
+						size="4"
+						readonly="#{not examereqBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovPeriodicidade"
+						value="#{examereqBacking.entity.periodicidadeFk}"
+						label="#{bundle.lbl_periodicidade}"
+						query="periodicidade"
+						size="2" />
+
+					<xcp:combo
+						id="cboSexo"
+						value="#{examereqBacking.entity.sexo}"
+						required="true"
+						label="#{bundle.lbl_sexo}"
+						itens="#{examereqBacking.itensSexo}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

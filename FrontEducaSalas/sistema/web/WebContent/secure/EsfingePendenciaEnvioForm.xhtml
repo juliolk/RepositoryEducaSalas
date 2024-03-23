@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags" template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+		
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+	
+					<xcp:commandButton
+						id="btn_atualizar"
+						value="#{bundle.btn_atualizar}"
+						action="#{esfingePendenciaEnvioBacking.actionPesquisar}"
+						update="tbl toolbar"
+						icon="ui-icon-gear" />
+						
+					<xcp:commandButton
+						id="btn_enviar"
+						value="#{bundle.btn_enviar}"
+						action="#{esfingePendenciaEnvioBacking.actionEnviar}"
+						update="tbl"
+						icon="ui-icon-gear">
+						<p:confirm
+							header="#{bundle.tit_confirma_tranmissao}"
+							message="#{bundle.msg_confirma_envio_esfinge}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+	
+					<p:spacer width="20" />
+						
+				</f:facet>
+	
+			</p:toolbar>
+				
+			<p:dataTable
+				id="tbl"
+				var="row"
+				value="#{esfingePendenciaEnvioBacking.list}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{row}"
+				selection="#{esfingePendenciaEnvioBacking.listSel}"
+				paginator="true"
+				rows="300">
+	
+				<p:column
+					selectionMode="multiple"
+					style="width:10px;text-align:center" />
+	
+				<p:column
+					headerText="#{bundle.col_pendenciaenvio}"
+					width="20">
+					<xcp:outputSimple value="#{row.pendenciaenvio}" />
+				</p:column>
+	
+				<p:column
+					headerText="#{bundle.col_datageracao}"
+					width="40">
+					<xcp:outputSimpleTimestamp value="#{row.dataGeracao}" />
+				</p:column>
+	
+				<p:column filterBy="#{row.tipoEnvio}"
+					headerText="#{bundle.col_tipoenvio}"
+					width="50">
+					<xcp:outputSimple value="#{row.tipoEnvio}" />
+				</p:column>
+	
+				<p:column
+					headerText="#{bundle.col_chaveregistro}"
+					width="40">
+					<xcp:outputSimple value="#{row.chaveRegistro}" />
+				</p:column>
+	
+				<p:column
+					headerText="#{bundle.col_tipooperacao}"
+					width="40">
+					<xcp:outputSimple
+						value="#{row.tipoOperacao}"
+						itens="#{esfingePendenciaEnvioBacking.itensTipooperacao}" />
+				</p:column>
+	
+				<p:column
+					headerText="#{bundle.col_situacao}"
+					width="100">
+					
+					<xcp:commandLink
+					  action="#{esfingePendenciaEnvioBacking.actionVerificaErro(row)}"
+					  rendered="#{row.situacao == 4}"
+					  update=":frmFor">
+					  <xcp:outputSimple
+					    value="#{row.situacao}"
+					    itens="#{esfingePendenciaEnvioBacking.itensSituacao}" />
+					</xcp:commandLink>					
+					
+					<xcp:outputSimple 
+					value="#{row.situacao}" 
+					rendered="#{row.situacao != 4}"
+					itens="#{esfingePendenciaEnvioBacking.itensSituacao}" />
+					
+				</p:column>
+				
+				<p:column
+					headerText="#{bundle.col_acoes}"
+					width="60">
+					<div style="float: left">
+						<!-- Sempre pode excluir (com cuidado) -->
+						<xcp:commandButton
+							label="#{bundle.btn_excluir}"
+							value="#{bundle.btn_excluir}"
+							action="#{esfingePendenciaEnvioBacking.actionExcluir(row)}"
+							update="@form"
+							rendered="#{row.situacao != 2}">					
+							<p:confirm
+								header="#{bundle.tit_confirma_exclusao}"
+								message="#{bundle.msg_confirma_exclusao_esfinge}"
+								icon="ui-icon-alert"
+								 />
+						</xcp:commandButton>
+					</div>
+				</p:column>
+							
+			</p:dataTable>
+		</xcp:panelContent>		
+	</ui:define>
+	<ui:define name="modalPanelArea">
+	  <p:dialog
+	    header="#{bundle.title_erro}"
+	    modal="true"
+	    id="dlgFor"
+	    widgetVar="wErro">
+	    <xcp:form id="frmFor">
+	      <p:inputTextarea
+	        value="#{esfingePendenciaEnvioBacking.erro}"
+	        cols="90"
+	        rows="40"
+	        autoResize="false" />	      
+	    </xcp:form>
+	  </p:dialog>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<xcp:panelForm>
+			<xcp:lov
+				id="lovTipofolha"
+				value="#{comprovanteanoBacking.comprovanteirSelecionada.tipofolhaFk}"
+				label="#{bundle.lbl_tipofolha}"
+				required="true"
+				query="tipofolha"
+				size="5"
+				readonly="#{not comprovanteanoBacking.comprovanteirSelecionada.novo}" />
+
+			<xcp:lov
+				id="lovConta"
+				value="#{comprovanteanoBacking.comprovanteirSelecionada.contaFk}"
+				label="#{bundle.lbl_conta}"
+				required="true"
+				query="contas"
+				size="5"
+				readonly="#{not comprovanteanoBacking.comprovanteirSelecionada.novo}" />
+
+			<xcp:combo
+				id="cboOperacao"
+				label="#{bundle.lbl_operacao}"
+				required="true"
+				value="#{comprovanteanoBacking.comprovanteirSelecionada.operacao}"
+				itens="#{comprovanteanoBacking.itensOperacao}" />
+
+		</xcp:panelForm>
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_gravar"
+					icon="ui-icon-disk"
+					update="@form"
+					value="#{bundle.btn_gravar}"
+					action="#{comprovanteanoBacking.actionGravarCta}" />
+
+				<xcp:commandButton
+					id="btn_voltar"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					immediate="true"
+					onclick="PF('dlgAcao_w').hide();return false;" />
+
+			</f:facet>
+		</p:toolbar>
+	</p:outputPanel>
+</ui:composition>

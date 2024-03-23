@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="SetoresIntegracao"
+		backing="#{setoresIntegracaoBacking}"
+		masterId="Setores">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codigo}"
+				value="#{row.codigo}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					value="#{row.codigo}"
+					precision="16"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.desLocal}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.desLocal}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovGrpMatRequisicao"
+					value="#{setoresIntegracaoBacking.mat}"
+					label="#{bundle.lbl_local}"
+					required="true"
+					readonly="#{not setoresIntegracaoBacking.mat.novo}"
+					query="grpmatlocalizacao"
+					size="10"
+					rendered="#{funcmateriaisBacking.renderedMatIntegracao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

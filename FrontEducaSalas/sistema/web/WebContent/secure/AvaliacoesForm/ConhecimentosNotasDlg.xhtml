@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<xcp:panelForm>
+
+		<xcp:number
+			id="txtNota_cn"
+			label="#{bundle.lbl_nota}"
+			required="true"
+			value="#{conhecimentosBacking.helper.notas.nota}"
+			size="5"
+			precision="5"
+			scale="0"
+			maxValue="99999"
+			readonly="#{not conhecimentosBacking.helper.notas.novo}" />
+
+		<xcp:text
+			id="txtDescricao_cn"
+			label="#{bundle.lbl_descricao}"
+			required="true"
+			value="#{conhecimentosBacking.helper.notas.descricao}"
+			size="80"
+			maxlength="150" />
+
+		<xcp:number
+			id="txtPontos_cn"
+			label="#{bundle.lbl_pontos}"
+			required="true"
+			value="#{conhecimentosBacking.helper.notas.pontos}"
+			size="10"
+			precision="12"
+			scale="2"
+			maxValue="9999999999.99" />
+
+		<xcp:memo
+			id="txtObs_cn"
+			label="#{bundle.lbl_obs}"
+			value="#{conhecimentosBacking.helper.notas.obs}"
+			size="500" />
+
+	</xcp:panelForm>
+
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_gravar"
+				icon="ui-icon-disk"
+				update="@form"
+				value="#{bundle.btn_gravar}"
+				action="#{conhecimentosBacking.actionGravarNotas}" />
+
+			<xcp:commandButton
+				id="btnVoltar"
+				image="true"
+				icon="ui-icon-arrowreturnthick-1-w"
+				value="#{bundle.btn_voltar}"
+				onclick="PF('dlgNotas_w').hide();return false;" />
+
+		</f:facet>
+	</p:toolbar>
+</ui:composition>

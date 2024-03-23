@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel
+		id="panelConcessao"
+		rendered="#{backing.helper.tipodoc.regra == 1||backing.helper.tipodoc.regra == 4||backing.helper.tipodoc.regra == 7}">
+		<p:outputPanel rendered="#{backing.helper.tipodoc.forma == 2}">
+			<ui:include src="ConcessaoColetivaForm.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel rendered="#{backing.helper.tipodoc.forma == 1}">
+			<ui:include src="ConcessaoIndividualForm.xhtml" />
+		</p:outputPanel>
+	</p:outputPanel>
+	<p:outputPanel
+		id="panelCorrecao"
+		rendered="#{backing.helper.tipodoc.regra != 1 and backing.helper.tipodoc.regra != 5 and backing.helper.tipodoc.regra != 4 and backing.helper.tipodoc.regra != 7 and backing.helper.tipodoc.regra != null}">
+		<ui:include src="CorrecaoForm.xhtml" />
+	</p:outputPanel>
+	<p:outputPanel
+		id="panelExclusao"
+		rendered="#{backing.helper.tipodoc.regra == 5 and backing.helper.tipodoc.regra != null}">
+		<ui:include src="ExclusaoForm.xhtml" />
+	</p:outputPanel>
+</ui:composition>

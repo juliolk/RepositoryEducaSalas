@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Relogios"
+			backing="#{relogiosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_relogio}"
+					value="#{row.relogio}"
+					type="Number"
+					size="18">
+					<xcp:outputSimpleNumber
+						value="#{row.relogio}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtRelogio"
+						label="#{bundle.lbl_relogio}"
+						required="true"
+						value="#{relogiosBacking.entity.relogio}"
+						size="18"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999"
+						readonly="#{not relogiosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{relogiosBacking.entity.descricao}"
+						size="100" />
+
+					<xcp:text
+						id="txtLocal"
+						label="#{bundle.lbl_local}"
+						value="#{relogiosBacking.entity.local}"
+						size="100" />
+
+					<xcp:date
+						id="txtData"
+						value="#{relogiosBacking.entity.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:text
+						id="txtDesIp"
+						label="#{bundle.lbl_desIp}"
+						value="#{relogiosBacking.entity.desIp}"
+						size="100"
+						maxlength="200" />
+
+					<xcp:number
+						id="txtNumPorta"
+						label="#{bundle.lbl_numPorta}"
+						value="#{relogiosBacking.entity.numPorta}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="RelogiosForm/RelogiosSetoresForm.xhtml" />
+				<ui:include src="RelogiosForm/RelogiosFuncForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

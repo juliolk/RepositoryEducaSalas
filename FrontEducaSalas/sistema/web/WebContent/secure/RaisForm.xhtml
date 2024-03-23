@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Rais"
+			backing="#{raisBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_ano}"
+					value="#{row.ano}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.ano}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtAno"
+						label="#{bundle.lbl_ano}"
+						required="true"
+						value="#{raisBacking.entity.ano}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not raisBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{raisBacking.entity.descricao}"
+						size="50" />
+				</xcp:panelForm>
+
+
+				<xcp:panelGrid rendered="#{not raisBacking.entity.novo}">
+					<p:row>
+						<p:column width="50%">
+							<p:fieldset legend="#{bundle.tit_agrupador_rais}">
+								<xcp:radio
+									id="cboModelo"
+									label="#{bundle.lbl_agrupador_rais}"
+									simple="true"
+									value="#{raisBacking.agrupadorSelecionado}"
+									layout="pageDirection"
+									required="true">
+									<f:selectItems
+										value="#{raisBacking.listaAgrupadores}"
+										var="it"
+										itemValue="#{it.agrupador}"
+										itemLabel="#{it.descricao}" />
+									<p:ajax
+										event="change"
+										update="tabCta"
+										listener="#{raisBacking.actionSelecionaAgrupador}" />
+								</xcp:radio>
+							</p:fieldset>
+						</p:column>
+						<p:column>
+							<p:spacer width="10" />
+						</p:column>
+						<p:column style="width:600px">
+							<p:dataTable
+								id="tabCta"
+								var="rowCta"
+								value="#{raisBacking.listaRaisCtas}"
+								selection="#{raisBacking.raisCtasSelecionada}"
+								rowKey="#{rowCta.PK}"
+								scrollHeight="315"
+								scrollWidth="600"
+								scrollable="true"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								selectionMode="single">
+
+								<p:ajax
+									event="rowSelect"
+									oncomplete="PF('dlgCta_w').show();" />
+								<xcp:column
+									size="8"
+									type="String"
+									headerText="#{bundle.col_tipofolha}">
+									<xcp:outputSimple value="#{rowCta.tipofolhaFk.descricao}" />
+								</xcp:column>
+								<xcp:column
+									headerText="#{bundle.col_conta}"
+									type="Number"
+									size="5">
+									<xcp:outputSimpleNumber
+										value="#{rowCta.conta}"
+										precision="6"
+										scale="0" />
+								</xcp:column>
+								<xcp:column
+									headerText="#{bundle.col_descricao}"
+									type="String"
+									size="12">
+									<xcp:outputSimple
+										value="#{rowCta.contaFk.descricao}" />
+								</xcp:column>
+								<xcp:column
+									size="5"
+									type="String"
+									headerText="#{bundle.col_operacao}">
+									<xcp:outputSimple value="#{rowCta.operacao}" />
+								</xcp:column>
+
+								<xcp:column size="2">
+									<xcp:commandLink
+										id="btnRemoverCta"
+										action="#{raisBacking.actionRemove(rowCta)}"
+										update="tabCta"
+										icon="ui-icon-trash">
+										<h:graphicImage
+											title="#{bundle.hint_remover}"
+											value="/resources/img/remover.png"
+											style="margin-top:3px;" />
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink>
+								</xcp:column>
+
+								<f:facet name="footer">
+									<xcp:commandButton
+										id="btn_adicionar_conta"
+										value="#{bundle.btn_adicionar_conta}"
+										action="#{raisBacking.actionNovaCta}"
+										update=":frmdlgCta"
+										oncomplete="PF('dlgCta_w').show();"
+										icon="ui-icon-document">
+									</xcp:commandButton>
+								</f:facet>
+
+							</p:dataTable>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_conta}"
+			modal="true"
+			id="dlgCta"
+			widgetVar="dlgCta_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmdlgCta">
+				<ui:include src="RaisForm/RaisDlgForm.xhtml" />
+				<p:remoteCommand
+					name="closeDlg"
+					update=":#{p:component('tabCta')}"
+					oncomplete="PF('dlgCta_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+        
+                
+		<p:fieldset legend="#{bundle.lbl_filtros}" style="width: 40%; margin-top: 15px;">
+			
+             <xcp:panelForm>
+                   <xcp:lov
+                      id="lovTipo"
+                      value="#{lotacaoBacking.tipocargo}"
+                      selectionListener="#{lotacaoBacking.selectTipoCargo}"
+                      label="#{bundle.lbl_tipo}"
+                      query="tipocargos"
+                      size="6"
+                      update="treeLotacao" />
+             
+                 <xcp:lov
+                     id="lovCargo"
+                     value="#{lotacaoBacking.cargo}"
+                     selectionListener="#{lotacaoBacking.selectCargo}"
+                     label="#{bundle.lbl_cargo}"
+                     query="cargos"
+                     size="6"
+                     update="treeLotacao" />
+
+                 <xcp:lov
+                     id="lovOrgao"
+                     value="#{lotacaoBacking.orgao}"
+                     selectionListener="#{lotacaoBacking.selectOrgao}"
+                     label="#{bundle.lbl_orgao}"
+                     query="orgaos"
+                     size="6"
+                     update="treeLotacao" />
+
+                 <xcp:lov
+                     id="lovDivisao"
+                     value="#{lotacaoBacking.divisao}"
+                     selectionListener="#{lotacaoBacking.selectDivisao}"
+                     label="#{bundle.lbl_divisao}"
+                     query="divisoes"
+                     size="6"
+                     update="treeLotacao" />
+
+                 <xcp:lov
+                     id="lovSetor"
+                     value="#{lotacaoBacking.setor}"
+                     selectionListener="#{lotacaoBacking.selectSetor}"
+                     label="#{bundle.lbl_setor}"
+                     query="setores"
+                     size="6"
+                     update="treeLotacao" />
+                     
+				<xcp:check
+					id="exibeCodigos"
+					label="Exibe Códigos"
+					value="#{lotacaoBacking.exibeCodigos}">
+					<p:ajax
+						event="change"
+						update="treeLotacao"
+						listener="#{lotacaoBacking.refreshTree}"/>
+				</xcp:check>
+				
+             </xcp:panelForm>
+		</p:fieldset>		
+
+		<p:treeTable id="treeLotacao" value="#{lotacaoBacking.root}" var="node" style="width: 90%; margin-left: 10px; margin-top: 20px">
+	        <p:column id="columnDescricao" headerText="Descrição" sortBy="#{lotacaoBacking.exibeCodigos ? node.codigo : node.descricao}">
+	            <h:outputText value="#{node.descricao}" />
+	        </p:column>
+	        <p:column sortBy="#{node.lotacao}" styleClass="xcp_column_Number">
+	        	<f:facet name="header">
+	        		<h:outputText value="Vagas / Lotação" />
+	        	</f:facet>
+	            <h:outputText value="#{node.lotacao == 0 ? '-' : node.lotacao}" />
+	        </p:column>
+	        <p:column sortBy="#{node.lotados}" styleClass="xcp_column_Number">
+	        	<f:facet name="header">
+	        		<h:outputText value="Lotados"/>
+	        	</f:facet>
+	            <h:outputText value="#{node.lotados}" />
+	        </p:column>
+	        <p:column sortBy="#{node.disponiveis}" styleClass="xcp_column_Number">
+	        	<f:facet name="header">
+	        		<h:outputText value="Disponíveis"/>
+	        	</f:facet>
+	            <h:outputText value="#{node.disponiveis == 0 ? '-' : node.disponiveis}" />
+	        </p:column>
+	        <p:column style="width:24px">
+            	<f:facet name="header">
+	        		<h:outputText value="Servidores" />
+	        	</f:facet>
+            	<xcp:commandButton
+					update=":dlgFunc"
+					icon="ui-icon-search"
+					action="#{lotacaoBacking.actionBuscarFunc}">
+						<f:setPropertyActionListener
+							value="#{node}" target="#{lotacaoBacking.selectedRow}" />
+				</xcp:commandButton>
+					
+        	</p:column>
+	    </p:treeTable>
+	    
+	   
+    	
+    
+           <p:ajaxStatus
+               onstart="PF('w_dlgXcpExecStatus').show()"
+               onsuccess="PF('w_dlgXcpExecStatus').hide()"
+               oncomplete="PF('w_dlgXcpExecStatus').hide()"
+               onerror="PF('w_dlgXcpExecStatus').hide()"
+           />
+	    <script type="text/javascript">
+	    function showStatus() {
+               PF('w_dlgXcpExecStatus').show();
+		}
+	    function hideStatus() {
+	    	PF('w_dlgXcpExecStatus').hide();
+		}
+	    </script>
+		    
+		</xcp:panelContent>
+	</ui:define>
+	
+	 <ui:define name="modalPanelArea">
+	    
+	    <p:dialog id="dlgFunc" header="#{bundle.title_lotServ}" 
+	    	showEffect="fade" 
+	   		widgetVar="dlgFunc_w" 
+	    	modal="true" 
+	   		width="800"
+			height="600">
+        	
+			<xcp:form id="frmFunc">
+
+				<p:dataTable
+					id="tblFunc"
+					var="row"
+					value="#{lotacaoBacking.listFunc}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						value="#{row.matricula}"
+						type="Number"
+						size="7">
+						<xcp:outputSimple value="#{row.matricula}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{row.nome}"
+						type="String"
+						size="15">
+						<xcp:outputSimple value="#{row.nome}" />
+					</xcp:column>
+
+
+				</p:dataTable>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgFunc_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+				
+			</xcp:form>
+			
+    	</p:dialog>
+    	
+    </ui:define>
+
+</ui:composition>

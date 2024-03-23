@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+		<xcp:panelManutDetalhes id="PensoesIncid" backing="#{pensoesIncidBacking}" masterId="Parfunc" >
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_Empresa}"
+					value="#{row.empresa}" type="Number" size="3">
+					<xcp:outputSimpleNumber value="#{row.empresa}" precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}" type="Number" size="8">
+					<xcp:outputSimpleNumber value="#{row.matricula}" precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_conta}" value="#{row.conta}"
+					type="Number" size="16">
+					<xcp:outputSimpleNumber value="#{row.conta}" precision="16"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_sinal}" value="#{row.sinal}"
+					type="String" size="1">
+					<xcp:outputSimple value="#{row.sinal}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_percentual}"
+					value="#{row.percentual}" type="Number" size="19">
+					<xcp:outputSimpleNumber value="#{row.percentual}" precision="16"
+						scale="2" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovConta"
+						value="#{pensoesIncidBacking.entity.contasFk}"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						query="contas"
+						size="5"  />
+					
+					<xcp:combo
+						id="cboSinal"
+						value="#{pensoesIncidBacking.entity.sinal}"
+						label="#{bundle.lbl_sinal}"
+						itens="#{pensoesIncidBacking.itensTipoincidencia}" 
+						styleClass="combosinal"
+						width="45px !important"
+						/>
+
+					<xcp:number id="txtPercentual" label="#{bundle.lbl_percentual}"
+						required="true" size="19"
+						value="#{pensoesIncidBacking.entity.percentual}" precision="16"
+						scale="2" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManutDetalhes>
+</ui:composition>

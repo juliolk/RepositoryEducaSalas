@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Elevacaoorgaos"
+		backing="#{elevacaoorgaosBacking}"
+		masterId="Orgaos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="Number"
+				size="1"
+				itens="#{elevacaoorgaosBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					precision="1"
+					scale="0"
+					itens="#{elevacaoorgaosBacking.itensTipo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtini}"
+				value="#{row.dtini}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfim}"
+				value="#{row.dtfim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:combo
+					id="cboTipo_Elevacaoorgaos"
+					value="#{elevacaoorgaosBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{elevacaoorgaosBacking.itensTipo}" />
+
+				<xcp:dateRange
+					id="txtDtini"
+					requiredStart="true"
+					valueStart="#{elevacaoorgaosBacking.entity.dtini}"
+					valueEnd="#{elevacaoorgaosBacking.entity.dtfim}"
+					label="#{bundle.lbl_data}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

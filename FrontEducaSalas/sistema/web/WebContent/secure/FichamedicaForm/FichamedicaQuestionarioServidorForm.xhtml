@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+ 	<style type="text/css">
+ 	
+ 		.toolbar-questionario .ui-toolbar-group-left {
+ 			width: 100%;
+		    display: flex;
+		    align-items: center;
+ 		}	
+ 	
+ 		.toolbar-questionario .ui-toolbar-group-left h3 {
+			flex: 1 1 auto;
+		    margin: 0;
+		    text-align: center;
+    	}	
+ 	
+ 		.exibicao-questionario {
+ 			padding: 20px;
+ 		}
+ 		
+ 		.exibicao-questionario .section-info {
+ 			margin-bottom: 30px;
+ 		}
+ 		
+ 		.exibicao-questionario .section-info p {
+ 			font-size: 14px;
+    		margin: 10px 0;
+ 		}
+ 		
+ 		.exibicao-questionario .datacard-container-title {
+ 			margin: 20px 0 10px 0;
+    		font-size: 16px;
+ 		}
+ 		
+ 		.exibicao-questionario .datacard-listcontainer ol.ui-datalist-data {
+ 			padding-inline-start: 30px;
+    		font-size: 12px;
+ 		}
+ 		
+ 		.exibicao-questionario .datacard-listcontainer .ui-datalist-item {
+ 			margin-bottom: 20px;
+ 		}	
+ 		
+ 		.exibicao-questionario .datacard-title {
+		    font-size: 14px;
+		    margin-bottom: 5px;
+		}
+ 	
+ 		.exibicao-questionario .complemento-questao, 
+ 		.exibicao-questionario .complemento-resposta {
+		    margin-top: 10px;
+		}
+ 	
+ 		.exibicao-questionario .ui-state-disabled, 
+ 		.exibicao-questionario .ui-widget-content .ui-state-disabled, 
+ 		.exibicao-questionario .ui-widget-header .ui-state-disabled {
+ 			opacity: 1;
+ 			background-color: white;
+ 		}
+ 		
+		.option-question-container table {
+		    display: flex;
+		}
+		
+		.option-question-container tbody {
+		    display: flex;
+		    flex-wrap: wrap;
+		    flex: 1 1 auto;
+		}
+		
+		.option-question-container tr {
+		    padding-right: 15px;
+		    flex-grow: 0;
+		    flex-basis: 25%;
+		    display: flex;
+		    align-items: center;
+		    margin-bottom: 10px;
+		    min-width: 200px;
+		}
+		
+		.option-question-container .ui-selectoneradio:not(no-label) tr:first-child td {
+		    padding-top: 5px;
+		} 		
+		
+		.complemento-inline {
+			display: flex;
+    		align-items: baseline;
+		}
+		
+		.complemento-inline .ui-inputfield {
+			margin: 0 10px;
+    		flex: 0 1 150px;
+		}
+		
+		.complemento-inline .ui-outputlabel {
+			display: none !important;
+		}
+		
+	</style>
+
+	<h:panelGroup id="tabQuestionariosServidor">
+
+		<!--  LISTA QUESTIONÁRIOS -->
+		<h:panelGroup rendered="#{fichamedicaBacking.statusQuestionarioServidor == 1}">
+		
+			<p:dataTable
+				id="tableQuestionariosServidor"
+				var="row"
+				value="#{fichamedicaBacking.listaRealizacoesQuestionariosServidor}"
+				filteredValue="#{fichamedicaBacking.listaFiltrados1}"
+				paginator="true"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}"
+				selectionMode="single"				
+				selection="#{fichamedicaBacking.realizacaoQuestionarioServidorSelecionada}"
+				rowKey="#{row.PK}"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+				
+				<f:facet name="header">#{bundle.tit_questionario_medico_servidor}</f:facet>
+				
+				<p:ajax
+					event="rowSelect"
+					update=":#{p:component('tabQuestionariosServidor')}"
+					listener="#{fichamedicaBacking.onRowSelectQuestionarioServidor}" />
+				
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.pesquisaFk().descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.pesquisaFk().descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtpublicacao}"
+					value="#{row.pesquisaFk().publicacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.pesquisaFk().publicacao}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_realizacao}"
+					value="#{row.realizacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.realizacao}" />
+				</xcp:column>
+			</p:dataTable>
+		
+		</h:panelGroup>
+
+		<!-- EXIBIÇÃO QUESTIONÁRIO -->
+		
+		<p:toolbar styleClass="toolbar-questionario" rendered="#{fichamedicaBacking.statusQuestionarioServidor == 2}">
+			<f:facet name="left">
+				<xcp:commandButton
+				 	icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					action="#{fichamedicaBacking.actionVoltarQuestionarioServidor}"
+					process="@this"
+					update=":#{p:component('tabQuestionariosServidor')}">
+				</xcp:commandButton>
+				<h3>#{bundle.lbl_respostas_servidor}</h3>
+			</f:facet>
+		</p:toolbar>
+		
+		
+		<h:panelGroup
+			id="panelPesquisa"
+			layout="block"
+ 			styleClass="exibicao-questionario"
+			rendered="#{fichamedicaBacking.statusQuestionarioServidor == 2}">
+						
+			<p:outputPanel class="section-header secondary-bgcolor ui-content-no-space-top ui-content-no-space-bottom">
+                   <div class="section-info">
+                       <h1>#{fichamedicaBacking.pesquisaFuncionarioSelecionada.pesquisa.descricao}</h1>
+                        
+                      	<ui:fragment rendered="#{fichamedicaBacking.pesquisaFuncionarioSelecionada.pesquisa.objetivo!=null}">
+                      		<p>#{bundle.lbl_objetivo}: #{fichamedicaBacking.pesquisaFuncionarioSelecionada.pesquisa.objetivo}</p>
+                      	</ui:fragment>
+                </div>
+               </p:outputPanel>
+
+			<p:outputPanel class="shadow-top-inset ui-content-full-width">
+			
+				<div class="datacard-container">
+					<div class="row">
+						<div class="col-xs-12">
+
+							<ui:repeat var="grupoQuestoes" value="#{fichamedicaBacking.pesquisaFuncionarioSelecionada.listaGruposQuestoes}">
+
+								<p:outputPanel>
+									<h1 class="datacard-container-title">#{grupoQuestoes.descricao}</h1>
+								</p:outputPanel>
+
+								<p:dataList
+									id="tabPesquisa"
+									value="#{grupoQuestoes.questoes}"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									var="itemPesquisa"
+									type="ordered"
+									rowIndexVar="listRowIndex"
+									itemType="decimal"
+									styleClass="datacard-listcontainer"
+									paginator="false">
+
+									<div class="datacard datacard-icon-left">
+										<div class="datacard-icon secondary-bgcolor">
+										</div>
+									
+										<div class="datacard-title">
+											<span class="primary-color">
+												#{itemPesquisa.questao.descricao}
+											</span>
+											
+											<p:outputPanel
+												class="datacard-icon-required" 
+												rendered="#{itemPesquisa.questao.indItemObrigatorio}">
+												<i class="fa fa-asterisk fa-fw" title="Questão obrigatória"></i>
+											</p:outputPanel>
+											
+										</div>
+										<div class="datacard-content">
+											<div class="row">
+												<div class="col-sm-12 option-question-container">
+												
+													<xcp:radio
+														id="cboRespostas"
+														label="#{bundle.lbl_modelo}"
+														value="#{itemPesquisa.respostaRadio}"
+														required="#{itemPesquisa.questao.indItemObrigatorio}"
+														requiredMessage="Esta resposta é obrigatória (#{grupoQuestoes.descricao})"
+														simple="true"
+														rendered="#{itemPesquisa.tipoRespostaRadio}"
+														readonly="true"
+														layout="pageDirection">
+														<f:selectItems
+															value="#{itemPesquisa.opcoesRadio}"
+															var="it"
+															itemValue="#{it.sequencia}"
+															itemLabel="#{it.descricao}" />
+														<p:ajax
+															event="change"
+															update="panelComplementoResposta" />
+													</xcp:radio>
+						
+													<xcp:manyCheck
+														id="chkRespostas"
+														label="#{bundle.lbl_modelo}"
+														value="#{itemPesquisa.respostasCheck}"
+														required="#{itemPesquisa.questao.indItemObrigatorio}"
+														requiredMessage="Esta resposta é obrigatória (#{grupoQuestoes.descricao})"
+														simple="true"
+														layout="pageDirection"
+														readonly="true"
+														rendered="#{itemPesquisa.tipoRespostaCheck}">
+														<f:selectItems
+															value="#{itemPesquisa.opcoesCheck}"
+															var="it"
+															itemValue="#{it.sequencia}"
+															itemLabel="#{it.descricao}" />
+														<p:ajax
+															event="change"
+															update="panelComplementoResposta" />
+													</xcp:manyCheck>
+
+												
+													<p:outputPanel id="panelComplementoResposta" styleClass="complemento-resposta">
+
+														<ui:fragment rendered="#{not itemPesquisa.complementoInlineResposta}">
+															<xcp:memo
+																id="txtComplementoResposta"
+																floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+																label="#{itemPesquisa.getDescricaoComplementoAlternativa(bundle.lbl_complemento_questao)}"
+																rows="2"
+																required="true"
+																requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																rendered="#{itemPesquisa.complementoResposta}"
+																value="#{itemPesquisa.txtComplementoResposta}"/>
+														</ui:fragment>
+														
+														<ui:fragment rendered="#{itemPesquisa.complementoInlineResposta}">
+															<div class="complemento-inline">
+																<span class="complemento-inline-parte primeira">
+																	<xcp:outputSimple value="#{itemPesquisa.complementoInlineRespostaPrimeiraParte}"/>
+																</span>
+																<xcp:text 
+																	id="txtComplementoRespostaInline"
+																	noLabel="true"
+																	floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+																	required="true"
+																	requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																	value="#{itemPesquisa.txtComplementoResposta}"
+																/>
+																<span class="complemento-inline-parte segunda">
+																	<xcp:outputSimple value="#{itemPesquisa.complementoInlineRespostaSegundaParte}"/>
+																</span>
+																<p:outputPanel styleClass="complemento-inline-required">*</p:outputPanel>
+															</div>
+														</ui:fragment>
+
+													</p:outputPanel>
+														
+												</div>
+												<div class="col-sm-12 complemento-questao">
+
+													<ui:fragment rendered="#{not itemPesquisa.complementoInlinePergunta}">
+														<xcp:memo
+															id="txtComplementoQuestao"
+															floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+															label="#{itemPesquisa.getDescricaoComplementoPergunta(bundle.lbl_complemento_questao, bundle.lbl_resposta)}"
+															rows="2"
+															required="#{itemPesquisa.questao.questaoDescritiva ? itemPesquisa.questao.indItemObrigatorio : itemPesquisa.questao.indComplementoObrigatorio}"
+															requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+															rendered="#{itemPesquisa.complemento}"
+															value="#{itemPesquisa.txtComplemento}"/>
+													</ui:fragment>
+													<ui:fragment rendered="#{itemPesquisa.complementoInlinePergunta}">
+														<div class="complemento-inline">
+															<span class="complemento-inline-parte primeira">
+																<xcp:outputSimple value="#{itemPesquisa.complementoInlinePerguntaPrimeiraParte}"/>
+															</span>
+															<xcp:text 
+																id="txtComplementoQuestaoInline"
+																noLabel=""
+																floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+																required="#{itemPesquisa.questao.questaoDescritiva ? itemPesquisa.questao.indItemObrigatorio : itemPesquisa.questao.indComplementoObrigatorio}"
+																requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																value="#{itemPesquisa.txtComplemento}"
+															/>
+															<span class="complemento-inline-parte segunda">
+																<xcp:outputSimple value="#{itemPesquisa.complementoInlinePerguntaSegundaParte}"/>
+															</span>
+																<p:outputPanel 
+																	rendered="#{itemPesquisa.questao.questaoDescritiva ? itemPesquisa.questao.indItemObrigatorio : itemPesquisa.questao.indComplementoObrigatorio}"
+																	styleClass="complemento-inline-required">*</p:outputPanel>
+														</div>
+													</ui:fragment>
+
+												</div>
+											</div>											
+										</div>
+									</div>
+								</p:dataList>
+							</ui:repeat>										
+						</div>
+					</div>
+				</div>
+			
+			</p:outputPanel>
+
+		</h:panelGroup>	
+	
+	</h:panelGroup>
+		
+</ui:composition>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<style type="text/css">
+		#documentos .content {
+			display: flex;
+		    flex-direction: row;
+		    flex-wrap: wrap;
+		}
+		
+		#documentos .content a {
+			display: flex;
+			flex: 0 0 33%;
+		    flex-direction: column;
+		    justify-content: flex-start;			
+		}
+		
+		#documentos .content a:hover {
+			text-decoration: none;
+		}
+		
+		#documentos .documento-portal {
+			padding: 20px 40px;
+		}
+		
+		@media (max-width:1200px) {
+			#documentos .content a {
+				flex-basis: 50%;
+			}
+		}
+
+		@media (max-width:840px) {
+			#documentos .content a {
+				flex-basis: 100%;
+			}
+		}
+		
+	</style>
+
+	<div class="row">
+		<div class="col-md-12">
+			<section  id="documentos">
+				<h1>#{bundle.txt_documentos}</h1>
+				<div class="content row">
+					<ui:fragment rendered="#{xcpPortalBacking.listaDocumentos.isEmpty()}">
+						<div class="col-md-12">
+							<h2>Nenhum documento disponível.</h2>
+						</div>
+					</ui:fragment>
+					<ui:fragment rendered="#{!xcpPortalBacking.listaTipoDocumento.isEmpty()}">
+						<div class="panel-group col-md-12" id="accordion" role="tablist" aria-multiselectable="true">
+						  <ui:repeat value="#{xcpPortalBacking.listaTipoDocumento}" var="tipodocumento">
+						  <div class="panel panel-default">
+						    <div class="panel-heading" role="tab" id="heading#{tipodocumento}">
+						      <h2 class="panel-title">
+						        <a class='#{(tipodocumento.codigo > 0) ? "collapsed" : ""}' role="button" data-toggle="collapse" data-parent="#accordion" 
+						        	href="#collapse#{tipodocumento.codigo}" aria-expanded='#{(tipodocumento.codigo > 0) ? "false" : "true"}'
+						        	aria-controls="collapse#{tipodocumento.codigo}" >
+						          #{tipodocumento.descricao}
+						        </a>
+						      </h2>
+						    </div>
+						    <div id="collapse#{tipodocumento.codigo}" class='panel-collapse collapse #{(tipodocumento.codigo > 0) ? "" : "in"}' role="tabpanel" aria-labelledby="heading#{tipodocumento.codigo}">
+						      <div class="panel-body">
+						      	<ui:repeat value="#{xcpPortalBacking.getRowsDoc(tipodocumento)}" var="rowsDoc" >
+						      		<div class="row">
+								        <ui:repeat value='#{rowsDoc}'  var="documento" >	
+						                    <div class="col-md-4">												
+												<p:commandLink
+													action="#{xcpPortalBacking.actionIniciaDownload(documento)}"
+													update=":frmDownload"
+													title="Clique para fazer download">
+													<div class="documento-portal">
+														<h2><i class="fa fa-fw fa-file-o"></i> #{documento.titulo}</h2>
+														<p>#{documento.descricao}</p>
+													</div>
+												</p:commandLink>
+											</div>
+										</ui:repeat>
+									</div>
+								</ui:repeat>
+						      </div>
+						    </div>
+						  </div>	
+						  </ui:repeat>				 
+						</div>                       	
+					</ui:fragment>
+				</div>
+			</section>
+		</div>
+	</div>
+	
+</ui:composition>

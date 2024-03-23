@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgOcorEnv"
+		widgetVar="w_env"
+		header="#{bundle.tit_dlgEnv}"
+		modal="true">
+		<xcp:form id="frmOcor">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovMatricula"
+					value="#{setoresInspBacking.helper.envolSel.matriculaFk}"
+					label="#{bundle.lbl_matricula}"
+					required="true"
+					query="funcionariosLov"
+					size="8" />
+
+				<xcp:date
+					id="txtInicio"
+					value="#{setoresInspBacking.helper.envolSel.inicio}"
+					label="#{bundle.lbl_inicio}" />
+
+				<xcp:date
+					id="txtTermino"
+					value="#{setoresInspBacking.helper.envolSel.termino}"
+					label="#{bundle.lbl_termino}" />
+
+			</xcp:panelForm>
+
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_ok_env"
+						icon="ui-icon-disk"
+						action="#{setoresInspBacking.actionSalvarEnvolvido}"
+						value="#{bundle.btn_gravar}"
+						update=":form:tabView:pnlUpdOcor" />
+
+					<xcp:commandButton
+						id="btn_voltar_env"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_env').hide();" />
+
+				</f:facet>
+
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgEpi"
+		widgetVar="w_epi"
+		header="#{bundle.tit_dlgEp}"
+		modal="true">
+
+		<xcp:form id="frmEpi">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovEquipamento"
+					value="#{setoresInspBacking.helper.epiSel.tipomatFk}"
+					label="#{bundle.lbl_tipoequipamento}"
+					required="true"
+					query="tipomateriais"
+					size="8" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_ok_epi"
+						icon="ui-icon-disk"
+						action="#{setoresInspBacking.actionSalvarEpi}"
+						value="#{bundle.btn_gravar}"
+						update=":form:tabView:pnlUpdFuncao" />
+
+					<xcp:commandButton
+						id="btn_voltar_epi"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_epi').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgAnexo"
+		widgetVar="w_anexo"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true">
+		<xcp:form
+			id="frmAnexo"
+			multipart="true">
+
+			<p:growl
+				for="idmsgs"
+				autoUpdate="true" />
+
+			<xcp:panelForm>
+
+				<xcp:text
+					id="txtDescricao"
+					required="true"
+					label="#{bundle.lbl_descricao}"
+					size="80"
+					value="#{setoresInspBacking.helper.anexo.descricao}" />
+
+			</xcp:panelForm>
+
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				fileUploadListener="#{setoresInspBacking.actionFileUpload}" />
+
+
+			<p:spacer height="1" />
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_gravar"
+						process="@this txtDescricao"
+						action="#{setoresInspBacking.actionGravarAnexoInsp}"
+						icon="ui-icon-disk"
+						update=":form:tabView:tabAnex"
+						value="#{bundle.btn_gravar}" />
+
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_anexo').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgAnexoFunc"
+		widgetVar="w_anexofunc"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true">
+		<xcp:form id="frmAnexoFunc">
+
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				fileUploadListener="#{setoresInspBacking.actionFileUploadFunc}"
+				update=":form:tabView:pnlUpdFuncao" />
+
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_vtl_anx_car"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						process="@this"
+						oncomplete="PF('w_anexofunc').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+
+	<p:dialog
+		id="dlgFuncAg"
+		widgetVar="w_funcag"
+		header="#{bundle.tit_dlgFuncag}"
+		modal="true">
+
+		<xcp:form id="frmFuncag">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovFuncAg"
+					value="#{setoresInspBacking.helper.funcAgSel.agenteFk}"
+					label="#{bundle.lbl_agente}"
+					required="true"
+					readonly="#{not setoresInspBacking.helper.funcAgSel.novo}"
+					query="agentes"
+					size="8" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{setoresInspBacking.helper.funcAgSel.obs}"
+					size="1000" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_ok_funcag"
+						icon="ui-icon-disk"
+						action="#{setoresInspBacking.actionSalvarAg}"
+						value="#{bundle.btn_gravar}"
+						update=":form:tabView:pnlUpdFuncao" />
+
+					<xcp:commandButton
+						id="btn_voltar_funcag"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_funcag').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgCopyFuncao"
+		widgetVar="w_copyfuncao"
+		header="#{bundle.tit_dlgCopyFuncao}"
+		modal="true">
+
+		<xcp:form id="frmCopyFuncao">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovFuncaoCopy"
+					value="#{setoresInspBacking.helper.funcaoVO.funcao}"
+					label="#{bundle.lbl_funcao}"
+					required="true"
+					query="funcoes_setor"
+					params="#{setoresInspBacking.paramsFuncSet}"
+					size="8" />
+
+				<xcp:lov
+					id="lovMatriculaCopy"
+					value="#{setoresInspBacking.helper.funcaoVO.func}"
+					label="#{bundle.lbl_matricula}"
+					params="#{setoresInspBacking.paramsFunc}"
+					query="funcionariosInspLov"
+					size="8" />
+
+				<xcp:check
+					id="chk_copyeepi"
+					label="#{bundle.lbl_epi}"
+					value="#{setoresInspBacking.helper.funcaoVO.copyEpi}" />
+
+				<xcp:check
+					id="chk_copyagente"
+					label="#{bundle.lbl_agentes}"
+					value="#{setoresInspBacking.helper.funcaoVO.copyAgentes}" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_ok_copy"
+						icon="ui-icon-disk"
+						action="#{setoresInspBacking.actionCopiarFuncao}"
+						value="#{bundle.btn_gravar}"
+						update=":form:tabView:pnlUpdFuncao" />
+
+					<xcp:commandButton
+						id="btn_voltar_copy"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_copyfuncao').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

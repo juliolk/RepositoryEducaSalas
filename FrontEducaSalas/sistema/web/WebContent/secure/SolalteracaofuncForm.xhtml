@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Solalteracaofunc"
+			backing="#{solalteracaofuncBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					value="#{row.seq}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="2"
+					value="#{row.situacao}"
+					itens="#{solalteracaofuncBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{solalteracaofuncBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.matriculaFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					type="String"
+					size="5"
+					value="#{row.tipo}"
+					itens="#{solalteracaofuncBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{solalteracaofuncBacking.itensTipo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelDisable
+					disabled="#{solalteracaofuncBacking.entity.dtatend != null}">
+					<p:outputPanel
+						rendered="#{solalteracaofuncBacking.cargo or solalteracaofuncBacking.padrao or solalteracaofuncBacking.nivel}">
+						<xcp:panelForm>
+
+							<ui:include
+								src="SolalteracaofuncForm/SolalteracaofuncHeader.xhtml">
+								<ui:param
+									name="id"
+									value="carpadnivel" />
+							</ui:include>
+
+							<xcp:lov
+								id="lovCargo"
+								value="#{solalteracaofuncBacking.helperVO.cargosFk}"
+								label="#{bundle.lbl_cargo}"
+								required="true"
+								query="cargos"
+								rendered="#{solalteracaofuncBacking.cargo}"
+								update="lovPadrao lovNivel"
+								selectionListener="#{solalteracaofuncBacking.selectCargo}"
+								params="#{transferenciasBacking.parEspParaPadrao}"
+								size="5" />
+
+							<xcp:lov
+								id="lovPadrao"
+								value="#{solalteracaofuncBacking.helperVO.cargosPadroesFk}"
+								label="#{bundle.lbl_padrao}"
+								required="true"
+								query="cargos_padroes"
+								rendered="#{solalteracaofuncBacking.cargo or solalteracaofuncBacking.padrao}"
+								params="#{solalteracaofuncBacking.paramsPadrao}"
+								size="5" />
+
+							<xcp:lov
+								id="lovNivel"
+								value="#{solalteracaofuncBacking.helperVO.padroesNiveisFk}"
+								label="#{bundle.lbl_nivel}"
+								required="true"
+								query="padroesniveis"
+								params="#{solalteracaofuncBacking.paramsNivel}"
+								size="5" />
+
+							<ui:include src="SolalteracaofuncForm/SolalteracaofuncObs.xhtml">
+								<ui:param
+									name="id"
+									value="carpadnivel" />
+							</ui:include>
+
+						</xcp:panelForm>
+					</p:outputPanel>
+
+					<p:outputPanel rendered="#{solalteracaofuncBacking.supervisor}">
+						<xcp:panelForm>
+							<ui:include
+								src="SolalteracaofuncForm/SolalteracaofuncHeader.xhtml">
+								<ui:param
+									name="id"
+									value="sup" />
+							</ui:include>
+
+							<xcp:lov
+								id="lovMatSupervisor"
+								value="#{solalteracaofuncBacking.entity.matSupervisorFk}"
+								label="#{bundle.lbl_matSupervisor}"
+								required="true"
+								query="funcionariosLov"
+								size="2" />
+
+							<ui:include src="SolalteracaofuncForm/SolalteracaofuncObs.xhtml">
+								<ui:param
+									name="id"
+									value="sup" />
+							</ui:include>
+						</xcp:panelForm>
+					</p:outputPanel>
+
+					<p:outputPanel rendered="#{solalteracaofuncBacking.horario}">
+						<xcp:panelForm>
+							<ui:include
+								src="SolalteracaofuncForm/SolalteracaofuncHeader.xhtml">
+								<ui:param
+									name="id"
+									value="hor" />
+							</ui:include>
+
+							<xcp:lov
+								id="lovHorario"
+								value="#{solalteracaofuncBacking.entity.horarioFk}"
+								label="#{bundle.lbl_horario}"
+								query="horarios"
+								required="true"
+								size="4" />
+
+							<ui:include src="SolalteracaofuncForm/SolalteracaofuncObs.xhtml">
+								<ui:param
+									name="id"
+									value="hor" />
+							</ui:include>
+						</xcp:panelForm>
+					</p:outputPanel>
+
+					<p:outputPanel rendered="#{solalteracaofuncBacking.funcao}">
+						<xcp:panelForm>
+							<ui:include
+								src="SolalteracaofuncForm/SolalteracaofuncHeader.xhtml">
+								<ui:param
+									name="id"
+									value="func" />
+							</ui:include>
+
+							<xcp:lov
+								id="lovFuncao"
+								value="#{solalteracaofuncBacking.entity.funcaoFk}"
+								label="#{bundle.lbl_funcao}"
+								query="funcoes"
+								required="true"
+								size="6" />
+
+							<ui:include src="SolalteracaofuncForm/SolalteracaofuncObs.xhtml">
+								<ui:param
+									name="id"
+									value="func" />
+							</ui:include>
+						</xcp:panelForm>
+					</p:outputPanel>
+
+					<p:outputPanel rendered="#{solalteracaofuncBacking.setor}">
+						<xcp:panelForm>
+							<ui:include
+								src="SolalteracaofuncForm/SolalteracaofuncHeader.xhtml">
+								<ui:param
+									name="id"
+									value="set" />
+							</ui:include>
+
+							<xcp:lov
+								id="lovSetor"
+								value="#{solalteracaofuncBacking.entity.setorFk}"
+								label="#{bundle.lbl_setor}"
+								query="setores"
+								required="true"
+								size="8"
+								update="lovParaFuncao" />
+
+							<xcp:lov
+								id="lovParaFuncao"
+								value="#{solalteracaofuncBacking.entity.funcaoFk}"
+								label="#{bundle.lbl_funcao}"
+								required="true"
+								query="funcoesnaogratif"
+								rendered="#{solalteracaofuncBacking.renderedFuncao}"
+								size="5" />
+
+							<ui:include src="SolalteracaofuncForm/SolalteracaofuncObs.xhtml">
+								<ui:param
+									name="id"
+									value="set" />
+							</ui:include>
+						</xcp:panelForm>
+					</p:outputPanel>
+
+					<p:outputPanel rendered="#{solalteracaofuncBacking.desligamento}">
+						<xcp:panelForm>
+							<ui:include
+								src="SolalteracaofuncForm/SolalteracaofuncHeader.xhtml">
+								<ui:param
+									name="id"
+									value="tipmov" />
+							</ui:include>
+
+							<xcp:lov
+								id="lovTipmov"
+								value="#{solalteracaofuncBacking.entity.tipmovFk}"
+								label="#{bundle.lbl_tipmov}"
+								query="tipomovtos_deslig"
+								required="true"
+								size="4" />
+
+							<ui:include src="SolalteracaofuncForm/SolalteracaofuncObs.xhtml">
+								<ui:param
+									name="id"
+									value="tipmov" />
+							</ui:include>
+						</xcp:panelForm>
+					</p:outputPanel>
+
+					<p:outputPanel rendered="#{solalteracaofuncBacking.atividade}">
+						<xcp:panelForm>
+							<ui:include
+								src="SolalteracaofuncForm/SolalteracaofuncHeader.xhtml">
+								<ui:param
+									name="id"
+									value="ativ" />
+							</ui:include>
+
+							<xcp:lov
+								id="lovTipodoc"
+								value="#{solalteracaofuncBacking.entity.tipodocFk}"
+								label="#{bundle.lbl_tipodoc}"
+								query="tipodocumento_pen"
+								required="true"
+								params="#{solalteracaofuncBacking.paramsTipoDoc}"
+								size="4" />
+
+							<ui:include src="SolalteracaofuncForm/SolalteracaofuncObs.xhtml">
+								<ui:param
+									name="id"
+									value="ativ" />
+							</ui:include>
+						</xcp:panelForm>
+					</p:outputPanel>
+
+				</xcp:panelDisable>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_aprovar"
+					icon="ui-icon-arrowthickstop-1-s"
+					value="#{bundle.btn_aprovar}"
+					disabled="#{solalteracaofuncBacking.entity.novo or solalteracaofuncBacking.entity.dtatend != null}"
+					update="@form"
+					action="#{solalteracaofuncBacking.actionAprovar}">
+					<p:confirm
+						header="#{bundle.tit_confirma_aprovacao}"
+						message="#{bundle.msg_confirma_aprovacao}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_reprovar"
+					icon="ui-icon-arrowthickstop-1-s"
+					value="#{bundle.btn_reprovar}"
+					disabled="#{solalteracaofuncBacking.entity.novo or solalteracaofuncBacking.entity.dtatend != null}"
+					update="@form"
+					action="#{solalteracaofuncBacking.actionReprovar}">
+					<p:confirm
+						header="#{bundle.tit_confirma_reprovacao}"
+						message="#{bundle.msg_confirma_reprovacao}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

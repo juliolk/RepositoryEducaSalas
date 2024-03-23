@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				id="brdPesq"
+				legend="#{bundle.tit_pesq_exec_acessos}">
+
+				<xcp:panelForm>
+					<xcp:dateTimeRange
+						id="dtaIniAcesso"
+						valueStart="#{usuariosLogadosBacking.helper.dtaIni}"
+						valueEnd="#{usuariosLogadosBacking.helper.dtaFim}"
+						label="#{bundle.lbl_data_acesso}" />
+
+					<xcp:dateTimeRange
+						id="dtaFimAcesso"
+						valueStart="#{usuariosLogadosBacking.helper.dtaIniSaida}"
+						valueEnd="#{usuariosLogadosBacking.helper.dtaFimSaida}"
+						label="#{bundle.lbl_data_saida}" />
+
+					<h:outputText value=" " />
+					<p:panelGrid columns="2">
+						<p:fieldset
+							id="brdSelecao"
+							legend="#{bundle.tit_sit_agendamento}">
+							<xcp:panelForm>
+								<xcp:check
+									id="txtSitAgendado"
+									label="#{bundle.lbl_SitAtivo}"
+									value="#{usuariosLogadosBacking.helper.situacaoAtivo}" />
+								<xcp:check
+									id="txtSitEncerrados"
+									label="#{bundle.lbl_SitFinalizados}"
+									value="#{usuariosLogadosBacking.helper.situacaoEncerrados}" />
+								<xcp:check
+									id="txtSitCancelados"
+									label="#{bundle.lbl_SitCancelados}"
+									value="#{usuariosLogadosBacking.helper.situacaoCancelada}" />
+							</xcp:panelForm>
+						</p:fieldset>
+						<p:fieldset
+							id="brdOperadores"
+							legend="#{bundle.tit_operadores_selecionados}">
+							<p:dataTable
+								id="tabOperadores"
+								editable="true"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								value="#{usuariosLogadosBacking.helper.listaOperadores}"
+								var="rowOperador">
+								
+								<p:ajax
+									event="rowEdit"
+									update=":form:upHints"
+									listener="#{usuariosLogadosBacking.onRowEditOperador}" />
+
+								<p:ajax
+									event="rowEditCancel"
+									update=":form:upHints" />
+
+								<xcp:column headerText="#{bundle.col_operador}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<xcp:outputSimple value="#{rowOperador.nome}" />
+										</f:facet>
+										<f:facet name="input">
+											<xcp:panelForm>
+												<xcp:lov
+													id="lovOperador"
+													value="#{rowOperador.operadorFk}"
+													label="#{bundle.lbl_operador}"
+													simple="true"
+													required="true"
+													row="#{rowOperador}"
+													query="operadoreslov"
+													size="15"
+													readonly="#{not rowOperador.novo}" />
+											</xcp:panelForm>
+										</f:facet>
+									</p:cellEditor>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									size="10">
+									<xcp:commandLink
+										icon="ui-icon-trash"
+										immediate="true"
+										id="btn_remove_operador"
+										update="tabOperadores"
+										rendered="#{rowOperador.operador!=null}"
+										action="#{usuariosLogadosBacking.actionRemoveOperador(rowOperador)}">
+										<h:graphicImage
+											title="#{bundle.hint_remover}"
+											value="/resources/img/remover.png"
+											style="margin-top:3px;" />
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink>
+								</xcp:column>
+								<p:column style="width:32px">
+									<p:rowEditor />
+								</p:column>
+							</p:dataTable>
+
+							<xcp:tableHints
+								id="upHints"
+								tableId="form:tabOperadores" />
+
+						</p:fieldset>
+					</p:panelGrid>
+				</xcp:panelForm>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							value="#{bundle.btn_pesquisar}"
+							update="tblLogs"
+							process="brdPesq"
+							action="#{usuariosLogadosBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:dataTable
+				id="tblLogs"
+				value="#{usuariosLogadosBacking.listaSessoes}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				var="row"
+				paginator="true"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}">
+
+				<xcp:column
+					headerText="#{bundle.col_sessao}"
+					value="#{row.sessao}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.sessao}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_dtaAcesso}"
+					value="#{row.inicio}"
+					type="Date"
+					size="14">
+					<xcp:outputSimpleTimestamp value="#{row.inicio}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_operador}"
+					value="#{row.operadorFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.operadorFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{usuariosLogadosBacking.itensTipo}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{usuariosLogadosBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_servidor}"
+					value="#{row.servidor}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.servidor}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numPorta}"
+					value="#{row.porta}"
+					type="Number"
+					size="5">
+					<xcp:outputSimple value="#{row.porta}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_ipAcesso}"
+					value="#{row.ipv4}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.ipv4}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_operadorCancel}"
+					value="#{row.operCancelFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.operCancelFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaTermino}"
+					value="#{row.termino}"
+					type="Date"
+					size="12">
+
+					<xcp:outputSimpleTimestamp
+						value="#{row.termino}"
+						rendered="#{row.termino!=null}" />
+
+					<xcp:commandLink
+						icon="ui-icon-trash"
+						immediate="true"
+						id="btn_cancela_sessao"
+						update="tblLogs"
+						rendered="#{row.termino==null}"
+						action="#{usuariosLogadosBacking.actionFinalizaSessao(row)}">
+						<h:graphicImage
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" />
+						<p:confirm
+							header="#{bundle.tit_confirma_cancelar}"
+							message="#{bundle.msg_confirma_cancelar}"
+							icon="ui-icon-alert" />
+					</xcp:commandLink>
+				</xcp:column>
+			</p:dataTable>
+
+			<p:remoteCommand
+				name="rcTabOperadores"
+				update="tabOperadores :form:upHints" />
+
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

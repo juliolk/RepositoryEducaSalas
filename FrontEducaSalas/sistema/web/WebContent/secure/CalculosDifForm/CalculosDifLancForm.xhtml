@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="CalculosDifLanc"
+		backing="#{calculosDifLancBacking}"
+		masterId="CalculosDif">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_datafim}"
+				value="#{row.datafim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.datafim}" />
+			</xcp:column>
+			
+			<xcp:column
+				headerText="#{bundle.col_qtd}"
+				value="#{row.qtd}"
+				type="Number"
+				size="19">
+				<xcp:outputSimpleNumber
+					value="#{row.qtd}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.valor}"
+				type="Number"
+				size="19">
+				<xcp:outputSimpleNumber
+					value="#{row.valor}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+
+				<xcp:date
+					id="txtData_CalculosDifLanc"
+					required="true"
+					value="#{calculosDifLancBacking.entity.data}"
+					label="#{bundle.lbl_data}">
+						
+				</xcp:date>		
+					
+				<xcp:date
+					id="txtDataFim_CalculosDifLanc"
+					value="#{calculosDifLancBacking.entity.datafim}"
+					required="true"
+					label="#{bundle.lbl_dtFim}">
+					
+				</xcp:date>			
+
+				<xcp:number
+					id="txtValor_CalculosDifLanc"
+					label="#{bundle.lbl_valor}"
+					required="true"
+					size="19"
+					value="#{calculosDifLancBacking.entity.valor}"
+					precision="16"
+					scale="2" />
+
+				<xcp:number
+					id="txtQtd_CalculosDifLanc"
+					label="#{bundle.lbl_qtd}"
+					required="true"
+					size="19"
+					value="#{calculosDifLancBacking.entity.qtd}"
+					precision="16"
+					scale="2" />
+							
+				<xcp:number
+					id="txtValorinfo_CalculosDifLanc"
+					label="#{bundle.lbl_valorinfo}"
+					size="19"
+					value="#{calculosDifLancBacking.entity.valorinfo}"
+					precision="16"
+					scale="2" />
+					
+				<p:outputLabel></p:outputLabel>
+				<p:tooltip for="txtValorinfo_CalculosDifLanc" trackMouse="true"
+					value="O campo Valor Info é meramente informativo e pode ser usado no caso da necessidade de registrar o valor efetivo da época, sem as devidas correções monetárias, sendo diferente do valor acima lançado" />
+					
+				
+				<xcp:memo
+					id="txtObsInfo"
+					label="#{bundle.lbl_obs}"
+					value="#{calculosDifLancBacking.entity.obs}"
+					size="4000" />
+					
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

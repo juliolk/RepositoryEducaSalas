@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:outputText
+		value="#{tipodocCoresBacking.getCores(9)}"
+		escape="false" />
+
+	<p:dataTable
+		id="tabListaHitoricos"
+		var="historicos"
+		paginator="true"
+		selectionMode="single"
+		paginatorPosition="bottom"
+		rows="14"
+		rowKey="#{historicos.PK}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		value="#{funcionariosBacking.listaHistoricos}"
+		styleClass="tabelaHitoricos"
+		selection="#{funcionariosBacking.historicosSel}"
+		rowStyleClass="#{tipodocCoresBacking.getStyelclass(historicos.tipodoc)}"
+		widgetVar="wTabListaHitoricos">
+
+		<p:ajax
+			event="rowSelect"
+			listener="#{funcionariosBacking.actionEditHistorico}" />
+
+		<p:column width="8">
+			<p:rowToggler rendered="#{historicos.detalhes}" />
+		</p:column>
+
+		<xcp:column
+			headerText="#{bundle.col_obs}"
+			type="String"
+			value="#{historicos.obsLivre}">
+			<p:outputPanel styleClass="funcionario-col-memo">#{historicos.obsLivre}</p:outputPanel>
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataIni}"
+			type="Date"
+			width="60"
+			value="#{historicos.data}">
+			<xcp:outputSimpleDate value="#{historicos.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataFim}"
+			type="Date"
+			width="60"
+			value="#{historicos.dataFim}">
+			<xcp:outputSimpleDate value="#{historicos.dataFim}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_tipodocumento_tipo}"
+			type="String"
+			width="130"
+			value="#{historicos.tipodocFk.descricao}">
+			<xcp:outputSimple value="#{historicos.tipodocFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_portaria}"
+			type="Number"
+			width="100"
+			value="#{historicos.registroFk.nrdoc}"
+			rendered="#{funcionariosBacking.paramHist == 2}"
+			>
+			<xcp:outputSimpleNumber
+				value="#{historicos.registroFk.nrdoc}"
+				scale="0" />
+		</xcp:column>
+		
+		<xcp:column
+			headerText="#{bundle.col_processo}"
+			type="Number"
+			width="100"
+			value="#{historicos.processo}"
+			rendered="#{funcionariosBacking.paramHist == 1}"
+			>
+			<xcp:outputSimpleNumber
+				value="#{historicos.processo}"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_descricao}"
+			type="String"
+			width="130"
+			value="#{historicos.registroFk.descricao}">
+			<xcp:outputSimple value="#{historicos.registroFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_motivo}"
+			type="String"
+			width="80"
+			rendered="#{funcionariosBacking.exibirMotivoTabelaHist}"
+			value="#{historicos.motivoFk.desMotivo}">
+			<xcp:outputSimple value="#{historicos.motivoFk.desMotivo}" />
+		</xcp:column>
+		
+		<xcp:column
+			headerText="#{bundle.col_deferimento}"
+			value="#{row.deferimento}"
+			type="String"
+			size="10"
+			itens="#{funcionariosBacking.itensDeferimento}"
+			rendered="#{funcionariosBacking.renderedDeferimento}">
+			<xcp:outputSimple
+				value="#{historicos.deferimento}"
+				itens="#{funcionariosBacking.itensDeferimento}" />
+		</xcp:column>
+
+		<xcp:column width="25">
+			<h:panelGroup layout="block">
+				<xcp:commandButton
+					id="btn_removerSel_hist"
+					immediate="true"
+					disabled="#{funcionariosBacking.disabledExcluir}"
+					action="#{funcionariosBacking.actionRemoverHistorico(historicos)}"
+					process="@this"
+					update="tabListaHitoricos"
+					icon="ui-icon-trash">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+			</h:panelGroup>
+		</xcp:column>
+
+		<p:rowExpansion>
+			<p:dataTable
+				id="tabDoc"
+				var="rowDoc"
+				value="#{historicos.listaHistoricosDoc}"
+				rowKey="#{rowDoc.PK}"
+				paginator="true"
+				selectionMode="single"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				style="margin-bottom:0;"
+				selection="#{funcionariosBacking.historicosDocSel}"
+				rowIndexVar="idx">
+
+				<p:ajax
+					event="rowSelect"
+					update=":dlgHisDoc"
+					oncomplete="PF('dlgHisDoc_w').show();" />
+
+				<ui:include src="../DocManual/DocUnificadoDetalhesDoc.xhtml">
+					<ui:param
+						name="rowDoc"
+						value="#{rowDoc}" />
+					<ui:param
+						name="rowPrincipal"
+						value="#{historicos}" />
+					<ui:param
+						name="actionExclusao"
+						value="#{funcionariosBacking.modelHist}" />
+				</ui:include>
+
+			</p:dataTable>
+		</p:rowExpansion>
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adic_hist"
+		immediate="true"
+		action="#{funcionariosBacking.actionOpenHistorico}"
+		value="#{bundle.btn_adicionar}"
+		icon="ui-icon-plusthick"
+		disabled="#{funcionariosBacking.disabledNovo}" />
+
+</ui:composition>

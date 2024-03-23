@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.tit_solictacao_adicional}"
+		modal="true"
+		id="dlgSolicitacao"
+		widgetVar="dlgSolicitacao_w"
+		closeOnEscape="true"
+		styleClass="full-page-dialog rightside-dialog"
+		dynamic="true"
+		resizable="false"
+		draggable="false"
+		closable="false"
+		onShow="$(this).eachHasValue();">
+		<xcp:form id="frmSolicitacao">
+
+			<xcp:panelForm
+				id="pnl_form_dados_solicitacao"
+				floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+				<xcp:combo
+					id="cboVariavel"
+					value="#{solParfuncPortalBacking.entity.grupo}"
+					label="#{bundle.lbl_adicional_solicitado}"
+					readonly="#{not solParfuncPortalBacking.entity.novo}"
+					required="true"
+					noFloat="true"
+					itens="#{solParfuncPortalBacking.adicionaisDisponiveis}">
+					<p:ajax
+						event="change"
+						listener="#{solParfuncPortalBacking.actionSelecionarVariavel()}"
+						oncomplete="$(this).eachHasValue()"
+						update="pnl_form_dados_solicitacao" />
+				</xcp:combo>
+
+				<xcp:date
+					id="dtaPeriodoIni"
+					label="#{bundle.lbl_dtaini}"
+					noFloat="true"
+					value="#{solParfuncPortalBacking.entity.dtinicioper}"
+					rendered="#{solParfuncPortalBacking.entity.variavelFk.indPerportal == 1}"
+					required="true" />
+
+				<xcp:date
+					id="dtaPeriodoFim"
+					label="#{bundle.lbl_dttermino}"
+					noFloat="true"
+					value="#{solParfuncPortalBacking.entity.dtfimper}"
+					rendered="#{solParfuncPortalBacking.entity.variavelFk.indPerportal == 1}"
+					required="true" />
+
+				<xcp:text
+					id="txtConteudo2"
+					label="#{solParfuncPortalBacking.entity.variavelFk.campo1}"
+					value="#{solParfuncPortalBacking.entity.conteudo2}"
+					size="10"
+					maxlength="15"
+					rendered="#{solParfuncPortalBacking.renderedInput1}"
+					noFloat="true"
+					readonly="#{solParfuncPortalBacking.readOnlyFields}" />
+
+				<xcp:combo
+					id="cboConteudo2"
+					value="#{solParfuncPortalBacking.vlrCombo1}"
+					rendered="#{solParfuncPortalBacking.renderedCombo1}"
+					noFloat="true"
+					label="#{solParfuncPortalBacking.entity.variavelFk.campo1}"
+					itens="#{solParfuncPortalBacking.listCombo1}"
+					readonly="#{solParfuncPortalBacking.readOnlyFields}" />
+
+				<xcp:number
+					id="txtConteudo3"
+					label="#{solParfuncPortalBacking.entity.variavelFk.campo2}"
+					size="10"
+					rendered="#{solParfuncPortalBacking.renderedInput2}"
+					noFloat="true"
+					value="#{solParfuncPortalBacking.entity.conteudo3}"
+					precision="15"
+					maxlength="15"
+					scale="4"
+					readonly="#{solParfuncPortalBacking.readOnlyFields}" />
+
+				<xcp:combo
+					id="cboConteudo3"
+					value="#{solParfuncPortalBacking.vlrCombo2}"
+					rendered="#{solParfuncPortalBacking.renderedCombo2}"
+					noFloat="true"
+					label="#{solParfuncPortalBacking.entity.variavelFk.campo2}"
+					itens="#{solParfuncPortalBacking.listCombo2}"
+					readonly="#{solParfuncPortalBacking.readOnlyFields}" />
+
+				<xcp:memo
+					id="txtTextoSolicitacao"
+					label="#{bundle.lbl_justificativa}"
+					noFloat="true"
+					value="#{solParfuncPortalBacking.entity.textoSolicitacao}"
+					size="3000" />
+
+			</xcp:panelForm>
+
+			<p:fieldset
+				legend="#{bundle.title_anexos}"
+				id="pnlanexos">
+				<table
+					class="table material table-inspector table-medium table-noborder table-striped">
+					<thead>
+						<tr>
+							<th></th>
+							<th>#{bundle.col_nome}</th>
+							<th>#{bundle.col_acoes}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:repeat
+							value="#{solParfuncPortalBacking.anexos}"
+							var="anexo">
+							<tr>
+								<td
+									data-title="#{bundle.lbl_tipo_solicitacao}"
+									class="table-icon-column"><span> <i
+										class="fa fa-fw fa-plus-circle"></i>
+								</span></td>
+								<td data-title="#{bundle.col_nome}"><xcp:outputSimple
+										id="outNome"
+										value="#{anexo.nomeArquivo}" /></td>
+								<td
+									data-title="#{bundle.col_acoes}"
+									class="table-actions-column"><xcp:commandLink
+										immediate="true"
+										id="btn_remove_lin"
+										rendered="#{solParfuncPortalBacking.entity.situacao == 1}"
+										update=":frmSolicitacao:pnlanexos"
+										title="#{bundle.lbl_remover}"
+										action="#{solParfuncPortalBacking.actionRemoverAnexo(anexo)}">
+										<i class="fa fa-fw fa-trash"></i>
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink></td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+			</p:fieldset>
+
+			<center>
+				<xcp:commandButton
+					id="btn_novo_anexo"
+					process="@this"
+					update=":frmAnexo"
+					rendered="#{solParfuncPortalBacking.entity.situacao == 1}"
+					value="#{bundle.btn_novo} #{bundle.lbl_anexo}"
+					oncomplete="PF('w_anexo').show()" />
+			</center>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_ok"
+						action="#{solParfuncPortalBacking.actionGravar()}"
+						value="#{bundle.btn_gravar}"
+						oncomplete="$(this).eachHasValue();"
+						update=":#{p:component('pnl_dados_solicitacao')}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						immediate="true"
+						value="#{bundle.btn_cancelar}"
+						oncomplete="$(this).eachHasValue()"
+						onclick="PF('dlgSolicitacao_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

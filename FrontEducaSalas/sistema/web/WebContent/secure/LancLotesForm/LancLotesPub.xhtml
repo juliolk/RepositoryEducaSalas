@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="pnlPub">
+
+		<xcp:panelForm>
+
+			<xcp:date
+				id="txtDataPub"
+				value="#{lancLotesBacking.helper.publicacoes.data}"
+				label="#{bundle.lbl_data}" />
+
+			<xcp:date
+				id="txtDataFimPub"
+				value="#{lancLotesBacking.helper.publicacoes.dataFim}"
+				label="#{bundle.lbl_dataFim}" />
+
+			<xcp:lov
+				id="lovMotivoPub"
+				value="#{lancLotesBacking.helper.publicacoes.motivoFk}"
+				label="#{bundle.lbl_motivo}"
+				query="motivo_pub_rest"
+				params="#{lancLotesBacking.paramsMotPub}"
+				size="10" />
+
+			<xcp:lov
+				id="lovTipodocPub"
+				value="#{lancLotesBacking.helper.publicacoes.tipodocFk}"
+				label="#{bundle.lbl_tipodoc}"
+				selectionListener="#{lancLotesBacking.selectTipodocumentoPub}"
+				update="lovDocumentoPub,lovProcessoPub,lovProcessoPub_l,txtProcjudicPub,txtProcjudicPub_l,txtDtingcarreiraPub,txtDtingcarreiraPub_l,txtDtingcargoPub,txtDtingcargoPub_l,lovComarcaprocPub,lovComarcaprocPub_l"
+				query="tipodoc_provapo"
+				params="#{lancLotesBacking.paramsTipoDoc}"
+				size="10" />
+
+			<xcp:lov
+				id="lovDocumentoPub"
+				value="#{lancLotesBacking.helper.publicacoes.registroFk}"
+				params="#{lancLotesBacking.paramsTipodocumentoPub}"
+				label="#{bundle.lbl_documento}"
+				query="documentosman"
+				size="10"
+				update="lovProcessoPub,lovProcessoPub_l"
+				selectionListener="#{lancLotesBacking.selectDocumentoPub}" />
+
+			<xcp:lov
+				id="lovProcessoPub"
+				value="#{lancLotesBacking.helper.publicacoes.processoFk}"
+				label="#{bundle.lbl_processo}"
+				query="processos"
+				size="10" />
+
+			<xcp:text
+				id="txtProcjudicPub"
+				label="#{bundle.lbl_procjudic}"
+				value="#{lancLotesBacking.helper.publicacoes.procjudic}"
+				size="25"
+				rendered="#{lancLotesBacking.helper.publicacoes.tipodocFk.indprocjudicial == 1}" />
+
+			<xcp:date
+				id="txtDatadocPubPub"
+				value="#{lancLotesBacking.helper.publicacoes.datadoc}"
+				label="#{bundle.lbl_datadoc}" />
+
+			<xcp:lov
+				id="lovCargoPub"
+				value="#{lancLotesBacking.helper.publicacoes.cargoFk}"
+				label="#{bundle.lbl_cargo}"
+				query="cargos"
+				size="10" />
+
+			<xcp:lov
+				id="lovAvaliacaoPub"
+				value="#{lancLotesBacking.helper.publicacoes.avaliacaoFk}"
+				label="#{bundle.lbl_areaCargo}"
+				query="avaliacoes"
+				update="lovConhecimentoPub,lovConhecimentoPub_l"
+				rendered="#{lancLotesBacking.tribunal}"
+				selectionListener="#{lancLotesBacking.selectPubAvaliacao}"
+				size="10"
+				params="#{lancLotesBacking.avalPubMap}" />
+
+			<xcp:lov
+				id="lovConhecimentoPub"
+				value="#{lancLotesBacking.helper.publicacoes.conhecimentoFk}"
+				label="#{bundle.lbl_especialidade}"
+				query="conhecimentos"
+				rendered="#{lancLotesBacking.tribunal}"
+				params="#{lancLotesBacking.paramsPubAvaliacao}"
+				size="10" />
+
+			<xcp:date
+				id="txtDtingcarreiraPub"
+				value="#{lancLotesBacking.helper.publicacoes.dtingcarreira}"
+				label="#{bundle.lbl_dtingcarreira}"
+				required="true"
+				rendered="#{lancLotesBacking.renderedFieldsApos}" />
+
+			<xcp:date
+				id="txtDtingcargoPub"
+				value="#{lancLotesBacking.helper.publicacoes.dtingcargo}"
+				label="#{bundle.lbl_dtingcargo}"
+				required="true"
+				rendered="#{lancLotesBacking.renderedFieldsApos}" />
+
+			<xcp:lov
+				id="lovComarcaprocPub"
+				value="#{lancLotesBacking.helper.publicacoes.comarcaprocFk}"
+				label="#{bundle.lbl_comarcaproc}"
+				query="orgaos"
+				size="8"
+				rendered="#{lancLotesBacking.renderedFieldsApos}" />
+
+			<xcp:memo
+				id="txtObsPub"
+				label="#{bundle.lbl_txtPort}"
+				value="#{lancLotesBacking.helper.publicacoes.obs}"
+				cols="95"
+				size="4000" />
+
+			<xcp:memo
+				id="txtObsLivrePub"
+				label="#{bundle.lbl_obsLivre}"
+				required="true"
+				value="#{lancLotesBacking.helper.publicacoes.obsLivre}"
+				cols="95"
+				size="4000" />
+
+		</xcp:panelForm>
+	</p:outputPanel>
+
+</ui:composition>

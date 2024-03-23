@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<style>
+fieldset.fld_data {
+	background-color: transparent;
+	color: white;
+	margin-bottom: 4px;
+}
+
+.fld_data legend {
+	color: white !important;
+}
+</style>
+	<div style="width: 1000px;">
+		<p:dataTable
+			id="tabTurmas"
+			editable="true"
+			rowIndexVar="idx"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			value="#{treinamentoBacking.listaTurmas}"
+			var="row"
+			style="width:1050px"
+			expandedRow="#{treinamentoBacking.isToggled(row.turma)}">
+
+			<p:column style="width:16px">
+				<p:rowToggler rendered="#{not row.novo}" />
+			</p:column>
+
+			<p:ajax
+				event="rowEdit"
+				update=":form:tabTreinamento:upHintsTurmas"
+				listener="#{treinamentoBacking.onRowEditTurma}" />
+
+			<p:ajax
+				event="rowEditCancel"
+				update=":form:tabTreinamento:upHintsTurmas"
+				listener="#{treinamentoBacking.onRowCancelTurma}" />
+
+			<p:ajax
+				event="rowToggle"
+				listener="#{treinamentoBacking.onRowToggleTurma}" />
+
+			<p:rowExpansion>
+				<p:tabView
+					id="fixo"
+					style="margin-top:10px;margin-bottom:10px">
+					<p:tab title="#{bundle.tit_datas}">
+						<p:dataTable
+							id="tabDatasTreinamento"
+							editable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							value="#{treinamentoBacking.listaDatasTreinamento}"
+							var="rowData">
+
+							<p:ajax
+								event="rowEdit"
+								listener="#{treinamentoBacking.onRowEditData}" />
+
+
+							<p:column headerText="#{bundle.col_datainicio}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<xcp:outputSimpleDate value="#{rowData.datainicio}" />
+									</f:facet>
+									<f:facet name="input">
+										<xcp:panelForm>
+											<xcp:date
+												id="txtDatainicio"
+												simple="true"
+												required="true"
+												value="#{rowData.datainicio}"
+												label="#{bundle.lbl_datainicio}" />
+										</xcp:panelForm>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="#{bundle.col_datafinal}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<xcp:outputSimpleDate value="#{rowData.datafinal}" />
+									</f:facet>
+									<f:facet name="input">
+										<xcp:panelForm>
+											<xcp:date
+												id="txtDatafinal"
+												simple="true"
+												value="#{rowData.datafinal}"
+												label="#{bundle.lbl_datafinal}" />
+										</xcp:panelForm>
+
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="#{bundle.col_horainicial}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<xcp:outputSimpleTimeNumber
+											value="#{rowData.horainicial}"
+											precision="5"
+											scale="2" />
+									</f:facet>
+									<f:facet name="input">
+										<xcp:timeNumber
+											id="txtHorainicial"
+											simple="true"
+											label="#{bundle.lbl_horainicial}"
+											required="true"
+											validate="true"
+											size="8"
+											value="#{rowData.horainicial}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="#{bundle.col_horafinal}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<xcp:outputSimpleTimeNumber
+											value="#{rowData.horafinal}"
+											precision="5"
+											scale="2" />
+									</f:facet>
+									<f:facet name="input">
+										<xcp:timeNumber
+											id="txtHorafinal"
+											label="#{bundle.lbl_horafinal}"
+											simple="true"
+											validate="true"
+											size="8"
+											value="#{rowData.horafinal}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column style="width:32px">
+								<xcp:commandLink
+									icon="ui-icon-trash"
+									update="tabDatasTreinamento"
+									id="btn_remover_data"
+									immediate="true"
+									rendered="#{!rowData.novo and row.dthcancelamento == null}"
+									action="#{treinamentoBacking.actionRemoveData(rowData)}">
+									<h:graphicImage
+										title="#{bundle.hint_remover}"
+										value="/resources/img/remover.png"
+										style="margin-top:3px;" />
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+
+								</xcp:commandLink>
+							</p:column>
+
+							<p:column style="width:32px">
+								<p:rowEditor rendered="#{row.dthcancelamento == null}" />
+							</p:column>
+						</p:dataTable>
+
+					</p:tab>
+					<p:tab title="#{bundle.tit_intrutores}">
+
+						<p:dataTable
+							id="tabInstrutores"
+							editable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							value="#{treinamentoBacking.listaInstrutores}"
+							var="rowData"
+							rowIndexVar="idx">
+
+							<p:ajax
+								event="rowEdit"
+								listener="#{treinamentoBacking.onRowEditInstrutor}" />
+
+							<p:ajax
+								event="rowEditCancel"
+								listener="#{treinamentoBacking.onRowCancelInstrutor}" />
+
+							<p:column
+								headerText="#{bundle.col_tipo}"
+								style="width:200px">
+								<p:cellEditor>
+									<f:facet name="output">
+										<xcp:outputSimple
+											value="#{treinamentoBacking.getDesTipInstrutor(rowData)}" />
+									</f:facet>
+									<f:facet name="input">
+										<xcp:combo
+											id="cboTipPessoa"
+											value="#{rowData.tipInstrutor}"
+											label="#{bundle.lbl_tipoInstrut}"
+											required="true"
+											simple="true"
+											readonly="#{not rowData.novo}"
+											itens="#{treinamentoBacking.itensTipInstrutor}">
+											<p:ajax
+												event="change"
+												listener="#{treinamentoBacking.actionChangeInstrutor(idx)}"
+												update="lovFunc,lovPessoa" />
+										</xcp:combo>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="#{bundle.col_instrutor}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<xcp:outputSimple
+											value="#{treinamentoBacking.getDesInstrutor(rowData)}" />
+									</f:facet>
+									<f:facet name="input">
+
+										<xcp:lov
+											id="lovFunc"
+											rendered="#{rowData.tipInstrutor == 1}"
+											value="#{rowData.matriculaFk}"
+											simple="true"
+											query="funcionariosLov"
+											readonly="#{not rowData.novo}"
+											required="true"
+											label="#{bundle.lbl_matricula}" />
+
+										<xcp:lov
+											id="lovPessoa"
+											rendered="#{rowData.tipInstrutor == 2}"
+											value="#{rowData.pessoaFk}"
+											label="#{bundle.lbl_pessoa}"
+											required="true"
+											readonly="#{not rowData.novo}"
+											simple="true"
+											query="autonomos"
+											size="10" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column style="width:32px">
+								<xcp:commandLink
+									icon="ui-icon-trash"
+									update="tabInstrutores"
+									id="btn_remover_inst"
+									immediate="true"
+									rendered="#{!rowData.novo and row.dthcancelamento == null}"
+									action="#{treinamentoBacking.actionRemoveInstrutor(rowData)}">
+									<h:graphicImage
+										title="#{bundle.hint_remover}"
+										value="/resources/img/remover.png"
+										style="margin-top:3px;" />
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+
+								</xcp:commandLink>
+							</p:column>
+
+							<p:column style="width:32px">
+								<p:rowEditor rendered="#{row.dthcancelamento == null}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:tab>
+					<p:tab title="#{bundle.tit_responsaveis}">
+
+						<p:dataTable
+							id="tabResponsaveis"
+							editable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							value="#{treinamentoBacking.listaResponsaveis}"
+							var="rowData"
+							rowIndexVar="idx">
+
+							<p:ajax
+								event="rowEdit"
+								listener="#{treinamentoBacking.onRowEditResponsavel}" />
+
+							<p:ajax
+								event="rowEditCancel"
+								listener="#{treinamentoBacking.onRowCancelResponsavel}" />
+
+							<p:column headerText="#{bundle.col_responsavel}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<xcp:outputSimple value="#{rowData.matriculaFk.nome}" />
+									</f:facet>
+									<f:facet name="input">
+										<xcp:lov
+											id="lovFunc"
+											value="#{rowData.matriculaFk}"
+											simple="true"
+											query="funcionariosLov"
+											readonly="#{not rowData.novo}"
+											required="true"
+											label="#{bundle.lbl_matricula}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column style="width:32px">
+								<xcp:commandLink
+									icon="ui-icon-trash"
+									update="tabResponsaveis"
+									id="btn_remover_resp"
+									immediate="true"
+									rendered="#{!rowData.novo and row.dthcancelamento == null}"
+									action="#{treinamentoBacking.actionRemoveResponsavel(rowData)}">
+									<h:graphicImage
+										title="#{bundle.hint_remover}"
+										value="/resources/img/remover.png"
+										style="margin-top:3px;" />
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+
+								</xcp:commandLink>
+							</p:column>
+
+							<p:column style="width:32px">
+								<p:rowEditor rendered="#{row.dthcancelamento == null}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:tab>
+				</p:tabView>
+
+			</p:rowExpansion>
+
+			<p:column headerText="#{bundle.col_descricao}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</f:facet>
+					<f:facet name="input">
+						<xcp:panelForm>
+							<xcp:memo
+								id="txtDatainicio"
+								simple="true"
+								required="true"
+								value="#{row.descricao}"
+								label="#{bundle.lbl_descricao}"
+								style="width:350px;height:30px;"
+								size="100" />
+						</xcp:panelForm>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_qtdvagastotal}"
+				width="10%">
+				<p:cellEditor>
+					<f:facet name="output">
+						<xcp:outputSimpleNumber
+							value="#{row.qtdvagas}"
+							precision="5"
+							scale="0" />
+					</f:facet>
+					<f:facet name="input">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtQtdVagas"
+								simple="true"
+								size="5"
+								precision="5"
+								scale="0"
+								value="#{row.qtdvagas}"
+								label="#{bundle.lbl_qtdvagas}" />
+						</xcp:panelForm>
+
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				headerText="#{bundle.col_qtdvagasportal}"
+				width="10%">
+				<p:cellEditor>
+					<f:facet name="output">
+						<xcp:outputSimpleNumber
+							value="#{row.nrovagasPortal}"
+							precision="5"
+							scale="0" />
+					</f:facet>
+					<f:facet name="input">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtNrovagasPortal"
+								label="#{bundle.lbl_nrovagasPortal}"
+								value="#{row.nrovagasPortal}"
+								size="6"
+								simple="true"
+								precision="6"
+								scale="0"
+								maxValue="999999" />
+						</xcp:panelForm>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="#{bundle.col_dtapesquisa}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:panelGrid
+							columns="1"
+							style="border: transparent;">
+							<xcp:outputSimple
+								value="#{treinamentoBacking.formatLabelPesq(row)}"
+								rendered="#{not empty treinamentoBacking.formatLabelPesq(row)}" />
+							<xcp:outputSimple
+								value="#{treinamentoBacking.formatLabelAplic(row)}"
+								rendered="#{not empty treinamentoBacking.formatLabelAplic(row)}" />
+						</h:panelGrid>
+					</f:facet>
+					<f:facet name="input">
+						<p:fieldset
+							styleClass="fld_data"
+							legend="#{bundle.tit_pesquisa}">
+							<h:panelGroup layout="block">
+								<p:outputLabel
+									value="#{bundle.lbl_de}"
+									style="padding-right: 5px" />
+
+								<p:calendar
+									pattern="dd/MM/yyyy"
+									label="#{bundle.lbl_de}"
+									size="8"
+									showOn="both"
+									onchange="Format.date(this)"
+									value="#{row.dtinipesq}" />
+
+								<p:outputLabel
+									value="#{bundle.ate}"
+									style="padding-right: 5px" />
+
+								<p:calendar
+									pattern="dd/MM/yyyy"
+									label="#{bundle.lbl_ate}"
+									size="8"
+									showOn="both"
+									onchange="Format.date(this)"
+									value="#{row.dtfimpesq}" />
+							</h:panelGroup>
+						</p:fieldset>
+						<p:fieldset
+							styleClass="fld_data"
+							legend="#{bundle.tit_aplicabilidade}">
+							<h:panelGroup layout="block">
+								<p:outputLabel
+									value="#{bundle.lbl_de}"
+									style="padding-right: 5px" />
+
+								<p:calendar
+									pattern="dd/MM/yyyy"
+									label="#{bundle.lbl_de}"
+									size="8"
+									showOn="both"
+									onchange="Format.date(this)"
+									value="#{row.dtiniaplic}" />
+
+								<p:outputLabel
+									value="#{bundle.ate}"
+									style="padding-right: 5px" />
+
+								<p:calendar
+									pattern="dd/MM/yyyy"
+									label="#{bundle.lbl_ate}"
+									size="8"
+									showOn="both"
+									onchange="Format.date(this)"
+									value="#{row.dtfimaplic}" />
+							</h:panelGroup>
+						</p:fieldset>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:32px;">
+				<xcp:commandLink
+					id="btn_canc_turma"
+					immediate="true"
+					update="tabTurmas :form:tabTreinamento:upHintsTurmas"
+					rendered="#{!row.novo and row.dthcancelamento == null}"
+					action="#{treinamentoBacking.actionCancelaTurma(row)}">
+					<h:graphicImage
+						title="#{bundle.hint_cancelarTurma}"
+						value="/resources/img/cancelar_doc.png"
+						style="margin-top:3px;" />
+				</xcp:commandLink>
+
+				<xcp:commandLink
+					id="btn_info"
+					immediate="true"
+					rendered="#{row.dthcancelamento != null}"
+					action="#{treinamentoBacking.actionShowInfo(row)}">
+					<h:graphicImage
+						title="#{bundle.hint_infoCanc}"
+						value="/resources/img/procurar.png"
+						style="margin-top:3px;" />
+				</xcp:commandLink>
+			</p:column>
+
+			<p:column style="width:32px">
+				<xcp:commandLink
+					update="tabTurmas :form:tabTreinamento:upHintsTurmas"
+					id="btn_remover"
+					immediate="true"
+					rendered="#{!row.novo}"
+					action="#{treinamentoBacking.actionRemoveTurma(row)}">
+					<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" />
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandLink>
+			</p:column>
+
+			<p:column style="width:32px">
+				<p:rowEditor rendered="#{row.dthcancelamento == null}" />
+			</p:column>
+		</p:dataTable>
+
+		<xcp:tableHints
+			id="upHintsTurmas"
+			tableId="form:tabTreinamento:tabTurmas" />
+
+		<!-- Utilizado para forcar a atualizacao ja que o update do listener nao conseguia -->
+		<p:remoteCommand
+			name="rcTurmas"
+			ignoreAutoUpdate="true"
+			update="tabTurmas upHintsTurmas" />
+
+	</div>
+</ui:composition>

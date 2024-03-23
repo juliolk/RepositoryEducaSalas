@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		modal="true"
+		id="dlgAcidentestrabExa"
+		header="#{bundle.title_procedimentos}"
+		widgetVar="dlgAcidentestrabExa_w">
+		<xcp:form id="frmAcidentestrabExa">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovExame_AcidentestrabExa"
+					value="#{acidentestrabExaBacking.entity.exameFk}"
+					label="#{bundle.lbl_exame}"
+					required="true"
+					query="examesmedicos"
+					size="8" />
+
+				<xcp:date
+					id="txtDataexa_AcidentestrabExa"
+					required="true"
+					value="#{acidentestrabExaBacking.entity.dataexa}"
+					label="#{bundle.lbl_data}" />
+
+				<xcp:lov
+					id="lovMedico_AcidentestrabExa"
+					value="#{acidentestrabExaBacking.entity.medicoFk}"
+					label="#{bundle.lbl_convenio}"
+					required="true"
+					query="lov_medicos"
+					size="8" />
+
+				<xcp:memo
+					id="txtObs_AcidentestrabExa"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{acidentestrabExaBacking.entity.obs}"
+					size="4000" />
+
+				<xcp:number
+					id="txtValor_AcidentestrabExa"
+					label="#{bundle.lbl_valor}"
+					required="true"
+					size="21"
+					value="#{acidentestrabExaBacking.entity.valor}"
+					precision="18"
+					scale="2" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						update="@form :form:tabGeral:table_AcidentestrabExa"
+						value="#{bundle.btn_gravar}"
+						action="#{acidentestrabExaBacking.actionGravar('AcidentestrabExa')}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgAcidentestrabExa_w').hide(); return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+
+</ui:composition>

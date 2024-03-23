@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 100px;
+}
+
+.contentWidth {
+	width: 130px;
+}
+</style>
+		<xcp:panelManut
+			id="Cipa"
+			backing="#{cipaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{row.edital}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.edital}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{row.orgaoFk.descricao}"
+					type="String"
+					size="25">
+					<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtpublicacao}"
+					value="#{row.dtpublicacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtpublicacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtmandato}"
+					value="#{row.dtmandato}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtmandato}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dteleicao}"
+					value="#{row.dteleicao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dteleicao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinscini}"
+					value="#{row.dtinscini}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinscini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinscfim}"
+					value="#{row.dtinscfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinscfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo_cipa}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{cipaBacking.itensTipo}"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{cipaBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_efetivos}"
+					value="#{row.efetivos}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.efetivos}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_suplentes}"
+					value="#{row.suplentes}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.suplentes}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+
+				<p:fieldset legend="#{bundle.tit_edital}">
+					<h:panelGrid
+						columns="8"
+						columnClasses="form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth">
+						<xcp:number
+							id="txtEdital"
+							label="#{bundle.lbl_edital}"
+							required="true"
+							value="#{cipaBacking.entity.edital}"
+							size="8"
+							precision="8"
+							scale="0"
+							maxValue="99999999"
+							readonly="#{not cipaBacking.entity.novo}" />
+
+						<xcp:date
+							id="txtDtpublicacao"
+							required="true"
+							value="#{cipaBacking.entity.dtpublicacao}"
+							label="#{bundle.lbl_dtpublicacao}" />
+
+						<xcp:date
+							id="txtDtmandato"
+							required="true"
+							value="#{cipaBacking.entity.dtmandato}"
+							label="#{bundle.lbl_dtmandato}">
+							<p:ajax
+								event="change"
+								update="txtDtfimmandato" />
+							<p:ajax
+								event="dateSelect"
+								update="txtDtfimmandato" />
+						</xcp:date>
+
+						<xcp:date
+							id="txtDtfimmandato"
+							value="#{cipaBacking.dtfimmandato}"
+							label="#{bundle.lbl_dtfimmandato}"
+							readonly="true" />
+
+						<xcp:combo
+							id="cboTipo"
+							value="#{cipaBacking.entity.tipo}"
+							label="#{bundle.lbl_tipo_cipa}"
+							required="true"
+							readonly="#{!cipaBacking.entity.novo}"
+							itens="#{cipaBacking.itensTipo}">
+							<p:ajax update="lovOrgao lovOrgao_l" />
+						</xcp:combo>
+
+					</h:panelGrid>
+					<h:panelGrid
+						columns="2"
+						columnClasses="form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth">
+						<xcp:lov
+							id="lovOrgao"
+							value="#{cipaBacking.entity.orgaoFk}"
+							label="#{bundle.lbl_orgao}"
+							query="orgaos"
+							rendered="#{cipaBacking.renderedSecretaria}"
+							size="10" />
+					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset legend="#{bundle.tit_per_inscricao}">
+					<h:panelGrid
+						columns="8"
+						columnClasses="form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth">
+						<xcp:date
+							id="txtDteleicao"
+							required="true"
+							value="#{cipaBacking.entity.dteleicao}"
+							label="#{bundle.lbl_dteleicao}" />
+
+						<xcp:date
+							id="txtDtinscini"
+							required="true"
+							value="#{cipaBacking.entity.dtinscini}"
+							label="#{bundle.lbl_dtinscini}" />
+
+						<xcp:date
+							id="txtDtinscfim"
+							required="true"
+							value="#{cipaBacking.entity.dtinscfim}"
+							label="#{bundle.lbl_dtinscfim}" />
+
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset legend="#{bundle.tit_vagas_cipa}">
+					<h:panelGrid
+						columns="4"
+						columnClasses="form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth,form_label labelWidth,form_content contentWidth">
+						<xcp:number
+							id="txtEfetivos"
+							label="#{bundle.lbl_efetivos}"
+							value="#{cipaBacking.entity.efetivos}"
+							size="3"
+							required="true"
+							precision="3"
+							scale="0"
+							maxValue="999" />
+
+						<xcp:number
+							id="txtSuplentes"
+							label="#{bundle.lbl_suplentes}"
+							required="true"
+							value="#{cipaBacking.entity.suplentes}"
+							size="3"
+							precision="3"
+							scale="0"
+							maxValue="999" />
+					</h:panelGrid>
+				</p:fieldset>
+
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="CipaForm/CipaInscForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

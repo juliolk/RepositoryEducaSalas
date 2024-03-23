@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Afdtmotivo"
+			backing="#{afdtMotivoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					value="#{row.motivo}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.motivo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+				
+				<xcp:column headerText="#{bundle.col_indDisponivelPortal}"
+					value="#{row.indPortal}" type="String" size="16" itens="#{afdtMotivoBacking.itensIndSimNaoNull}">
+					<xcp:outputSimple
+						value="#{row.indPortal}"
+						itens="#{afdtMotivoBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						value="#{afdtMotivoBacking.entity.motivo}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						readonly="#{not afdtMotivoBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{afdtMotivoBacking.entity.descricao}"
+						rows="2"
+						size="100" />
+					
+					<xcp:combo id="cboIndDisponivelPortal" size="10"
+						value="#{afdtMotivoBacking.entity.indPortal}"
+						label="#{bundle.lbl_indDisponivelPortal}" required="true"
+						itens="#{afdtMotivoBacking.itensIndSimNaoNull}" />
+					
+					<xcp:text
+						id="txtFuncRest"
+						label="#{bundle.lbl_funcao}"
+						value="#{afdtMotivoBacking.entity.funcao}"
+						size="60"
+						maxlength="100" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

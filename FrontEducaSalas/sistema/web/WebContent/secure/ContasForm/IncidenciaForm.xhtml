@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Incidencia"
+		backing="#{incidenciaBacking}"
+		masterId="Contas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_tipoincidencia}"
+				value="#{row.tipoincidenciaFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.tipoincidenciaFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_sinal}"
+				value="#{row.sinal}"
+				itens="#{incidenciaBacking.itensTipoincidencia}"
+				type="String"
+				size="3">
+				<xcp:outputSimple
+					value="#{row.sinal}"
+					itens="#{incidenciaBacking.itensTipoincidencia}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_percentual}"
+				value="#{row.percentual}"
+				type="Number"
+				size="19">
+				<xcp:outputSimpleNumber
+					value="#{row.percentual}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipoincidencia_Incidencia"
+					value="#{incidenciaBacking.entity.tipoincidenciaFk}"
+					label="#{bundle.lbl_tipoincidencia}"
+					required="true"
+					query="containcid"
+					size="4"
+					readonly="#{not incidenciaBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboSinal"
+					value="#{incidenciaBacking.entity.sinal}"
+					label="#{bundle.lbl_sinal}"
+					itens="#{incidenciaBacking.itensTipoincidencia}" 
+					styleClass="combosinal"
+					width="45px !important"
+					/>
+
+				<xcp:number
+					id="txtPercentual_Incidencia"
+					label="#{bundle.lbl_percentual}"
+					required="true"
+					size="4"
+					value="#{incidenciaBacking.entity.percentual}"
+					precision="16"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

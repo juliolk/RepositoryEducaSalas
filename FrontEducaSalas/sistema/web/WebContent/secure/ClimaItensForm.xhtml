@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style type="text/css">
+			.help-text {
+				color: #777;
+				background-color: #efefef;
+			    padding: 5px 10px;
+			    border-radius: 3px;
+			}
+		</style>
+	
+		<xcp:panelManut
+			id="ClimaItens"
+			backing="#{climaItensBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_item}"
+					value="#{row.item}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.item}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipoQuestionario}"
+					value="#{climaItensBacking.getDescricaoTipoQuestionario(row.tipoQuestionario)}"
+					type="String"
+					size="20">
+					<xcp:outputSimple
+						value="#{climaItensBacking.getDescricaoTipoQuestionario(row.tipoQuestionario)}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_tipoItem}"
+					value="#{row.tipoItemFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.tipoItemFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_grupo}"
+					value="#{row.grupoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.grupoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_percentual}"
+					value="#{row.percentual}"
+					type="Number"
+					size="13">
+					<xcp:outputSimpleNumber
+						value="#{row.percentual}"
+						precision="10"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_complemento}"
+					value="#{row.complemento}"
+					itens="#{climaItensBacking.itensComplemento}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.complemento}"
+						itens="#{climaItensBacking.itensComplemento}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtItem"
+						label="#{bundle.lbl_item}"
+						required="true"
+						value="#{climaItensBacking.entity.item}"
+						size="4"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not climaItensBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{climaItensBacking.entity.descricao}"
+						maxlength="300"
+						size="78" />
+
+					<xcp:combo
+						id="cboTipoQuestionario"
+						value="#{climaItensBacking.entity.tipoQuestionario}"
+						label="#{bundle.lbl_tipoQuestionario}"
+						required="false"
+						itens="#{climaItensBacking.itensTipoQuestionario}" />
+
+					<xcp:lov
+						id="lovTipoItem"
+						value="#{climaItensBacking.entity.tipoItemFk}"
+						label="#{bundle.lbl_tipoItem}"
+						required="true"
+						query="clima_tipo_itens"
+						size="4" />
+
+					<xcp:lov
+						id="lovGrupo"
+						value="#{climaItensBacking.entity.grupoFk}"
+						label="#{bundle.lbl_gruporesposta}"
+						selectionListener="#{climaItensBacking.selectGrupo}"
+						update="tabRespostas cboComplemento"
+						required="true"
+						query="clima_gruporesposta"
+						size="4" />
+
+					<xcp:number
+						id="txtPercentual"
+						label="#{bundle.lbl_percentual}"
+						size="10"
+						value="#{climaItensBacking.entity.percentual}"
+						precision="10"
+						scale="2" />
+						
+					<xcp:check
+						id="chkItemObrigatorio"
+						label="#{bundle.lbl_pergunta_obrigatoria}"
+						value="#{climaItensBacking.entity.indItemObrigatorio}">
+					</xcp:check>
+
+					<xcp:combo
+						id="cboComplemento"
+						readonly="#{climaItensBacking.entity.questaoDescritiva}"
+						value="#{climaItensBacking.entity.complemento}"
+						label="#{bundle.lbl_complemento}"
+						itens="#{climaItensBacking.itensComplemento}">
+						<p:ajax
+							event="change"
+							update="chkComplementoObrigatorio txtDescricaoComplemento" />
+					</xcp:combo>
+						
+					<xcp:text
+						id="txtDescricaoComplemento"
+						label="#{bundle.lbl_descricao_complemento}"
+						required="true"
+						value="#{climaItensBacking.entity.descricaoComplemento}"
+						maxlength="300"
+						readonly="#{!climaItensBacking.entity.perguntaComComplemento}"
+						size="78" />
+						
+					
+					<p:outputLabel value=""/>
+					<p:outputPanel styleClass="help-text">
+						<h4>Observação:</h4>
+						<p>
+							Caso desejar uma resposta no meio do texto da pergunta informe na descrição do complemento os caracteres <strong>#RESPOSTA#</strong> 
+						</p>
+						<p>
+							Por exemplo, a descrição do complemento com o texto:<br/>
+							<strong>Experiência de #RESPOSTA# anos comprovada.</strong>
+						</p>
+						<p>
+							Gerará a seguinte pergunta:<br/>
+							<strong>Experiência de ___________ anos comprovada.</strong>
+						</p>
+					</p:outputPanel>
+
+					<xcp:check
+						id="chkComplementoObrigatorio"
+						label="#{bundle.lbl_complemento_obrigatorio}"
+						value="#{climaItensBacking.entity.indComplementoObrigatorio}"
+						readonly="#{!climaItensBacking.entity.perguntaComComplemento or climaItensBacking.entity.questaoDescritiva}">
+					</xcp:check>
+
+				</xcp:panelForm>
+				
+				<div style="width: 500px; padding-left: 10px;">
+					<p:dataTable
+						id="tabRespostas"
+						var="row"
+						value="#{climaItensBacking.listaClimaAlternativas}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						scrollable="true"
+						scrollWidth="500"
+						scrollHeight="161">
+
+						<xcp:column
+							headerText="#{bundle.col_sequencia}"
+							type="Number"
+							size="4">
+							<xcp:outputSimpleNumber
+								value="#{row.sequencia}"
+								precision="4"
+								scale="0" />
+						</xcp:column>
+						<xcp:column
+							headerText="#{bundle.col_descricao}"
+							type="String"
+							size="50">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</xcp:column>
+					</p:dataTable>
+				</div>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

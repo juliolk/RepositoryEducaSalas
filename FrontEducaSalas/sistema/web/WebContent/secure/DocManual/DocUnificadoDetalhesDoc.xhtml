@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:column
+		headerText="#{bundle.col_processo}"
+		type="String"
+		size="10">
+		<xcp:outputSimple value="#{rowDoc.desProcesso}" />
+	</xcp:column>
+
+	<xcp:column
+		headerText="#{bundle.col_dtaProcesso}"
+		type="Date"
+		size="10">
+		<xcp:outputSimpleDate value="#{rowDoc.processoFk.dtcriacao}" />
+	</xcp:column>
+
+	<xcp:column
+		headerText="#{bundle.col_nrdocPortaria}"
+		type="Number"
+		size="10">
+		<xcp:outputSimple value="#{rowDoc.registroFk.nrdoc}" />
+	</xcp:column>
+
+	<xcp:column
+		headerText="#{bundle.col_dtpublicacao}"
+		type="Date"
+		size="10">
+		<xcp:outputSimpleDate value="#{rowDoc.registroFk.dtpublicacao}" />
+	</xcp:column>
+
+	<xcp:column
+		headerText="#{bundle.col_desc_documento}"
+		type="String"
+		size="60">
+		<xcp:outputSimple value="#{rowDoc.registroFk.descricao}" />
+	</xcp:column>
+
+	<xcp:column
+		type="String"
+		rendered="#{actionExclusao != null}"
+		size="1">
+		<!-- QUANDO LIBERAR PARA APAGAR QUALQUER LINHA ROWPRINCIPAL SOME E FICA SO ROWDOC -->
+		<xcp:commandLink
+			id="btn_remove_retificacao"
+			process="@this"
+			rendered="#{rowDoc.semPortaria or rowDoc.docManual}"
+			action="#{actionExclusao.actionRemover(rowPrincipal,rowDoc, idx)}">
+			<h:graphicImage
+				title="#{bundle.hint_remover_retificacao}"
+				value="/resources/img/remover.png"
+				style="margin-top:3px;" />
+			<p:confirm
+				header="#{bundle.tit_confirma_remover}"
+				message="#{bundle.msg_confirma_remover}"
+				icon="ui-icon-alert" />
+		</xcp:commandLink>
+
+	</xcp:column>
+
+</ui:composition>
+

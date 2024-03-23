@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AuxilioRel"
+		backing="#{auxilioRelBacking}"
+		masterId="Auxilio">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_numero}"
+				value="#{row.numero}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.numero}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtrefini}"
+				value="#{row.dtrefini}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtrefini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtreffim}"
+				value="#{row.dtreffim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtreffim}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtentrega}"
+				value="#{row.dtentrega}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtentrega}" />
+			</xcp:column>
+
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtNumero_AuxilioRel"
+					label="#{bundle.lbl_numero}"
+					required="true"
+					value="#{auxilioRelBacking.entity.numero}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					rendered="#{not auxilioRelBacking.entity.novo}"
+					readonly="true" />
+
+				<xcp:dateRange
+					id="txtDtrefini_AuxilioRel"
+					required="true"
+					valueStart="#{auxilioRelBacking.entity.dtrefini}"
+					valueEnd="#{auxilioRelBacking.entity.dtreffim}"
+					label="#{bundle.lbl_dtrefini}" />
+
+
+				<xcp:date
+					id="txtDtentrega_AuxilioRel"
+					required="true"
+					value="#{auxilioRelBacking.entity.dtentrega}"
+					label="#{bundle.lbl_dtentrega}" />
+
+				<xcp:memo
+					id="txtRelatorio_AuxilioRel"
+					label="#{bundle.lbl_relatorio}"
+					value="#{auxilioRelBacking.entity.relatorio}"
+					size="4000" />
+
+				<xcp:memo
+					id="txtObs_AuxilioRel"
+					label="#{bundle.lbl_obs}"
+					value="#{auxilioRelBacking.entity.obs}"
+					size="4000" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

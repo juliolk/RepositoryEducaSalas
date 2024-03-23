@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Valerefeicao"
+			backing="#{valealimentacaoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nrcartao}"
+					value="#{row.nrcartao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.nrcartao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vlrentregue}"
+					value="#{row.vlrentregue}"
+					type="Number"
+					size="13">
+					<xcp:outputSimpleNumber
+						value="#{row.vlrentregue}"
+						precision="10"
+						scale="2" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtinicio"
+						required="true"
+						value="#{valealimentacaoBacking.entity.dtinicio}"
+						label="#{bundle.lbl_dtinicio}"
+						readonly="#{not valealimentacaoBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDtfim"
+						value="#{valealimentacaoBacking.entity.dtfim}"
+						label="#{bundle.lbl_dtfim}" />
+
+					<xcp:text
+						id="txtNrcartao"
+						label="#{bundle.lbl_nrcartao}"
+						value="#{valealimentacaoBacking.entity.nrcartao}"
+						size="15" />
+
+					<xcp:number
+						id="txtVlrentregue"
+						label="#{bundle.lbl_vlrentregue}"
+						size="13"
+						value="#{valealimentacaoBacking.entity.vlrentregue}"
+						precision="10"
+						scale="2" />
+						
+					<xcp:number
+						id="txtCodExterno"
+						label="#{bundle.lbl_codexterno}"
+						value="#{valealimentacaoBacking.entity.codexterno}"
+						size="18"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

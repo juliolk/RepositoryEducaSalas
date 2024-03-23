@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="pnlHist">
+
+		<xcp:panelForm>
+
+			<xcp:date
+				id="txtDataHist"
+				value="#{lancLotesBacking.helper.historicos.data}"
+				label="#{bundle.lbl_data}" />
+
+			<xcp:date
+				id="txtDataFimHist"
+				value="#{lancLotesBacking.helper.historicos.dataFim}"
+				label="#{bundle.lbl_dataFim}" />
+
+			<xcp:lov
+				id="lovMotivoHist"
+				value="#{lancLotesBacking.helper.historicos.motivoFk}"
+				label="#{bundle.lbl_motivo}"
+				query="motivo_hist_rest"
+				params="#{lancLotesBacking.paramsMotHist}"
+				size="10" />
+
+			<xcp:lov
+				id="lovTipodocHist"
+				value="#{lancLotesBacking.helper.historicos.tipodocFk}"
+				label="#{bundle.lbl_tipodoc}"
+				selectionListener="#{lancLotesBacking.selectTipodocumentoHist}"
+				update="lovDocumentoHist,lovProcessoHist,lovProcessoHist_l,txtProcjudicHist,txtProcjudicHist_l"
+				query="tipodocumento_pen"
+				params="#{lancLotesBacking.paramsTipoDoc}"
+				size="10"/>
+
+			<xcp:lov
+				id="lovDocumentoHist"
+				value="#{lancLotesBacking.helper.historicos.registroFk}"
+				params="#{lancLotesBacking.paramsTipodocumentoHist}"
+				label="#{bundle.lbl_documento}"
+				query="documentosman"
+				size="10"
+				update="lovProcessoHist,lovProcessoHist_l"
+				selectionListener="#{lancLotesBacking.selectDocumentoHist}" />
+
+			<xcp:lov
+				id="lovProcessoHist"
+				value="#{lancLotesBacking.helper.historicos.processoFk}"
+				label="#{bundle.lbl_processo}"
+				query="processos"
+				size="10"/>
+
+			<xcp:text
+				id="txtProcjudicHist"
+				label="#{bundle.lbl_procjudic}"
+				value="#{lancLotesBacking.helper.historicos.procjudic}"
+				size="25"
+				rendered="#{lancLotesBacking.helper.historicos.tipodocFk.indprocjudicial == 1}" />
+
+			<xcp:number
+				id="txtPontosHist"
+				label="#{bundle.lbl_pontos}"
+				size="10"
+				value="#{lancLotesBacking.helper.historicos.pontos}"
+				precision="7"
+				scale="2" />
+
+			<xcp:memo
+				id="txtObsHist"
+				label="#{bundle.lbl_txtPort}"
+				value="#{lancLotesBacking.helper.historicos.obs}"
+				cols="95"
+				size="4000" />
+
+			<xcp:memo
+				id="txtObsLivreHist"
+				label="#{bundle.lbl_obsLivre}"
+				required="true"
+				value="#{lancLotesBacking.helper.historicos.obsLivre}"
+				cols="95"
+				size="4000" />
+
+		</xcp:panelForm>
+	</p:outputPanel>
+
+</ui:composition>

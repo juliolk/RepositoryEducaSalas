@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Editalnommsg"
+			backing="#{editalnommsgBacking}"
+			consulta="true">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					value="#{row.seqmsg}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.seqmsg}"
+						scale="0"
+						precision="18" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_editalNomeacao}"
+					value="#{row.editalNom}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.editalNom}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.editalNomFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.editalNomFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dthinclusao}"
+					value="#{row.dthinclusao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleTimestamp value="#{row.dthinclusao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_assunto}"
+					value="#{row.assunto}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.assunto}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSeqmsg"
+						label="#{bundle.lbl_seqmsg}"
+						required="true"
+						value="#{editalnommsgBacking.entity.seqmsg}"
+						size="18"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovEditalNom"
+						value="#{editalnommsgBacking.entity.editalNomFk}"
+						label="#{bundle.lbl_editalNom}"
+						required="true"
+						query="edital_nom"
+						size="8"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovSeqTexto"
+						value="#{editalnommsgBacking.entity.seqTextoFk}"
+						label="#{bundle.lbl_seqTextoFk}"
+						query="xcp_texto"
+						size="20"
+						readonly="true"
+						rendered="#{editalnommsgBacking.entity.seqTexto != null}" />
+
+					<xcp:text
+						id="txtAssunto"
+						label="#{bundle.lbl_assunto}"
+						value="#{editalnommsgBacking.entity.assunto}"
+						size="80"
+						readonly="true"
+						rendered="#{editalnommsgBacking.entity.seqTexto == null}" />
+
+					<h:outputLabel
+						value="#{bundle.lbl_mensagem}:"
+						rendered="#{editalnommsgBacking.entity.seqTexto == null}" />
+
+					<p:editor
+						id="txtMsgDlg"
+						required="true"
+						label="#{bundle.lbl_mensagem}"
+						widgetVar="editorWidget"
+						value="#{editalnommsgBacking.entity.mensagem}"
+						rendered="#{editalnommsgBacking.entity.seqTexto == null}"
+						width="600"
+						disabled="true" />
+
+					<xcp:date
+						id="txtDthinclusao"
+						required="true"
+						value="#{editalnommsgBacking.entity.dthinclusao}"
+						label="#{bundle.lbl_dthinclusao}"
+						readonly="true" />
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						value="#{editalnommsgBacking.entity.nome}"
+						size="80"
+						rendered="#{editalnommsgBacking.entity.nome != null}"
+						readonly="true" />
+
+					<p:outputLabel
+						value="#{bundle.lbl_anexo}#{viewUtil.labelSufix}"
+						rendered="#{editalnommsgBacking.entity.anexo != null}" />
+
+					<xcp:commandButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						rendered="#{editalnommsgBacking.entity.anexo != null}">
+						<p:fileDownload
+							value="#{editalnommsgBacking.downloadDocumento}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="EditalnommsgForm/EditalnommsgCandForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:fieldset
+		legend="#{bundle.title_envolvidos}"
+		rendered="#{not setoresInspBacking.helper.ocorSel.novo}">
+
+		<p:dataTable
+			id="tblOcorEnv"
+			var="rowEnv"
+			rowKey="#{rowEnv.PK}"
+			value="#{setoresInspBacking.helper.ocorSel.listEnv}"
+			filteredValue="#{setoresInspBacking.helper.ocorSel.listEnvFilter}"
+			sortMode="multiple"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			paginator="true"
+			paginatorPosition="bottom"
+			rows="#{viewUtil.tableRows}">
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{rowEnv.matricula}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					value="#{rowEnv.matricula}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{rowEnv.matriculaFk.nome}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{rowEnv.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_inicio}"
+				value="#{rowEnv.inicio}"
+				type="Date"
+				size="4">
+				<xcp:outputSimpleDate value="#{rowEnv.inicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_termino}"
+				value="#{rowEnv.termino}"
+				type="Date"
+				size="4">
+				<xcp:outputSimpleDate value="#{rowEnv.termino}" />
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="1">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_remove_nota"
+					update="tblOcorEnv"
+					action="#{setoresInspBacking.actionRemoveEnvolvido(rowEnv)}">
+					<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" />
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandLink>
+			</xcp:column>
+
+
+		</p:dataTable>
+
+		<xcp:commandButton
+			id="btn_adicionar"
+			style="margin-top:5px"
+			action="#{setoresInspBacking.actionOpenEnvolvido}"
+			update=":frmOcor"
+			process="@this"
+			value="#{bundle.btn_adicionar}"
+			icon="ui-icon-plusthick" />
+
+	</p:fieldset>
+</ui:composition>

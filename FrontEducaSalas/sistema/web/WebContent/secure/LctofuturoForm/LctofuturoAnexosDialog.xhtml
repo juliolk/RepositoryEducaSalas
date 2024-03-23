@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		modal="true"
+		id="dlgFuncanexos"
+		header="#{bundle.title_dlgLctofuturoanexos}"
+		widgetVar="dlgLctofuturoAnexos_w"
+		resizable="false">
+		<xcp:form id="frmLctofuturoAnexos">
+			<div style="width: 700px;">
+				<xcp:panelManutAvulso
+					id="Funcanexos"
+					backing="#{lctofuturoAnexosBacking}">
+
+					<ui:define name="colunas">
+						<xcp:column
+							headerText="#{bundle.col_desTabela}"
+							value="#{row.descricao}"
+							type="String"
+							size="10">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtanexo}"
+							value="#{row.dtanexo}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleTimestamp value="#{row.dtanexo}" />
+						</xcp:column>
+
+					</ui:define>
+
+					<ui:define name="detalhes">
+						<p:spacer height="10" />
+						<p:toolbar>
+							<f:facet name="left">
+								<xcp:commandButton
+									onclick="PF('dlgLctofuturoAnexos_w').hide();"
+									type="button"
+									value="#{bundle.btn_fechar}" />
+							</f:facet>
+						</p:toolbar>
+					</ui:define>
+
+					<ui:define name="form">
+						<xcp:panelForm>
+
+							<xcp:text
+								id="txtDescricao"
+								label="#{bundle.lbl_descricao}"
+								required="true"
+								value="#{lctofuturoAnexosBacking.entity.descricao}"
+								size="50" />
+
+							<p:outputLabel
+								value="#{bundle.lbl_anexo}#{viewUtil.labelSufix}"
+								for="txtNome" />
+
+							<h:panelGroup>
+
+								<p:toolbar id="toolBarAnexo">
+									<f:facet name="left">
+										<xcp:commandButton
+											onclick="PF('dlgUploadLctofuturoAnexo_w').show();"
+											type="button"
+											value="#{bundle.btn_upload}"
+											disabled="#{lctofuturoAnexosBacking.disabledGravar}" />
+
+										<xcp:commandButton
+											id="btnDownloadAnexo"
+											value="#{bundle.btn_visualizar}"
+											ajax="false"
+											immediate="true"
+											process="@this"
+											onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+											disabled="#{lctofuturoAnexosBacking.entity.anexo == null}">
+											<p:fileDownload
+												value="#{lctofuturoAnexosBacking.downloadAnexo}"
+												contentDisposition="attachment" />
+										</xcp:commandButton>
+									</f:facet>
+								</p:toolbar>
+
+								<p:inputText
+									id="txtNome"
+									type="hidden"
+									required="true"
+									label="#{bundle.lbl_anexo}"
+									value="#{lctofuturoAnexosBacking.entity.nome}" />
+
+								<p:message for="txtNome" />
+							</h:panelGroup>
+						</xcp:panelForm>
+					</ui:define>
+				</xcp:panelManutAvulso>
+			</div>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgUploadLctofuturoAnexo"
+		header="#{bundle.tit_dlgUploadAnexo}"
+		widgetVar="dlgUploadLctofuturoAnexo_w"
+		modal="true">
+		<xcp:form
+			id="formUploadLctofuturoAnexos"
+			multipart="true">
+			<p:fileUpload
+				id="uploadFuncAnexos"
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				uploadLabel="#{bundle.btn_upload}"
+				invalidFileMessage="#{bundle.msg_upload_arquivo}"
+				converterMessage="#{bundle.msg_upload_conversao}"
+				fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				messageTemplate="#{bundle.msg_upload_mensagem}"
+				requiredMessage="#{bundle.msg_upload_requerido}"
+				validatorMessage="#{bundle.msg_upload_validacao}"
+				cancelLabel="#{bundle.btn_upload_cancel}"
+				dragDropSupport="false"
+				fileUploadListener="#{lctofuturoAnexosBacking.actionUploadAnexo}" />
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

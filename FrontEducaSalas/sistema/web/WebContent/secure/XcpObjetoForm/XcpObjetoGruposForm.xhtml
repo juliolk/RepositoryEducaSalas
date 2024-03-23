@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="XcpObjetoGrupos"
+		backing="#{xcpObjetoGruposBacking}"
+		masterId="XcpObjeto">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codGrupo}"
+				value="#{row.codGrupo}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.codGrupo}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desGrupo}"
+				value="#{row.codGrupoFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.codGrupoFk.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCodGrupo_XcpObjetoGrupos"
+					value="#{xcpObjetoGruposBacking.entity.codGrupoFk}"
+					label="#{bundle.lbl_codGrupo}"
+					required="true"
+					query="xcp_grupo_par"
+					size="10"
+					readonly="#{not xcpObjetoGruposBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtNumGrupo_XcpObjetoGrupos"
+					label="#{bundle.lbl_numGrupo}"
+					required="true"
+					value="#{xcpObjetoGruposBacking.entity.numGrupo}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+                <xcp:combo id="txtTipInicializacao_XcpObjetoGrupos"
+                    label="#{bundle.lbl_tipInicializacao}" required="true"
+                    value="#{xcpObjetoGruposBacking.entity.tipInicializacao}"
+                    itens="#{xcpObjetoGruposBacking.itensTipInicializacao}"
+                    size="10" />
+                    
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

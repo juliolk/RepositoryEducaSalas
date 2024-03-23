@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:lov
+			id="lovVariavel"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.variavelFk}"
+			label="#{bundle.lbl_variavel}"
+			required="true"
+			selectionListener="#{parfuncBacking.selectVariavel}"
+			update="txtConteudo,txtConteudo2,txtConteudo3,txtConteudo_l,txtConteudo2_l,txtConteudo3_l"
+			query="variaveis"
+			size="4"
+			readonly="true" />
+
+		<xcp:number
+			id="txtConteudo"
+			label="#{parfuncBacking.getDescricao(parfuncBacking.helper.parfuncDocSelecionada.variavelFk.tipo)}"
+			required="true"
+			size="21"
+			rendered="#{parfuncBacking.helper.parfuncDocSelecionada.variavelFk.tipo!=null}"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.conteudo}"
+			precision="16"
+			scale="4"
+			readonly="true" />
+
+		<xcp:text
+			id="txtConteudo2"
+			label="#{parfuncBacking.helper.parfuncDocSelecionada.variavelFk.campo1}"
+			rendered="#{parfuncBacking.helper.parfuncDocSelecionada.variavelFk.campo1!=null}"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.conteudo2}"
+			size="20"
+			readonly="true" />
+
+		<xcp:number
+			id="txtConteudo3"
+			label="#{parfuncBacking.helper.parfuncDocSelecionada.variavelFk.campo2}"
+			size="20"
+			rendered="#{parfuncBacking.helper.parfuncDocSelecionada.variavelFk.campo2!=null}"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.conteudo3}"
+			precision="15"
+			scale="4"
+			readonly="true" />
+
+		<xcp:date
+			id="txtDtini"
+			required="true"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.dtini}"
+			label="#{bundle.lbl_dtini}"
+			readonly="true" />
+
+		<xcp:date
+			id="txtDtfim"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.dtfim}"
+			label="#{bundle.lbl_dtfim}"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovTipodocumento"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.tipodocFk}"
+			label="#{bundle.lbl_tipodocumento}"
+			selectionListener="#{parfuncBacking.selectTipodocumento}"
+			update="lovDocumento,btnDownloadDocumento"
+			query="tipodocumento"
+			size="4"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovDocumento"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.registroFk}"
+			params="#{parfuncBacking.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			query="documentos"
+			size="20"
+			update="btnDownloadDocumento"
+			readonly="true" />
+
+
+		<xcp:lov
+			id="lovProcesso"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.processoFk}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			size="25"
+			readonly="true" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+
+		<p:panelGrid>
+			<p:row>
+				<p:column>
+					<p:splitButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{parfuncBacking.helper.parfuncDocSelecionada.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(parfuncBacking.helper.parfuncDocSelecionada.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{parfuncBacking.model.actionOpenVisDialog(parfuncBacking.helper.parfuncDocSelecionada.registro)}"
+							process="@this" />
+
+					</p:splitButton>
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:dateTime
+							id="txtRetificacao"
+							value="#{parfuncBacking.helper.parfuncDocSelecionada.retificacao}"
+							label="#{bundle.lbl_retificacao}"
+							rendered="#{parfuncBacking.helper.parfuncDocSelecionada.retificacao!=null}"
+							readonly="true" />
+					</xcp:panelForm>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+		<xcp:memo
+			id="txtObs"
+			label="#{bundle.lbl_obs}"
+			value="#{parfuncBacking.helper.parfuncDocSelecionada.obs}"
+			size="500"
+			style="width:429px;"
+			readonly="true" />
+
+
+	</xcp:panelForm>
+</ui:composition>

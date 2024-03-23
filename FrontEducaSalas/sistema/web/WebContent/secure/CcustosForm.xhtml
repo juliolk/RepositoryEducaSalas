@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Ccustos"
+			backing="#{ccustosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_ccusto}"
+					value="#{row.ccusto}"
+					type="Number"
+					size="15">
+					<xcp:outputSimpleNumber
+						value="#{row.ccusto}"
+						precision="15"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCcusto"
+						label="#{bundle.lbl_ccusto}"
+						required="true"
+						value="#{ccustosBacking.entity.ccusto}"
+						size="15"
+						precision="15"
+						scale="0"
+						maxValue="999999999999999"
+						readonly="#{not ccustosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{ccustosBacking.entity.descricao}"
+						size="80" />
+						
+					<xcp:lov
+						id="lovGerencia"
+						value="#{ccustosBacking.entity.gerenciasFk}"
+						label="#{bundle.lbl_gerencia}"
+						query="gerencias"
+						size="8" />
+						
+	
+
+					<xcp:border
+						id="brd_integracao"
+						header="#{bundle.tit_int_contabil}"
+						stylefieldset="margin-left:-0px !important;">
+						<xcp:text
+							id="txtContabil"
+							label="#{bundle.lbl_contabil}"
+							value="#{ccustosBacking.entity.contabil}"
+							size="20" />
+
+						<xcp:number
+							id="txtReduzido"
+							label="#{bundle.lbl_reduzido}"
+							value="#{ccustosBacking.entity.reduzido}"
+							size="20"
+							precision="15"
+							scale="0"
+							maxValue="999999999999999" />
+					</xcp:border>
+
+					<xcp:lov
+						id="lovBancos"
+						value="#{ccustosBacking.entity.bancosFk}"
+						label="#{bundle.lbl_banco}"
+						query="bancos"
+						size="8" />
+
+					<xcp:lov
+						id="lovBancosconvenio"
+						value="#{ccustosBacking.entity.bancosconvenioFk}"
+						label="#{bundle.lbl_convenio}"
+						params="#{ccustosBacking.paramsBanco}"
+						query="bancosconvenio"
+						size="8" />
+
+					<xcp:text
+						id="txtConvenio"
+						label="#{bundle.col_bancosconvenio_conta}"
+						value="#{ccustosBacking.entity.convenio}"
+						size="20" />
+
+					<xcp:text
+						id="txtConta"
+						label="#{bundle.lbl_conta}"
+						value="#{ccustosBacking.entity.conta}"
+						size="20" />
+
+					<xcp:text
+						id="txtDigito"
+						label="#{bundle.col_digito}"
+						value="#{ccustosBacking.entity.digito}"
+						size="2" />
+
+	                 <xcp:lov
+	                     id="lovResp1"
+	                     value="#{ccustosBacking.entity.responsavel1Fk}"
+	                     label="#{bundle.lbl_responsavel} 1"
+	                     query="funcionariosLov"
+	                     size="6" />
+
+	                 <xcp:lov
+	                     id="lovResp2"
+	                     value="#{ccustosBacking.entity.responsavel2Fk}"
+	                     label="#{bundle.lbl_responsavel} 2"
+	                     query="funcionariosLov"
+	                     size="6" />
+
+				</xcp:panelForm>
+
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:panelGrid>
+		<p:row>
+			<p:column>
+				<p:panel header="#{bundle.tit_dadosPessoais}">
+					<xcp:panelForm>
+
+						<xcp:number
+							id="txtMatriculaNovaFinal"
+							label="#{bundle.lbl_matricula}"
+							value="#{funcionariosBacking.helper.matriculaNova}"
+							size="8"
+							maxValue="99999999">
+							<p:ajax
+								event="blur"
+								listener="#{funcionariosBacking.validaMatricula}"
+								update="txtMatriculaNova,txtMatriculaNova_l,txtMatriculaNovaFinal,txtMatriculaNovaFinal_l" />
+						</xcp:number>
+
+						<xcp:date
+							id="txtDtnascimentoFinalizacao"
+							required="true"
+							value="#{funcionariosBacking.entity.dtnascimento}"
+							label="#{bundle.lbl_dtnascimento}" />
+
+						<xcp:combo
+							id="cboSexoFinalizacao"
+							value="#{funcionariosBacking.entity.sexo}"
+							required="true"
+							label="#{bundle.lbl_sexo}"
+							itens="#{funcionariosBacking.itensSexo}" />
+
+						<xcp:cpf
+							id="txtCpfFinalizacao"
+							label="#{bundle.lbl_cpf}"
+							required="true"
+							value="#{funcionariosBacking.entity.cpf}" />
+
+					</xcp:panelForm>
+				</p:panel>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+</ui:composition>

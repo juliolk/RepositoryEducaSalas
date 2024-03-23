@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_historicos}"
+		modal="true"
+		id="dlgHis"
+		widgetVar="dlgHis_w"
+		dynamic="true"
+		onShow="XCUtil.selecttab('tabFuncionarios_w','tabHitoricos')">
+		<xcp:form id="frmHis">
+
+			<xcp:panelForm>
+
+				<p:outputLabel
+					value="#{bundle.lbl_data}: *"
+					for="txtData_c" />
+
+				<xcp:date
+					id="txtData"
+					value="#{funcionariosBacking.historicosSel.data}"
+					label="#{bundle.lbl_data}"
+					simple="true"
+					readonly="#{funcionariosBacking.readOnlyDtaInicioHist}">
+					<p:ajax
+						event="change"
+						process="@this" />
+					<p:ajax
+						event="dateSelect"
+						process="@this" />
+				</xcp:date>
+
+				<h:outputLabel value="#{bundle.lbl_dataFim}:" />
+
+				<h:panelGrid
+					id="pnlativ"
+					columns="5"
+					style="float:left">
+
+					<xcp:date
+						id="txtDataFim"
+						value="#{funcionariosBacking.historicosSel.dataFim}"
+						label="#{bundle.lbl_dataFim}"
+						readonly="#{funcionariosBacking.readOnlyFieldsHist}"
+						simple="true">
+						<p:ajax
+							event="change"
+							process="@this" />
+						<p:ajax
+							event="dateSelect"
+							process="@this" />
+					</xcp:date>
+
+					<xcp:dateTime
+						id="txtCancelamento"
+						value="#{funcionariosBacking.historicosSel.dtcancelamento}"
+						label="#{bundle.lbl_cancelado}"
+						rendered="#{funcionariosBacking.renderedDtCancelamentoHistorico}"
+						readonly="true" />
+
+					<xcp:check
+						id="chk_bloq_lib"
+						label="#{funcionariosBacking.helper.canceladoHistorico ? bundle.lbl_lib : bundle.lbl_canc}"
+						rendered="#{funcionariosBacking.renderedChkAtivoHistorico}"
+						value="#{funcionariosBacking.helper.canceladoHistorico}">
+						<p:ajax
+							event="change"
+							update="@form"
+							listener="#{funcionariosBacking.cancelaLiberaHistorico}" />
+					</xcp:check>
+
+				</h:panelGrid>
+
+				<xcp:lov
+					id="lovMotivo"
+					value="#{funcionariosBacking.historicosSel.motivoFk}"
+					label="#{bundle.lbl_motivo}"
+					query="motivo_hist_rest"
+					size="5"
+					params="#{funcionariosBacking.paramsMotHist}"
+					readonly="#{funcionariosBacking.readOnlyFieldsHist}" />
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{funcionariosBacking.historicosSel.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					selectionListener="#{funcionariosBacking.selectTipodocumentoHist}"
+					update=":frmHis:lovDocumento,:frmHis:lovProcesso,:frmHis:lovProcesso_l,:frmHis:btnDownloadDocumento,:frmHis:lovProcessoRev,:frmHis:lovProcessoRev_l,frmHis:btnAddDocHist,:frmHis:pnlinfotipodoc,pnlativ,toolform,txtObs,txtProcjudic,txtProcjudic_l"
+					readonly="#{funcionariosBacking.readOnlyTipdocHist}"
+					query="tipodocumento_pen"
+					params="#{funcionariosBacking.paramsTipoDoc}"
+					size="15" />
+
+				<xcp:lov
+					id="lovDocumento"
+					value="#{funcionariosBacking.historicosSel.registroFk}"
+					params="#{funcionariosBacking.paramsTipodocumentoHist}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					readonly="#{funcionariosBacking.readOnlyDocHist}"
+					size="15"
+					update=":frmHis:lovProcesso,:frmHis:lovProcesso_l,:frmHis:btnDownloadDocumento,frmHis:btnAddDocHist,:frmHis:toolform"
+					selectionListener="#{funcionariosBacking.selectDocumentoHist}" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{funcionariosBacking.historicosSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="#{funcionariosBacking.readOnlyProcHist}"
+					required="#{funcionariosBacking.requiredProcHist}"
+					size="25" />
+
+				<xcp:lov
+					id="lovProcessoRev"
+					value="#{funcionariosBacking.historicosSel.processoRevFk}"
+					label="#{bundle.lbl_processoRev}"
+					query="processos"
+					rendered="#{funcionariosBacking.renderedProcessoRevHist}"
+					size="25" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:splitButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{funcionariosBacking.historicosSel.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(funcionariosBacking.historicosSel.registro)}"
+									contentDisposition="attachment" />
+								<p:menuitem
+									value="#{bundle.btn_detalhes_doc}"
+									action="#{funcionariosBacking.modelHist.actionOpenVisDialog(funcionariosBacking.historicosSel.registro)}"
+									process="@this" />
+
+							</p:splitButton>
+						</p:column>
+
+						<p:column>
+							<xcp:btnAddDocUni
+								id="btnAddDocHist"
+								model="#{funcionariosBacking.modelHist}" />
+						</p:column>
+
+						<p:column>
+							<p:outputPanel id="pnlinfotipodoc">
+								<p:commandButton
+									id="btninst"
+									value="#{bundle.btn_info_tipodoc}"
+									type="button"
+									rendered="#{not empty funcionariosBacking.historicosSel.tipodocFk.instrucoes}" />
+
+
+								<p:overlayPanel
+									for="btninst"
+									style="max-width:600px;text-align: left;">
+									<h:outputText
+										value="#{funcionariosBacking.historicosSel.tipodocFk.instrucoes}"
+										escape="false" />
+								</p:overlayPanel>
+							</p:outputPanel>
+						</p:column>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:dateTime
+									id="txtRetificacao"
+									value="#{funcionariosBacking.historicosSel.retificacao}"
+									label="#{funcionariosBacking.labelRetifHist}"
+									rendered="#{funcionariosBacking.historicosSel.retificacao!=null}"
+									readonly="true">
+									<ui:define name="right">
+										<xcp:commandLink
+											id="btn_remove_retificacao"
+											update="@form"
+											action="#{funcionariosBacking.actionRemoveRetificacaoHistoricos(funcionariosBacking.historicosSel, 1)}">
+											<h:graphicImage
+												title="#{bundle.hint_remover_retificacao}"
+												value="/resources/img/remover.png"
+												style="margin-top:3px;" />
+											<p:confirm
+												header="#{bundle.tit_confirma_remover}"
+												message="#{bundle.msg_confirma_remover}"
+												icon="ui-icon-alert" />
+										</xcp:commandLink>
+									</ui:define>
+								</xcp:dateTime>
+
+							</xcp:panelForm>
+							<xcp:panelForm>
+								<xcp:check
+									id="chk_retificacao"
+									label="#{funcionariosBacking.labelRetifHist}"
+									rendered="#{funcionariosBacking.renderedRetificacaoHist}"
+									value="#{funcionariosBacking.helper.retificacaoHist}">
+									<p:ajax update="@form" />
+								</xcp:check>
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<xcp:text
+					id="txtProcjudic"
+					label="#{bundle.lbl_procjudic}"
+					value="#{funcionariosBacking.historicosSel.procjudic}"
+					size="25"
+					rendered="#{funcionariosBacking.historicosSel.tipodocFk.indprocjudicial == 1}" />
+
+				<xcp:combo
+					id="cboDeferimento"
+					value="#{funcionariosBacking.historicosSel.deferimento}"
+					label="#{bundle.lbl_deferimento}"
+					itens="#{funcionariosBacking.itensDeferimento}"
+					rendered="#{funcionariosBacking.renderedDeferimento}">>
+				</xcp:combo>
+				
+				<xcp:number
+					id="txtPontos"
+					label="#{bundle.lbl_pontos}"
+					size="10"
+					value="#{funcionariosBacking.historicosSel.pontos}"
+					readonly="#{funcionariosBacking.readOnlyFieldsHist}"
+					precision="7"
+					scale="2" />
+
+				<p:spacer height="2" />
+
+				<p:fieldset
+					legend="#{bundle.title_designacoes}"
+					style="margin-left:0px !important;margin-bottom:8px">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovSetorDesig"
+							value="#{funcionariosBacking.historicosSel.setorDesigFk}"
+							label="#{bundle.lbl_setorDesig}"
+							readonly="#{funcionariosBacking.readOnlyFieldsHist}"
+							query="set_validade_par"
+							params="#{funcionariosBacking.paramsSetHistorico}"
+							size="8" />
+
+						<xcp:lov
+							id="lovFuncaoDesig"
+							value="#{funcionariosBacking.historicosSel.funcaoDesigFk}"
+							label="#{bundle.lbl_funcaoDesig}"
+							readonly="#{funcionariosBacking.readOnlyFieldsHist}"
+							query="funcoes"
+							size="8" />
+
+						<xcp:lov
+							id="lovMatriculaDesig"
+							value="#{funcionariosBacking.historicosSel.matriculaDesigFk}"
+							label="#{bundle.lbl_matriculaDesig}"
+							readonly="#{funcionariosBacking.readOnlyFieldsHist}"
+							query="funcionariosLov"
+							size="8" />
+					</xcp:panelForm>
+				</p:fieldset>
+
+				<xcp:memo
+					id="txtObs"
+					styleClass="funcionario-form-memo"
+					label="#{bundle.lbl_txtPort}"
+					value="#{funcionariosBacking.historicosSel.obs}"
+					readonly="#{funcionariosBacking.readOnlyFieldsHist}"
+					cols="95"
+					size="4000" />
+
+				<xcp:memo
+					id="txtObsLivre"
+					styleClass="funcionario-form-memo"
+					label="#{bundle.lbl_obsLivre}"
+					required="true"
+					value="#{funcionariosBacking.historicosSel.obsLivre}"
+					cols="95"
+					size="4000" />
+
+			</xcp:panelForm>
+
+			<p:toolbar id="toolform">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_ok_hist"
+						icon="ui-icon-disk"
+						disabled="#{funcionariosBacking.disabledGravar}"
+						action="#{funcionariosBacking.actionGravarHistorico}"
+						value="#{bundle.btn_gravar}" />
+
+					<xcp:commandButton
+						id="btn_emitir_portaria_hist"
+						value="#{bundle.btn_emitir_portaria}"
+						action="#{penalidadesPortariaDiretaBacking.actionOpenOrExecute}"
+						update="#{penalidadesPortariaDiretaBacking.btnEmitirUpdate}"
+						rendered="#{penalidadesPortariaDiretaBacking.renderedEmissao}" />
+
+					<xcp:commandButton
+						id="btn_excluir_portaria_hist"
+						value="#{bundle.btn_excluir_portaria}"
+						action="#{penalidadesPortariaDiretaBacking.actionExcluirPortariaDireta}"
+						rendered="#{penalidadesPortariaDiretaBacking.renderedExcluir}">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

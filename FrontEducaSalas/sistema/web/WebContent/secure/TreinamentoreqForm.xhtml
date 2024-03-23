@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Treinamentoreq"
+			backing="#{treinamentoreqBacking}"
+			renderedNovo="false"
+			renderedRemover="false">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+					<xcp:panelForm>
+						<xcp:radio
+							id="cboStatusPesq"
+							value="#{treinamentoreqBacking.tipStatus}"
+							label="#{bundle.lbl_situacao}"
+							itens="#{treinamentoreqBacking.itensSituacao}" />
+					</xcp:panelForm>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="String"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.matriculaFk.nome}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_treinamento}"
+					value="#{row.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_local}"
+					value="#{row.local}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.local}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vagas}"
+					value="#{row.vagas}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.vagas}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{treinamentoreqBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="funcionariosLov"
+						size="10"
+						readonly="true" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						readonly="true"
+						value="#{treinamentoreqBacking.entity.descricao}"
+						size="80" />
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						readonly="true"
+						value="#{treinamentoreqBacking.entity.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:combo
+						id="cboStatus"
+						value="#{treinamentoreqBacking.entity.status}"
+						label="#{bundle.lbl_status}"
+						required="true"
+						itens="#{treinamentoreqBacking.itensSituacao}">
+						<p:ajax update="txtLocal txtLocal_l txtVagas txtVagas_l" />
+					</xcp:combo>
+
+					<xcp:text
+						id="txtLocal"
+						label="#{bundle.lbl_local}"
+						value="#{treinamentoreqBacking.entity.local}"
+						size="80"
+						maxlength="200"
+						required="true"
+						rendered="#{treinamentoreqBacking.entity.status == 4}" />
+
+					<xcp:number
+						id="txtVagas"
+						label="#{bundle.lbl_vagas}"
+						value="#{treinamentoreqBacking.entity.vagas}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						required="true"
+						rendered="#{treinamentoreqBacking.entity.status == 4}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

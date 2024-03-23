@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.labelWidth {
+	width: 80px;
+}
+</style>
+
+		<xcp:panelManut
+			id="Treinamento"
+			backing="#{treinamentoBacking}">
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_criar_novo"
+					value="#{bundle.btn_duplicar}"
+					action="#{treinamentoBacking.actionDuplicar}"
+					rendered="#{!treinamentoBacking.entity.novo}"
+					onclick="if(!confirm('#{bundle.msg_confirma_duplicar}')) return false;"
+					update="@form" />
+
+				<xcp:commandButton
+					id="btn_copiar"
+					icon="ui-icon-arrowthickstop-1-s"
+					value="#{bundle.btn_copiar_trei}"
+					disabled="#{treinamentoBacking.entity.novo}"
+					update=":frmDlg"
+					action="#{treinamentoBacking.actionAbrirCopia}" />
+
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_treinamento}"
+					value="#{row.treinamento}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.treinamento}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_instrutor}"
+					value="#{row.instrutor}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.instrutor}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datafim}"
+					value="#{row.datafim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datafim}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<p:panelGrid styleClass="tabela_alinhamento">
+					<p:row>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:number
+									id="txtTreinamento"
+									label="#{bundle.lbl_treinamento}"
+									required="true"
+									value="#{treinamentoBacking.entity.treinamento}"
+									size="6"
+									precision="6"
+									scale="0"
+									maxValue="999999"
+									readonly="true"
+									rendered="#{not treinamentoBacking.entity.novo}" />
+
+								<xcp:text
+									id="txtDescricao"
+									label="#{bundle.lbl_descricao}"
+									required="true"
+									value="#{treinamentoBacking.entity.descricao}"
+									maxlength="100"
+									size="72" />
+
+								<xcp:text
+									id="txtPromotor"
+									label="#{bundle.lbl_promotor}"
+									value="#{treinamentoBacking.entity.promotor}"
+									size="72" />
+
+								<xcp:text
+									id="txtInstrutor"
+									label="#{bundle.lbl_instrutor}"
+									value="#{treinamentoBacking.entity.instrutor}"
+									maxlength="100"
+									size="72" />
+
+								<xcp:text
+									id="txtLocal"
+									label="#{bundle.lbl_local}"
+									value="#{treinamentoBacking.entity.local}"
+									maxlength="50"
+									size="72" />
+
+								<xcp:lov
+									id="lovCategoria"
+									value="#{treinamentoBacking.entity.categoriaFk}"
+									label="#{bundle.lbl_categoria}"
+									required="true"
+									query="categoriatreinamento"
+									size="5" />
+
+								<h:outputLabel value="#{bundle.lbl_inscricoes}" />
+
+								<h:panelGroup
+									id="teste"
+									layout="block"
+									style="float:left">
+									<xcp:dateRange
+										id="txtDataInsc"
+										simple="true"
+										valueStart="#{treinamentoBacking.entity.dtinscini}"
+										valueEnd="#{treinamentoBacking.entity.dtinscfim}"
+										label="#{bundle.lbl_inscricoes}"
+										size="8"
+										style="float:left" />
+
+									<h:panelGrid
+										columns="2"
+										style="float:left">
+										<xcp:number
+											id="txtPerminfreq"
+											label="#{bundle.lbl_perfreq}"
+											size="8"
+											style="float:left"
+											maxValue="100"
+											value="#{treinamentoBacking.entity.perminfreq}"
+											precision="5"
+											scale="2" />
+									</h:panelGrid>
+
+								</h:panelGroup>
+								<xcp:date
+									id="txtDtcancelamento"
+									size="8"
+									rendered="#{not treinamentoBacking.entity.novo}"
+									value="#{treinamentoBacking.entity.dtcancelamento}"
+									label="#{bundle.lbl_dtcanc}" />
+
+							</xcp:panelForm>
+
+							<h:panelGrid
+								columns="4"
+								columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+
+								<xcp:number
+									id="txtPeriodicidade"
+									label="#{bundle.lbl_periodicidade}"
+									value="#{treinamentoBacking.entity.periodicidade}"
+									maxlength="6"
+									size="10"
+									precision="4"
+									scale="0"
+									maxValue="9999" />
+
+								<xcp:number
+									id="txtValor"
+									label="#{bundle.lbl_valor_treinamento}"
+									size="10"
+									value="#{treinamentoBacking.entity.valor}"
+									precision="12"
+									scale="2" />
+							</h:panelGrid>
+
+							<h:panelGrid
+								columns="2"
+								columnClasses="form_label labelWidth,form_content">
+								<xcp:memo
+									id="txtObs"
+									rows="2"
+									label="#{bundle.lbl_obs}"
+									value="#{treinamentoBacking.entity.obs}"
+									size="500" />
+							</h:panelGrid>
+						</p:column>
+
+						<p:column>
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovArea"
+									value="#{treinamentoBacking.entity.areaFk}"
+									label="#{bundle.lbl_area}"
+									required="true"
+									query="grupofunc"
+									size="5" />
+
+								<xcp:lov
+									id="lovEspecie"
+									value="#{treinamentoBacking.entity.especieFk}"
+									label="#{bundle.lbl_especie}"
+									required="true"
+									query="especietreinamento"
+									size="5" />
+
+								<xcp:lov
+									id="lovMotivo"
+									value="#{treinamentoBacking.entity.motivoFk}"
+									label="#{bundle.lbl_motivo_canc}"
+									query="treinamento_motivo_c"
+									size="5" />
+
+								<xcp:lov
+									id="lovPesquisa"
+									value="#{treinamentoBacking.entity.pesquisaFk}"
+									label="#{bundle.lbl_pesquisa}"
+									query="clima_pesquisa"
+									size="5" />
+
+								<xcp:lov
+									id="lovPesquisaAplic"
+									value="#{treinamentoBacking.entity.pesquisaApliqFk}"
+									label="#{bundle.lbl_pesquisaAplic}"
+									query="clima_pesquisa"
+									size="5" />
+
+							</xcp:panelForm>
+
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<xcp:border
+											id="brd_duracao"
+											header="#{bundle.tit_duracao}">
+											<xcp:date
+												id="txtData"
+												required="true"
+												value="#{treinamentoBacking.entity.data}"
+												label="#{bundle.lbl_data}" />
+
+											<xcp:date
+												id="txtDatafim"
+												value="#{treinamentoBacking.entity.datafim}"
+												label="#{bundle.lbl_datafim}" />
+											<xcp:number
+												id="txtDuracao"
+												label="#{bundle.lbl_carga}"
+												required="true"
+												maxlength="9"
+												size="10"
+												value="#{treinamentoBacking.entity.duracao}"
+												precision="6"
+												scale="2" />
+										</xcp:border>
+									</p:column>
+									<p:column>
+										<xcp:border
+											id="brd_vagas"
+											header="#{bundle.tit_vagas}">
+											<xcp:panelForm>
+												<xcp:number
+													id="txtNrovagas"
+													label="#{bundle.lbl_nrovagas}"
+													value="#{treinamentoBacking.entity.nrovagas}"
+													size="6"
+													required="true"
+													precision="6"
+													scale="0"
+													maxValue="999999" />
+											</xcp:panelForm>
+										</xcp:border>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column colspan="2">
+							<p:tabView
+								id="tabTreinamento"
+								activeIndex="#{treinamentoBacking.activeIdx}"
+								cache="false">
+								<p:tab title="#{bundle.tit_objetivos}">
+									<xcp:memo
+										style="width:99%;height:225px"
+										id="txtObjetivo"
+										simple="true"
+										label="#{bundle.lbl_objetivo}"
+										value="#{treinamentoBacking.entity.objetivo}"
+										size="3800" />
+
+								</p:tab>
+								<p:tab title="#{bundle.tit_topicos}">
+									<xcp:memo
+										id="txtTopicos"
+										style="width:99%;height:225px"
+										simple="true"
+										label="#{bundle.lbl_topicos}"
+										value="#{treinamentoBacking.entity.topicos}"
+										size="3800" />
+
+								</p:tab>
+								<p:tab title="#{bundle.tit_matdidaticos}">
+									<xcp:memo
+										style="width:99%;height:225px"
+										id="txtMatdidaticos"
+										simple="true"
+										label="#{bundle.lbl_matdidaticos}"
+										value="#{treinamentoBacking.entity.matdidaticos}"
+										size="500" />
+								</p:tab>
+								<p:tab
+									id="abaTurmas"
+									title="#{bundle.tit_turmas}"
+									disabled="#{treinamentoBacking.entity.novo}">
+									<ui:include src="TreinamentoForm/TreinamentoTurmas.xhtml" />
+								</p:tab>
+								<p:tab
+									title="#{bundle.tit_funcoes}"
+									disabled="#{treinamentoBacking.entity.novo}">
+									<ui:include src="TreinamentoForm/TreinamentoCargos.xhtml" />
+								</p:tab>
+								<p:tab
+									title="#{bundle.tit_empresas}"
+									disabled="#{treinamentoBacking.entity.novo}">
+									<ui:include src="TreinamentoForm/TreinamentoEmpresas.xhtml" />
+								</p:tab>
+								<p:tab
+									title="#{bundle.tit_orcamentos}"
+									disabled="#{treinamentoBacking.entity.novo}">
+									<ui:include src="TreinamentoForm/TreinamentoOrcamentos.xhtml" />
+								</p:tab>
+
+								<p:tab
+									title="#{bundle.tit_anexos}"
+									disabled="#{treinamentoBacking.entity.novo}">
+									<ui:include src="TreinamentoForm/TreinamentoAnexos.xhtml" />
+								</p:tab>
+
+
+							</p:tabView>
+						</p:column>
+					</p:row>
+
+				</p:panelGrid>
+
+				<script>
+					$('#form\\:txtDataInsc').css("float","left");
+				</script>
+
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_copiar}"
+			modal="true"
+			id="dlg"
+			widgetVar="dlg_w">
+			<xcp:form id="frmDlg">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTreinamentoCopia"
+						value="#{treinamentoBacking.treinamentoCopiaFk}"
+						label="#{bundle.lbl_treinamento}"
+						required="true"
+						query="treinamento"
+						size="5" />
+
+					<xcp:manyCheck
+						id="chkProcessos"
+						value="#{treinamentoBacking.procSelList}"
+						label="#{bundle.lbl_processo}"
+						itens="#{treinamentoBacking.itensCopia}"
+						required="true" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_copiar"
+							icon="ui-icon-gear"
+							action="#{treinamentoBacking.actionCopiar}"
+							value="#{bundle.btn_copiar_trei}"
+							update=":form:tabTreinamento" />
+
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlg_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_mot_canc}"
+			modal="true"
+			id="dlgMotCanc"
+			widgetVar="dlgMotCanc_w">
+			<xcp:form id="frmCanc">
+				<xcp:panelDisable
+					disabled="#{treinamentoBacking.turmaSel.dthcancelamento != null}">
+					<xcp:panelForm>
+
+						<xcp:date
+							id="txtData"
+							label="#{bundle.lbl_data}"
+							value="#{treinamentoBacking.turmaSel.dthcancelamento}"
+							required="true" />
+
+						<xcp:lov
+							id="lovCodigo"
+							required="true"
+							value="#{treinamentoBacking.turmaSel.codigoFk}"
+							label="#{bundle.lbl_codigo}"
+							query="treinamento_motivo_c"
+							size="5" />
+
+						<xcp:memo
+							id="txtCanc"
+							label="#{bundle.lbl_obs}"
+							size="500"
+							value="#{treinamentoBacking.turmaSel.motivo}" />
+
+					</xcp:panelForm>
+				</xcp:panelDisable>
+				<p:toolbar
+					rendered="#{treinamentoBacking.turmaSel.dthcancelamento == null}">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_salvar"
+							action="#{treinamentoBacking.actionSalvarMot}"
+							value="#{bundle.btn_gravar}"
+							update=":form:tabTreinamento" />
+					</f:facet>
+				</p:toolbar>
+				<p:remoteCommand
+					name="rcFormAtualiza"
+					process="@this"
+					update="frmCanc" />
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{treinamentoBacking.treinamentoAnexosAnexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{treinamentoBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":form:tabTreinamento:tblAnex"
+							action="#{treinamentoBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

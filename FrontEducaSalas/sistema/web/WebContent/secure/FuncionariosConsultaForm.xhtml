@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="conteudo">
+
+		<h:outputStylesheet
+			name="/font-awesome/css/font-awesome.min.css"
+			library="lib" />
+	
+
+		<style type="text/css">
+			.label_prop_emp {
+				width: 77px;
+			}
+			
+			.label_prop_empl {
+				width: 82px;
+			}
+		</style>
+
+		<xcp:panelManut
+			id="Funcionarios"
+			consulta="true"
+			hideAtualizar="true"
+			backing="#{funcionariosBacking}"
+			lazy="true"
+			dataTableValue="#{funcionariosBacking.listaFuncionariosLazy}">
+
+			<ui:define name="barraFiltro">
+				<xcp:radio
+					id="cboSituacaoFuncionario"
+					value="#{funcionariosBacking.situacaoFuncionario}"
+					label="#{bundle.lbl_situacaoFuncionario}"
+					itens="#{funcionariosBacking.itensSituacaoFuncionario}"
+					simple="true" />
+				<script>
+					$(PrimeFaces.escapeClientId('form:cboSituacaoFuncionario')).find('input').each(function () {
+						this.onclick = function(){$(PrimeFaces.escapeClientId('form:btnAtualizar_Funcionarios')).click();};
+					});
+				</script>
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_numMatricula}"
+					value="#{row.numMatricula}"
+					type="Number"
+					rendered="#{funcionariosBacking.canRender('numMatricula')}"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.numMatricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desNome}"
+					value="#{row.desNome}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desNome')}"
+					size="40">
+					<xcp:outputSimple value="#{row.desNome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaNascimento}"
+					value="#{row.dtaNascimento}"
+					type="Date"
+					rendered="#{backing.canRender('dtaNascimento')}"
+					width="10%">
+					<xcp:outputSimpleDate value="#{row.dtaNascimento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaAdmissao}"
+					value="#{row.dtaAdmissao}"
+					type="Date"
+					rendered="#{funcionariosBacking.canRender('dtaAdmissao')}"
+					size="10">
+					<xcp:outputSimpleDate value="#{row.dtaAdmissao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desFuncao}"
+					value="#{row.desFuncao}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desFuncao')}"
+					size="35">
+					<xcp:outputSimple value="#{row.desFuncao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descccusto}"
+					value="#{row.desCcusto}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desCcusto')}"
+					size="35">
+					<xcp:outputSimple value="#{row.desCcusto}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_desvinculo}"
+					value="#{row.desVinculo}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desVinculo')}"
+					size="35">
+					<xcp:outputSimple value="#{row.desVinculo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desCargo_panelfunc}"
+					value="#{row.desCargo}"
+					type="String"
+					rendered="#{funcionariosBacking.canRender('desCargo')}"
+					width="25%">
+					<xcp:outputSimple value="#{row.desCargo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipMovimento}"
+					value="#{row.tipMovimento}"
+					type="Center"
+					rendered="#{funcionariosBacking.canRender('tipMovimento')}"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.tipMovimento}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desMovimento}"
+					value="#{row.desMovimento}"
+					type="Center"
+					rendered="#{funcionariosBacking.canRender('desMovimento')}"
+					width="15%">
+					<xcp:outputSimpleNumber
+						value="#{row.desMovimento}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdHoras}"
+					value="#{row.qtdHoras}"
+					type="Center"
+					rendered="#{(empty show_hrmensais or show_hrmensais) and funcionariosBacking.canRender('qtdHoras')}"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdHoras}"
+						precision="7"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_funcionarios_ncartao}"
+					value="#{row.numCartao}"
+					type="Center"
+					rendered="#{backing.canRender('numCartao')}"
+					width="5%">
+					<xcp:outputSimpleNumber
+						value="#{row.numCartao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numPis}"
+					value="#{row.numPis}"
+					type="Number"
+					rendered="#{funcionariosBacking.canRender('numPis')}"
+					size="12">
+					<xcp:outputSimpleNumber
+						value="#{row.numPis}"
+						precision="12"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_funcionarios_cpf}"
+					value="#{row.numCpf}"
+					type="Number"
+					rendered="#{(empty show_cpf or show_cpf) and funcionariosBacking.canRender('numCpf')}"
+					width="10%">
+					<xcp:outputSimpleCpf value="#{row.numCpf}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vlrSalario}"
+					value="#{row.vlrSalario}"
+					type="Number"
+					rendered="#{(empty show_venc or show_venc) and funcionariosBacking.canRender('vlrSalario')}"
+					size="14">
+					<xcp:outputSimpleNumber
+						value="#{row.vlrSalario}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<table style="width: 1245px;">
+					<tr>
+						<td><ui:include
+								src="FuncionariosForm/FuncionariosCabecalho.xhtml" /></td>
+					</tr>
+					<tr>
+						<td style="vertical-align: top;"><p:tabView
+								id="tabFuncionarios"
+								widgetVar="tabFuncionarios_w">
+								<p:tab
+									id="tabDadosPessoais"
+									title="#{bundle.tit_pessoais}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabDadosPessoais')}">
+									<xcp:panelDisable disabled="true">
+										<ui:include src="FuncionariosForm/FuncionariosPessoal.xhtml" />
+									</xcp:panelDisable>
+								</p:tab>
+
+								<p:tab
+									id="tabDadosProfissional"
+									title="#{bundle.tit_dados_profissional}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabDadosProfissional')}">
+									<xcp:panelDisable disabled="true">
+										<ui:include
+											src="FuncionariosForm/FuncionariosProfissional.xhtml" />
+									</xcp:panelDisable>
+								</p:tab>
+
+								<p:tab
+									id="tabDadosFilhacao"
+									title="#{bundle.tit_dados_dependentes}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabDadosFilhacao')}">
+									<ui:include
+										src="FuncionariosForm/FuncionariosDependentes.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabFerias"
+									title="#{bundle.tit_ferias}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabFerias')}">
+									<ui:include src="FuncionariosForm/FuncionariosFerias.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabMovimentacoes"
+									title="#{bundle.tit_movimentacoes}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabMovimentacoes')}">
+									<ui:include
+										src="FuncionariosForm/FuncionariosMovimentacoes.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabAtestados"
+									title="#{bundle.tit_atestados}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabAtestados')}">
+									<ui:include src="FuncionariosForm/FuncionariosAtestados.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabReajustes"
+									title="#{bundle.tit_reajustes}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabReajustes')}">
+									<ui:include src="FuncionariosForm/FuncionariosReajustes.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabPublicacoes"
+									title="#{bundle.tit_publicacoes}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabPublicacoes')}">
+									<ui:include
+										src="FuncionariosForm/FuncionariosPublicacoes.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabHitoricos"
+									title="#{bundle.tit_hitoricos}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabHitoricos')}">
+									<ui:include src="FuncionariosForm/FuncionariosHistoricos.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabFormacao"
+									title="#{bundle.tit_formacao}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabFormacao')}">
+									<ui:include src="FuncionariosForm/FuncionariosFormacao.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabEmpregos"
+									title="#{bundle.tit_empregos}"
+									rendered="#{empty show_tabs or show_tabs.contains('tabEmpregos')}">
+									<ui:include src="FuncionariosForm/FuncionariosEmpregos.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabColunasComplementares"
+									rendered="#{(empty show_tabs or show_tabs.contains('tabDadosPessoais')) and (funcionariosBacking.xcpTabelaColunaVO.colunaComplementar)}"
+									title="#{bundle.tit_colunas_complementares}">
+									<p:outputPanel id="pnlupcompl">
+										<xcp:panelDisable disabled="true">
+											<ui:include src="FuncionariosForm/FuncionariosColunas.xhtml" />
+										</xcp:panelDisable>
+									</p:outputPanel>
+								</p:tab>
+							</p:tabView></td>
+					</tr>
+				</table>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<ui:include src="FuncionariosForm/FuncionariosReajusteDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosPublicacoesDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosHistoricosDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosFormacaoDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosEmpregosDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosDependentesDialog.xhtml" />
+		<ui:include
+			src="FuncionariosForm/FuncionariosDependentesAnexoDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosFilhosDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosConjugeDialog.xhtml" />
+		<ui:include
+			src="FuncionariosForm/FuncionariosHistoricosDocDialog.xhtml" />
+		<ui:include
+			src="FuncionariosForm/FuncionariosPublicacoesDocDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosEmpregosDocDialog.xhtml" />
+		<ui:include
+			src="FuncionariosForm/FuncionariosFormacaoAnexoDialog.xhtml" />
+
+		<ui:include src="FuncionariosForm/FuncionariosFonesDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosEmailDialog.xhtml" />
+		<ui:include src="FuncionariosForm/FuncionariosDefDialog.xhtml" />
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{funcionariosBacking.modelEmp}" />
+		</ui:include>
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{funcionariosBacking.modelPub}" />
+		</ui:include>
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{funcionariosBacking.modelHist}" />
+		</ui:include>
+
+		<!-- EMISSAO DE PORTARIAS DIRETAS -->
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{averbacoesPortariaDiretaBacking}" />
+		</ui:include>
+
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{penalidadesPortariaDiretaBacking}" />
+		</ui:include>
+
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{provimentoPortariaDiretaBacking}" />
+		</ui:include>
+
+
+	</ui:define>
+
+</ui:composition>

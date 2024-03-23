@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Assistencia"
+			backing="#{assistenciaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_assistencia}"
+					value="#{row.assistencia}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.assistencia}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="120">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{assistenciaBacking.itensTipo}"
+					size="50">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{assistenciaBacking.itensTipo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtAssistencia"
+						label="#{bundle.lbl_assistencia}"
+						required="true"
+						value="#{assistenciaBacking.entity.assistencia}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not assistenciaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{assistenciaBacking.entity.descricao}"
+						size="119" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{assistenciaBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="#{not assistenciaBacking.entity.novo}"
+						itens="#{assistenciaBacking.itensTipo}">
+						<p:ajax
+							event="change"
+							update="cboDependente,cboDependente_l,cboCat,cboCat_l,cboAfastamento,cboAfastamento_l,lovTipmov,lovTipmov_l,cboQuebra,cboQuebra_l,txtDiasminimo,txtDiasminimo_l,lovTipmovQuebra,lovTipmovQuebra_l,cboDtfim,cboDtfim_l,cboReencaminha,cboReencaminha_l,cboTipUnid,cboTipUnid_l" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboTipUnid"
+						value="#{assistenciaBacking.entity.tipUnid}"
+						label="#{bundle.lbl_tipUnid}"
+						required="true"
+						itens="#{assistenciaBacking.itensTipUnid}"
+						rendered="#{assistenciaBacking.entity.tipo == 2}">
+						<p:ajax
+							event="change"
+							update="lovTipmov,lovTipmov_l,cboAfastamento,cboAfastamento_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovTipmov"
+						value="#{assistenciaBacking.entity.tipmovFk}"
+						rendered="#{assistenciaBacking.afastamento}"
+						label="#{bundle.lbl_tipmov}"
+						query="tipomovtos"
+						size="4" />
+
+					<xcp:combo
+						id="cboDependente"
+						value="#{assistenciaBacking.entity.dependente}"
+						label="#{bundle.lbl_dependente}"
+						required="true"
+						itens="#{assistenciaBacking.itensIndSimNao}"
+						rendered="#{assistenciaBacking.renderedDependente}" />
+
+					<xcp:combo
+						id="cboCat"
+						value="#{assistenciaBacking.entity.cat}"
+						label="#{bundle.lbl_cat}"
+						required="true"
+						rendered="#{assistenciaBacking.renderedCat}"
+						itens="#{assistenciaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboAfastamento"
+						rendered="#{assistenciaBacking.renderedIndAfast}"
+						value="#{assistenciaBacking.entity.afastamento}"
+						label="#{bundle.lbl_afastamento}"
+						itens="#{assistenciaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboTipLanc"
+						value="#{assistenciaBacking.entity.tipLanc}"
+						label="#{bundle.lbl_tipLanc}"
+						itens="#{assistenciaBacking.itensTipLanc}" />
+
+					<xcp:combo
+						id="cboProcesso"
+						value="#{assistenciaBacking.entity.processo}"
+						label="#{bundle.lbl_ind_processo}"
+						rendered="#{assistenciaBacking.afastamento}"
+						itens="#{assistenciaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboQuebra"
+						rendered="#{assistenciaBacking.afastamento}"
+						value="#{assistenciaBacking.entity.quebraAfast}"
+						label="#{bundle.lbl_quebraAfastamento}"
+						itens="#{assistenciaBacking.itensIndSimNao}">
+						<p:ajax
+							event="change"
+							update="txtDiasminimo,txtDiasminimo_l,lovTipmovQuebra,lovTipmovQuebra_l" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtDiasminimo"
+						label="#{bundle.lbl_diasMinimoQuebra}"
+						rendered="#{assistenciaBacking.entity.quebraAfast == 1 and assistenciaBacking.afastamento}"
+						required="true"
+						value="#{assistenciaBacking.entity.diasQuebra}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:lov
+						id="lovTipmovQuebra"
+						value="#{assistenciaBacking.entity.tipmovQuebraFk}"
+						rendered="#{assistenciaBacking.entity.quebraAfast == 1 and assistenciaBacking.afastamento}"
+						label="#{bundle.lbl_tipmovQuebra}"
+						query="tipomovtos"
+						required="true"
+						size="4" />
+
+
+					<xcp:combo
+						id="cboDtfim"
+						required="true"
+						rendered="#{assistenciaBacking.renderedIndAfast}"
+						value="#{assistenciaBacking.entity.indDtfim}"
+						label="#{bundle.lbl_indTermino}"
+						itens="#{assistenciaBacking.itensIndSimNao}" />
+
+
+					<xcp:combo
+						id="cboReencaminha"
+						rendered="#{assistenciaBacking.afastamento}"
+						value="#{assistenciaBacking.entity.indReencaminha}"
+						label="#{bundle.lbl_indReencaminha}"
+						itens="#{assistenciaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboCidObrigatorio"
+						value="#{assistenciaBacking.entity.cidObrigatorio}"
+						label="#{bundle.lbl_cidObrigatorio}"
+						itens="#{assistenciaBacking.itensIndSimNao}"
+						required="true" />
+
+					<xcp:combo
+						id="cboPortal"
+						value="#{assistenciaBacking.entity.indPortal}"
+						label="#{bundle.lbl_indPortal}"
+						itens="#{assistenciaBacking.itensIndSimNao}"
+						required="true">
+						<p:ajax
+							event="change"
+							update="txtObs,txtObs_l" />
+					</xcp:combo>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_orientportal}"
+						value="#{assistenciaBacking.entity.txtOrientPortal}"
+						size="2000"
+						rendered="#{assistenciaBacking.entity.indPortal == 1}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<p:outputPanel rendered="#{assistenciaBacking.afastamento}">
+					<ui:include src="AssistenciaForm/AssistenciaafastForm.xhtml" />
+				</p:outputPanel>
+
+				<p:outputPanel rendered="#{not assistenciaBacking.afastamento}">
+
+					<ui:include src="AssistenciaForm/AssistenciamotivoForm.xhtml" />
+
+					<ui:include src="AssistenciaForm/AssistenciatipoForm.xhtml" />
+
+					<p:outputPanel rendered="#{assistenciaBacking.renderedTabFuncao}">
+
+						<ui:include src="AssistenciaForm/AssistenciafuncaoForm.xhtml" />
+
+					</p:outputPanel>
+				</p:outputPanel>
+
+				<ui:include src="AssistenciaForm/AssistenciaavisoForm.xhtml" />
+
+				<ui:include src="AssistenciaForm/AssistenciavincForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

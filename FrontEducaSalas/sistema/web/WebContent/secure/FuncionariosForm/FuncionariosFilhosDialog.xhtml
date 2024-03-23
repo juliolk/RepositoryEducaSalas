@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		header="#{bundle.title_filho}"
+		modal="true"
+		id="dlgFilho"
+		widgetVar="dlgFilho_w"
+		dynamic="true">
+		<xcp:form id="frmFilho">
+
+			<xcp:panelForm>
+				<xcp:output
+					id="outSeqfilho"
+					label="#{bundle.lbl_nro_depend}"
+					value="#{funcionariosBacking.filho.sequencia}" />
+
+				<xcp:text
+					id="txtNome"
+					label="#{bundle.lbl_nome}"
+					readonly="true"
+					value="#{funcionariosBacking.filho.dependenteFk.nome}"
+					size="50" />
+
+				<xcp:combo
+					id="txtSexo"
+					required="true"
+					readonly="true"
+					label="#{bundle.lbl_sexo}"
+					value="#{funcionariosBacking.filho.sexo}"
+					itens="#{funcionariosBacking.itensSexo}"
+					size="1" />
+
+				<xcp:lov
+					id="lovCidade"
+					label="#{bundle.lbl_cidade}"
+					value="#{funcionariosBacking.filho.cidadeFk}"
+					row="#{filho}"
+					query="cidades"
+					size="10" />
+
+				<xcp:text
+					id="txtCartorio"
+					label="#{bundle.lbl_cartorio}"
+					value="#{funcionariosBacking.filho.cartorio}"
+					maxlength="25"
+					size="10" />
+
+				<xcp:text
+					id="txtLivro"
+					label="#{bundle.lbl_livro}"
+					value="#{funcionariosBacking.filho.livro}"
+					maxlength="6"
+					size="10" />
+
+				<xcp:text
+					id="txtFolha"
+					label="#{bundle.lbl_nfolha}"
+					value="#{funcionariosBacking.filho.nfolha}"
+					maxlength="6"
+					size="10" />
+
+				<xcp:text
+					id="txtNregistro"
+					label="#{bundle.lbl_nregistro}"
+					value="#{funcionariosBacking.filho.nregistro}"
+					size="50" />
+
+				<xcp:date
+					label="#{bundle.lbl_dta_certificado}"
+					id="txtCertificado"
+					value="#{funcionariosBacking.filho.certificado}"
+					size="10" />
+
+				<xcp:date
+					label="#{bundle.lbl_dta_creche}"
+					id="txtCreche"
+					value="#{funcionariosBacking.filho.dtcreche}"
+					size="10" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						update="@form"
+						value="#{bundle.btn_gravar}"
+						action="#{funcionariosBacking.actionGravarFilho}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgFilho_w').hide();return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+</ui:composition>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<script>
+		function modificaPrime(){
+			$('input[name=form\\:tblFuncionarios_checkbox]').closest('tr').click(function(e) {
+				var idx = $(this).data('ri');
+				if($(this).hasClass('ui-state-highlight')){
+					PF('tblvar').unselectRow(idx);
+				}else{
+					PF('tblvar').selectRow(idx);
+				}	
+				return false;
+			});
+		}
+	</script>
+
+	<p:fieldset legend="#{bundle.title_funcionarios}">
+		<xcp:panelForm>
+
+			<xcp:lov
+				id="lovCargo"
+				value="#{lancLotesBacking.helper.cargo}"
+				label="#{bundle.lbl_cargo}"
+				query="cargos"
+				selectionListener="#{lancLotesBacking.selectCargo}"
+				size="10"
+				update="lovCpPadrao lovNivel" />
+
+			<xcp:lov
+				id="lovCpPadrao"
+				value="#{lancLotesBacking.helper.cargosPadroesLov}"
+				label="#{bundle.lbl_desPadrao}"
+				query="cargos_padroes"
+				size="10"
+				params="#{lancLotesBacking.parEspPadrao}"
+				selectionListener="#{lancLotesBacking.selectPadrao}"
+				update="lovNivel" />
+
+			<xcp:lov
+				id="lovNivel"
+				value="#{lancLotesBacking.helper.padroesNiveis}"
+				label="#{bundle.lbl_nivel}"
+				query="padroesniveis_padrao"
+				params="#{lancLotesBacking.parEspNivel}"
+				size="10" />
+
+			<xcp:lov
+				id="lovVinculos"
+				value="#{lancLotesBacking.helper.vinculos}"
+				label="#{bundle.lbl_vinculos}"
+				query="vinculos"
+				update="tblFuncionarios"
+				size="10" />
+
+			<xcp:lov
+				id="lovOrgao"
+				value="#{lancLotesBacking.helper.orgao}"
+				label="#{bundle.lbl_orgao}"
+				query="orgaos"
+				size="10" />
+
+			<xcp:lov
+				id="lovDivisao"
+				value="#{lancLotesBacking.helper.divisao}"
+				params="#{lancLotesBacking.paramsDivisao}"
+				label="#{bundle.lbl_divisao}"
+				query="divisoes_orgao"
+				size="10" />
+
+			<xcp:lov
+				id="lovSetor"
+				value="#{lancLotesBacking.helper.setores}"
+				label="#{bundle.lbl_setor}"
+				query="set_div_validade"
+				size="10"
+				params="#{lancLotesBacking.paramsSetor}" />
+
+			<xcp:lov
+				id="lovRep"
+				value="#{lancLotesBacking.helper.relogios}"
+				label="#{bundle.lbl_rep}"
+				query="relogios"
+				size="10" />
+
+		</xcp:panelForm>
+
+
+		<xcp:commandButton
+			id="btn_buscar"
+			value="#{bundle.btn_buscar}"
+			style="margin-top:10px;margin-bottom:10px"
+			icon="ui-icon-search"
+			action="#{lancLotesBacking.actionBuscaFuncionarios}"
+			update="tblFuncionarios"
+			oncomplete="modificaPrime()" />
+
+
+	</p:fieldset>
+
+	<p:fieldset legend="#{bundle.tit_individual}">
+		<xcp:panelForm>
+			<xcp:lov
+				id="lovMatricula"
+				value="#{lancLotesBacking.helper.funcionariosLov}"
+				label="#{bundle.lbl_funcionario}"
+				query="#{lancLotesBacking.queryFunc}"
+				update="tblFuncionarios"
+				size="6" />
+		</xcp:panelForm>
+
+		<xcp:commandButton
+			id="btn_adicionar"
+			value="#{bundle.btn_buscar}"
+			icon="ui-icon-search"
+			action="#{lancLotesBacking.actionAdicionaFuncionario}"
+			update="lovMatricula tblFuncionarios"
+			oncomplete="modificaPrime()" />
+	</p:fieldset>
+
+	<p:spacer height="5px" />
+
+	<p:fieldset>
+
+		<xcp:commandButton
+			id="btn_limpar"
+			value="#{bundle.btn_limparSelecao}"
+			style="margin-top:10px;margin-bottom:10px"
+			icon="ui-icon-trash"
+			immediate="true"
+			action="#{lancLotesBacking.actionLimparSelecao}"
+			update="tblFuncionarios" />
+
+		<p:dataTable
+			id="tblFuncionarios"
+			var="row"
+			rowKey="#{row}"
+			widgetVar="tblvar"
+			value="#{lancLotesBacking.helper.listaFuncionarios}"
+			selection="#{lancLotesBacking.helper.listaFuncionariosSel}"
+			sortMode="multiple"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			scrollable="true"
+			filteredValue="#{lancLotesBacking.helper.listaFuncionariosFiltrados}">
+
+			<p:column
+				selectionMode="multiple"
+				style="width:15px;text-align:center" />
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.numMatricula}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.numMatricula}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.desNome}"
+				type="String"
+				size="70">
+				<xcp:outputSimple value="#{row.desNome}" />
+			</xcp:column>
+			
+			<xcp:column
+				headerText="#{bundle.col_funcao}"
+				value="#{row.desFuncao}"
+				type="String"
+				size="70">
+				<xcp:outputSimple value="#{row.desFuncao}" />
+			</xcp:column>			
+
+		</p:dataTable>
+	</p:fieldset>
+
+</ui:composition>

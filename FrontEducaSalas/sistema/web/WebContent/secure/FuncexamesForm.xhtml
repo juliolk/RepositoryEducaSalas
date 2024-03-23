@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Funcexames"
+			backing="#{funcexamesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_exame}"
+					value="#{row.exameFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.exameFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="Number"
+					size="20">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{funcexamesBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataprox}"
+					value="#{row.dataprox}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataprox}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovExame"
+						value="#{funcexamesBacking.entity.exameFk}"
+						label="#{bundle.lbl_exame}"
+						required="true"
+						query="examesmedicos"
+						size="3"
+						readonly="#{not funcexamesBacking.entity.novo}"
+						selectionListener="#{funcexamesBacking.selectExame}"
+						update="txtCnpjlab,txtCnpjlab_l,txtCodexametox,txtCodexametox_l,lovMedico,lovMedico_l,cboIndRecusa,cboIndRecusa_l,cboOrdem,cboOrdem_l" />
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{funcexamesBacking.entity.data}"
+						label="#{bundle.lbl_data}"
+						readonly="#{not funcexamesBacking.entity.novo}">
+						<p:ajax
+							event="change"
+							update="txtDataprox"
+							listener="#{funcexamesBacking.changeData}" />
+						<p:ajax
+							event="dateSelect"
+							update="txtDataprox"
+							listener="#{funcexamesBacking.changeData}" />
+					</xcp:date>
+
+					<xcp:combo
+						id="cboOrdem"
+						value="#{funcexamesBacking.entity.indOrdem}"
+						label="#{bundle.col_ordem}"
+						itens="#{funcexamesBacking.itensOrdem}"
+						required="true"
+						rendered="#{funcexamesBacking.entity.exameFk.tipo == 1}">
+					</xcp:combo>
+					
+					<xcp:combo
+						id="cboSituacao"
+						value="#{funcexamesBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{funcexamesBacking.itensSituacao}">
+						<p:ajax
+							update="txtDataprox"
+							listener="#{funcexamesBacking.changeSituacao}" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboIndRecusa"
+						value="#{funcexamesBacking.entity.indRecusa}"
+						label="#{bundle.lbl_indRecusa}"
+						itens="#{funcexamesBacking.itensIndSimNao}"
+						rendered="#{funcexamesBacking.entity.exameFk.tipo == 2}">
+						<p:ajax
+							update="txtCnpjlab,txtCnpjlab_l,txtCodexametox,txtCodexametox_l,lovMedico,lovMedico_l" />
+					</xcp:combo>
+
+					<xcp:cnpj
+						id="txtCnpjlab"
+						label="#{bundle.lbl_cnpjlab}"
+						value="#{funcexamesBacking.entity.cnpjlab}"
+						size="14"
+						required="true"
+						rendered="#{funcexamesBacking.entity.exameFk.tipo == 2 and funcexamesBacking.entity.indRecusa == 0}" />
+
+					<xcp:text
+						id="txtCodexametox"
+						label="#{bundle.lbl_codexametox}"
+						value="#{funcexamesBacking.entity.codexametox}"
+						size="17"
+						required="true"
+						rendered="#{funcexamesBacking.entity.exameFk.tipo == 2 and funcexamesBacking.entity.indRecusa == 0}" />
+
+					<xcp:lov
+						id="lovMedico"
+						value="#{funcexamesBacking.entity.medicoFk}"
+						label="#{bundle.lbl_medico}"
+						query="lov_medicos_crm"
+						size="8"
+						required="true"
+						rendered="#{funcexamesBacking.entity.exameFk.tipo == 2 and funcexamesBacking.entity.indRecusa == 0}" />
+
+					<xcp:memo
+						id="txtLaudo"
+						label="#{bundle.lbl_laudo}"
+						value="#{funcexamesBacking.entity.laudo}"
+						size="2000" />
+
+					<xcp:date
+						id="txtDataprox"
+						value="#{funcexamesBacking.entity.dataprox}"
+						label="#{bundle.lbl_dataprox}"
+						readonly="#{funcexamesBacking.entity.situacao == 1}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcpfunc:anexosButton
+					id="funcexames"
+					entity="#{funcexamesBacking.entity}"
+					funcionarioPK="#{funcexamesBacking.funcionario.PK}" />
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<xcpfunc:anexosDialog />
+	</ui:define>
+</ui:composition>

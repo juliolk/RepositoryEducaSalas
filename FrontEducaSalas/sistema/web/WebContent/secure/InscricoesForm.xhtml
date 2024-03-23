@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelTreinamento
+			id="Inscricoes"
+			backing="#{inscricoesBacking}">
+
+			<ui:define name="barraLista">
+				<p:column>
+					<xcp:commandButton
+						id="btn_enviar_msg"
+						icon="ui-icon-document"
+						immediate="true"
+						value="#{bundle.btn_enviar_msg}"
+						action="#{inscricoesBacking.actionOpenMsgDialog}"
+						update=":formmsg" />
+				</p:column>
+			</ui:define>
+
+			<ui:define name="panelLista">
+
+				<p:fieldset legend="#{bundle.tit_inscritos}">
+					<p:dataTable
+						id="table_inscritos"
+						var="rowInscritos"
+						value="#{inscricoesBacking.listaInscritos}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						scrollable="true"
+						scrollHeight="161"
+						selectionMode="single"
+						selection="#{inscricoesBacking.inscritoSelecionado}"
+						rowKey="#{rowInscritos.PK}">
+
+						<xcp:column
+							headerText="#{bundle.col_empresa}"
+							type="Number"
+							size="4">
+							<xcp:outputSimpleNumber
+								value="#{rowInscritos.empresa}"
+								precision="8"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_matricula}"
+							type="Number"
+							size="10"
+							sortBy="#{rowInscritos.matricula}">
+							<xcp:outputSimpleNumber
+								value="#{rowInscritos.matricula}"
+								precision="8"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_nome}"
+							type="String"
+							size="30"
+							sortBy="#{rowInscritos.funcionarioFk.nome}">
+							<xcp:outputSimple value="#{rowInscritos.funcionarioFk.nome}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_cargo}"
+							type="String"
+							size="30"
+							sortBy="#{rowInscritos.funcionarioFk.cargoFk.descricao}">
+							<xcp:outputSimple
+								value="#{rowInscritos.funcionarioFk.cargoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_setor}"
+							type="String"
+							size="30"
+							sortBy="#{rowInscritos.funcionarioFk.setorFk.descricao}">
+							<xcp:outputSimple
+								value="#{rowInscritos.funcionarioFk.setorFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_situacao}"
+							type="String"
+							size="20"
+							sortBy="#{rowInscritos.status}">
+							<xcp:outputSimple
+								value="#{rowInscritos.status}"
+								itens="#{inscricoesBacking.itensStatus}" />
+
+							<h:outputText
+								value="#{bundle.msg_pendente}"
+								rendered="#{rowInscritos.tipAprovacao == 0 and rowInscritos.dthcancelamento == null}"
+								style="font-weight:bold;padding-left: 2px;" />
+
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_origem}"
+							type="String"
+							size="20">
+							<xcp:outputSimple
+								value="#{rowInscritos.tipInscricao}"
+								itens="#{inscricoesBacking.itensTipInscricao}" />
+						</xcp:column>
+
+						<xcp:column size="4">
+							<xcp:commandLink
+								id="btn_acomp_insc"
+								immediate="true"
+								action="#{inscricoesBacking.actionEditarAcompanhante(rowInscritos)}"
+								rendered="#{rowInscritos.dthcancelamento == null and rowInscritos.status != 4}">
+
+								<h:graphicImage
+									title="#{bundle.hint_acompanhante}"
+									value="/resources/img/icon_acomp.png"
+									rendered="#{rowInscritos.nomeAcomp != null}"
+									style="margin-top:3px" />
+
+								<h:graphicImage
+									title="#{bundle.hint_acompanhante}"
+									value="/resources/img/icon_acomp_gray.png"
+									rendered="#{rowInscritos.nomeAcomp == null}"
+									style="margin-top:3px" />
+							</xcp:commandLink>
+
+						</xcp:column>
+
+						<p:column style="width: 15px;">
+							<xcp:commandLink
+								id="btn_canc_insc"
+								immediate="true"
+								update="table_inscritos,:form:panelTotais"
+								rendered="#{rowInscritos.dthcancelamento == null and rowInscritos.status != 4}"
+								action="#{inscricoesBacking.actionCancelarInscricao(rowInscritos)}">
+								<h:graphicImage
+									title="#{bundle.hint_cancelarInscricao}"
+									value="/resources/img/cancelar_doc.png"
+									style="margin-top:3px;" />
+							</xcp:commandLink>
+
+							<xcp:commandLink
+								id="btn_info"
+								immediate="true"
+								rendered="#{rowInscritos.dthcancelamento != null and rowInscritos.status != 4}"
+								action="#{inscricoesBacking.actionShowInfo(rowInscritos)}">
+								<h:graphicImage
+									title="#{bundle.hint_infoCanc}"
+									value="/resources/img/procurar.png"
+									style="margin-top:3px;" />
+							</xcp:commandLink>
+
+						</p:column>
+
+						<p:column style="width: 15px;">
+							<xcp:commandLink
+								id="btn_remover_inscrito"
+								immediate="true"
+								update="table_inscritos,:form:panelTotais"
+								rendered="#{rowInscritos.status != 4}"
+								action="#{inscricoesBacking.actionRemoveInscrito(rowInscritos)}">
+								<h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" />
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+							</xcp:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="panelAcoes">
+				<xcp:panelForm>
+
+					<xcp:radio
+						id="optTipo"
+						value="#{inscricoesBacking.helper.tipoFunc}"
+						itens="#{inscricoesBacking.itensTipoFunc}"
+						label="#{bundle.lbl_tipoFunc}">
+						<p:ajax
+							event="change"
+							update="lovNovoInscrito lovEmpresa lovEmpresa_l"
+							listener="#{inscricoesBacking.actionChangeTipoFunc}" />
+					</xcp:radio>
+
+					<xcp:lov
+						id="lovEmpresa"
+						value="#{inscricoesBacking.helper.empresaFk}"
+						rendered="#{inscricoesBacking.helper.tipoFunc == 2}"
+						label="#{bundle.lbl_empresa}"
+						query="empresas_out" />
+
+					<xcp:lov
+						id="lovNovoInscrito"
+						value="#{inscricoesBacking.funcionarioSelecionado}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="#{inscricoesBacking.queryFunc}"
+						params="#{inscricoesBacking.paramsFunc}" />
+
+					<h:outputText value="" />
+
+					<xcp:commandButton
+						id="btnConfirmar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_confirmar}"
+						action="#{inscricoesBacking.actionConfirmarFuncionario}"
+						update="detalhes :form:lovNovoInscrito" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="panelDet">
+				<p:panelGrid
+					id="panelTotais"
+					columns="4"
+					styleClass="tabela_alinhamento">
+					<xcp:number
+						id="txtNrovagas"
+						label="#{bundle.lbl_nrovagastrei}"
+						value="#{inscricoesBacking.entity.nrovagas}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:number
+						id="txtInscritos"
+						label="#{bundle.lbl_inscritostrei}"
+						value="#{inscricoesBacking.qtdInscritosTrei}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:number
+						id="txtNrovagasturma"
+						label="#{bundle.lbl_nrovagasturma}"
+						value="#{inscricoesBacking.turmaSelecionada.qtdvagas}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:number
+						id="txtInscritosturma"
+						label="#{bundle.lbl_inscritosturma}"
+						value="#{inscricoesBacking.qtdInscritosTurma}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+				</p:panelGrid>
+			</ui:define>
+		</xcp:panelTreinamento>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_enviar_msg}"
+			modal="true"
+			id="dlgMsg"
+			width="800px"
+			widgetVar="dlgMsg_w">
+			<xcp:form
+				id="formmsg"
+				multipart="true">
+
+				<xcp:panelForm>
+
+					<h:outputText value="" />
+
+					<h:outputText
+						value="#{inscricoesBacking.msgMatriculas}"
+						style="color:red;font-style:red; display:block;width:600px; word-wrap:break-word;" />
+
+					<xcp:radio
+						id="txtEnvio"
+						label="#{bundle.lbl_tipoEnvio}"
+						required="true"
+						value="#{inscricoesBacking.helper.tipEnvio}"
+						itens="#{inscricoesBacking.itensTipEnvio}">
+						<p:ajax
+							event="change"
+							update="@form" />
+					</xcp:radio>
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{inscricoesBacking.helper.funcionariosLov}"
+						label="#{bundle.lbl_funcionario}"
+						query="funcionariosLovTrei"
+						params="#{inscricoesBacking.parEspFunc}"
+						size="15"
+						update=":formmsg:lovMatricula :formmsg:table_sel"
+						selectionListener="#{inscricoesBacking.selectFuncionarioMsg}"
+						rendered="#{inscricoesBacking.helper.tipEnvio == 2}" />
+
+					<h:outputText
+						value=""
+						rendered="#{inscricoesBacking.helper.tipEnvio == 2}" />
+
+					<p:dataTable
+						id="table_sel"
+						var="row"
+						rendered="#{inscricoesBacking.helper.tipEnvio == 2}"
+						value="#{inscricoesBacking.helper.listFuncLov}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						scrollable="true"
+						scrollHeight="161">
+
+						<p:column
+							width="170"
+							headerText="#{bundle.col_matricula}"
+							styleClass="xcp_column_Number">
+							<xcp:outputSimpleNumber
+								value="#{row.matricula}"
+								precision="10"
+								scale="0" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_nome}"
+							type="String">
+							<xcp:outputSimple value="#{row.nome}" />
+						</p:column>
+
+						<p:column style="width: 15px;">
+							<xcp:commandLink
+								id="btn_remover_sel"
+								immediate="true"
+								update=":formmsg:table_sel"
+								process="@this"
+								action="#{inscricoesBacking.actionRemoveSel(row)}">
+								<h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" />
+							</xcp:commandLink>
+						</p:column>
+					</p:dataTable>
+
+					<xcp:radio
+						id="txtMsg"
+						label="#{bundle.lbl_tipMsg}"
+						required="true"
+						value="#{inscricoesBacking.helper.tipMsg}"
+						itens="#{inscricoesBacking.itensTipMsg}">
+						<p:ajax
+							event="change"
+							update="@form" />
+					</xcp:radio>
+
+					<xcp:lov
+						id="lovSeqTexto"
+						required="true"
+						value="#{inscricoesBacking.helper.xcpTexto}"
+						label="#{bundle.lbl_textoEmail}"
+						query="xcp_texto"
+						size="20"
+						rendered="#{inscricoesBacking.helper.tipMsg == 1}" />
+
+					<xcp:text
+						id="txtAssunto"
+						required="true"
+						label="#{bundle.lbl_assuntoEmail}"
+						value="#{inscricoesBacking.helper.assunto}"
+						rendered="#{inscricoesBacking.helper.tipMsg == 2}" />
+
+					<h:outputLabel
+						value="#{bundle.lbl_mensagem}:"
+						rendered="#{inscricoesBacking.helper.tipMsg == 2}" />
+
+					<p:editor
+						id="txtMsgDlg"
+						required="true"
+						label="#{bundle.lbl_mensagem}"
+						widgetVar="editorWidget"
+						value="#{inscricoesBacking.helper.desMsg}"
+						rendered="#{inscricoesBacking.helper.tipMsg == 2}"
+						width="600" />
+
+					<h:outputLabel value="#{bundle.lbl_anexo}:" />
+
+					<p:fileUpload
+						id="uploadAnexos"
+						mode="advanced"
+						auto="true"
+						label="#{bundle.btn_upload}"
+						uploadLabel="#{bundle.btn_upload}"
+						invalidFileMessage="#{bundle.msg_upload_arquivo}"
+						converterMessage="#{bundle.msg_upload_conversao}"
+						fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+						invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+						messageTemplate="#{bundle.msg_upload_mensagem}"
+						requiredMessage="#{bundle.msg_upload_requerido}"
+						validatorMessage="#{bundle.msg_upload_validacao}"
+						cancelLabel="#{bundle.btn_upload_cancel}"
+						dragDropSupport="false"
+						fileUploadListener="#{inscricoesBacking.actionUploadAnexo}" />
+
+				</xcp:panelForm>
+
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_enviar"
+							icon="ui-icon-document"
+							process="btn_enviar txtEnvio lovSeqTexto txtMsg txtAssunto txtMsgDlg"
+							value="#{bundle.btn_enviar}"
+							action="#{inscricoesBacking.actionEnviarMsg}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_mot_canc}"
+			modal="true"
+			id="dlgMotCanc"
+			widgetVar="dlgMotCanc_w">
+			<xcp:form id="frmCanc">
+				<xcp:panelDisable
+					disabled="#{inscricoesBacking.functreisel.status == 9}">
+
+					<xcp:panelForm>
+						<xcp:date
+							id="txtData"
+							label="#{bundle.lbl_data}"
+							value="#{inscricoesBacking.dtaCanc}"
+							required="true" />
+
+						<xcp:lov
+							id="lovCodigo"
+							required="true"
+							value="#{inscricoesBacking.treimot}"
+							label="#{bundle.lbl_codigo}"
+							query="treinamento_motivo_c"
+							size="5" />
+
+						<xcp:memo
+							id="txtCanc"
+							label="#{bundle.lbl_obs}"
+							size="500"
+							value="#{inscricoesBacking.obs}" />
+
+					</xcp:panelForm>
+				</xcp:panelDisable>
+				<p:toolbar rendered="#{inscricoesBacking.functreisel.status != 9}">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_salvar"
+							action="#{inscricoesBacking.actionSalvarMot}"
+							value="#{bundle.btn_gravar}"
+							update=":form:detalhes" />
+					</f:facet>
+				</p:toolbar>
+				<p:remoteCommand
+					name="rcFormAtualiza"
+					process="@this"
+					update="frmCanc" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_acompanhante}"
+			modal="true"
+			id="dlgAcomp"
+			widgetVar="dlgAcomp_w">
+			<xcp:form id="frmAcomp">
+
+				<p:focus context="frmAcomp" />
+
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtNomeAcomp"
+						label="#{bundle.lbl_nomeAcomp}"
+						value="#{inscricoesBacking.functreisel.nomeAcomp}"
+						size="80" />
+
+					<xcp:text
+						id="txtRgAcomp"
+						label="#{bundle.lbl_rgAcomp}"
+						value="#{inscricoesBacking.functreisel.rgAcomp}"
+						size="19" />
+
+					<xcp:cpf
+						id="txtCpfAcomp"
+						label="#{bundle.lbl_cpfAcomp}"
+						value="#{inscricoesBacking.functreisel.cpfAcomp}" />
+
+					<xcp:email
+						id="txtEmail"
+						label="#{bundle.lbl_emailAcomp}"
+						value="#{inscricoesBacking.functreisel.emailAcomp}"
+						size="70" />
+
+					<xcp:fone
+						id="txtFone"
+						label="#{bundle.lbl_foneAcomp}"
+						value="#{inscricoesBacking.functreisel.foneAcomp}"
+						size="30" />
+
+				</xcp:panelForm>
+				<p:toolbar rendered="#{inscricoesBacking.functreisel.status != 9}">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_salvar"
+							action="#{inscricoesBacking.actionSalvarAcompanhante}"
+							value="#{bundle.btn_gravar}"
+							update=":form:detalhes" />
+
+						<xcp:commandButton
+							id="btn_limpar"
+							action="#{inscricoesBacking.actionLimparAcompanhante}"
+							value="#{bundle.btn_excluir}"
+							update=":form:detalhes" />
+					</f:facet>
+				</p:toolbar>
+				<p:remoteCommand
+					name="rcFormAtuaAcomp"
+					process="@this"
+					update="frmAcomp" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

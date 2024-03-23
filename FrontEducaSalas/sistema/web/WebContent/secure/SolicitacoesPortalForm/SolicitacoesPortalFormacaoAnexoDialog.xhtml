@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_formacao}"
+		modal="true"
+		minWidth="300"
+		id="dlgForAnex"
+		widgetVar="dlgFormAnexo_w"
+		closeOnEscape="true"
+		styleClass="full-page-dialog rightside-dialog"					
+		dynamic="true"
+		resizable="false"
+		draggable="false"
+		closable="false"
+		onShow="$(this).eachHasValue();">
+
+		<xcp:form
+			id="frmForAnex"
+			multipart="true">
+
+			<p:outputPanel id="pnl_anexos">
+				<table
+					class="table material table-inspector table-medium table-noborder table-striped">
+					<thead>
+						<tr>
+							<th></th>
+							<th>#{bundle.col_nome}</th>
+							<th>#{bundle.col_acoes}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:repeat
+							value="#{solicitacoesPortalBacking.formacaoSelecionada.listAnexos}"
+							var="row">
+							<tr>
+								<td data-title="#{bundle.lbl_tipo_solicitacao}" class="table-icon-column">
+									<span title="#{solicitacoesPortalBacking.getLabelTipoSolicitacao(row.tipoSolicitacao)}">
+										<i class="fa fa-fw #{row.tipoSolicitacao == 1 ? 'fa-plus-square success-color' : (row.tipoSolicitacao == 2 ? 'fa-pencil-square positive-color' : 'fa-minus-square negative-color')}"></i>
+									</span>
+								</td>
+								<td data-title="#{bundle.col_nome}">
+									<xcp:outputSimple
+										id="outNome"
+										value="#{row.nome}" />
+								</td>
+								<td data-title="#{bundle.col_acoes}" class="table-actions-column">
+									<xcp:commandLink
+										immediate="true"
+										id="btn_download_anex"
+										update="pnl_anexos"
+										title="Download"
+										onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+										ajax="false">
+										<i class="fa fa-fw fa-download"></i>
+										<p:fileDownload
+											value="#{solicitacoesPortalBacking.getFormacaoAnexo(row)}"
+											contentDisposition="attachment" />
+									</xcp:commandLink>
+									<xcp:commandLink
+										immediate="true"
+										id="btn_remove_lin"
+										rendered="#{row.tipoSolicitacao != 3}"
+										update=":frmForAnex"
+										title="Remover"
+										action="#{solicitacoesPortalBacking.actionRemoveFormacaoAnexo(row)}">
+										<i class="fa fa-fw fa-trash"></i>
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink>
+								</td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+				
+				<ui:fragment rendered="#{empty solicitacoesPortalBacking.formacaoSelecionada.listAnexos }">
+					<div class="datacard-empty-message">
+						Nenhum anexo informado.
+					</div>
+				</ui:fragment>
+				
+			</p:outputPanel>
+
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						process="@this"
+						update=":frmAnexo"
+						value="#{bundle.btn_novo} #{bundle.lbl_anexo}"
+						oncomplete="PF('w_anexo').show()" />
+
+					<xcp:commandButton
+						id="btn_vtl_anx_car"
+						immediate="true"
+						value="#{bundle.btn_voltar}"
+						process="@this"
+						oncomplete="PF('dlgFormAnexo_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+
+	<p:dialog
+		id="dlgAnexo"
+		widgetVar="w_anexo"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true">
+		<xcp:form id="frmAnexo">
+
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				sizeLimit="#{solicitacoesPortalBacking.limiteTamanhoArquivoUpload}"				
+				fileUploadListener="#{solicitacoesPortalBacking.actionGravarFormacaoAnexo}"
+				update=":frmForAnex" 
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				requiredMessage='#{ empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+				validator="xcpInputFileValidator"/>
+
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						value="#{bundle.btn_cancelar}"
+						oncomplete="PF('w_anexo').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

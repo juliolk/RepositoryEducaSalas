@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags">
+	<xcp:panelGrid>
+		<p:row>
+			<p:column style="vertical-align: top;">
+				<c:forEach
+					items="#{funcionariosBacking.xcpTabelaColunaVO.grupos}"
+					var="grupo">
+					<p:fieldset
+						legend="#{bundle[funcionariosBacking.xcpTabelaColunaVO.getTitGrupo(grupo)]}"
+						style="margin-bottom: 10px;">
+						<xcp:panelForm>
+							
+							<c:forEach
+								items="#{funcionariosBacking.xcpTabelaColunaVO.getListaParametros(grupo)}"
+								var="row">
+								<c:if test="#{row.indMostrar}">
+									<xcp:creator 
+										index="#{row.seqObjetoParametro}"
+									 	inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocComplementar(row.desParametroSql) }"
+									/>
+								</c:if>
+							</c:forEach>
+						</xcp:panelForm>
+						
+						<!-- Controle para menus de contexto dos anexos dos campos complementares -->
+						<c:forEach
+							items="#{funcionariosBacking.xcpTabelaColunaVO.getListaParametros(grupo)}"
+							var="row">
+							<c:if test="#{row.indMostrar}">
+								<c:choose>
+									<c:when test="#{row.range}">
+										<c:choose>
+											<c:when test="#{row.text}">
+												<xcpfunc:colAnexos
+													idComponente="txtTextRangeCreator_#{row.seqObjetoParametro}"
+													coluna="#{row.desParametroSql}" />
+											</c:when>
+							
+											<c:when test="#{row.number}">
+												<xcpfunc:colAnexos
+													idComponente="txtNumberRangeCreator_#{row.seqObjetoParametro}"
+													coluna="#{row.desParametroSql}" />
+											</c:when>
+							
+											<c:when test="#{row.date}">
+												<xcpfunc:colAnexos
+													idComponente="txtDateRangeCreator_#{row.seqObjetoParametro}"
+													coluna="#{row.desParametroSql}" />
+											</c:when>
+										</c:choose>
+									</c:when>
+							
+									<!-- MULTIPLO COM PRE SELECAO DE ELEMENTOS -->
+									<c:when test="#{row.multiploPreSelecao}">
+										<xcpfunc:colAnexos
+											idComponente="lovCreator_#{row.seqObjetoParametro}"
+											coluna="#{row.desParametroSql}" />
+										<xcpfunc:colAnexos
+											idComponente="panel_#{row.seqObjetoParametro}"
+											coluna="#{row.desParametroSql}" />
+									</c:when>
+							
+									<!-- MULTIPLO -->
+									<c:when test="#{row.multiplo}">
+							
+										<xcpfunc:colAnexos
+											idComponente="multiCreator_#{row.seqObjetoParametro}"
+											coluna="#{row.desParametroSql}" />
+											
+									</c:when>
+							
+									<c:otherwise>
+							
+										<c:choose>
+											<!-- LOV -->
+											<c:when test="#{row.lov}">
+							
+												<xcpfunc:colAnexos
+													idComponente="lovCreator_#{row.seqObjetoParametro}"
+													coluna="#{row.desParametroSql}" />
+											
+											</c:when>
+							
+											<!-- RADIO -->
+											<c:when test="#{row.radio}">
+							
+												<xcpfunc:colAnexos
+													idComponente="radCreator_#{row.seqObjetoParametro}"
+													coluna="#{row.desParametroSql}" />
+													
+											</c:when>
+							
+											<!-- COMBO -->
+											<c:when test="#{row.combo}">
+											
+												<xcpfunc:colAnexos
+													idComponente="cboCreator_#{row.seqObjetoParametro}"
+													coluna="#{row.desParametroSql}" />
+													
+											</c:when>
+							
+											<c:otherwise>
+							
+												<c:choose>
+													<c:when test="#{row.text}">
+														<c:choose>
+															<c:when test="#{row.size > 60}">
+																<xcpfunc:colAnexos
+																	idComponente="txtMemoCreator_#{row.seqObjetoParametro}"
+																	coluna="#{row.desParametroSql}" />
+															</c:when>
+							
+															<c:otherwise>
+																<xcpfunc:colAnexos
+																	idComponente="txtTextCreator_#{row.seqObjetoParametro}"
+																	coluna="#{row.desParametroSql}" />
+															</c:otherwise>
+														</c:choose>
+													</c:when>
+							
+													<c:when test="#{row.date}">
+														<xcpfunc:colAnexos
+															idComponente="txtDateCreator_#{row.seqObjetoParametro}"
+															coluna="#{row.desParametroSql}" />
+													</c:when>
+							
+													<c:when test="#{row.number}">
+														<xcpfunc:colAnexos
+															idComponente="txtNumberCreator_#{row.seqObjetoParametro}"
+															coluna="#{row.desParametroSql}" />
+													</c:when>
+												</c:choose>
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+								</c:choose>
+							
+							</c:if>
+						</c:forEach>
+						
+					</p:fieldset>
+				</c:forEach>
+			</p:column>
+		</p:row>
+	</xcp:panelGrid>
+</ui:composition>

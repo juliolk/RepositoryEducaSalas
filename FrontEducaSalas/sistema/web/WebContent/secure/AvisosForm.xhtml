@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="Avisos" backing="#{avisosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_dataInicio}"
+					value="#{row.dataInicio}" type="Date" size="7">
+					<xcp:outputSimpleDate value="#{row.dataInicio}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_dtFim}"
+					value="#{row.dataFim}" type="Date" size="7">
+					<xcp:outputSimpleDate value="#{row.dataFim}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_aviso}" value="#{row.aviso}"
+					type="String" size="50">
+					<xcp:outputSimple value="#{row.aviso}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date id="txtDataInicio" required="true"
+						value="#{avisosBacking.entity.dataInicio}"
+						label="#{bundle.lbl_dataInicio}"
+						readonly="#{not avisosBacking.entity.novo}" />
+
+					<xcp:date id="txtDataFim" required="true"
+						value="#{avisosBacking.entity.dataFim}"
+						label="#{bundle.lbl_dtFim}" />
+
+					<xcp:memo id="txtAviso" label="#{bundle.lbl_aviso}" required="true"
+						value="#{avisosBacking.entity.aviso}" size="600" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

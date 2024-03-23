@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="Perfis"
+			backing="#{perfisBacking}">
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_copiarPerfil"
+					value="#{bundle.btn_copiarPerfil}"
+					action="#{perfisBacking.actionCopiar}"
+					update="@form">
+				</xcp:commandButton>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					value="#{row.codigo}"
+					size="4"
+					type="Number"
+					headerText="#{bundle.col_codigo}">
+					<xcp:outputSimple value="#{row.codigo}" />
+				</xcp:column>
+
+				<xcp:column
+					value="#{row.descricao}"
+					size="170"
+					type="String"
+					headerText="#{bundle.col_descricao}">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="formCustom">
+				<ui:include src="PerfisForm/PerfisCopiaForm.xhtml" />
+			</ui:define>
+
+			<ui:define name="formBarraCustom">
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_duplicar"
+							value="#{bundle.btn_duplicar}"
+							action="#{perfisBacking.actionDuplicar}"
+							onstart="PF('w_dlgXcpExecStatus').show();"
+							oncomplete="PF('w_dlgXcpExecStatus').hide();"
+							update="@form" />
+
+						<xcp:commandButton
+							id="btn_voltar_duplicar"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar_duplicar}"
+							action="#{perfisBacking.actionVoltar('PerfisCopiaForm')}"
+							process="@this"
+							update="@form" />
+					</f:facet>
+				</p:toolbar>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="lovCodigo"
+						value="#{perfisBacking.entity.codigo}"
+						size="4"
+						precision="4"
+						label="#{bundle.lbl_codigo}"
+						readonly="#{not perfisBacking.entity.novo}"
+						required="true"
+						reload="true" />
+
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						value="#{perfisBacking.entity.descricao}"
+						size="170"
+						maxlength="200" />
+
+					<xcp:combo
+						id="cboPermissao"
+						value="#{perfisBacking.entity.permissao}"
+						label="#{bundle.lbl_disponivel}"
+						required="true"
+						itens="#{perfisBacking.itensPermissao}">
+
+						<p:ajax
+							update="@form cboPortalPerfilPrincipal cboPortalPerfilPrincipal_l "
+							listener="#{perfisBacking.changePermissao(perfisBacking.entity)}" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboPortalPerfilPrincipal"
+						value="#{perfisBacking.entity.portalPerfilPrincipal}"
+						label="#{bundle.lbl_portalperfilprincipal}"
+						required="false"
+						itens="#{perfisBacking.itensIndSimNao}"
+						rendered="#{perfisBacking.entity.permissao == 2}" />
+
+				</xcp:panelForm>
+
+				<table>
+					<tr>
+						<td width="1500px"><p:tabView
+								id="tabPerfil"
+								dynamic="true"
+								cache="false">
+								<p:tab title="#{bundle.tit_rotinas}">
+									<xcp:panelForm>
+										<xcp:tableMultiSelect
+											header="#{bundle.tit_rotinas_disponives}"
+											id="checkRotinas"
+											filteredValue="#{perfisBacking.listaFiltrados1}"
+											value="#{perfisBacking.listaRotinasDisponiveis}"
+											selection="#{perfisBacking.listaRotinasSelecionadas}"
+											rowKey="#{rowMult.PK}">
+
+											<xcp:column
+												value="#{rowMult.descricao}"
+												size="60"
+												type="String"
+												headerText="#{bundle.col_rotinas}">
+												<xcp:outputSimple
+													value="#{rowMult.descricao} (#{rowMult.rotina})" />
+											</xcp:column>
+
+											<f:facet name="footer">
+												<xcp:commandButton
+													id="btn_adicionar_perfil"
+													process="checkRotinas :form:tabPerfil:checkPerfil"
+													update="checkRotinas :form:tabPerfil:checkPerfil"
+													actionListener="#{perfisBacking.actionAdicionaSelecionadas}"
+													value="#{bundle.btn_adicionar_perfil}">
+												</xcp:commandButton>
+											</f:facet>
+										</xcp:tableMultiSelect>
+
+										<xcp:tableMultiSelect
+											id="checkPerfil"
+											rowKey="#{rowMult.PK}"
+											value="#{perfisBacking.listaRotinasPerfil}"
+											header="#{bundle.tit_rotinas_perfil}"
+											selection="#{perfisBacking.listaExcluir}"
+											filteredValue="#{perfisBacking.listaFiltrados2}">
+
+											<xcp:column
+												value="#{rowMult.rotinaFk.descricao}"
+												size="60"
+												type="String"
+												headerText="#{bundle.col_rotinas}">
+												<xcp:outputSimple
+													value="#{rowMult.rotinaFk.descricao} (#{rowMult.rotina})" />
+											</xcp:column>
+
+											<xcp:column
+												size="5"
+												type="Center"
+												headerText="#{bundle.col_incluir}">
+												<xcp:check
+													id="chk_incluir"
+													simple="true"
+													value="#{rowMult.indIncluir}" />
+											</xcp:column>
+
+											<xcp:column
+												size="5"
+												type="Center"
+												headerText="#{bundle.col_alterar}">
+												<xcp:check
+													id="chk_alterar"
+													simple="true"
+													value="#{rowMult.indAlterar}" />
+											</xcp:column>
+
+											<xcp:column
+												size="5"
+												type="Center"
+												headerText="#{bundle.col_excluir}">
+												<xcp:check
+													id="chk_excluir"
+													simple="true"
+													value="#{rowMult.indExcluir}" />
+											</xcp:column>
+
+											<f:facet name="footer">
+												<xcp:commandButton
+													id="btn_remover_sel_perfil"
+													process="checkPerfil :form:tabPerfil:checkRotinas"
+													update="checkPerfil :form:tabPerfil:checkRotinas"
+													actionListener="#{perfisBacking.actionRemoveSelecionados}"
+													value="#{bundle.btn_remover_sel_perfil}">
+												</xcp:commandButton>
+											</f:facet>
+										</xcp:tableMultiSelect>
+									</xcp:panelForm>
+								</p:tab>
+								<p:tab
+									title="#{bundle.tit_acoes}"
+									disabled="#{perfisBacking.entity.novo}">
+									<p:panelGrid>
+										<p:row>
+											<p:column styleClass="alinhatopo">
+												<p:dataTable
+													id="tabRotinasPerfil"
+													var="rowRotinaPerfil"
+													value="#{perfisBacking.listaRotinasPerfil}"
+													paginator="true"
+													paginatorPosition="bottom"
+													filteredValue="#{perfisBacking.listaFiltrados3}"
+													rows="#{viewUtil.tableRows}"
+													rowKey="#{rowRotinaPerfil.rotina}"
+													selectionMode="single"
+													selection="#{perfisBacking.rotinaSelecionada}"
+													emptyMessage="#{bundle.msg_sem_resultado}"
+													style="margin-bottom:0">
+													<f:facet name="header">#{bundle.tit_rotinas_disponives}</f:facet>
+													<p:ajax
+														event="rowSelect"
+														update=":#{p:component('tabAcoes')}" />
+													<xcp:column
+														value="#{rowRotinaPerfil.rotinaFk.descricao}"
+														size="40"
+														type="String"
+														headerText="#{bundle.col_rotinas_perfil}">
+														<xcp:outputSimple
+															value="#{rowRotinaPerfil.rotinaFk.descricao} (#{rowRotinaPerfil.rotina})" />
+													</xcp:column>
+												</p:dataTable>
+											</p:column>
+
+											<p:column styleClass="alinhatopo">
+												<h:panelGroup id="tabAcoes">
+													<p:dataTable
+														id="tblAcoes"
+														var="rowAcoes"
+														value="#{perfisBacking.listaPermissaoAcao}"
+														paginator="true"
+														filteredValue="#{perfisBacking.listaFiltrados4}"
+														paginatorPosition="bottom"
+														rowKey="#{rowAcoes.PK}"
+														rows="#{viewUtil.tableRows}"
+														selectionMode="single"
+														selection="#{perfisBacking.permissaoAcao}"
+														emptyMessage="#{bundle.msg_sem_resultado}"
+														style="margin-bottom:0">
+														<f:facet name="header">#{bundle.tit_acoes}</f:facet>
+														<p:ajax
+															event="rowSelect"
+															update=":frmDlgAcao"
+															oncomplete="PF('dlgAcao_w').show();" />
+														<xcp:column
+															value="#{rowAcoes.acao}"
+															size="20"
+															type="String"
+															headerText="#{bundle.col_acao}">
+															<xcp:outputSimple value="#{rowAcoes.acao}" />
+														</xcp:column>
+														<xcp:column
+															value="#{perfisBacking.getLabelPermissao(rowAcoes)}"
+															size="15"
+															type="String"
+															headerText="#{bundle.col_data}">
+															<xcp:outputSimple
+																value="#{perfisBacking.getLabelPermissao(rowAcoes)}" />
+														</xcp:column>
+
+														<xcp:column
+															size="10"
+															value="#{rowAcoes.situacao}"
+															type="Center"
+															headerText="#{bundle.col_situacao_acao}"
+															itens="#{perfisBacking.itensSituacaoNull}"
+															style="height:18px;">
+															<xcp:combo
+																id="cboSituacao"
+																simple="true"
+																styleClass="combooperadores"
+																value="#{rowAcoes.situacao}"
+																itens="#{perfisBacking.itensSituacao}"
+																readonly="true" />
+														</xcp:column>
+														<xcp:column size="5">
+															<xcp:commandLink
+																icon="ui-icon-trash"
+																immediate="true"
+																id="btn_exclusao_acao"
+																update=":#{p:component('tabAcoes')}"
+																action="#{perfisBacking.actionExcluiAcao(rowAcoes)}">
+																<h:graphicImage
+																	title="#{bundle.hint_remover}"
+																	value="/resources/img/remover.png"
+																	style="margin-top:3px;" />
+																<p:confirm
+																	header="#{bundle.tit_confirma_exclusao}"
+																	message="#{bundle.msg_confirma_exclusao}"
+																	icon="ui-icon-alert" />
+															</xcp:commandLink>
+														</xcp:column>
+
+														<f:facet name="footer">
+															<xcp:commandButton
+																id="btn_adicionar_acao"
+																value="#{bundle.btn_adicionar_acao}"
+																rendered="#{perfisBacking.rotinaSelecionada!=null}"
+																action="#{perfisBacking.actionNovaAcao}"
+																update=":frmDlgAcao"
+																oncomplete="PF('dlgAcao_w').show();"
+																icon="ui-icon-document">
+															</xcp:commandButton>
+														</f:facet>
+													</p:dataTable>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:tab>
+								<p:tab
+									title="#{bundle.tit_restricoes}"
+									id="restricoes">
+									<ui:include src="PerfisForm/PerfisRestricaoForm.xhtml" />
+								</p:tab>
+
+								<p:tab
+									title="#{bundle.tit_restlanc}"
+									disabled="#{perfisBacking.entity.novo}">
+									<p:dataTable
+										id="tblRest"
+										var="row"
+										value="#{perfisBacking.listaPerfisRest}"
+										paginator="true"
+										filteredValue="#{perfisBacking.listaPerfisRestFiltrados}"
+										paginatorPosition="bottom"
+										rows="#{viewUtil.tableRows}"
+										emptyMessage="#{bundle.msg_sem_resultado}">
+
+										<xcp:column
+											headerText="#{bundle.col_tipo}"
+											value="#{row.tipo}"
+											type="String"
+											size="10"
+											itens="#{perfisBacking.itensTipoRest}">
+											<xcp:outputSimple
+												value="#{row.tipo}"
+												precision="2"
+												scale="0"
+												itens="#{perfisBacking.itensTipoRest}" />
+										</xcp:column>
+
+										<xcp:column
+											headerText="#{bundle.col_subtipo}"
+											value="#{row.tipoaba}"
+											type="String"
+											size="10"
+											itens="#{perfisBacking.itensTipoAba}">
+											<xcp:outputSimple
+												value="#{row.tipoaba}"
+												precision="2"
+												scale="0"
+												itens="#{perfisBacking.itensTipoAba}" />
+										</xcp:column>
+
+										<xcp:column
+											headerText="#{bundle.col_codigo}"
+											value="#{row.codigoLista}"
+											type="Number"
+											size="5">
+											<xcp:outputSimpleNumber
+												value="#{row.codigoLista}"
+												precision="8"
+												scale="0" />
+										</xcp:column>
+
+										<xcp:column
+											headerText="#{bundle.col_descricao}"
+											value="#{row.descricaoLista}"
+											type="String"
+											size="10">
+											<xcp:outputSimple value="#{row.descricaoLista}" />
+										</xcp:column>
+
+										<xcp:column size="1">
+											<xcp:commandLink
+												icon="ui-icon-trash"
+												immediate="true"
+												id="btn_exclusao_rest"
+												update=":#{p:component('tblRest')}"
+												action="#{perfisBacking.actionRemoverPerfilRest(row)}">
+												<h:graphicImage
+													title="#{bundle.hint_remover}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_exclusao}"
+													message="#{bundle.msg_confirma_exclusao}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</xcp:column>
+
+									</p:dataTable>
+									<center>
+										<xcp:commandButton
+											id="btn_novo"
+											icon="ui-icon-document"
+											value="#{bundle.btn_novo}"
+											action="#{perfisBacking.actionNovoRest}"
+											process="@form"
+											update=":frmDlgRest" />
+									</center>
+								</p:tab>
+							</p:tabView></td>
+					</tr>
+				</table>
+				<p:remoteCommand
+					name="rcTabAcoes"
+					update=":#{p:component('tabAcoes')}" />
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_copiarPerfil_barra"
+					value="#{bundle.btn_copiarPerfil_barra}"
+					action="#{perfisBacking.actionCopiar}"
+					update="@form">
+				</xcp:commandButton>
+			</ui:define>
+		</xcp:panelManut>
+
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_det_acao}"
+			modal="true"
+			id="dlgAcao"
+			widgetVar="dlgAcao_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmDlgAcao">
+				<ui:include src="PerfisForm/PerfisDlgAcoes.xhtml" />
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			header="#{bundle.tit_restlanc}"
+			modal="true"
+			id="dlgRest"
+			widgetVar="dlgRest_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmDlgRest">
+				<xcp:panelForm>
+					<xcp:combo
+						id="cboTipo"
+						value="#{perfisBacking.perfilRest.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{perfisBacking.itensTipoRest}">
+						<p:ajax
+							update="cboTipoAba,cboTipoAba_l,lovCodHist,lovCodHist_l,lovCodPonto,lovCodPonto_l,lovCodTipMov,lovCodTipMov_l,lovCodAver,lovCodAver_l,lovCodAut,lovCodAut_l,lovCodPar,lovCodPar_l,lovCodPub,lovCodPub_l,lovCodFerias,lovCodFerias_l,lovCodLic,lovCodLic_l,lovCodMot,lovCodMot_l,lovCodReaj,lovCodReaj_l,lovCodCom,lovCodCom_l,lovCodAssist,lovCodAssist_l"
+							process="@this"
+							oncomplete="ajusta()"
+							listener="#{perfisBacking.actionChangeTipo}" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboTipoAba"
+						value="#{perfisBacking.perfilRest.tipoaba}"
+						label="#{bundle.lbl_tipoaba}"
+						required="true"
+						rendered="#{perfisBacking.perfilRest.tipo == 8}"
+						itens="#{perfisBacking.itensTipoAba}">
+						<p:ajax
+							update="lovCodMot,lovCodMot_l,lovCodReaj,lovCodReaj_l"
+							process="@this"
+							oncomplete="ajusta()"
+							listener="#{perfisBacking.actionChangeAba}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovCodHist"
+						value="#{perfisBacking.perfilRest.codHistFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="motivo_hist"
+						size="5"
+						required="true"
+						params="#{perfisBacking.parsHist}"
+						rendered="#{perfisBacking.perfilRest.tipo == 1}" />
+
+					<xcp:lov
+						id="lovCodPonto"
+						value="#{perfisBacking.perfilRest.codPontoFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="tipopontoall"
+						size="5"
+						required="true"
+						rendered="#{perfisBacking.perfilRest.tipo == 2}" />
+
+					<xcp:lov
+						id="lovCodTipMov"
+						value="#{perfisBacking.perfilRest.codAfastFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="tipomovtos"
+						size="5"
+						required="true"
+						rendered="#{perfisBacking.perfilRest.tipo == 3}" />
+
+					<xcp:lov
+						id="lovCodAver"
+						value="#{perfisBacking.perfilRest.codAverFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="empregos_cat_todos"
+						size="5"
+						required="true"
+						rendered="#{perfisBacking.perfilRest.tipo == 4}" />
+
+					<xcp:lov
+						id="lovCodAut"
+						value="#{perfisBacking.perfilRest.codAutFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="bancohoras"
+						size="5"
+						required="true"
+						rendered="#{perfisBacking.perfilRest.tipo == 5}" />
+
+					<xcp:lov
+						id="lovCodPar"
+						value="#{perfisBacking.perfilRest.codParFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="variaveisall"
+						size="5"
+						required="true"
+						rendered="#{perfisBacking.perfilRest.tipo == 6}" />
+
+					<xcp:lov
+						id="lovCodPub"
+						value="#{perfisBacking.perfilRest.codHistFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="motivo_hist"
+						size="5"
+						required="true"
+						params="#{perfisBacking.parsPub}"
+						rendered="#{perfisBacking.perfilRest.tipo == 7}" />
+
+					<xcp:lov
+						id="lovCodMot"
+						value="#{perfisBacking.perfilRest.codMotFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="motivo_transf"
+						size="10"
+						rendered="#{perfisBacking.renderedMotivoTransf}"
+						required="true"
+						params="#{perfisBacking.paramsMotivoTransf}" />
+
+					<xcp:lov
+						id="lovCodReaj"
+						value="#{perfisBacking.perfilRest.codReajFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="tiporeajustes"
+						size="10"
+						rendered="#{perfisBacking.renderedTipoReajuste}"
+						required="true" />
+
+
+					<xcp:lov
+						id="lovCodFerias"
+						value="#{perfisBacking.perfilRest.codFeriasFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="tipoferias"
+						rendered="#{perfisBacking.perfilRest.tipo == 9}"
+						size="3"
+						required="true" />
+
+					<xcp:lov
+						id="lovCodLic"
+						value="#{perfisBacking.perfilRest.codLicFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="tipolicpremio"
+						rendered="#{perfisBacking.perfilRest.tipo == 10}"
+						size="3"
+						required="true" />
+
+					<xcp:lov
+						id="lovCodCom"
+						value="#{perfisBacking.perfilRest.codComFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="motivocomissao"
+						size="5"
+						rendered="#{perfisBacking.perfilRest.tipo == 11}"
+						required="true" />
+
+					<xcp:lov
+						id="lovCodAssist"
+						value="#{perfisBacking.perfilRest.codAssistFk}"
+						label="#{bundle.lbl_codLanc}"
+						query="assistencia_afastall"
+						size="5"
+						rendered="#{perfisBacking.perfilRest.tipo == 12}"
+						required="true" />
+
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							update=":#{p:component('tblRest')}"
+							value="#{bundle.btn_gravar}"
+							action="#{perfisBacking.actionGravarPerfilRest}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgRest_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+			<script>
+		  function ajusta(){
+			  var el = document.getElementById('frmDlgRest');
+			  var divs = el.getElementsByTagName('div');
+	
+			  for(i = 0;i &lt;  divs.length; i++) {
+				 var currEl = divs[i];
+				 if(currEl.childNodes.length == 0 ){
+					 currEl.parentNode.style.padding = '0px';
+			     }
+			  }
+		  }
+
+		  ajusta();
+		</script>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

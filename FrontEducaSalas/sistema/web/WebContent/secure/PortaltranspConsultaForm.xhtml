@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="PortaltranspConsulta"
+			backing="#{portaltranspConsultaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.lbl_portaltransp_titulo}" value="#{row.titulo}"
+					type="String" width="20%">
+					<xcp:outputSimple value="#{row.titulo}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.lbl_portaltransp_identificador}"
+					value="#{row.identificador}" type="String" width="20%">
+					<xcp:outputSimple value="#{row.identificador}" />
+				</xcp:column>
+				
+				<xcp:column headerText="#{bundle.lbl_portaltransp_textoTopo}"
+					value="#{row.textoTopo}" type="String" width="60%">
+					<xcp:outputSimple value="#{row.textoTopo}" />
+				</xcp:column>
+				
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text id="txtTitulo" label="#{bundle.lbl_portaltransp_titulo}"
+						required="true"
+						value="#{portaltranspConsultaBacking.entity.titulo}"
+						size="130" maxlength="255" />
+
+					<xcp:memo id="txtTextoTopo"  
+						autoResize="false" rows="10"
+						value="#{portaltranspConsultaBacking.entity.textoTopo}"
+						label="#{bundle.lbl_portaltransp_textoTopo}"
+						size="4000" cols="132" />
+
+					<xcp:memo id="txtTextoFinal"
+						autoResize="false" rows="10"
+						value="#{portaltranspConsultaBacking.entity.textoFinal}"
+						label="#{bundle.lbl_portaltransp_textoFinal}"
+						size="4000" cols="132" />
+
+					<xcp:combo id="cboExigeCaptcha"
+						value="#{portaltranspConsultaBacking.entity.exigeCaptcha}"
+						label="#{bundle.lbl_portaltransp_exigeCaptcha}" required="true"
+						itens="#{portaltranspConsultaBacking.itensIndSimNao}" />
+
+					<xcp:text id="txtIdentificador" label="#{bundle.lbl_portaltransp_identificador}"
+						required="true"
+						value="#{portaltranspConsultaBacking.entity.identificador}"
+						size="130" maxlength="255" />
+
+					<xcp:combo id="cboAtualizacaoAutomatica"
+						value="#{portaltranspConsultaBacking.entity.atualizacaoAutomatica}"
+						label="#{bundle.lbl_portaltransp_atualizacaoAutomatica}" required="true"
+						itens="#{portaltranspConsultaBacking.itensIndSimNao}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include
+					src="PortaltranspConsultaForm/PortaltranspConsultaObjForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

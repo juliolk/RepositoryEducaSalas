@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:fieldset legend="#{bundle.title_periodos}">
+
+				<p:dataTable
+					id="tblPer"
+					var="row"
+					value="#{progressoesPortalBacking.listPeriodos}"
+					rows="#{viewUtil.tableRows}"
+					rowKey="#{row}"
+					paginator="true"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginatorPosition="bottom"
+					selectionMode="single"
+					selection="#{progressoesPortalBacking.periodoSel}">
+
+					<p:ajax
+						event="rowSelect"
+						listener="#{progressoesPortalBacking.actionSelectPeriodo}"
+						update=":form:pnlRefresh" />
+
+					<xcp:column
+						headerText="#{bundle.col_referencia}"
+						value="#{row.referencia}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.referencia}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtinicio}"
+						value="#{row.dtinicio}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtinicio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtfim}"
+						value="#{row.dtfim}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtfim}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+			</p:fieldset>
+
+			<p:spacer height="4px" />
+
+			<p:outputPanel id="pnlRefresh">
+			
+				<p:fieldset
+					id="fldOutraspontuacoes"
+					legend="#{bundle.title_outraspontuacoes}"
+					rendered="#{progressoesPortalBacking.periodoSel != null}">
+
+					<p:dataTable
+						id="tblOutraspontuacoes"
+						var="row"
+						value="#{progressoesPortalBacking.listCriterios}"
+						rows="#{viewUtil.tableRows}"
+						rowKey="#{row}"
+						paginator="true"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginatorPosition="bottom">
+						
+						<xcp:column
+							headerText="#{bundle.col_descricao}"
+							value="#{row.descricao}"
+							type="String"
+							size="15">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_pontos}"
+							value="#{row.pontos}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleNumber
+								value="#{row.pontos}" 
+								precision="2" 
+								scale="2" />
+						</xcp:column>
+
+					</p:dataTable>
+				</p:fieldset>	
+				
+				<p:fieldset
+					id="fldCursos"
+					legend="#{bundle.title_cursos}"
+					rendered="#{progressoesPortalBacking.periodoSel != null}">
+
+					<p:dataTable
+						id="tblCursos"
+						var="row"
+						value="#{progressoesPortalBacking.listFormacao}"
+						rows="#{viewUtil.tableRows}"
+						rowKey="#{row}"
+						paginator="true"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginatorPosition="bottom"
+						selection="#{progressoesPortalBacking.listFormacaoSel}">
+
+						<p:column
+							selectionMode="multiple"
+							style="width:3%;text-align:center" />
+
+						<p:ajax
+							event="toggleSelect"
+							update=":form:toolbar :form:pnlmsg" />
+
+						<p:ajax
+							event="rowSelect"
+							update=":form:toolbar :form:pnlmsg" />
+
+						<p:ajax
+							event="rowSelectCheckbox"
+							update=":form:toolbar :form:pnlmsg" />
+
+						<p:ajax
+							event="rowUnselectCheckbox"
+							update=":form:toolbar :form:pnlmsg" />
+
+						<p:ajax
+							event="toggleSelect"
+							update=":form:toolbar" />
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							size="15"
+							value="#{row.cursoFk.descricao}">
+							<xcp:outputSimple value="#{row.cursoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_curso}"
+							value="#{row.cursoacadFk.descricao}"
+							type="String"
+							size="10">
+							<xcp:outputSimple
+								value="#{row.area}"
+								rendered="#{row.area !=null}" />
+							<xcp:outputSimple
+								value="#{row.cursoacadFk.descricao}"
+								rendered="#{row.cursoacadFk !=null}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtinicio}"
+							value="#{row.dtinicio}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtinicio}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtfim}"
+							value="#{row.dtfim}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtfim}" />
+						</xcp:column>
+
+					</p:dataTable>
+				</p:fieldset>
+
+				<p:outputPanel
+					id="pnlmsg"
+					style="text-align:center">
+					<p:outputLabel
+						id="desPontuacao"
+						value="#{progressoesPortalBacking.desPontuacao}"
+						rendered="#{not empty progressoesPortalBacking.desPontuacao}"
+						style="font-size:30px !important" />
+				</p:outputPanel>
+
+				<p:toolbar
+					id="toolbar"
+					styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_confirmar"
+							styleClass="btn-main-action"
+							value="#{bundle.btn_gravar_solicitacao}"
+							process="@form"
+							update="@form"
+							rendered="#{progressoesPortalBacking.renderedInscricao}"
+							action="#{progressoesPortalBacking.actionConfirmarInscricao}"
+							icon="ui-icon-disk" />
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+		</xcp:panelContent>
+	</ui:define>
+
+
+
+</ui:composition>

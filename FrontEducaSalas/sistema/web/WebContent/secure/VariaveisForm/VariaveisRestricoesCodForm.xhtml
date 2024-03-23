@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="RestricoesCod"
+		backing="#{variaveisRestricoesCodBacking}"
+		masterId="Variaveis">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_restricao}"
+				value="#{row.restricao}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.restricao}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_variavelRest}"
+				value="#{row.variavelRestFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.variavelRestFk.descricao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovVariavelRest_RestricoesCod"
+					value="#{variaveisRestricoesCodBacking.entity.variavelRestFk}"
+					label="#{bundle.lbl_variavelRest}"
+					query="variaveis"
+					required="true"
+					size="5" />
+
+				<xcp:combo
+					id="cboTiprestricao"
+					value="#{variaveisRestricoesCodBacking.entity.tiprestricao}"
+					label="#{bundle.lbl_tiprestricao}"
+					required="true"
+					itens="#{variaveisRestricoesCodBacking.itensTiprestricao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

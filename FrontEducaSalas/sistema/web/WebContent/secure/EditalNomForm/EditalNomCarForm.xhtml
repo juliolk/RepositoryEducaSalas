@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="EditalNomCar"
+		backing="#{editalNomCarBacking}"
+		renderedGravar="#{editalNomBacking.entity.oficial == null}"
+		renderedRemover="#{editalNomBacking.entity.oficial == null}"
+		renderedNovo="#{editalNomBacking.entity.oficial == null}"
+		masterId="EditalNom"
+		rowStyleClassDet="#{editalNomCarBacking.getRowStyle(row)}">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_funcao}"
+				value="#{row.funcao}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					value="#{row.funcao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_funcao}"
+				value="#{row.funcaoFk.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple
+					value="#{row.funcaoFk.descricao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vagas}"
+				value="#{row.vagas}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.vagas}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vagasOut}"
+				value="#{row.vagasOut}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.vagasOut}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_msg}"
+				value="#{row.log}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.log}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCargo_EditalNomCar"
+					value="#{editalNomCarBacking.entity.funcaoFk}"
+					label="#{bundle.lbl_funcao}"
+					required="true"
+					query="funcoes_edital"
+					size="6"
+					params="#{editalNomCarBacking.paramsFuncao}"
+					readonly="#{not editalNomCarBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovAvaliacao"
+					value="#{editalNomCarBacking.entity.avaliacaoFk}"
+					label="#{bundle.lbl_avalForm}"
+					query="avaliacoesConhec"
+					update="lovConhecimento,lovConhecimento_l"
+					selectionListener="#{editalNomCarBacking.selectAvaliacao}"
+					size="6"
+					rendered="#{editalNomCarBacking.clienteTribunal}" />
+
+				<xcp:lov
+					id="lovConhecimento"
+					value="#{editalNomCarBacking.entity.conhecimentoFk}"
+					label="#{bundle.lbl_conhecForm}"
+					query="conhecimentos"
+					params="#{editalNomCarBacking.paramsAvaliacao}"
+					size="6"
+					rendered="#{editalNomCarBacking.clienteTribunal}" />
+
+				<xcp:number
+					id="txtVagasDisp_EditalNomCar"
+					label="#{bundle.lbl_vagasDisp}"
+					value="#{editalNomCarBacking.entity.vagasDisp}"
+					size="10"
+					precision="10"
+					scale="0"
+					rendered="#{!editalNomCarBacking.entity.novo}"
+					readonly="true"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtVagas_EditalNomCar"
+					label="#{bundle.lbl_vagas}"
+					required="true"
+					value="#{editalNomCarBacking.entity.vagas}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999" />
+
+				<xcp:number
+					id="txtVagasOut_EditalNomCar"
+					label="#{bundle.lbl_vagasOut}"
+					value="#{editalNomCarBacking.entity.vagasOut}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999" />
+
+				<xcp:lov
+					id="lovOrgao"
+					value="#{editalNomCarBacking.entity.orgaoFk}"
+					label="#{bundle.lbl_orgao}"
+					query="orgaos"
+					size="8"
+					rendered="#{editalNomBacking.selecaoComarca}"
+					required="#{editalNomBacking.selecaoComarca and not editalNomBacking.selecaoZona}" />
+
+				<xcp:lov
+					id="lovZona"
+					value="#{editalNomCarBacking.entity.zonaFk}"
+					label="#{bundle.lbl_zona}"
+					query="zonajudiciaria"
+					size="8"
+					rendered="#{editalNomBacking.selecaoZona}" />
+
+				<xcp:memo
+					id="txtObs_EditalNomCar"
+					label="#{bundle.lbl_obs}"
+					value="#{editalNomCarBacking.entity.obs}"
+					size="4000" />
+
+			</xcp:panelForm>
+
+			<!--  <p:fieldset legend="#{bundle.title_setores}">
+				<p:dataTable
+					id="tblSet"
+					var="row"
+					value="#{editalNomCarBacking.listSet}"
+					rows="#{viewUtil.tableRows}"
+					rowKey="#{row}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rendered="#{not editalNomCarBacking.entity.novo}"
+					style="max-width: 600px;">
+
+					<xcp:column
+						headerText="#{bundle.col_codigo}"
+						type="Number"
+						value="#{row.setorFk.setor}">
+						<xcp:outputSimpleNumber
+							value="#{row.setorFk.setor}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desSetor}"
+						type="String"
+						value="#{row.setorFk.descricao}">
+						<xcp:outputSimple value="#{row.setorFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_vagas}"
+						type="String"
+						value="#{row.qtdVagas}">
+						<xcp:outputSimple value="#{row.qtdVagas}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="3">
+						<xcp:commandButton
+							id="btn_removerSel"
+							immediate="true"
+							update="tblSet"
+							action="#{editalNomCarBacking.actionExcluirSetor(row)}"
+							icon="ui-icon-trash">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_novo_setor"
+					process="@this"
+					update=":frmSetor"
+					value="#{bundle.btn_novo}"
+					style="margin-top:5px"
+					action="#{editalNomCarBacking.actionNovoSetor}"
+					rendered="#{not editalNomCarBacking.entity.novo}" />
+			</p:fieldset>-->
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

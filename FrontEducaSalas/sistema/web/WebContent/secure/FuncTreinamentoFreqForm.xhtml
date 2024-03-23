@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelTreinamento
+			id="Inscricoes"
+			backing="#{funcTreinamentoFreqBacking}">
+
+			<ui:define name="panelLista">
+				<div style="width: 100%">
+					<p:fieldset legend="#{bundle.tit_frequencia}">
+						<h:panelGrid
+							styleClass="tabela_alinhamento"
+							columns="3">
+							<xcp:date
+								id="txtDtFrequencia"
+								value="#{funcTreinamentoFreqBacking.dataFrequencia}"
+								label="#{bundle.lbl_dtfrequencia}">
+								<p:ajax
+									event="change"
+									listener="#{funcTreinamentoFreqBacking.trocaData}"
+									update="table_avaliacoes,panelTotais" />
+								<p:ajax
+									event="dateSelect"
+									listener="#{funcTreinamentoFreqBacking.trocaData}"
+									update="table_avaliacoes,panelTotais" />
+							</xcp:date>
+							<xcp:commandButton
+								id="btn_gerar_frequencia"
+								value="#{bundle.btn_gerar_frequencia}"
+								icon="ui-icon-gerar"
+								update="table_avaliacoes,panelTotais"
+								action="#{funcTreinamentoFreqBacking.actionGeraFrequencia}"
+								disabled="#{backing.disabledGravar}" />
+						</h:panelGrid>
+						<p:spacer width="10" />
+						<p:dataTable
+							id="table_avaliacoes"
+							var="rowFrequencia"
+							value="#{funcTreinamentoFreqBacking.listaFrequencia}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							scrollable="true"
+							scrollHeight="161"
+							rowKey="#{rowFrequencia.PK}">
+
+							<p:ajax
+								event="rowSelect"
+								listener="#{funcTreinamentoFreqBacking.onRowSelect}" />
+
+							<xcp:column
+								headerText="#{bundle.col_empresa}"
+								type="Number"
+								size="1">
+								<xcp:outputSimpleNumber
+									value="#{rowFrequencia.empresa}"
+									precision="3"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_matricula}"
+								type="Number"
+								size="4">
+								<xcp:outputSimpleNumber
+									value="#{rowFrequencia.matricula}"
+									precision="8"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_nome}"
+								type="String"
+								size="20">
+								<xcp:outputSimple value="#{rowFrequencia.funcionarioFk.nome}" />
+							</xcp:column>
+
+
+							<xcp:column
+								headerText="#{bundle.col_datainicial}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleDate
+									value="#{rowFrequencia.datastreinamentoFk.datainicio}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_datafinal}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleDate
+									value="#{rowFrequencia.datastreinamentoFk.datafinal}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_horainicial}"
+								type="Number"
+								size="5">
+								<xcp:outputSimpleTimeNumber
+									value="#{rowFrequencia.datastreinamentoFk.horainicial}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_horafinal}"
+								type="Number"
+								size="5">
+								<xcp:outputSimpleTimeNumber
+									value="#{rowFrequencia.datastreinamentoFk.horafinal}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_presenca}"
+								type="Center"
+								size="20">
+								<xcp:panelGrid>
+									<p:row>
+										<p:column style="width: 25px;">
+											<p:selectBooleanCheckbox
+												id="chkPresente"
+												value="#{rowFrequencia.indAusente}">
+												<p:ajax
+													process="@this"
+													update="txtMotivo" />
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width: 100%;">
+											<xcp:text
+												id="txtMotivo"
+												label="#{bundle.lbl_motivo}"
+												simple="true"
+												value="#{rowFrequencia.motivo}"
+												maxlength="4000"
+												readonly="#{not rowFrequencia.indAusente}"
+												required="#{rowFrequencia.indAusente}"
+												style="width: 100%; box-sizing: border-box;" />
+										</p:column>
+									</p:row>
+								</xcp:panelGrid>
+							</xcp:column>
+
+						</p:dataTable>
+					</p:fieldset>
+				</div>
+			</ui:define>
+
+			<ui:define name="panelAcoes">
+				<p:panelGrid
+					columns="1"
+					styleClass="tabela_alinhamento">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						update="table_avaliacoes,panelTotais"
+						action="#{funcTreinamentoFreqBacking.actionGravarFrequencia}"
+						disabled="#{backing.disabledGravar}" />
+				</p:panelGrid>
+			</ui:define>
+
+			<ui:define name="panelDet">
+				<p:panelGrid
+					id="panelTotais"
+					columns="4"
+					styleClass="tabela_alinhamento">
+					<xcp:number
+						id="txtNrovagas"
+						label="#{bundle.lbl_nrovagas}"
+						value="#{funcTreinamentoFreqBacking.entity.nrovagas}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:number
+						id="txtInscritos"
+						label="#{bundle.lbl_inscritos}"
+						value="#{funcTreinamentoFreqBacking.qtdInscritos}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+				</p:panelGrid>
+			</ui:define>
+		</xcp:panelTreinamento>
+
+	</ui:define>
+</ui:composition>

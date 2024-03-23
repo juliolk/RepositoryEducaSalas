@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<center>
+		<xcp:panelForm>
+			<xcp:border
+				id="brd_restricao"
+				header="#{bundle.tit_restricao_acesso}">
+				<xcp:lov
+					id="lovOrgao"
+					value="#{perfisBacking.entity.orgaoFk}"
+					selectionListener="#{perfisBacking.selectOrgao}"
+					label="#{bundle.lbl_orgao}"
+					query="orgaos_all"
+					update="lovDivisao,lovSetor"
+					size="4" />
+
+				<xcp:lov
+					id="lovDivisao"
+					value="#{perfisBacking.entity.divisaoFk}"
+					label="#{bundle.lbl_divisao}"
+					query="divisoes_orgao_all"
+					selectionListener="#{perfisBacking.selectDivisao}"
+					params="#{perfisBacking.paramsDivisao}"
+					update="lovSetor"
+					size="4" />
+
+				<xcp:lov
+					id="lovSetor"
+					value="#{perfisBacking.entity.setorFk}"
+					label="#{bundle.lbl_setor}"
+					params="#{perfisBacking.paramsSetor}"
+					query="setores_divisao_all"
+					size="4" />
+
+				<xcp:lov
+					id="lovVinculo"
+					value="#{perfisBacking.entity.vinculoFk}"
+					label="#{bundle.lbl_vinculo}"
+					query="vinculos_all"
+					size="4" />
+
+				<xcp:combo
+					id="cmbMostraServDisp"
+					value="#{perfisBacking.entity.indMostraDisp}"
+					itens="#{perfisBacking.itensIndSimNaoNull}"
+					label="#{bundle.lbl_mostraDisp}" />
+
+			</xcp:border>
+		</xcp:panelForm>
+	</center>
+</ui:composition>

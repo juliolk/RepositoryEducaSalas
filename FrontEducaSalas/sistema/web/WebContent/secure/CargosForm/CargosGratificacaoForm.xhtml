@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="CargosGratificacao"
+		backing="#{cargosGratificacaoBacking}"
+		masterId="Cargos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_variavel}"
+				value="#{row.variavel}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.variavel}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.valor}"
+				type="Number"
+				size="19">
+				<xcp:outputSimpleNumber
+					value="#{row.valor}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desproc}"
+				value="#{row.desproc}"
+				type="String"
+				size="100">
+				<xcp:outputSimple value="#{row.desproc}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovVariavel"
+					value="#{cargosGratificacaoBacking.entity.variavelFk}"
+					label="#{bundle.lbl_variavel}"
+					required="true"
+					query="variaveis"
+					size="20" />
+
+				<xcp:number
+					id="txtValor"
+					label="#{bundle.lbl_valorperc}"
+					required="true"
+					size="19"
+					value="#{cargosGratificacaoBacking.entity.valor}"
+					precision="16"
+					scale="2" />
+
+				<xcp:dateRange
+					id="txtDtValidade"
+					valueStart="#{cargosGratificacaoBacking.entity.dtinicio}"
+					valueEnd="#{cargosGratificacaoBacking.entity.dtfim}"
+					label="#{bundle.lbl_dtinicio}"
+					requiredStart="true" />
+
+				<xcp:lov
+					id="lovPadrao"
+					value="#{cargosGratificacaoBacking.entity.padraoFk}"
+					label="#{bundle.lbl_padraoo}"
+					query="padroes"
+					size="30" />
+
+				<xcp:text
+					id="txtDesproc"
+					label="#{bundle.lbl_desprocbanco}"
+					value="#{cargosGratificacaoBacking.entity.desproc}"
+					size="100" />
+
+			</xcp:panelForm>
+
+			<p:dataTable
+				id="tabRest"
+				value="#{cargosGratificacaoBacking.listRest}"
+				var="rowRest"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{rowRest}"
+				style="width: 600px;margin-top:5px"
+				rendered="#{not cargosGratificacaoBacking.entity.novo}">
+
+				<f:facet name="header">#{bundle.tit_restricoes}</f:facet>
+
+				<xcp:column
+					headerText="#{bundle.col_vinculo}"
+					value="#{rowRest.vinculoFk.descricao}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{rowRest.vinculoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandLink
+						immediate="true"
+						id="btn_remover"
+						update="tabRest :frmRest"
+						action="#{cargosGratificacaoBacking.actionRemoverRestricao(rowRest)}">
+						<h:graphicImage
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" />
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandLink>
+				</xcp:column>
+
+			</p:dataTable>
+
+			<div style="text-align: center">
+				<xcp:commandButton
+					id="btn_novo"
+					style="margin-top:5px"
+					process="@this"
+					update=":frmRest"
+					action="#{cargosGratificacaoBacking.actionNovaRestricao}"
+					icon="ui-icon-plusthick"
+					value="#{bundle.btn_novo}"
+					rendered="#{not cargosGratificacaoBacking.entity.novo}" />
+			</div>
+
+
+
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

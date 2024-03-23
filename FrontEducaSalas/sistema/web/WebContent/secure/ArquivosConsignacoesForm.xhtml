@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="ArquivosConsignacoes"
+			backing="#{arquivosConsignacoesBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					rendered="#{arquivosConsignacoesBacking.tipoAcesso == 1}">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovConsigPesq"
+							value="#{arquivosConsignacoesBacking.consigPesq}"
+							label="#{bundle.lbl_consignatario}"
+							query="consignacoes_emp"
+							required="true"
+							size="8" />
+					</xcp:panelForm>
+				</p:fieldset>
+				<p:spacer height="5" />
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_convenio}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{row.codconv}"
+						precision="10"
+						scale="0" />
+
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_competencia}"
+					value="#{row.competencia}"
+					type="Date"
+					size="7">
+					<h:outputText value="#{row.competencia}">
+						<f:convertDateTime
+							pattern="MM/yyyy"
+							type="date" />
+					</h:outputText>
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_operador}"
+					value="#{row.operinclusaoFk.nome}"
+					type="Date"
+					size="7"
+					rendered="#{arquivosConsignacoesBacking.tipoAcesso == 1}">
+					<xcp:outputSimple value="#{row.operinclusaoFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_acesso}"
+					value="#{row.operinclusaoFk.permissao}"
+					type="Date"
+					size="7"
+					rendered="#{arquivosConsignacoesBacking.tipoAcesso == 1}">
+					<xcp:outputSimple
+						value="#{row.operinclusaoFk.permissao}"
+						itens="#{arquivosConsignacoesBacking.itensPermissao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovOrgaoCur"
+						value="#{arquivosConsignacoesBacking.consigEmp}"
+						label="#{bundle.lbl_consignatario}"
+						query="consignacoes_emp"
+						required="true"
+						size="8"
+						rendered="#{arquivosConsignacoesBacking.tipoAcesso == 1}" />
+
+					<xcp:lov
+						id="lovCodconv"
+						value="#{arquivosConsignacoesBacking.entity.codconvFk}"
+						label="#{bundle.lbl_convenio}"
+						required="true"
+						query="consignacoes_arq"
+						size="10"
+						params="#{arquivosConsignacoesBacking.paramsConsig}" />
+
+					<p:outputLabel
+						for="txtCompetencia_c"
+						value="#{bundle.lbl_competencia}" />
+
+					<p:calendar
+						locale="pt_BR"
+						id="txtCompetencia_c"
+						autocomplete="off"
+						value="#{arquivosConsignacoesBacking.entity.competencia}"
+						pattern="MM/yyyy"
+						maxlength="10"
+						size="10"
+						navigator="true"
+						required="true"
+						requiredMessage='#{bundle.msg_campo_obrigatorio.replaceAll("%s", bundle.lbl_competencia)}'
+						label="#{bundle.lbl_competencia}">
+						<p:tooltip
+							for="txtCompetencia_c"
+							rendered="#{toolTip['txtCompetencia_c']!=null}"
+							value="#{toolTip['txtCompetencia_c']}" />
+					</p:calendar>
+
+					<p:outputLabel
+						id="lblArq"
+						value="#{bundle.lbl_arquivo}:" />
+
+					<p:outputPanel id="pnlambos">
+						<p:commandLink
+							id="lnkUpload"
+							oncomplete="PF('w_anexo').show()"
+							value="#{bundle.msg_selecionar_arquivo}"
+							process="@this"
+							style="float:left"
+							rendered="#{empty arquivosConsignacoesBacking.entity.nome}" />
+						<p:commandLink
+							id="lnkDownload"
+							value="#{arquivosConsignacoesBacking.entity.nome}"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							style="float:left"
+							rendered="#{not empty arquivosConsignacoesBacking.entity.nome}">
+							<p:fileDownload
+								value="#{arquivosConsignacoesBacking.getDownload()}"
+								contentDisposition="attachment" />
+						</p:commandLink>
+						<p:commandLink
+							id="lnkRem"
+							process="@this"
+							update="pnlambos"
+							action="#{arquivosConsignacoesBacking.actionRemoveAnexo}"
+							rendered="#{arquivosConsignacoesBacking.tipoAcesso == 2}">
+							<h:graphicImage
+								title="#{bundle.hint_remover}"
+								value="/resources/img/remover_icon.png"
+								style="margin-left:3px;" />
+						</p:commandLink>
+					</p:outputPanel>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{arquivosConsignacoesBacking.entity.obs}"
+						size="1000" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true"
+			dynamic="true">
+			<xcp:form id="frmAnexo">
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{arquivosConsignacoesBacking.actionUploadAnexo}"
+					update=":form:pnlambos" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<p:outputPanel>
+				<h1 class="datacard-container-title"><a class="datacard-icon-action" data-toggle="collapse" data-target="#pnlcolcomp"><i class='fa fa-minus-square-o'/></a>#{bundle.tit_competencias}</h1>
+			</p:outputPanel>
+			
+  			<div id="pnlcolcomp" class="collapse in">
+				<div class="datacard-listcontainer">
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_conhecimento}
+	
+							<h:commandLink href="#" 
+								action="#{talentosPortalBacking.actionNovoConhec}"
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_con}">												
+								<p:ajax update=":frmDlg"/>												
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+							
+						</div>
+						<p:outputPanel id="listaConhecimento" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listConhec }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_conhecimento}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="conhecimento" value="#{talentosPortalBacking.helper.listConhec}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#" 
+												action="#{talentosPortalBacking.actionEditarConhec}">	
+												<p:ajax update=":frmDlg" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funcconhec}"
+													value="#{conhecimento}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverConhec(conhecimento)}">
+												<p:ajax update=":#{p:component('listaConhecimento')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{conhecimento.conhecimentoFk.descricao}
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_data}:&#160;<xcp:outputSimpleDate value="#{conhecimento.data}"/></span><br/>
+													<span><xcp:outputSimpleNumber value="#{conhecimento.tempo}" />&#160;horas </span>
+													<span><xcp:outputSimpleNumber value="#{conhecimento.pontos}" />&#160;pontos </span>
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_observ}:</small><br/>
+												<h:outputText value="#{fn:replace(conhecimento.obs,'\\n','&lt;br/&gt;')}" escape="false"/>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>				
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_habilidade}
+	
+							<h:commandLink href="#" 
+								action="#{talentosPortalBacking.actionNovoHabil}"
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_hab}">												
+								<p:ajax update=":frmDlgHabil"/>												
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+							
+						</div>
+						<p:outputPanel id="listaHabilidades" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listHabil}">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhuma_habilidade}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="hab" value="#{talentosPortalBacking.helper.listHabil}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#" 
+												action="#{talentosPortalBacking.actionEditarHabil}">	
+												<p:ajax update=":frmDlgHabil" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funchabil}"
+													value="#{hab}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverHabil(hab)}">
+												<p:ajax update=":#{p:component('listaHabilidades')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{hab.conhecimentoFk.descricao}
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_data}:&#160;<xcp:outputSimpleDate value="#{hab.data}"/></span><br/>
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_observ}:</small><br/>
+												<h:outputText value="#{fn:replace(hab.obs,'\\n','&lt;br/&gt;')}" escape="false"/>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_atitudes}
+	
+							<h:commandLink href="#" 
+								action="#{talentosPortalBacking.actionNovoAtit}"
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_atit}">												
+								<p:ajax update=":frmDlgAtit"/>												
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+							
+						</div>
+						<p:outputPanel id="listaAtitudes" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listAtit }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhuma_atitude}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="atit" value="#{talentosPortalBacking.helper.listAtit}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#" 
+												action="#{talentosPortalBacking.actionEditarAtit}">	
+												<p:ajax update=":frmDlgAtit" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funcatit}"
+													value="#{atit}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverAtit(atit)}">
+												<p:ajax update=":#{p:component('listaAtitudes')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{atit.conhecimentoFk.descricao}
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_data}:&#160;<xcp:outputSimpleDate value="#{atit.data}"/></span><br/>
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_observ}:</small><br/>
+												<h:outputText value="#{fn:replace(atit.obs,'\\n','&lt;br/&gt;')}" escape="false"/>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_ativcompl}
+	
+							<h:commandLink href="#" 
+								action="#{talentosPortalBacking.actionNovoAtivCompl}"
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_ativ_compl}">												
+								<p:ajax update=":frmDlgAtivCompl"/>												
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+							
+						</div>
+						<p:outputPanel id="listaAtivCompl" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listAtivCompl }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhuma_ativ_compl}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="ativ" value="#{talentosPortalBacking.helper.listAtivCompl}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#" 
+												action="#{talentosPortalBacking.actionEditarAtivCompl}">	
+												<p:ajax update=":frmDlgAtivCompl" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funcativcompl}"
+													value="#{ativ}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverAtivCompl(ativ)}">
+												<p:ajax update=":#{p:component('listaAtivCompl')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{ativ.descricao}
+												</div>
+											</div>
+											
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_tipo}:&#160;<xcp:outputSimple value="#{ativ.tipo}" itens="#{talentosPortalBacking.itensTipoAtivCompl}"/></span><br/>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_area}:&#160;<xcp:outputSimpleDate value="#{ativ.areaFk.descricao}"/></span><br/>
+												</div>
+											</div>
+											
+											<div class="col-sm-2">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_subarea}:&#160;<xcp:outputSimpleDate value="#{ativ.divisaoFk.descricao}"/></span><br/>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_funccert}
+	
+							<h:commandLink href="#" 
+								action="#{talentosPortalBacking.actionNovoCert}"
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_cert}">												
+								<p:ajax update=":frmDlgCert"/>												
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+							
+						</div>
+						<p:outputPanel id="listaCert" class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listCertif}">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhuma_cert}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="cert" value="#{talentosPortalBacking.helper.listCertif}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#" 
+												action="#{talentosPortalBacking.actionEditarCert}">	
+												<p:ajax update=":frmDlgCert" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funccertif}"
+													value="#{cert}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverCert(cert)}">
+												<p:ajax update=":#{p:component('listaCert')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{ativ.descricao}
+												</div>
+											</div>										
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_instcert}:&#160;<xcp:outputSimple value="#{cert.instCertFk.descricao}"/></span><br/>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_areacert}:&#160;<xcp:outputSimpleDate value="#{cert.areaCertifFk.descricao}"/></span><br/>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>				
+					
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_idiomas}
+							
+							<h:commandLink href="#" 
+								action="#{talentosPortalBacking.actionNovoIdioma}"
+								styleClass="datacard-icon-action"  title="#{bundle.hlp_adic_idioma}">
+								<p:ajax update=":frmDlgIdioma" />
+								
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+							</h:commandLink>
+																		
+						</div>
+						<p:outputPanel id="listaIdioma"  class="datacard-content">
+							<ui:fragment rendered="#{empty talentosPortalBacking.helper.listIdiomas }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_idioma}
+								</div>
+							</ui:fragment>
+						
+							<ul class="datacard-itemslist-container">
+								<ui:repeat var="idioma" value="#{talentosPortalBacking.helper.listIdiomas}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#" 
+												action="#{talentosPortalBacking.actionEditarIdioma}">	
+												<p:ajax update=":frmDlgIdioma" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funcidiomas}"
+													value="#{idioma}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink href="#" 													
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverIdioma(idioma)}">
+												<p:ajax update=":#{p:component('listaIdioma')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{idioma.idiomaFk.descricao}
+												</div>
+											</div>
+											<div class="col-sm-2 col-xs-6">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_entende}: 
+														<xcp:outputSimple
+															value="#{idioma.entende}"
+															itens="#{talentosPortalBacking.itensFluencia}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-2 col-xs-6">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_le}: 
+														<xcp:outputSimple
+															value="#{idioma.leitura}"
+															itens="#{talentosPortalBacking.itensFluencia}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-2 col-xs-6">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_fala}: 
+														<xcp:outputSimple
+															value="#{idioma.fala}"
+															itens="#{talentosPortalBacking.itensFluencia}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-2 col-xs-6">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_escreve}: 
+														<xcp:outputSimple
+															value="#{idioma.escreve}"
+															itens="#{talentosPortalBacking.itensFluencia}" /></span>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+				</div>			
+			</div>
+		</div>
+	</div>
+	
+	
+
+</ui:composition>

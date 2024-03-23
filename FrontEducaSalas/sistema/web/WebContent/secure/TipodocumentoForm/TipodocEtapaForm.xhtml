@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="TipodocEtapa"
+		backing="#{tipoDocEtapaBacking}"
+		masterId="Tipodocumento">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_etapa}"
+				value="#{row.etapa}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.etapa}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_meses}"
+				value="#{row.meses}"
+				type="Number"
+				size="50">
+				<xcp:outputSimpleNumber
+					value="#{row.meses}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtEtapa_TipodocEtapa"
+					label="#{bundle.lbl_etapa}"
+					required="true"
+					value="#{tipoDocEtapaBacking.entity.etapa}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					readonly="#{not tipoDocEtapaBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtMeses_TipodocEtapa"
+					label="#{bundle.lbl_meses}"
+					required="true"
+					value="#{tipoDocEtapaBacking.entity.meses}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+
+		<ui:define name="headerTitle">
+			<h:outputText
+				value="#{bundle[detailTitle]}"
+				rendered="#{tipodocumentoBacking.probatorio}" />
+			<h:outputText
+				value="#{bundle.title_etapa_exp}"
+				rendered="#{tipodocumentoBacking.avalExperiencia}" />
+			<h:outputText
+				value="#{bundle.title_etapa_teletrabalho}"
+				rendered="#{tipodocumentoBacking.teletrabalho}" />
+		</ui:define>
+
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

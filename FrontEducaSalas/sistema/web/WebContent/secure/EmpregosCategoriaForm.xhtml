@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="EmpregosCategoria"
+			backing="#{empregosCategoriaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_categoria}"
+					value="#{row.categoria}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.categoria}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indAvanco}"
+					value="#{row.indAvanco}"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indAvanco}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indGratificacao}"
+					value="#{row.indGratificacao}"
+					type="String"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indGratificacao}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indAposentadoria}"
+					value="#{row.indAposentadoria}"
+					type="String"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indAposentadoria}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indLicencaPremio}"
+					value="#{row.indLicencaPremio}"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indLicencaPremio}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indProgressaoFuncional}"
+					value="#{row.indProgressaoFuncional}"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indProgressaoFuncional}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indAdicional}"
+					value="#{row.indAdicional}"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indAdicional}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indExperienciaProfissional}"
+					value="#{row.indExperienciaProfissional}"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indExperienciaProfissional}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indDisponibilidade}"
+					value="#{row.indDisponibilidade}"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indDisponibilidade}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_status}"
+					value="#{row.indAtivo}"
+					itens="#{empregosCategoriaBacking.itensIndSimNaoNull}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.indAtivo}"
+						itens="#{empregosCategoriaBacking.itensIndSimNaoNull}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCategoria"
+						label="#{bundle.lbl_categoria}"
+						required="true"
+						value="#{empregosCategoriaBacking.entity.categoria}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not empregosCategoriaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{empregosCategoriaBacking.entity.descricao}"
+						size="100" />
+
+					<xcp:combo
+						id="cboIndAvanco"
+						value="#{empregosCategoriaBacking.entity.indAvanco}"
+						label="#{bundle.lbl_indAvanco}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:combo
+						id="cboIndGratificacao"
+						value="#{empregosCategoriaBacking.entity.indGratificacao}"
+						label="#{bundle.lbl_indGratificacao}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:combo
+						id="cboIndAposentadoria"
+						value="#{empregosCategoriaBacking.entity.indAposentadoria}"
+						label="#{bundle.lbl_indAposentadoria}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:combo
+						id="cboIndLicencaPremio"
+						value="#{empregosCategoriaBacking.entity.indLicencaPremio}"
+						label="#{bundle.lbl_indLicencaPremio}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:combo
+						id="cboIndProgressaoFuncional"
+						value="#{empregosCategoriaBacking.entity.indProgressaoFuncional}"
+						label="#{bundle.lbl_indProgressaoFuncional}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:combo
+						id="cboIndAdicional"
+						value="#{empregosCategoriaBacking.entity.indAdicional}"
+						label="#{bundle.lbl_indAdicional}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:combo
+						id="cboIndExperienciaProfissional"
+						value="#{empregosCategoriaBacking.entity.indExperienciaProfissional}"
+						label="#{bundle.lbl_indExperienciaProfissional}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:combo
+						id="cboIndDisponibilidade"
+						value="#{empregosCategoriaBacking.entity.indDisponibilidade}"
+						label="#{bundle.lbl_indDisponibilidade}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}"
+						rendered="#{not empregosCategoriaBacking.renderedReflexos}" />
+
+					<xcp:text
+						id="txtFuncao"
+						label="#{bundle.lbl_funcao}"
+						value="#{empregosCategoriaBacking.entity.funcao}"
+						size="100" />
+
+					<xcp:combo
+						id="cboIndAtivo"
+						value="#{empregosCategoriaBacking.entity.indAtivo}"
+						label="#{bundle.lbl_indAtivo}"
+						required="true"
+						itens="#{empregosCategoriaBacking.itensIndSimNao}" />
+
+				</xcp:panelForm>
+				<script>
+		  function ajusta(){
+			  var el = document.getElementById('form');
+			  var divs = el.getElementsByTagName('div');
+	
+			  for(i = 0;i &lt;  divs.length; i++) {
+				 var currEl = divs[i];
+				 if(currEl.childNodes.length == 0 ){
+					 currEl.parentNode.style.padding = '0px';
+			     }
+			  }
+		  }
+
+		  ajusta();
+		</script>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

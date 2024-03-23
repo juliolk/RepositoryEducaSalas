@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<p:outputPanel>
+				<h1 class="datacard-container-title">
+					<a
+						class="datacard-icon-action"
+						data-toggle="collapse"
+						data-target="#pnlcolfor"><i class='fa fa-minus-square-o' /></a>#{bundle.title_historicos}
+				</h1>
+			</p:outputPanel>
+			<div
+				id="pnlcolfor"
+				class="collapse in">
+				<div class="datacard-listcontainer">
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">#{bundle.tit_histacad}</div>
+						<p:outputPanel
+							id="listaFormacao"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listaFormacao }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_histacad}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="formacao"
+									value="#{talentosPortalBacking.helper.listaFormacao}">
+									<li class="datacard-item container-fluid">
+
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{formacao.cursoFk.descricao}</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_area}:&#160; <xcp:outputSimple
+															value="#{formacao.area}"
+															rendered="#{formacao.area !=null}" /> <xcp:outputSimple
+															value="#{formacao.cursoacadFk.descricao}"
+															rendered="#{formacao.cursoacadFk !=null}" /></span> <span>#{bundle.lbl_instituicao}:&#160;<xcp:outputSimple
+															value="#{formacao.instituicaoFk.descricao}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_dataini}:&#160;<xcp:outputSimpleDate
+															value="#{formacao.dtinicio}" /></span> <span>#{bundle.lbl_datafim}:&#160;<xcp:outputSimpleDate
+															value="#{formacao.dtfim}" /></span><span>#{bundle.lbl_situacao}:&#160;<xcp:outputSimple
+															value="#{formacao.situacaoFk.descricao}" />
+													</span>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4" />
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<xcp:outputSimple
+														value="#{bundle.lbl_observacao}: #{formacao.obs}"
+														rendered="#{formacao.obs !=null}" />
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+				</div>
+				<div class="datacard-listcontainer">
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">#{bundle.title_histprof}</div>
+						<p:outputPanel
+							id="listaEmpregos"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listaEmpregos }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_histprof}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="row"
+									value="#{talentosPortalBacking.helper.listaEmpregos}">
+									<li class="datacard-item container-fluid">
+
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{row.nomeempresa}</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_dataini}:&#160;<xcp:outputSimpleDate
+															value="#{row.dtadm}" /></span> <span>#{bundle.lbl_datafim}:&#160;<xcp:outputSimpleDate
+															value="#{row.dtdem}" /></span>
+												</div>
+											</div>
+
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_faltas}:&#160;<xcp:outputSimple
+															value="#{row.faltas}" /></span> <span>#{bundle.lbl_afastamentos}:&#160;<xcp:outputSimple
+															value="#{row.afastamentos}" /></span>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+.alinhamento {
+	padding-left: 8px;
+}
+</style>
+		<xcp:panelMestre
+			id="Candidatos"
+			backing="#{candidatosRemBacking}">
+
+			<ui:define name="colunasMaster">
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{rowMaster.editalFk.numero}"
+					type="Number"
+					size="8">
+					<xcp:outputSimple value="#{rowMaster.editalFk.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desEdital}"
+					value="#{rowMaster.editalFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{rowMaster.editalFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{rowMaster.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{rowMaster.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vagas}"
+					value="#{rowMaster.vagas}"
+					type="Number"
+					size="6" 
+					rendered="#{not candidatosRemBacking.vagaIndividual}">
+					<xcp:outputSimpleNumber
+						value="#{rowMaster.vagas}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_desVaga}"
+					value="#{rowMaster.numSeqVagaFk.descricao}"
+					type="String"
+					size="20"
+					rendered="#{candidatosRemBacking.vagaIndividual}">
+					<xcp:outputSimple value="#{rowMaster.numSeqVagaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{rowMaster.orgao}"
+					type="Number"
+					size="30">
+					<xcp:outputSimpleNumber
+						value="#{rowMaster.orgao}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{rowMaster.orgaoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{rowMaster.orgaoFk.descricao}" />
+				</xcp:column>
+				
+			</ui:define>
+
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.matriculaFk.nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinscr}"
+					value="#{row.datainscr}"
+					type="Date"
+					size="5">
+					<xcp:outputSimpleTimestamp value="#{row.datainscr}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classfinal}"
+					value="#{row.classfinal}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.classfinal}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelDisable disabled="#{candidatosRemBacking.disabled}">
+
+					<p:fieldset
+						id="brd_dados_concruso"
+						legend="#{bundle.tit_dados_concurso}">
+						<h:panelGrid
+							columns="6"
+							styleClass="tabela_alinhamento">
+
+							<xcp:number
+								id="txtEdital"
+								label="#{bundle.lbl_edital}"
+								value="#{candidatosRemBacking.masterEntity.editalFk.edital}"
+								size="8"
+								precision="8"
+								scale="0"
+								maxValue="99999999"
+								readonly="true" />
+
+							<xcp:text
+								id="txtDescricao"
+								label="#{bundle.lbl_descricao_edital}"
+								value="#{candidatosRemBacking.masterEntity.editalFk.descricao}"
+								size="60"
+								readonly="true" />
+
+							<xcp:date
+								id="txtData"
+								value="#{candidatosRemBacking.masterEntity.editalFk.data}"
+								label="#{bundle.lbl_data_edital}"
+								readonly="true" />
+
+							<xcp:number
+								id="txtFuncao"
+								label="#{bundle.lbl_funcao_edital}"
+								value="#{candidatosRemBacking.masterEntity.funcao}"
+								size="8"
+								precision="8"
+								scale="0"
+								maxValue="99999999"
+								readonly="true" />
+
+							<xcp:text
+								id="txtDescricaoFuncao"
+								label="#{bundle.lbl_descricao_funcao_edital}"
+								value="#{candidatosRemBacking.masterEntity.funcaoFk.descricao}"
+								size="60"
+								readonly="true" />
+						</h:panelGrid>
+					</p:fieldset>
+					<p:spacer width="10px" />
+
+					<xcp:border
+						id="brd_inscricao"
+						header="#{bundle.tit_inscricao}">
+
+						<xcp:panelForm>
+							<xcp:number
+								id="txtCodigo"
+								label="#{bundle.lbl_codigo}"
+								required="true"
+								value="#{candidatosRemBacking.entity.codigo}"
+								size="8"
+								precision="8"
+								scale="0"
+								maxValue="99999999"
+								readonly="true"
+								rendered="#{not candidatosRemBacking.entity.novo}" />
+
+							<xcp:lov
+								id="lovMatricula"
+								label="#{bundle.lbl_matricula}"
+								required="true"
+								value="#{candidatosRemBacking.entity.matriculaFk}"
+								query="funcionariosLov" />
+
+							<xcp:dateTime
+								id="txtDtinscricao"
+								value="#{candidatosRemBacking.entity.datainscr}"
+								label="#{bundle.lbl_dtinsc}"
+								required="true"
+								readonly="true"
+								rendered="#{not candidatosRemBacking.entity.novo}" />
+
+							<xcp:number
+								id="txtClassfinal"
+								size="5"
+								readonly="true"
+								value="#{candidatosRemBacking.entity.classfinal}"
+								label="#{bundle.lbl_classfinal}" />
+						</xcp:panelForm>
+					</xcp:border>
+				</xcp:panelDisable>
+			</ui:define>
+		</xcp:panelMestre>
+
+	</ui:define>
+</ui:composition>

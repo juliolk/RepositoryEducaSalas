@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+		
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+
+					<p:fieldset id="brdPesq" legend="Filtro">
+						<xcp:panelForm>
+
+							<xcp:lov id="lovCidades"
+								value="#{consultaCNESBacking.cidadeSelecionada}"
+								label="#{bundle.lbl_cidade}" query="cidades" size="8"
+								sizeDesc="48" />
+
+							<xcp:commandButton id="btn_pesquisar"
+								value="#{bundle.btn_pesquisar}"
+								action="#{consultaCNESBacking.actionPesquisar}"
+								update="tbl toolbar" icon="ui-icon-search" />
+
+						</xcp:panelForm>
+					</p:fieldset>
+
+				</f:facet>
+
+			</p:toolbar>
+			
+			<p:dataTable id="tbl" var="row"
+				value="#{consultaCNESBacking.estabelecimentoDataModel}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				sortBy="#{row.nomeFantasia.nome}"
+				filteredValue="#{consultaCNESBacking.listaEstabelecimentosFiltrados}"
+				paginator="true" rows="30" rowStatePreserved="true">
+
+				<p:column headerText="Código CNES" width="10" filterMaxLength="60"
+					filterBy="#{row.codigoCNES.codigo}" >
+					<xcp:outputSimple value="#{row.codigoCNES.codigo}" />
+				</p:column>
+
+				<p:column headerText="Nome do Estabelecimento de Saúde" width="60"
+					filterBy="#{row.nomeFantasia.nome}" >
+					<xcp:outputSimple value="#{row.nomeFantasia.nome}" />
+				</p:column>
+
+				<p:column headerText="Visualizações" width="60" >
+					<div style="float: left">
+						<xcp:commandButton label="Dados Gerais" value="Dados Gerais" 
+							action="#{consultaCNESBacking.actionConsultar(row, 'wDetalhe')}"
+							icon="ui-icon-document" update=":frmFor, tbl">
+						</xcp:commandButton>
+					</div>
+					<div style="float: left">
+						<xcp:commandButton label="Leitos" value="Leitos"
+							action="#{consultaCNESBacking.actionConsultar(row, 'wLeito')}"
+							icon="ui-icon-document" update=":frmLeito">
+						</xcp:commandButton>
+					</div>
+					<div style="float: left">
+						<xcp:commandButton label="Habilitações" value="Habilitações"
+							action="#{consultaCNESBacking.actionConsultar(row, 'wHabilitacao')}"
+							icon="ui-icon-document" update=":frmHabilitacao">
+						</xcp:commandButton>
+					</div>
+					<div style="float: left">
+						<xcp:commandButton label="Profissionais" value="Profissionais"
+							action="#{consultaCNESBacking.actionConsultar(row, 'wProfissional')}"
+							icon="ui-icon-document" update=":frmProfissional">
+						</xcp:commandButton>
+					</div>
+					<div style="float: left">
+						<xcp:commandButton label="Equipamentos" value="Equipamentos"
+							action="#{consultaCNESBacking.actionConsultar(row, 'wEquipamento')}"
+							icon="ui-icon-document" update=":frmEquipamento">
+						</xcp:commandButton>
+					</div>
+				</p:column>
+
+
+			</p:dataTable>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog header="Estabelecimento de Saúde - Dados Gerais"
+			modal="true" id="dlgFor" widgetVar="wDetalhe" closeOnEscape="true"
+			width="1024" height="768">
+
+			<xcp:form id="frmFor">
+				<p:fieldset id="brdDadosGerais" legend="Dados Gerais">
+
+					<xcp:panelGrid>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Código
+										CNES:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.codigoCNES.codigo}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">CNPJ:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.CNPJ.numeroCNPJ}
+								</div>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Nome
+										Fantasia:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.nomeFantasia.nome}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Nome
+										Empresarial:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.nomeEmpresarial.nome}
+								</div>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Endereço:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.endereco.nomeLogradouro}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Número:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.endereco.numero}
+								</div>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Bairro:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.endereco.bairro.descricaoBairro}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">CEP:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.endereco.CEP.numeroCEP}
+								</div>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Município:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.endereco.municipio.nomeMunicipio}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">UF:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.endereco.municipio.UF.siglaUF}
+								</div>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Data
+										Atualização:</span>
+									#{consultaCNESBacking.formataData(consultaCNESBacking.dadosGeraisEstabelecimentoSaude.dataAtualizacao)}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Tipo
+										unidade:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.tipoUnidade.descricao}
+								</div>
+							</p:column>
+						</p:row>
+						<ui:repeat var="telefone"
+							value="#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.telefone}">
+							<p:row>
+								<p:column>
+									<div style="text-align: left; padding: 10px;">
+										<span style="font-size: 0.875em; font-weight: bolder;">Telefone:</span>
+										(#{telefone.DDD}) #{telefone.numeroTelefone}
+									</div>
+								</p:column>
+								<p:column>
+									<div style="text-align: left; padding: 10px;">
+										<span style="font-size: 0.875em; font-weight: bolder;">Tipo
+											telefone:</span> #{telefone.tipoTelefone.descricaoTipoTelefone}
+									</div>
+								</p:column>
+							</p:row>
+						</ui:repeat>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">E-mail:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.email.descricaoEmail}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Tipo
+										e-mail:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.email.tipoEmail}
+								</div>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Fluxo
+										clientela:</span>
+									#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.fluxoClientela}
+								</div>
+							</p:column>
+						</p:row>
+					</xcp:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset id="brdSumário" legend="Sumário">
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Profissionais:</span>
+									#{consultaCNESBacking.sumario.quantidadeProfissionaisSaude}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">CBO's:</span>
+									#{consultaCNESBacking.sumario.quantidadeCBOS}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Tipos de Leito:</span>
+									#{consultaCNESBacking.sumario.quantidadeLeitos}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Habilitações:</span>
+									#{consultaCNESBacking.sumario.quantidadeHabilitacoes}
+								</div>
+							</p:column>
+							<p:column>
+								<div style="text-align: left; padding: 10px;">
+									<span style="font-size: 0.875em; font-weight: bolder;">Equipamentos:</span>
+									#{consultaCNESBacking.sumario.quantidadeEquipamentos}
+								</div>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog header="Estabelecimento de Saúde - Leitos" modal="true"
+			id="dlgLeito" widgetVar="wLeito" closeOnEscape="true" width="1024"
+			height="768">
+
+			<xcp:form id="frmLeito">
+				<p:dataTable id="tblLeitos" var="leito"
+					value="#{consultaCNESBacking.leitos}"
+					emptyMessage="#{bundle.msg_sem_resultado}" rowKey="#{leito}"
+					paginator="true" rows="20">
+					<f:facet name="header">
+							#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.nomeFantasia.nome}
+						</f:facet>
+					<p:column headerText="Leito" width="60"
+						filterBy="#{leito.descricao}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple value="#{leito.descricao}" />
+					</p:column>
+					<p:column headerText="Quantidade" width="10">
+						<xcp:outputSimple value="#{leito.quantidadeLeito}" />
+					</p:column>
+					<p:column headerText="Quantidade SUS" width="10">
+						<xcp:outputSimple value="#{leito.quantidadeLeitoSUS}" />
+					</p:column>
+					<p:column headerText="Data Atualização" width="10">
+						<xcp:outputSimple
+							value="#{consultaCNESBacking.formataData(leito.dataAtualizacao)}" />
+					</p:column>
+
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog header="Estabelecimento de Saúde - Habilitações"
+			modal="true" id="dlgHabilitacao" widgetVar="wHabilitacao"
+			closeOnEscape="true" width="1024" height="768">
+
+			<xcp:form id="frmHabilitacao">
+				<p:dataTable id="tblHabilitacoes" var="habilitacao"
+					value="#{consultaCNESBacking.habilitacoes}"
+					emptyMessage="#{bundle.msg_sem_resultado}" rowKey="#{habilitacao}"
+					paginator="true" rows="20">
+
+					<f:facet name="header">
+							#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.nomeFantasia.nome}
+						</f:facet>
+					<p:column headerText="Grupo" width="50"
+						filterBy="#{habilitacao.grupoHabilitacao.descricao}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple
+							value="#{habilitacao.grupoHabilitacao.descricao}" />
+					</p:column>
+					<p:column headerText="Subgrupo" width="70"
+						filterBy="#{habilitacao.subGrupoHabilitacao.descricao}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple
+							value="#{habilitacao.subGrupoHabilitacao.descricao}" />
+					</p:column>
+					<p:column headerText="Portaria" width="20"
+						filterBy="#{habilitacao.nomePortaria}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple value="#{habilitacao.nomePortaria}" />
+					</p:column>
+					<p:column headerText="Data Portaria" width="10">
+						<xcp:outputSimple
+							value="#{consultaCNESBacking.formataData(habilitacao.dataPortaria)}" />
+					</p:column>
+					<p:column headerText="Data Atualização" width="10">
+						<xcp:outputSimple
+							value="#{consultaCNESBacking.formataData(habilitacao.dataAtualizacao)}" />
+					</p:column>
+
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog header="Estabelecimento de Saúde - Profissionais"
+			modal="true" id="dlgProfissional" widgetVar="wProfissional"
+			closeOnEscape="true" width="1024" height="768">
+
+			<xcp:form id="frmProfissional">
+				<p:dataTable id="tblProfissionais" var="profissional"
+					value="#{consultaCNESBacking.profissionais}"
+					emptyMessage="#{bundle.msg_sem_resultado}" rowKey="#{profissional}"
+					paginator="true" sortBy="#{profissional.nome.nome}" rows="20">
+					<f:facet name="header">
+							#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.nomeFantasia.nome}
+						</f:facet>
+					<p:column headerText="Profissional" width="60"
+						filterBy="#{profissional.nome.nome}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple value="#{profissional.nome.nome}" />
+					</p:column>
+					<p:column headerText="CNS" width="17"
+						filterBy="#{profissional.CNS.numeroCNS}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple value="#{profissional.CNS.numeroCNS}" />
+					</p:column>
+					<p:column headerText="CPF" width="15"
+						filterBy="#{profissional.CPF.numeroCPF}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple value="#{profissional.CPF.numeroCPF}" />
+					</p:column>
+					<p:column headerText="CBO" width="60">
+						<ul>
+							<ui:repeat var="cbo" value="#{profissional.CBO}">
+								<li style="list-style-type: none">#{cbo.descricaoCBO}</li>
+							</ui:repeat>
+						</ul>
+					</p:column>
+					<p:column headerText="Data Atualização" width="10">
+						<xcp:outputSimple
+							value="#{consultaCNESBacking.formataData(profissional.dataAtualizacao)}" />
+					</p:column>
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog header="Estabelecimento de Saúde - Equipamentos"
+			modal="true" id="dlgEquipamento" widgetVar="wEquipamento"
+			closeOnEscape="true" width="1024" height="768">
+
+			<xcp:form id="frmEquipamento">
+				<p:dataTable id="tblEquipamentos" var="equipamento"
+					value="#{consultaCNESBacking.equipamentos}"
+					emptyMessage="#{bundle.msg_sem_resultado}" rowKey="#{equipamento}"
+					paginator="true" sortBy="#{equipamento.descricao}" rows="20">
+					<f:facet name="header">
+							#{consultaCNESBacking.dadosGeraisEstabelecimentoSaude.nomeFantasia.nome}
+						</f:facet>
+					<p:column headerText="Equipamento" width="60"
+						filterBy="#{equipamento.descricao}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple value="#{equipamento.descricao}" />
+					</p:column>
+					<p:column headerText="Tipo" width="60"
+						filterBy="#{equipamento.tipoEquipamento.descricao}"
+						filterFunction="#{consultaCNESBacking.filterBy}">
+						<xcp:outputSimple value="#{equipamento.tipoEquipamento.descricao}" />
+					</p:column>
+					<p:column headerText="Quantidade" width="10">
+						<xcp:outputSimple value="#{equipamento.quantidadeEquipamento}" />
+					</p:column>
+					<p:column headerText="Quantidade Uso" width="10">
+						<xcp:outputSimple value="#{equipamento.quantidadeUso}" />
+					</p:column>
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

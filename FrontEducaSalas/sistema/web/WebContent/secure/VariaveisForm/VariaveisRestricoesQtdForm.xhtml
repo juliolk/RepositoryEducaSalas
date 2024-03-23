@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="RestricoesQtd"
+		backing="#{variaveisRestricoesQtdBacking}"
+		masterId="Variaveis">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_restricao}"
+				value="#{row.restricao}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.restricao}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dataini}"
+				value="#{row.dataini}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dataini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_datafim}"
+				value="#{row.datafim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.datafim}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDi_VarRest"
+					value="#{variaveisRestricoesQtdBacking.entity.dataini}"
+					label="#{bundle.lbl_dataini}"
+					required="true" />
+
+				<xcp:date
+					id="txtDf_VarRest"
+					value="#{variaveisRestricoesQtdBacking.entity.datafim}"
+					label="#{bundle.lbl_datafim}"
+					required="true" />
+
+				<xcp:number
+					id="txtQi_VarRest"
+					label="#{bundle.lbl_qtd}"
+					required="true"
+					value="#{variaveisRestricoesQtdBacking.entity.qtdIni}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

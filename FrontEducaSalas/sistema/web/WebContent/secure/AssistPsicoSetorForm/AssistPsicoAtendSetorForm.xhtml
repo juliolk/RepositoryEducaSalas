@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:panel
+		id="pnlAssistPsicoAtend"
+		styleClass="xcp_pmanut_detalhes"
+		rendered="#{not assistPsicoSetorBacking.helper.entity.novo}">
+
+		<f:facet name="header">
+			<xcp:panelGrid>
+				<p:row>
+					<p:column>
+						<p:outputPanel autoUpdate="true">
+							<xcp:commandLink
+								id="lnkVoltar_atend"
+								value="#{bundle.lbl_listagem}"
+								action="#{assistPsicoAtendSetorBacking.actionVoltar}"
+								process="@this"
+								update="pnlAssistPsicoAtend tollbarprinc"
+								rendered="#{assistPsicoAtendSetorBacking.tipTela == 2}">
+								<p:resetInput target="pnlAssistPsicoAtend tollbarprinc" />
+							</xcp:commandLink>
+
+							<h:outputText
+								value="|"
+								escape="false"
+								rendered="#{assistPsicoAtendSetorBacking.tipTela == 2}" />
+						</p:outputPanel>
+					</p:column>
+					<p:column styleClass="manut_content_header_title">
+						<ui:insert name="headerTitle">
+							<h:outputText value="#{bundle.title_AssistPsicoSetorAtend}" />
+						</ui:insert>
+					</p:column>
+				</p:row>
+			</xcp:panelGrid>
+		</f:facet>
+
+		<h:panelGroup rendered="#{assistPsicoAtendSetorBacking.tipTela == 2}">
+			<xcp:panelGrid styleClass="xcp_pmanut_form">
+				<p:row>
+					<p:column styleClass="xcp_pmanut_form_cell_frm">
+						<p:fieldset>
+							<xcp:panelForm>
+
+								<xcp:dateTime
+									id="txtDthAtend_AssistPsicoAtend"
+									required="true"
+									value="#{assistPsicoAtendSetorBacking.entity.dthAtend}"
+									label="#{bundle.lbl_dthAtend}" />
+
+								<xcp:lov
+									id="lovTipo"
+									value="#{assistPsicoAtendSetorBacking.entity.tipoFk}"
+									params="#{assistPsicoBacking.paramsAssistencia}"
+									label="#{bundle.lbl_tipoAtend}"
+									query="assistenciatipo"
+									required="true"
+									size="8" />
+
+								<xcp:memo
+									id="txtRelato_AssistPsicoAtend"
+									label="#{bundle.lbl_relato}"
+									value="#{assistPsicoAtendSetorBacking.entity.relato}"
+									size="16000" />
+
+							</xcp:panelForm>
+
+							<p:fieldset
+								legend="#{bundle.title_tecnicos}"
+								rendered="#{not assistPsicoAtendSetorBacking.entity.novo}">
+								<p:dataTable
+									id="tblTec"
+									var="row"
+									value="#{assistPsicoAtendSetorBacking.listTec}"
+									rowKey="#{row}"
+									paginator="false"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									style="width:650px">
+
+									<p:column
+										headerText="#{bundle.col_matricula}"
+										width="70">
+										<xcp:outputSimple value="#{row.matricula}" />
+									</p:column>
+
+									<p:column headerText="#{bundle.col_nome}">
+										<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+									</p:column>
+
+									<p:column
+										headerText="#{bundle.col_responsavel}"
+										width="70">
+										<xcp:outputSimple
+											value="#{row.tecresponsavel == 1 ? bundle.opt_ind_1 : bundle.opt_ind_2}" />
+									</p:column>
+
+									<p:column style="width:32px">
+										<p:commandButton
+											id="btn_rem_tecnico"
+											icon="ui-icon-trash"
+											update="tblTec"
+											action="#{assistPsicoAtendSetorBacking.actionRemoveTec(row)}">
+											<p:confirm
+												header="#{bundle.tit_confirma_remover}"
+												message="#{bundle.msg_confirma_remover}"
+												icon="ui-icon-alert" />
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+
+								<xcp:commandButton
+									id="btn_adicionar"
+									value="#{bundle.btn_novo}"
+									style="margin-top: 5px"
+									rendered="#{not assistPsicoAtendSetorBacking.entity.novo}"
+									action="#{assistPsicoAtendSetorBacking.actionOpenTec}"
+									icon="ui-icon-document"
+									update=":frmDlgTec" />
+							</p:fieldset>
+
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</xcp:panelGrid>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btnGravar_atend"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						action="#{assistPsicoAtendSetorBacking.actionGravar}"
+						process="pnlAssistPsicoAtend"
+						update="pnlAssistPsicoAtend tollbarprinc" />
+
+					<xcp:commandButton
+						id="btnRemover_atend"
+						icon="ui-icon-trash"
+						value="#{bundle.btn_remover}"
+						action="#{assistPsicoAtendSetorBacking.actionRemover}"
+						disabled="#{assistPsicoAtendSetorBacking.entity.novo}"
+						process="@this"
+						update="pnlAssistPsicoAtend tollbarprinc">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+						<p:resetInput target="pnlAssistPsicoAtend tollbarprinc" />
+					</xcp:commandButton>
+
+					<xcp:commandButton
+						id="btnVoltar_atend"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						action="#{assistPsicoAtendSetorBacking.actionVoltar}"
+						process="@this"
+						update="pnlAssistPsicoAtend tollbarprinc">
+						<p:resetInput target="pnlAssistPsicoAtend tollbarprinc" />
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+		</h:panelGroup>
+
+
+		<h:panelGroup rendered="#{assistPsicoAtendSetorBacking.tipTela == 1}">
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						icon="ui-icon-document"
+						value="#{bundle.btn_novo}"
+						action="#{assistPsicoAtendSetorBacking.actionNovo}"
+						process="pnlAssistPsicoAtend"
+						update="pnlAssistPsicoAtend tollbarprinc">
+						<p:resetInput target="pnlAssistPsicoAtend tollbarprinc" />
+					</xcp:commandButton>
+
+					<xcp:commandButton
+						id="btnAtualizar_atend"
+						icon="ui-icon-refresh"
+						value="#{bundle.btn_atualizar}"
+						action="#{assistPsicoAtendSetorBacking.actionPesquisar}"
+						process="@this"
+						update="pnlAssistPsicoAtend" />
+
+					<ui:insert name="barraListaDet" />
+				</f:facet>
+			</p:toolbar>
+
+			<p:dataTable
+				id="table_atend"
+				var="row"
+				resizableColumns="true"
+				value="#{assistPsicoAtendSetorBacking.list}"
+				filteredValue="#{assistPsicoAtendSetorBacking.listFiltrados}"
+				rows="8"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				paginatorPosition="bottom"
+				selectionMode="single"
+				selection="#{assistPsicoAtendSetorBacking.entity}"
+				rowKey="#{row.PK}">
+
+				<p:ajax
+					event="rowSelect"
+					update=":form:pnlAssistPsicoAtend :form:tollbarprinc"
+					listener="#{assistPsicoAtendSetorBacking.actionSelectAtend}" />
+
+				<xcp:column
+					headerText="#{bundle.col_dthAtend}"
+					value="#{row.dthAtend}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleTimestamp value="#{row.dthAtend}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipoFk.descricao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_relato}"
+					value="#{row.relato}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.relato}" />
+				</xcp:column>
+
+			</p:dataTable>
+		</h:panelGroup>
+
+	</p:panel>
+</ui:composition>

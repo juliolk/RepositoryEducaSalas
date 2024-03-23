@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgAnexo"
+		widgetVar="w_anexo"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true">
+		<xcp:form id="frmAnexo">
+
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				sizeLimit="#{solParfuncPortalBacking.limiteTamanhoArquivoUpload}"
+				fileUploadListener="#{solParfuncPortalBacking.actionGravarAnexo}"
+				update=":frmSolicitacao:pnlanexos"
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				requiredMessage='#{ empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+				validator="xcpInputFileValidator" />
+
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						value="#{bundle.btn_cancelar}"
+						oncomplete="PF('w_anexo').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

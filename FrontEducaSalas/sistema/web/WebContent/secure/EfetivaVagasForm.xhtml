@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.tit_filtros}">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovCargo_Restricoes"
+						value="#{efetivaVagasBacking.cargoFk}"
+						label="#{bundle.lbl_cargo}"
+						query="cargostipo"
+						size="10"
+						required="true"
+						params="#{efetivaVagasBacking.paramsCargo}"
+						selectionListener="#{efetivaVagasBacking.selectCargoFiltro}"
+						update="pnlCargo" />
+
+
+					<p:spacer width="1" />
+
+					<p:outputPanel id="pnlCargo">
+						<p:outputPanel
+							id="pnlCargoInner"
+							rendered="#{efetivaVagasBacking.cargoFk != null}">
+							<p:fieldset legend="#{bundle.tit_vagasorgao}">
+								<h:panelGrid columns="6">
+									<xcp:output
+										id="txtTot"
+										value="#{efetivaVagasBacking.totVagas}"
+										label="#{bundle.lbl_totVagas}"
+										styleLabel="font-weight: bold;" />
+
+									<xcp:output
+										id="txtOcup"
+										value="#{efetivaVagasBacking.totOcup}"
+										label="#{bundle.lbl_totVagOcupad}"
+										styleLabel="margin-left: 10px; font-weight: bold;" />
+
+									<xcp:outputNumber
+										id="txtPerc"
+										scale="2"
+										precision="5"
+										value="#{efetivaVagasBacking.totCCPerc}"
+										label="#{bundle.lbl_totCargoCCPerc}"
+										styleLabel="margin-left: 10px; font-weight: bold;" />
+
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset legend="#{bundle.tit_vagascargo}">
+								<h:panelGrid columns="6">
+									<xcp:output
+										id="txtTotCargo"
+										value="#{efetivaVagasBacking.totCargoVagas}"
+										label="#{bundle.lbl_totVagas}"
+										styleLabel="font-weight: bold;" />
+
+									<xcp:output
+										id="txtOcupCargo"
+										value="#{efetivaVagasBacking.totCargoOcup}"
+										label="#{bundle.lbl_totVagOcupad}"
+										styleLabel="margin-left: 10px; font-weight: bold;" />
+
+									<xcp:outputNumber
+										id="txtPercCargo"
+										scale="2"
+										precision="5"
+										value="#{efetivaVagasBacking.totCargoCCPerc}"
+										label="#{bundle.lbl_totCargoCCPerc}"
+										styleLabel="margin-left: 10px; font-weight: bold;" />
+
+								</h:panelGrid>
+							</p:fieldset>
+						</p:outputPanel>
+					</p:outputPanel>
+
+					<xcp:combo
+						id="txtTipo"
+						value="#{efetivaVagasBacking.tipo}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{efetivaVagasBacking.itensTipo}"
+						required="true" />
+
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:spacer height="5" />
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_pesquisar"
+						icon="ui-icon-search"
+						update="tblF"
+						value="#{bundle.btn_pesquisar}"
+						action="#{efetivaVagasBacking.actionPesquisar}" />
+				</f:facet>
+			</p:toolbar>
+
+			<p:dataTable
+				id="tblF"
+				var="row"
+				value="#{efetivaVagasBacking.lista}"
+				rowKey="#{row}"
+				paginator="false"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				selection="#{efetivaVagasBacking.row}"
+				selectionMode="single">
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.setor}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descsetor}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.descSetor}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matTitular}"
+					type="Number"
+					size="2"
+					rendered="#{efetivaVagasBacking.tipo == 2}">
+					<xcp:outputSimple value="#{row.mattitular}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nomeTitular}"
+					type="String"
+					size="5"
+					rendered="#{efetivaVagasBacking.tipo == 2}">
+					<xcp:outputSimple value="#{row.nometitular}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasServico}"
+					type="Number"
+					size="2"
+					rendered="#{efetivaVagasBacking.tipo == 2}">
+					<xcp:outputSimple value="#{row.diasServico}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matResponsavel}"
+					type="Number"
+					size="2">
+					<xcp:outputSimple value="#{row.matResponsavel}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nomeResponsavel}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.nomeResponsavel}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdLotacao}"
+					type="Number"
+					size="2">
+					<xcp:outputSimple value="#{row.qtdLotacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_entrancia}"
+					type="Number"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.entrancia}"
+						itens="#{efetivaVagasBacking.itensEntrancia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_regra}"
+					type="Number"
+					size="5"
+					rendered="#{efetivaVagasBacking.tipo == 1}">
+					<xcp:outputSimple
+						value="#{row.regra}"
+						itens="#{efetivaVagasBacking.itensRegra}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_anexos}"
+					type="String"
+					size="15">
+
+					<xcp:commandButton
+						id="btn_anexos" 
+						action="#{efetivaVagasBacking.actionBuscaAnexos(row)}"
+						update=":frmAnexos"
+						process="@this"
+						value="#{bundle.btn_efetivacao}">
+						<f:setPropertyActionListener
+							target="#{efetivaVagasBacking.rowAnex}"
+							value="#{row}" />
+					</xcp:commandButton>
+					
+					<xcp:commandButton
+						id="btn_anexos_vagas"
+						action="#{efetivaVagasBacking.actionBuscaAnexosVagas(row)}"
+						process="@this"
+						value="#{bundle.btn_anexos}">
+						<f:setPropertyActionListener
+							target="#{efetivaVagasBacking.rowAnex}"
+							value="#{row}" />
+					</xcp:commandButton>
+					
+					<xcp:commandButton
+						id="btn_anexos_propostas"
+						action="#{efetivaVagasBacking.actionBuscaAnexosPropostas(row)}"
+						process="@this"
+						value="#{bundle.btn_propostas}"
+						rendered="#{row.proposta != null}">
+						<f:setPropertyActionListener
+							target="#{efetivaVagasBacking.rowAnex}"
+							value="#{row}" />
+					</xcp:commandButton>
+
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:toolbar id="toolbarconf">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_confirmar"
+						icon="ui-icon-disk"
+						update="@form"
+						action="#{efetivaVagasBacking.actionConfirmar(true)}"
+						value="#{bundle.btn_confirmar}">
+						<p:confirm
+							header="#{bundle.tit_confirma_efetivacao}"
+							message="#{bundle.msg_confirma_efetivacao}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+
+					<xcp:commandButton
+						id="btn_confirmar_pend"
+						icon="ui-icon-disk"
+						update="@form"
+						action="#{efetivaVagasBacking.actionConfirmar(false)}"
+						value="#{bundle.btn_confirmar_pend}">
+						<p:confirm
+							header="#{bundle.tit_confirma_efetivacao}"
+							message="#{bundle.msg_confirma_efetivacao}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+					
+					<xcp:commandButton
+						id="btn_rejeitar"
+						icon="ui-icon-disk"
+						update="@form frmjustrejeicao"
+						action="#{efetivaVagasBacking.actionRejeitar}"
+						value="#{bundle.btn_rejeitar}">
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			modal="true"
+			id="dlgjust"
+			header="#{bundle.title_just}"
+			widgetVar="dlgjust_w">
+			<xcp:form id="frmjust">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_just}"
+						value="#{efetivaVagasBacking.desJustificativa}"
+						size="2000"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar id="toolbarconf">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_confirmar"
+							icon="ui-icon-disk"
+							update="@form :form"
+							action="#{efetivaVagasBacking.actionConfirmarDialog}"
+							value="#{bundle.btn_confirmar}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+		
+		<p:dialog
+			modal="true"
+			id="dlgjust_rejeicao"
+			header="#{bundle.title_justificativa}"
+			widgetVar="dlgjust_rejeicao_w">
+			<xcp:form id="frmjustrejeicao">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_justificativa}"
+						value="#{efetivaVagasBacking.desJustificativa}"
+						size="2000"
+						required="false" />
+				</xcp:panelForm>
+				<p:toolbar id="toolbarconf">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_confirmar"
+							icon="ui-icon-disk"
+							update="@form :form"
+							action="#{efetivaVagasBacking.actionRejeitarDialog}"
+							value="#{bundle.btn_confirmar}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlganx"
+			header="#{bundle.title_anexos}"
+			widgetVar="dlganx_w"
+			width="1000px">
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblF"
+					var="rowAnex"
+					value="#{efetivaVagasBacking.listaAnexos}"
+					rowKey="#{rowAnex}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					selection="#{efetivaVagasBacking.row}"
+					selectionMode="single"
+					widgetVar="w_tblAnex">
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_documento}"
+						value="#{rowAnex.docprovFk.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.docprovFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{efetivaVagasBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo">
+							<f:setPropertyActionListener
+								value="#{rowAnex}"
+								target="#{efetivaVagasBacking.anexo}" />
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update=":frmAnexos"
+							icon="ui-icon-trash"
+							action="#{efetivaVagasBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+				</p:dataTable>
+
+				<div style="text-align: center; margin-bottom: 5px">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{efetivaVagasBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this"
+							action="#{efetivaVagasBacking.actionGravarAnexos}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{efetivaVagasBacking.anexo.descricao}" />
+
+					<xcp:lov
+						id="lovProv"
+						value="#{efetivaVagasBacking.anexo.docprovFk}"
+						label="#{bundle.lbl_documento}"
+						query="funcoesprovimento"
+						size="3"
+						params="#{efetivaVagasBacking.paramsProv}" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{efetivaVagasBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this :frmAnexo:txtDescricao"
+							update=":frmAnexos"
+							action="#{efetivaVagasBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+		
+		<p:dialog
+			modal="true"
+			id="dlganxvaga"
+			header="#{bundle.title_anexos}"
+			widgetVar="dlganxvaga_w"
+			width="1000px">
+			<xcp:form id="frmAnexosVaga">
+				<p:dataTable
+					id="tblFV"
+					var="rowAnex"
+					value="#{efetivaVagasBacking.listaAnexosVagas}"
+					rowKey="#{rowAnex}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					selection="#{efetivaVagasBacking.row}"
+					selectionMode="single"
+					widgetVar="w_tblAnexVaga">
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_documento}"
+						value="#{rowAnex.docprovFk.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.docprovFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{efetivaVagasBacking.getArquivoAnexoVagas(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+					
+				</p:dataTable>
+
+			</xcp:form>
+		</p:dialog>
+		
+		<p:dialog
+			modal="true"
+			id="dlganxprop"
+			header="#{bundle.title_anexos}"
+			widgetVar="dlganxprop_w"
+			width="1000px">
+			<xcp:form id="frmAnexosProp">
+				<p:dataTable
+					id="tblFP"
+					var="rowAnex"
+					value="#{efetivaVagasBacking.listaAnexosPropostas}"
+					rowKey="#{rowAnex}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					selection="#{efetivaVagasBacking.row}"
+					selectionMode="single"
+					widgetVar="w_tblAnexProp">
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_documento}"
+						value="#{rowAnex.docprovFk.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.docprovFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{efetivaVagasBacking.getArquivoAnexoPropostas(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+					
+				</p:dataTable>
+
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

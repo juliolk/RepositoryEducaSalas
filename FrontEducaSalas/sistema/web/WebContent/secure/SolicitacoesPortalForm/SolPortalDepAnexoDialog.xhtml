@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.tit_dependente} - #{bundle.tit_anexos}"
+		modal="true"
+		minWidth="300"
+		id="dlgDepAnex"
+		widgetVar="dlgDepAnexo_w"
+		closeOnEscape="true"
+		styleClass="full-page-dialog rightside-dialog"					
+		dynamic="true"
+		resizable="false"
+		draggable="false"
+		closable="false"
+		onShow="$(this).eachHasValue();">
+
+		<xcp:form
+			id="frmDepAnex"
+			multipart="true">
+
+			<p:outputPanel styleClass="datacard-title">
+				#{solicitacoesPortalBacking.dependenteSelecionado.nome}
+			</p:outputPanel>
+
+			<p:outputPanel id="pnl_depanexos">
+				<table
+					class="table material table-inspector table-medium table-noborder table-striped">
+					<thead>
+						<tr>
+							<th></th>
+							<th>#{bundle.col_tipo}</th>
+							<th>#{bundle.col_nome}</th>
+							<th>#{bundle.col_acoes}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:repeat
+							value="#{solicitacoesPortalBacking.dependenteSelecionado.listAnexos}"
+							var="row">
+							<tr>
+								<td data-title="#{bundle.lbl_tipo_solicitacao}" class="table-icon-column">
+									<span title="#{solicitacoesPortalBacking.getLabelTipoSolicitacao(row.tipoSolicitacao)}">
+										<i class="fa fa-fw #{row.tipoSolicitacao == 1 ? 'fa-plus-square success-color' : (row.tipoSolicitacao == 2 ? 'fa-pencil-square positive-color' : 'fa-minus-square negative-color')}"></i>
+									</span>
+								</td>
+								<td data-title="#{bundle.col_tipo}">
+									<xcp:outputSimple
+										id="outTipoDepAnexo"
+										value="#{row.tipoanexoFk.descricao}" />
+								</td>
+								<td data-title="#{bundle.col_nome}">
+									<xcp:outputSimple
+										id="outNomeDepAnexo"
+										value="#{row.nome}" />
+								</td>
+								<td data-title="#{bundle.col_acoes}" class="table-actions-column">
+									<xcp:commandLink
+										immediate="true"
+										id="btn_download_depanex"
+										update="pnl_depanexos"
+										title="Download"
+										onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+										ajax="false">
+										<i class="fa fa-fw fa-download"></i>
+										<p:fileDownload
+											value="#{solicitacoesPortalBacking.getDepAnexo(row)}"
+											contentDisposition="attachment" />
+									</xcp:commandLink>
+									<xcp:commandLink
+										immediate="true"
+										id="btn_remove_lin_depanexo"
+										rendered="#{row.tipoSolicitacao != 3}"
+										update=":frmDepAnex"
+										title="Remover"
+										action="#{solicitacoesPortalBacking.actionRemoveDepAnexo(row)}">
+										<i class="fa fa-fw fa-trash"></i>
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink>
+								</td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+				
+				<ui:fragment rendered="#{empty solicitacoesPortalBacking.dependenteSelecionado.listAnexos }">
+					<div class="datacard-empty-message" style="text-align:center;">
+						Nenhum anexo informado.
+					</div>
+				</ui:fragment>
+				
+			</p:outputPanel>
+
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_novo_depanexo"
+						process="@this"
+						value="#{bundle.btn_novo} #{bundle.lbl_anexo}"
+						update=":frmNovoDepAnexo"
+						action="#{solicitacoesPortalBacking.actionNovoDepAnexo}" />
+
+					<xcp:commandButton
+						id="btn_vtl_depanx_car"
+						immediate="true"
+						value="#{bundle.btn_voltar}"
+						process="@this"
+						oncomplete="PF('dlgDepAnexo_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+
+	<p:dialog
+		id="dlgDepAnexo"
+		widgetVar="w_depanexo"
+		header="#{bundle.tit_dependente} - #{bundle.tit_dlgAnexo}"
+		modal="true"
+		styleClass="full-page-dialog rightside-dialog"					
+		dynamic="true"
+		resizable="false"
+		draggable="false"
+		closable="false"
+		onShow="$(this).eachHasValue();"
+		minWidth="350">
+		
+		<xcp:panelForm 
+			id="panelfrmDepAnexo"
+			floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+			<xcp:form id="frmNovoDepAnexo">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-12">
+							<xcp:combo
+								id="cboDependentesTipoAnexo"
+								value="#{solicitacoesPortalBacking.dependenteAnexoSelecionado.tipoanexo}"
+								required="true"
+								label="#{bundle.lbl_tipo}"
+								update="textoexplicativo"
+								itens="#{solicitacoesPortalBacking.itensDependentesTipoAnexo}">
+								<p:ajax
+                                    event="change"
+                                    update="textoexplicativo" />
+								</xcp:combo>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<p:outputPanel id="textoexplicativo" styleClass="well well-lg" style="margin-top:15px;">
+								#{solicitacoesPortalBacking.textoExplicativoDependentetipoanexo}
+							</p:outputPanel>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<xcp:commandButton
+								id="btn_upload_depanexo"
+								immediate="true"
+								process="@this"
+								update=":frmUploadDepAnexo"
+								value="#{bundle.tit_dlgUploadArquivo}"
+								oncomplete="PF('w_uploaddepanexo').show();"
+								/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<xcp:output 
+								value="#{solicitacoesPortalBacking.dependenteAnexoSelecionado.nome}"
+								rendered="#{solicitacoesPortalBacking.dependenteAnexoSelecionado.nome != null}"/>
+						</div>
+					</div>
+	
+				</div>
+	
+				<p:toolbar>
+					<f:facet name="left">
+	
+						<xcp:commandButton
+							id="btn_gravarDepanexo"
+							value="#{bundle.btn_gravar}"
+							process="@form"
+							update=":frmDepAnex"
+							action="#{solicitacoesPortalBacking.actionGravarDepAnexo}" />
+	
+						<xcp:commandButton
+							id="btn_voltar_depanexo"
+							immediate="true"
+							process="@this"
+							value="#{bundle.btn_cancelar}"
+							oncomplete="PF('w_depanexo').hide();" />
+	
+					</f:facet>
+				</p:toolbar>
+				<h:outputScript>$(this).eachHasValue();</h:outputScript>
+			</xcp:form>
+		</xcp:panelForm>
+	</p:dialog>
+
+	<p:dialog
+		id="dlgUploadDepAnexo"
+		widgetVar="w_uploaddepanexo"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true">
+		
+		<xcp:form id="frmUploadDepAnexo">
+				
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				sizeLimit="#{solicitacoesPortalBacking.limiteTamanhoArquivoUpload}"				
+				fileUploadListener="#{solicitacoesPortalBacking.actionUploadDepAnexo}"
+				update=":frmNovoDepAnexo" 
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				requiredMessage='#{ empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+				validator="xcpInputFileValidator"/>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_voltar_uploaddepanexo"
+						immediate="true"
+						process="@this"
+						value="#{bundle.btn_cancelar}"
+						oncomplete="PF('w_uploaddepanexo').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

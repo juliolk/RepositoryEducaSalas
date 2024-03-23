@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="VinculosCamposcad"
+		backing="#{vinculosCamposcadBacking}"
+		masterId="Vinculos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_id}"
+				value="#{row.id}"
+				type="String"
+				size="1">
+				<xcp:outputSimple value="#{row.id}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_situacao}"
+				value="#{row.situacao}"
+				type="String"
+				size="10"
+				itens="#{vinculosCamposcadBacking.itensSituacao}">
+				<xcp:outputSimple
+					value="#{row.situacao}"
+					itens="#{vinculosCamposcadBacking.itensSituacao}" />
+			</xcp:column>s
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:text
+					id="txtId_VinculosCamposcad"
+					label="#{bundle.lbl_id}"
+					required="true"
+					value="#{vinculosCamposcadBacking.entity.id}"
+					size="100" />
+
+				<xcp:combo
+					id="cboSituacao_VinculosCamposcad"
+					value="#{vinculosCamposcadBacking.entity.situacao}"
+					label="#{bundle.lbl_situacao}"
+					required="true"
+					itens="#{vinculosCamposcadBacking.itensSituacao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

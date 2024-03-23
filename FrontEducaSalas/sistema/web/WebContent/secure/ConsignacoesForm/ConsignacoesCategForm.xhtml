@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelManutTabDetalhes
+		id="ConsignacoesCateg"
+		backing="#{consignacoesCategBacking}"
+		masterId="Consignacoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_categoria}"
+				value="#{row.categoria}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber		
+					value="#{row.categoria}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.categoriaFk.descricao}"
+				type="String"
+				size="16">
+				<xcp:outputSimple value="#{row.categoriaFk.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCategoria_ConsignacoesCateg"
+					value="#{consignacoesCategBacking.entity.categoriaFk}"
+					label="#{bundle.lbl_categoria}"
+					required="true"
+					query="empcategorias"
+					size="8" />
+
+			</xcp:panelForm>
+		</ui:define>
+	</xcp:panelManutTabDetalhes>
+
+
+</ui:composition>

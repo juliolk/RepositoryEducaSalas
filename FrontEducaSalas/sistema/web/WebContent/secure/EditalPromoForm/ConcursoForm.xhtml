@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_adicionar_concurso"
+				oncomplete="PF('dlgConcurso_w').show();"
+				disabled="#{editalPromoBacking.entity.novo}"
+				update=":frmConcurso:formConcurso"
+				value="#{bundle.btn_adicionar}"
+				action="#{editalPromoBacking.setConcursoManut(null)}"
+				icon="ui-icon-plusthick" />
+		</f:facet>
+	</p:toolbar>
+
+	<p:dataTable
+		id="table_Concurso"
+		var="rowConcurso"
+		value="#{editalPromoBacking.listaConcurso}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		scrollable="true"
+		scrollHeight="161"
+		selectionMode="single"
+		selection="#{editalPromoBacking.concursoManut}"
+		rowKey="#{rowConcurso.PK}">
+
+		<xcp:column
+			headerText="#{bundle.col_setor}"
+			type="Number"
+			size="5">
+			<h:outputText value="#{rowConcurso.setor}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_desSetor}"
+			type="String"
+			size="20">
+			<h:outputText value="#{rowConcurso.setorFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_vaga}"
+			type="Number"
+			size="6">
+			<xcp:outputSimpleNumber
+				value="#{rowConcurso.numSeqVaga}"
+				precision="10"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_descricao}"
+			type="String"
+			size="20">
+			<xcp:outputSimple value="#{rowConcurso.numSeqVagaFk.descricao}" />
+		</xcp:column>
+
+
+		<xcp:column
+			type="String"
+			size="2">
+			<xcp:commandButton
+				id="btn_editarSel"
+				icon="icon-navegar"
+				update="table_Concurso,:#{p:component('formConcurso')}"
+				oncomplete="PF('dlgConcurso_w').show();"
+				action="#{editalPromoBacking.setConcursoManut(rowConcurso)}">
+			</xcp:commandButton>
+			<xcp:commandButton
+				id="btn_removerSel"
+				immediate="true"
+				update="table_Concurso"
+				action="#{editalPromoBacking.actionExcluirConcurso(rowConcurso)}"
+				icon="ui-icon-trash">
+				<p:confirm
+					header="#{bundle.tit_confirma_remover}"
+					message="#{bundle.msg_confirma_remover}"
+					icon="ui-icon-alert" />
+			</xcp:commandButton>
+		</xcp:column>
+
+
+	</p:dataTable>
+
+
+	<p:remoteCommand
+		name="closeDlgConcurso"
+		update="table_Concurso"
+		oncomplete="PF('dlgConcurso_w').hide();" />
+
+
+
+</ui:composition>

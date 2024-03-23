@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="ConfigPanelfuncionario"
+			backing="#{configPanelfuncionarioBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_perfil}"
+					value="#{row.perfil == null ? 'Todos' : row.perfilFk.descricao}"
+					type="String"
+					width="9%">
+					<xcp:outputSimple
+						value="#{row.perfil == null ? 'Todos' : row.perfilFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_operador}"
+					value="#{row.operador == null ? 'Todos' : row.operadorFk.funcionarioFk.nome}"
+					type="String"
+					width="10%">
+					<xcp:outputSimple
+						value="#{row.operador == null ? 'Todos' : row.operadorFk.funcionarioFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showNummatricula}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNummatricula)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNummatricula)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showDesnome}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDesnome)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDesnome)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showDtanascimento}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDtanascimento)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDtanascimento)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showDtaadmissao}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDtaadmissao)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDtaadmissao)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showDesfuncao}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDesfuncao)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDesfuncao)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showDescargo}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDescargo)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDescargo)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showTipmovimento}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showTipmovimento)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showTipmovimento)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showDesmovimento}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDesmovimento)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDesmovimento)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showQtdhoras}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showQtdhoras)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showQtdhoras)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showNumpis}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNumpis)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNumpis)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showNumcpf}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNumcpf)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNumcpf)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showVlrsalario}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showVlrsalario)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showVlrsalario)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showNumcartao}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNumcartao)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showNumcartao)}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_showDescCcusto}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDescccusto)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDescccusto)}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_showDescvinculo}"
+					value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDescvinculo)}"
+					type="String"
+					width="8%">
+					<xcp:outputSimple
+						value="#{configPanelfuncionarioBacking.getDescricaoExibeColuna(row.showDescvinculo)}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovPerfil"
+						value="#{configPanelfuncionarioBacking.entity.perfilFk}"
+						label="#{bundle.lbl_perfil}"
+						query="perfis"
+						size="4" />
+
+					<xcp:lov
+						id="lovOperador"
+						value="#{configPanelfuncionarioBacking.entity.operadorFk}"
+						label="#{bundle.lbl_operador}"
+						query="operadores"
+						size="15" />
+
+					<xcp:combo
+						id="cboShowNummatricula"
+						value="#{configPanelfuncionarioBacking.entity.showNummatricula}"
+						label="#{bundle.lbl_showNummatricula}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowDesnome"
+						value="#{configPanelfuncionarioBacking.entity.showDesnome}"
+						label="#{bundle.lbl_showDesnome}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowDtanascimento"
+						value="#{configPanelfuncionarioBacking.entity.showDtanascimento}"
+						label="#{bundle.lbl_showDtanascimento}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowDtaadmissao"
+						value="#{configPanelfuncionarioBacking.entity.showDtaadmissao}"
+						label="#{bundle.lbl_showDtaadmissao}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowDesfuncao"
+						value="#{configPanelfuncionarioBacking.entity.showDesfuncao}"
+						label="#{bundle.lbl_showDesfuncao}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowDescargo"
+						value="#{configPanelfuncionarioBacking.entity.showDescargo}"
+						label="#{bundle.lbl_showDescargo}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowTipmovimento"
+						value="#{configPanelfuncionarioBacking.entity.showTipmovimento}"
+						label="#{bundle.lbl_showTipmovimento}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowDesmovimento"
+						value="#{configPanelfuncionarioBacking.entity.showDesmovimento}"
+						label="#{bundle.lbl_showDesmovimento}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowQtdhoras"
+						value="#{configPanelfuncionarioBacking.entity.showQtdhoras}"
+						label="#{bundle.lbl_showQtdhoras}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowNumpis"
+						value="#{configPanelfuncionarioBacking.entity.showNumpis}"
+						label="#{bundle.lbl_showNumpis}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowNumcpf"
+						value="#{configPanelfuncionarioBacking.entity.showNumcpf}"
+						label="#{bundle.lbl_showNumcpf}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowVlrsalario"
+						value="#{configPanelfuncionarioBacking.entity.showVlrsalario}"
+						label="#{bundle.lbl_showVlrsalario}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowNumcartao"
+						value="#{configPanelfuncionarioBacking.entity.showNumcartao}"
+						label="#{bundle.lbl_showNumcartao}"
+						required="true"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboShowDescccusto"
+						value="#{configPanelfuncionarioBacking.entity.showDescccusto}"
+						label="#{bundle.lbl_showDescccusto}"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+						
+					<xcp:combo
+						id="cboShowDescvinculo"
+						value="#{configPanelfuncionarioBacking.entity.showDescvinculo}"
+						label="#{bundle.lbl_showDescvinculo}"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />						
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

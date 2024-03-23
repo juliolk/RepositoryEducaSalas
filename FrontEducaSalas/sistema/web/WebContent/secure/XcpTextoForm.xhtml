@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="XcpTexto"
+			backing="#{xcpTextoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seqTexto}"
+					value="#{row.seqTexto}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.seqTexto}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desTexto}"
+					value="#{row.desTexto}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.desTexto}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSeqTexto"
+						label="#{bundle.lbl_seqTexto}"
+						required="true"
+						value="#{xcpTextoBacking.entity.seqTexto}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not xcpTextoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDesTexto"
+						label="#{bundle.lbl_desTexto}"
+						required="true"
+						value="#{xcpTextoBacking.entity.desTexto}"
+						size="50" />
+
+
+				</xcp:panelForm>
+				<p:editor
+					id="editor"
+					widgetVar="editorWidget"
+					value="#{xcpTextoBacking.entity.txtTextoEmail}"
+					width="800" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

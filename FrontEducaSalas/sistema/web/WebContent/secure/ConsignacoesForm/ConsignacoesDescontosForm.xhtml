@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelManutTabDetalhes
+		id="ConsignacoesDesconto"
+		backing="#{consignacoesDescontosBacking}"
+		masterId="Consignacoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codigo}"
+				value="#{row.codigo}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.codigo}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.codigoFk.descricao}"
+				type="String"
+				size="5">
+				<xcp:outputSimple value="#{row.codigoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_forma}"
+				value="#{row.forma}"
+				type="String"
+				itens="#{consignacoesDescontosBacking.itensForma}"
+				size="5">
+				<xcp:outputSimple
+					value="#{row.forma}"
+					precision="1"
+					itens="#{consignacoesDescontosBacking.itensForma}"
+					scale="0" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCodigo"
+					value="#{consignacoesDescontosBacking.entity.codigoFk}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					query="tipodesconto"
+					size="10"
+					readonly="#{not consignacoesDescontosBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboForma"
+					value="#{consignacoesDescontosBacking.entity.forma}"
+					label="#{bundle.lbl_forma}"
+					required="true"
+					itens="#{consignacoesDescontosBacking.itensForma}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+
+
+</ui:composition>

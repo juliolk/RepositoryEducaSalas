@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+        <xcp:panelContent >
+	        <h:panelGroup id="mainPanel">
+	        	<ui:fragment rendered="#{pedidoAdiantamentoDecimoBacking.adiantamentoSituacao == 'INDISPONIVEL'}">
+			        <h:panelGroup style="padding: 10px;">
+			            <p:fieldset>
+			                <h:outputLabel
+			                    value="#{bundle.msg_pedido_ad13_periodo_fechado}"
+			                    style="font-size: 14px; display: block; padding: 10px" />
+			            </p:fieldset>        
+			        </h:panelGroup>
+		        </ui:fragment>
+	        	<ui:fragment rendered="#{pedidoAdiantamentoDecimoBacking.adiantamentoSituacao == 'INDISPONIVEL_6MESES'}">
+			        <h:panelGroup style="padding: 10px;">
+			            <p:fieldset>
+			                <h:outputLabel
+			                    value="#{bundle.msg_pedido_ad13_periodo_6meses_fechado}"
+			                    style="font-size: 14px; display: block; padding: 10px" />
+			            </p:fieldset>        
+			        </h:panelGroup>
+		        </ui:fragment>
+	        	<ui:fragment rendered="#{pedidoAdiantamentoDecimoBacking.adiantamentoSituacao == 'SOLICITADO'}">
+			        <h:panelGroup style="padding: 10px;">
+			            <p:fieldset style="margin: 10px; ">
+			                <h:outputLabel
+			                    value="#{bundle.msg_pedido_ad13_solicitado}"
+			                    style="font-size: 14px; display: block; padding: 5px; padding-left: 10px; padding-top: 10px" />
+			                <h:outputLabel
+			                    value="#{pedidoAdiantamentoDecimoBacking.dataPagamentoString}"
+			                    style="font-size: 14px; display: block; padding: 5px; padding-left: 10px;" />
+			                <h:outputLabel
+			                    value="#{pedidoAdiantamentoDecimoBacking.observacao}"
+			                    style="font-size: 12px; display: block; padding: 5px; padding-left: 10px;"  />
+			            </p:fieldset>
+						<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+							<f:facet name="left">
+								<xcp:commandButton
+									id="btn_comprovante"
+									value="#{bundle.msg_pedido_ad13_lbl_btn_comprovante}"
+									action="#{pedidoAdiantamentoDecimoBacking.actionImprimirComprovante}"
+									icon="ui-icon-print">
+								</xcp:commandButton>
+								<xcp:commandButton
+									id="btn_cancelar"
+									rendered="#{pedidoAdiantamentoDecimoBacking.podeCancelarAdiantamento}"
+									value="#{bundle.msg_pedido_ad13_lbl_btn_cancelar}"
+									action="#{pedidoAdiantamentoDecimoBacking.actionCancelarAdiantamento}"
+									update="mainPanel"
+									icon="ui-icon-cancel">
+									<p:confirm
+										header="#{bundle.msg_pedido_ad13_cancelar_title}"
+										message="#{bundle.msg_pedido_ad13_cancelar_msg}"
+										icon="ui-icon-alert" />
+								</xcp:commandButton>
+						        <xcp:commandButton
+						            id="btnDownloadRelatorio"
+						            widgetVar="wBtnDownloadRelatorio"
+						            ajax="false"
+						            immediate="true"
+						            process="@this"
+						            style="display: none;"
+						            onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)">
+			                        <p:fileDownload
+			                            value="#{xcpExecObjBacking.file}"
+			                            contentDisposition="attachment" />
+							        </xcp:commandButton>
+								
+							</f:facet>
+						</p:toolbar>	
+			        </h:panelGroup>
+				    <script type="text/javascript">
+				    function showStatus() {
+		                PF('w_dlgXcpExecStatus').show();
+					}
+				    function hideStatus() {
+				    	PF('w_dlgXcpExecStatus').hide();
+					}
+				    </script>
+		        </ui:fragment>
+	        	<ui:fragment rendered="#{pedidoAdiantamentoDecimoBacking.adiantamentoSituacao == 'DISPONIVEL'}">
+					<p:fieldset
+						legend="#{bundle.msg_pedido_ad13_selecione_data}"
+						style="height:100px; margin: 10px; ">
+		
+						<p:panelGrid style="width:100%; margin: 10px">
+		
+							<p:row>
+								<p:column style="text-align: right; width: 10%">
+									<h:outputLabel
+										value="#{bundle.msg_pedido_ad13_data}: "
+										style="display: block; margin-top: 5px; margin-right:5px" />
+								</p:column>
+								<p:column colspan="6">
+									<xcp:panelForm>
+										<xcp:combo
+											id="cboDataPagto"
+											simple="true"
+											value="#{pedidoAdiantamentoDecimoBacking.periodoSelecionado}"
+											itens="#{pedidoAdiantamentoDecimoBacking.periodosAdiantamento}"
+											>
+											<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>											
+										</xcp:combo>
+									</xcp:panelForm>
+					                <h:panelGroup rendered="#{pedidoAdiantamentoDecimoBacking.limitadoSeisMesesExercicio}">
+						                <h:outputLabel
+						                    value="#{bundle.msg_pedido_ad13_periodo_6meses_disponivel}"
+						                    style="font-size: 12px; display: block; padding-top: 10px" />
+					                </h:panelGroup>
+								</p:column>
+							</p:row>
+							
+						</p:panelGrid>
+					</p:fieldset>
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_solicitar"
+								value="#{bundle.msg_pedido_ad13_lbl_btn_solicitar}"
+								action="#{pedidoAdiantamentoDecimoBacking.actionSolicitarAdiantamento}"
+								update="mainPanel"
+								icon="ui-icon-check">
+								<p:confirm
+									header="#{bundle.msg_pedido_ad13_solicitar_title}"
+									message="#{bundle.msg_pedido_ad13_solicitar_msg}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>	
+						</f:facet>
+					</p:toolbar>
+		        </ui:fragment>
+	        </h:panelGroup>	        
+        </xcp:panelContent>
+	</ui:define>
+
+</ui:composition>
+	

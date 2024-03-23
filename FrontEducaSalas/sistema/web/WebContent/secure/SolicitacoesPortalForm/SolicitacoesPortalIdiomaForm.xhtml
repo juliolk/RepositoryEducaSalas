@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<xcp:panelForm
+			id="pnl_form_dados_idioma"
+			style="min-width: 350px;"
+			floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+			<xcp:lov
+				id="lovInstituicao"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.instituicaoFk}"
+				label="#{bundle.lbl_instituicao}"
+				query="instituicoes"
+				size="5" />
+
+			<xcp:combo
+				id="cboTipocurso"
+				noFloat="true"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.tipocurso}"
+				label="#{bundle.lbl_tipocurso}"
+				itens="#{solicitacoesPortalBacking.itensTipoCurso}"
+				required="true" />
+						
+			<xcp:combo
+				id="comboIdioma"
+				required="true"
+				noFloat="true"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.idioma}"
+				itens="#{solicitacoesPortalBacking.itensIdioma}"
+				label="#{bundle.lbl_idioma}"/>
+
+			<xcp:combo
+				id="comboIdiomaEntende"
+				required="true"
+				noFloat="true"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.entende}"
+				itens="#{solicitacoesPortalBacking.itensFluencia}"
+				label="#{bundle.lbl_entende}"/>
+
+			<xcp:combo
+				id="comboIdiomaLe"
+				required="true"
+				noFloat="true"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.leitura}"
+				itens="#{solicitacoesPortalBacking.itensFluencia}"
+				label="#{bundle.lbl_le}"/>
+
+			<xcp:combo
+				id="comboIdiomaFala"
+				required="true"
+				noFloat="true"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.fala}"
+				itens="#{solicitacoesPortalBacking.itensFluencia}"
+				label="#{bundle.lbl_fala}"/>
+
+			<xcp:combo
+				id="comboIdiomaEscreve"
+				required="true"
+				noFloat="true"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.escreve}"
+				itens="#{solicitacoesPortalBacking.itensFluencia}"
+				label="#{bundle.lbl_escreve}"/>
+				
+			<xcp:date
+				id="txtConclusao"
+				value="#{solicitacoesPortalBacking.idiomaSelecionado.conclusao}"
+				label="#{bundle.lbl_conclusao}" />				
+
+		</xcp:panelForm>
+
+		<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_confirmaAlteracaoIdioma"
+					value="#{bundle.btn_gravar}"
+					process="@form"
+					update="@form"
+					action="#{solicitacoesPortalBacking.actionGravaIdioma}" />
+
+				<xcp:commandButton
+					id="btnVoltar_AlteracaoIdioma"
+					immediate="true"
+					value="#{bundle.btn_cancelar}"
+					onclick="PF('dlgIdioma_w').hide();" />
+
+			</f:facet>
+		</p:toolbar>
+
+	</p:outputPanel>
+</ui:composition>

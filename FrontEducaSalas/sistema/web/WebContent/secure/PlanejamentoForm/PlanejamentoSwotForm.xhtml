@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="PlanejamentoSwot"
+		backing="#{planejamentoSwotBacking}" masterId="Planejamento">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.col_tipo}"
+				itens="#{planejamentoSwotBacking.itensTipo}" type="String" size="20" value="#{row.tipo}">
+				<xcp:outputSimple value="#{row.tipo}"
+					itens="#{planejamentoSwotBacking.itensTipo}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_detalhamento}"
+				value="#{row.detalhamento}" type="String" size="100">
+				<xcp:outputSimple value="#{row.detalhamento}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:combo id="cboTipo"
+					value="#{planejamentoSwotBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}" required="true"
+					itens="#{planejamentoSwotBacking.itensTipo}" />
+
+				<xcp:memo id="txtDetalhamento_PlanejamentoSwot"
+					required="true" size="4000"
+					value="#{planejamentoSwotBacking.entity.detalhamento}"
+					label="#{bundle.lbl_detalhamento}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

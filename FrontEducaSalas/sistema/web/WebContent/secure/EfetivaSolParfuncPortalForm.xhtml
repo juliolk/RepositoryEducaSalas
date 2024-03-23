@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManutLazy
+			id="EfetivaSolParfuncPortal"
+			renderedRemover="false"
+			renderedGravar="false"
+			renderedNovo="false"
+			renderedAtualizar="false"
+			backing="#{efetivaSolParfuncPortalBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					id="brdPesq"
+					legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="dtaSolicitacao"
+							valueStart="#{efetivaSolParfuncPortalBacking.dtaIni}"
+							valueEnd="#{efetivaSolParfuncPortalBacking.dtaFim}"
+							label="#{bundle.lbl_data}" />
+
+						<xcp:lov
+							id="lovFuncionario"
+							value="#{efetivaSolParfuncPortalBacking.funcionarioLov}"
+							label="#{bundle.lbl_matricula}"
+							query="funcionariosLovAll"
+							size="15"
+							maxlength="8" />
+
+					</xcp:panelForm>
+					<p:fieldset
+						id="brdSelecao"
+						legend="#{bundle.tit_situacao}"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtSitSolicitada"
+								label="#{bundle.opt_situacao_solicitacao_1}"
+								value="#{efetivaSolParfuncPortalBacking.situacaoSolicitada}" />
+							<xcp:check
+								id="txtSitEfetivada"
+								label="#{bundle.opt_situacao_solicitacao_2}"
+								value="#{efetivaSolParfuncPortalBacking.situacaoEfetivada}" />
+							<xcp:check
+								id="txtSitNaoAceita"
+								label="#{bundle.opt_situacao_solicitacao_3}"
+								value="#{efetivaSolParfuncPortalBacking.situacaoNaoAceita}" />
+						</xcp:panelForm>
+					</p:fieldset>
+					<p:fieldset
+						id="brdPendencia"
+						legend="Filtros"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtFiltroSemPendencia"
+								label="Solicitações sem pendências"
+								value="#{efetivaSolParfuncPortalBacking.filtroSemPendencia}" />
+							<xcp:check
+								id="txtFiltroComPendencia"
+								label="Solicitações com pendências"
+								value="#{efetivaSolParfuncPortalBacking.filtroComPendencia}" />
+						</xcp:panelForm>
+					</p:fieldset>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_pesquisar"
+					icon="icon-pesquisar_azul"
+					value="#{bundle.btn_pesquisar}"
+					update="table_#{id}"
+					onclick="PF('table_#{id}_w').filter()" />
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_efetiva_solicitacao"
+					icon="ui-icon-arrowthickstop-1-s"
+					disabled="#{efetivaSolParfuncPortalBacking.entity.situacao != 1}"
+					action="#{efetivaSolParfuncPortalBacking.actionAceitaSolicitacao}"
+					value="#{bundle.btn_aceita_solicitacao}"
+					immediate="false"
+					update=":dlgMsg" />
+
+				<xcp:commandButton
+					id="btn_rejeita_solicitacao"
+					icon="ui-icon-cancelar"
+					disabled="#{efetivaSolParfuncPortalBacking.entity.situacao != 1}"
+					actionListener="#{efetivaSolParfuncPortalBacking.actionRejeitaSolicitacao}"
+					immediate="true"
+					value="#{bundle.btn_rejeita_solicitacao}"
+					update=":dlgMsg" />
+
+				<xcp:commandButton
+					id="btn_registrapendencia_solicitacao"
+					icon="icon-navegar"
+					disabled="#{efetivaSolParfuncPortalBacking.entity.situacao != 1}"
+					immediate="true"
+					actionListener="#{efetivaSolParfuncPortalBacking.actionRegistraPendenciaSolicitacao}"
+					value="Informar Pendência"
+					update=":dlgMsg" />
+
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="12"
+					sortBy="data">
+					<xcp:outputSimpleTimestamp value="#{row.dataSolicitacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					type="Number"
+					size="7"
+					sortBy="matricula">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="String"
+					size="50"
+					sortBy="nome">
+					<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fone}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.funcionarioFk.fone}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{efetivaSolParfuncPortalBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtMatricula"
+						label="#{bundle.lbl_matricula}"
+						value="#{efetivaSolParfuncPortalBacking.entity.matricula}"
+						size="8"
+						maxValue="99999999"
+						readonly="true">
+					</xcp:number>
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						value="#{efetivaSolParfuncPortalBacking.entity.funcionarioFk.nome}"
+						size="60"
+						readonly="true" />
+
+					<xcp:dateTime
+						id="txtDataSolicitacao"
+						required="true"
+						value="#{efetivaSolParfuncPortalBacking.entity.dataSolicitacao}"
+						label="#{bundle.col_data}"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovVariavel"
+						value="#{efetivaSolParfuncPortalBacking.entity.variavelFk}"
+						label="#{bundle.lbl_variavel}"
+						required="true"
+						query="variaveis"
+						size="10"
+						readonly="true" />
+
+					<xcp:number
+						id="txtConteudo"
+						label="#{efetivaSolParfuncPortalBacking.getDescricao(efetivaSolParfuncPortalBacking.entity.variavelFk.tipo)}"
+						required="true"
+						size="10"
+						rendered="#{efetivaSolParfuncPortalBacking.entity.variavelFk.tipo!=null}"
+						value="#{efetivaSolParfuncPortalBacking.entity.conteudo}"
+						precision="16"
+						scale="4" />
+
+
+					<xcp:text
+						id="txtConteudo2"
+						label="#{efetivaSolParfuncPortalBacking.entity.variavelFk.campo1}"
+						value="#{efetivaSolParfuncPortalBacking.entity.conteudo2}"
+						size="10"
+						maxlength="15"
+						rendered="#{efetivaSolParfuncPortalBacking.renderedInput1}"
+						readonly="false" />
+
+					<xcp:combo
+						id="cboConteudo2"
+						value="#{efetivaSolParfuncPortalBacking.helper.vlrCombo1}"
+						rendered="#{efetivaSolParfuncPortalBacking.renderedCombo1}"
+						label="#{efetivaSolParfuncPortalBacking.entity.variavelFk.campo1}"
+						itens="#{efetivaSolParfuncPortalBacking.itensCombo1}"
+						readonly="false" />
+
+					<xcp:number
+						id="txtConteudo3"
+						label="#{efetivaSolParfuncPortalBacking.entity.variavelFk.campo2}"
+						size="10"
+						rendered="#{efetivaSolParfuncPortalBacking.renderedInput2}"
+						value="#{efetivaSolParfuncPortalBacking.entity.conteudo3}"
+						precision="15"
+						maxlength="15"
+						scale="4"
+						readonly="false" />
+
+					<xcp:combo
+						id="cboConteudo3"
+						value="#{efetivaSolParfuncPortalBacking.helper.vlrCombo2}"
+						rendered="#{efetivaSolParfuncPortalBacking.renderedCombo2}"
+						label="#{efetivaSolParfuncPortalBacking.entity.variavelFk.campo2}"
+						itens="#{efetivaSolParfuncPortalBacking.itensCombo2}"
+						readonly="false" />
+
+					<xcp:memo
+						id="txtSolicitacao"
+						label="#{bundle.lbl_texto_justificativa}"
+						value="#{efetivaSolParfuncPortalBacking.entity.textoSolicitacao}"
+						size="500"
+						readonly="false"
+						style="width:500px;" />
+
+
+					<xcp:date
+						id="txtDtini"
+						value="#{efetivaSolParfuncPortalBacking.entity.dtinicioper}"
+						label="#{bundle.lbl_dtini}"
+						readonly="false"
+						required="true" />
+
+					<xcp:date
+						id="txtDtFim"
+						value="#{efetivaSolParfuncPortalBacking.entity.dtfimper}"
+						label="#{bundle.lbl_dtfim}"
+						readonly="false" />
+
+				</xcp:panelForm>
+
+				<p:fieldset
+					legend="#{bundle.tit_anexos}"
+					style="width: 600px">
+					<p:dataTable
+						id="tabAnexos"
+						editable="true"
+						value="#{efetivaSolParfuncPortalBacking.listAnexos}"
+						var="anexo"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+						<xcp:column
+							headerText="#{bundle.col_arquivo}"
+							width="90%">
+							<h:outputText
+								value="#{anexo.nomeArquivo}"
+								style="float:left; " />
+						</xcp:column>
+						<xcp:column
+							type="String"
+							width="10%">
+							<xcp:commandLink
+								immediate="true"
+								id="btn_download_anexo"
+								update="tabAnex"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								ajax="false">
+								<h:graphicImage
+									value="/resources/img/download.png"
+									style="margin-top:3px;" />
+								<p:fileDownload
+									value="#{efetivaSolParfuncPortalBacking.getAnexo(anexo)}"
+									contentDisposition="attachment" />
+							</xcp:commandLink>
+						</xcp:column>
+					</p:dataTable>
+				</p:fieldset>
+
+
+
+			</ui:define>
+		</xcp:panelManutLazy>
+
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{efetivaSolParfuncPortalBacking.msgDialogHeader}"
+			modal="true"
+			id="dlgMsg"
+			widgetVar="dlgMsg_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo
+							id="obsMsg"
+							label="#{bundle.lbl_mensagem}"
+							value="#{efetivaSolParfuncPortalBacking.mensagem}"
+							size="2000" />
+
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_finalizar"
+								value="#{efetivaSolParfuncPortalBacking.msgDialogHeader}"
+								process="@form"
+								action="#{efetivaSolParfuncPortalBacking.actionFinalizar}"
+								icon="#{efetivaSolParfuncPortalBacking.msgDialogButtonIcon}"
+								update=":#{p:component('panelManut_EfetivaSolParfuncPortal')}"
+								oncomplete="PF('dlgMsg_w').hide();">
+								<p:confirm
+									header="#{efetivaSolParfuncPortalBacking.msgDialogConfirmHeader}"
+									message="#{efetivaSolParfuncPortalBacking.msgDialogConfirmMessage}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+				<p:remoteCommand
+					name="closeDlgMsg"
+					oncomplete="PF('dlgMsg_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

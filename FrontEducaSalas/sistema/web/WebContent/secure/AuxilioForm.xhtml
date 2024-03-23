@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Auxilio"
+			backing="#{auxilioBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="3"
+					itens="#{auxilioBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{auxilioBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="3"
+					itens="#{auxilioBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{auxilioBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="25">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					value="#{row.valor}"
+					type="Number"
+					size="12">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="9"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_parcelas}"
+					value="#{row.parcelas}"
+					type="Number"
+					size="12">
+					<xcp:outputSimpleNumber
+						value="#{row.parcelas}"
+						precision="9"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+
+					<xcp:dateRange
+						id="txtDt"
+						valueStart="#{auxilioBacking.entity.dtinicio}"
+						valueEnd="#{auxilioBacking.entity.dtfim}"
+						requiredStart="true"
+						label="#{bundle.lbl_dtinicio}" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{auxilioBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						rendered="#{not auxilioBacking.entity.novo}"
+						itens="#{auxilioBacking.itensSituacao}"
+						required="true" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{auxilioBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{auxilioBacking.itensTipo}"
+						readonly="#{not auxilioBacking.entity.novo}"
+						required="true">
+						<p:ajax
+							process="@this"
+							update="outpanel outpanel1"
+							event="change" />
+					</xcp:combo>
+					
+					<xcp:lov
+						id="lovProcesso"
+						value="#{auxilioBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						size="12" />
+
+					<p:outputPanel id="outpanel1">
+						<h:outputText
+							id="lblPnl"
+							value=""
+							rendered="#{auxilioBacking.entity.tipo != null}" />
+					</p:outputPanel>
+
+					<p:outputPanel id="outpanel">
+						<p:fieldset
+							id="pnlCursos"
+							legend="#{bundle.title_cursos}"
+							rendered="#{auxilioBacking.entity.tipo == 1}">
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovSequenciaCurso"
+									value="#{auxilioBacking.entity.dependentesFk}"
+									readonly="#{not auxilioBacking.entity.novo}"
+									params="#{auxilioBacking.paramsMatricula}"
+									label="#{bundle.lbl_depend}"
+									query="dependentes"
+									size="4" />
+
+								<xcp:lov
+									id="lovOrgaoCur"
+									value="#{auxilioBacking.entity.codconvFk}"
+									label="#{bundle.lbl_emp}"
+									query="consignacoes_emp"
+									required="true"
+									size="8"
+									rendered="#{auxilioBacking.renderedEmp}" />
+
+								<xcp:combo
+									id="cboTipoben"
+									value="#{auxilioBacking.entity.tipoben}"
+									label="#{bundle.lbl_tipoben}"
+									itens="#{auxilioBacking.itensTipoben}" />
+
+								<xcp:combo
+									id="cboTipocurso"
+									value="#{auxilioBacking.entity.tipocurso}"
+									label="#{bundle.lbl_tipocurso}"
+									itens="#{auxilioBacking.itensTipocurso}" />
+
+								<xcp:lov
+									id="lovCurso"
+									value="#{auxilioBacking.entity.cursoFk}"
+									label="#{bundle.lbl_curso}"
+									query="cursoacad"
+									size="6"
+									update="pnlCursos"
+									selectionListener="#{auxilioBacking.selectCurso}" />
+
+								<xcp:lov
+									id="lovInstituicao"
+									value="#{auxilioBacking.entity.instituicaoFk}"
+									label="#{bundle.lbl_instituicao}"
+									query="instituicoes"
+									size="5" />
+
+								<xcp:dateRange
+									id="txtdtaCurso"
+									valueStart="#{auxilioBacking.dtaIniCurso}"
+									valueEnd="#{auxilioBacking.dtaFimCurso}"
+									readonly="true"
+									label="#{bundle.lbl_percurso}"
+									rendered="#{not auxilioBacking.entity.novo}" />
+
+								<xcp:text
+									id="txtPortmec"
+									label="#{bundle.lbl_portmec}"
+									value="#{auxilioBacking.entity.portmec}"
+									size="20" />
+
+								<xcp:combo
+									id="cboGrau"
+									value="#{auxilioBacking.entity.grau}"
+									label="#{bundle.lbl_grau}"
+									itens="#{auxilioBacking.itensGrau}" />
+
+								<xcp:memo
+									id="txtProjeto"
+									label="#{bundle.lbl_projeto}"
+									value="#{auxilioBacking.entity.projeto}"
+									size="4000" />
+
+								<xcp:date
+									id="txtDthomol"
+									value="#{auxilioBacking.entity.dthomol}"
+									label="#{bundle.lbl_dthomol}" />
+
+								<xcp:memo
+									id="txtRelatoriofim"
+									label="#{bundle.lbl_relatoriofim}"
+									value="#{auxilioBacking.entity.relatoriofim}"
+									size="4000" />
+
+								<xcp:date
+									id="txtDtentregarel"
+									value="#{auxilioBacking.entity.dtentregarel}"
+									label="#{bundle.lbl_dtentregarel}" />
+
+								<xcp:memo
+									id="txtProjetoimplant"
+									label="#{bundle.lbl_projetoimplant}"
+									value="#{auxilioBacking.entity.projetoimplant}"
+									size="4000" />
+
+								<xcp:date
+									id="txtDtentregaproj"
+									value="#{auxilioBacking.entity.dtentregaproj}"
+									label="#{bundle.lbl_dtentregaproj}" />
+
+								<xcp:memo
+									id="txtManifestacaodir"
+									label="#{bundle.lbl_manifestacaodir}"
+									value="#{auxilioBacking.entity.manifestacaodir}"
+									size="4000" />
+
+								<xcp:combo
+									id="cboTcc"
+									value="#{auxilioBacking.entity.tcc}"
+									label="#{bundle.lbl_tcc}"
+									itens="#{auxilioBacking.itensIndSimNao}" />
+
+								<xcp:combo
+									id="cboCertificado"
+									value="#{auxilioBacking.entity.certificado}"
+									label="#{bundle.lbl_certificado_ent}"
+									itens="#{auxilioBacking.itensIndSimNao}" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+						<p:fieldset
+							id="pnlCreche"
+							legend="#{bundle.title_creche}"
+							rendered="#{auxilioBacking.entity.tipo == 2}">
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovSequencia"
+									value="#{auxilioBacking.entity.dependentesFk}"
+									readonly="#{not auxilioBacking.entity.novo}"
+									required="true"
+									params="#{auxilioBacking.paramsMatricula}"
+									label="#{bundle.lbl_depend}"
+									query="dependentesCreche"
+									size="4" 
+									selectionListener="#{auxilioBacking.selectDep}" 
+									update="txtDt"/>
+
+								<xcp:text
+									id="txtNomeemp"
+									label="#{bundle.lbl_nomeemp}"
+									value="#{auxilioBacking.entity.nomeemp}"
+									size="80"
+									maxlength="200" />
+									
+								<xcp:combo
+									id="cboTipocreche"
+									value="#{auxilioBacking.entity.tipocreche}"
+									label="#{bundle.lbl_tipo_creche}"
+									readonly="#{not auxilioBacking.entity.novo}"
+									itens="#{auxilioBacking.itensTipocreche}"/>
+						
+						
+							</xcp:panelForm>
+						</p:fieldset>
+						<p:fieldset
+							id="pnlSaude"
+							legend="#{bundle.title_saude}"
+							rendered="#{auxilioBacking.entity.tipo == 3}">
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovOrgaoSau"
+									value="#{auxilioBacking.entity.codconvFk}"
+									label="#{bundle.lbl_emp}"
+									query="consignacoes_emp"
+									required="true"
+									size="8"
+									rendered="#{auxilioBacking.renderedEmp}" />
+
+								<xcp:lov
+									id="lovSequenciaSaude"
+									value="#{auxilioBacking.entity.dependentesFk}"
+									readonly="#{not auxilioBacking.entity.novo}"
+									params="#{auxilioBacking.paramsMatricula}"
+									label="#{bundle.lbl_depend}"
+									query="dependentes"
+									size="4" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+					</p:outputPanel>
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valorHomol}"
+						size="12"
+						value="#{auxilioBacking.entity.valor}"
+						precision="9"
+						scale="2"
+						rendered="#{auxilioBacking.entity.tipo == 1}"
+						required="true" />
+
+
+
+					<xcp:number
+						id="txtParcelas"
+						label="#{bundle.lbl_parcelas}"
+						value="#{auxilioBacking.entity.parcelas}"
+						size="3"
+						precision="3"
+						scale="0"
+						minValue="1"
+						maxValue="999"
+						rendered="#{auxilioBacking.entity.tipo == 1}"
+						required="true" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{auxilioBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{auxilioBacking.anexoIcon}"
+					update=":frmAnexos"
+					process="@this"
+					value="#{bundle.btn_anexos}"
+					oncomplete="PF('w_anexos').show()" />
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="AuxilioForm/AuxilioPgtoForm.xhtml" />
+
+				<ui:include src="AuxilioForm/AuxilioRelForm.xhtml" />
+
+				<p:outputPanel rendered="#{auxilioBacking.renderedMensalidade}">
+					<ui:include src="AuxilioForm/AuxilioMensalidadeForm.xhtml" />
+				</p:outputPanel>
+
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgUploadDocumento}"
+			widgetVar="wDlgUploadDocumento"
+			modal="true">
+			<xcp:form
+				id="formUpload"
+				multipart="true">
+				<p:fileUpload
+					id="uploadDocumento"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					fileUploadListener="#{auxilioPgtoBacking.actionUploadDocumento}" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{auxilioBacking.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{auxilioBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{auxilioBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo"
+							action="#{auxilioBacking.actionEditarAnexo(rowAnex)}">
+
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update="tblAnex :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{auxilioBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{auxilioBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{auxilioBacking.anexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{auxilioBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{auxilioBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="DivisoesTransformacao"
+		backing="#{divisoesTransformacaoBacking}"
+		masterId="Divisoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_dtinicio}"
+				value="#{row.dtinicio}"
+				type="Date"
+				size="2">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_divisaotransf}"
+				value="#{row.divisaotransfFk.descricao}"
+				type="String"
+				size="6">
+				<xcp:outputSimple value="#{row.divisaotransfFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDtinicio_DivisoesTransformacao"
+					required="true"
+					value="#{divisoesTransformacaoBacking.entity.dtinicio}"
+					label="#{bundle.lbl_dtinicio}" />
+
+				<xcp:lov
+					id="lovDivisaotransf_DivisoesTransformacao"
+					value="#{divisoesTransformacaoBacking.entity.divisaotransfFk}"
+					label="#{bundle.lbl_divisaotransf}"
+					required="true"
+					query="divisoes"
+					size="6" />
+
+				<xcp:text
+					id="txtDescricao_DivisoesTransformacao"
+					label="#{bundle.lbl_descricao}"
+					value="#{divisoesTransformacaoBacking.entity.descricao}"
+					size="100" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tabAnexosAcao"
+		value="#{planoConflitosAcoesBacking.listaAnexosAcao}"
+		var="row"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		selection="#{planoConflitosAcoesBacking.anexoAcao}"
+		rowKey="#{row}">
+
+			<xcp:column headerText="#{bundle.nome_arquivo_doc_anexo}"
+				value="#{row.nomeArquivo}" type="String" width="95%">
+				<xcp:outputSimple value="#{row.nomeArquivo}" />
+			</xcp:column>			
+
+			<xcp:column
+				type="String"
+				width="5%">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_download_anex"
+					update="tabAnexosAcao"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					ajax="false">
+					<h:graphicImage
+						value="/resources/img/download.png"
+						style="margin-top:3px;" />
+					<p:fileDownload
+						value="#{planoConflitosAcoesBacking.downloadAnexoAcao(row)}"
+						contentDisposition="attachment" />
+				</xcp:commandLink>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				width="5%">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_remove_anexo_acao"
+					update="tabAnexosAcao"
+					action="#{planoConflitosAcoesBacking.actionRemoverAnexoAcao(row)}">
+					<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" />
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandLink>
+			</xcp:column>
+
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adicionar_anexo"
+		value="#{bundle.btn_adicionar_anexo_acao}"
+		update="tabAnexosAcao :dlgAnexosAcao"
+		oncomplete="PF('dlgAnexosAcao_w').show();"
+		icon="ui-icon-plusthick">
+		<f:setPropertyActionListener
+			target="#{planoConflitosAcoesBacking.anexoAcao}"
+			value="#{null}" />
+	</xcp:commandButton>
+
+	<p:remoteCommand
+		name="rcTabAnexosAcao"
+		update="tabAnexosAcao" />
+</ui:composition>

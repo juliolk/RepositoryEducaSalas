@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.label_prop_130 {
+	width: 130px;
+}
+
+.label_prop_50 {
+	width: 50px;
+}
+
+.label_prop_70 {
+	width: 68px;
+}
+
+.label_prop_110 {
+	width: 110px;
+}
+
+.label_prop_92 {
+	width: 92px;
+}
+
+.label_prop_90 {
+	width: 90px;
+}
+
+.label_prop_120 {
+	width: 120px;
+}
+
+.label_prop_1xx {
+	width: 160px;
+}
+
+.label_prop_80 {
+	width: 80px;
+}
+
+.label_prop_40 {
+	width: 40px;
+}
+
+.label_prop_30 {
+	width: 30px;
+}
+
+.label_prop_35 {
+	width: 35px !important;
+}
+
+.label_prop_102 {
+	width: 102px;
+}
+
+.campo-esquerda {
+	margin-right: 15px !important;
+}
+
+.grid_prop_top {
+	vertical-align: top;
+}
+</style>
+
+		<xcp:panelManut
+			id="Propostas"
+			backing="#{propostasBacking}">
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_efetivar"
+					icon="ui-icon-gear"
+					action="#{propostasBacking.actionSolicitaEfetivacao}"
+					rendered="#{propostasBacking.entity.situacao!=1 and !propostasBacking.entity.novo}"
+					update=":#{p:component('dlg')}"
+					value="#{bundle.btn_efetivar}" />
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_proposta}"
+					value="#{row.proposta}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.proposta}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtproposta}"
+					value="#{row.dtproposta}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtproposta}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<h:panelGrid
+					columns="2"
+					id="Propostas"
+					border="0"
+					cellspacing="0"
+					cellpadding="0"
+					columnClasses="grid_prop_top,grid_prop_top">
+					<h:panelGroup>
+
+						<xcp:panelForm
+							columns="2"
+							labelClass="label_prop_50,label_prop_50,label_prop_50">
+
+							<xcp:number
+								id="txtProposta"
+								label="#{bundle.lbl_proposta}"
+								required="true"
+								value="#{propostasBacking.entity.proposta}"
+								size="8"
+								precision="8"
+								scale="0"
+								maxValue="99999999"
+								readonly="#{true}"
+								rendered="#{not propostasBacking.entity.novo}" />
+						</xcp:panelForm>
+
+						<xcp:panelForm
+							columns="6"
+							labelClass="label_prop_50,label_prop_50,label_prop_50">
+
+
+
+							<xcp:date
+								id="txtDtproposta"
+								required="true"
+								value="#{propostasBacking.entity.dtproposta}"
+								label="#{bundle.lbl_dtproposta}" />
+
+							<xcp:combo
+								id="cboSituacao"
+								value="#{propostasBacking.entity.situacao}"
+								label="#{bundle.lbl_situacao}"
+								required="true"
+								itens="#{propostasBacking.itensSituacao}" />
+						</xcp:panelForm>
+
+						<xcp:panelForm labelClass="label_prop_50">
+							<xcp:text
+								id="txtNome"
+								label="#{bundle.lbl_nome}"
+								required="true"
+								value="#{propostasBacking.entity.nome}"
+								size="70" />
+						</xcp:panelForm>
+
+
+						<xcp:panelForm>
+							<xcp:endereco
+								id="proposta"
+								value="#{propostasBacking.entity.endereco}" />
+						</xcp:panelForm>
+
+
+
+
+
+						<div style="margin-left: 6px">
+							<xcp:panelForm
+								columns="4"
+								labelClass="null, label_prop_110">
+								<xcp:text
+									id="txtPessoareferencia"
+									label="#{bundle.lbl_pessoareferencia}"
+									value="#{propostasBacking.entity.pessoareferencia}"
+									size="30"
+									maxlength="30" />
+								<xcp:date
+									id="txtDtnascimento"
+									required="true"
+									value="#{propostasBacking.entity.dtnascimento}"
+									label="#{bundle.lbl_dtnascimento}" />
+							</xcp:panelForm>
+
+
+							<xcp:panelForm
+								columns="4"
+								labelClass="label_prop_92, label_prop_110 ">
+								<xcp:text
+									id="txtFonereferencia"
+									label="#{bundle.lbl_fonereferencia}"
+									value="#{propostasBacking.entity.fonereferencia}"
+									size="30" />
+
+								<xcp:number
+									id="txtPretsalario"
+									label="#{bundle.lbl_pretsalario}"
+									size="10"
+									value="#{propostasBacking.entity.pretsalario}"
+									precision="16"
+									scale="2" />
+							</xcp:panelForm>
+						</div>
+						<xcp:panelForm>
+						</xcp:panelForm>
+
+						<xcp:panelForm>
+							<xcp:lov
+								id="lovCargo1"
+								value="#{propostasBacking.entity.cargo1Fk}"
+								label="#{bundle.lbl_cargo1}"
+								selectionListener="#{propostasBacking.selectCargo}"
+								query="cargos"
+								update="lovPadrao,cboClasse,txtSalbase,lovNumSeqVaga"
+								size="4"
+								required="#{propostasBacking.vagaIndividual}" />
+
+							<xcp:lov
+								id="lovCargo2"
+								value="#{propostasBacking.entity.cargo2Fk}"
+								label="#{bundle.lbl_cargo2}"
+								query="cargos"
+								size="4"
+								rendered="#{not propostasBacking.vagaIndividual}" />
+
+							<xcp:lov
+								id="lovCargo3"
+								value="#{propostasBacking.entity.cargo3Fk}"
+								label="#{bundle.lbl_cargo3}"
+								query="cargos"
+								size="4"
+								rendered="#{not propostasBacking.vagaIndividual}" />
+
+							<xcp:dateRange
+								id="txtPer"
+								valueStart="#{propostasBacking.entity.perini}"
+								valueEnd="#{propostasBacking.entity.perfim}"
+								label="#{bundle.lbl_iniciotrab}"
+								size="8"
+								style="float:left">
+								<ui:define name="event_start">
+									<p:ajax
+										event="change"
+										update=":#{p:component('txtPer_c_end')}"
+										listener="#{propostasBacking.changeDtaIniPer}" />
+									<p:ajax
+										event="dateSelect"
+										update=":#{p:component('txtPer_c_end')}"
+										listener="#{propostasBacking.changeDtaIniPer}" />
+								</ui:define>
+							</xcp:dateRange>
+
+						</xcp:panelForm>
+
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<div style="margin-left: 10px !important">
+
+							<div style="margin-left: 6px !important">
+								<xcp:panelForm>
+
+									<xcp:lov
+										id="lovVaga"
+										value="#{propostasBacking.entity.vagaFk}"
+										label="#{bundle.lbl_vaga}"
+										required="true"
+										query="vagas"
+										size="8"
+										sizeDesc="52"
+										selectionListener="#{propostasBacking.selectVaga}"
+										update="lovEntrevistador lovCargo1"
+										rendered="#{not propostasBacking.vagaIndividual}" />
+
+									<xcp:lov
+										id="lovNumSeqVaga"
+										value="#{propostasBacking.entity.numSeqVagaFk}"
+										label="#{bundle.lbl_vaga}"
+										query="vagas_proposta"
+										size="18"
+										required="true"
+										rendered="#{propostasBacking.vagaIndividual}"
+										selectionListener="#{propostasBacking.selectVagaIndividual}"
+										update="lovCargo1 lovPadrao cboClasse txtSalbase"
+										params="#{propostasBacking.paramsVagaIndiv}" />
+
+									<xcp:lov
+										id="lovCurso"
+										value="#{propostasBacking.entity.cursoFk}"
+										label="#{bundle.lbl_curso}"
+										query="cursoacadvaga"
+										size="8"
+										sizeDesc="52"
+										params="#{propostasBacking.paramsCurso}" />
+
+									<xcp:lov
+										id="lovGrauinst"
+										required="true"
+										value="#{propostasBacking.entity.grauinstFk}"
+										label="#{bundle.lbl_grauinst}"
+										query="graus"
+										size="8"
+										sizeDesc="52" />
+
+								</xcp:panelForm>
+							</div>
+							<xcp:panelForm
+								columns="4"
+								labelClass="label_prop_70,label_prop_1xx">
+
+								<xcp:combo
+									id="cboEstudante"
+									value="#{propostasBacking.entity.estudante}"
+									label="#{bundle.lbl_estudante}"
+									itens="#{propostasBacking.itensIndSimNao}"
+									class="campo-esquerda" />
+
+								<xcp:combo
+									id="cboAnoescolaridade"
+									value="#{propostasBacking.entity.anoescolaridade}"
+									label="#{bundle.lbl_anoescolaridade}"
+									itens="#{propostasBacking.itensAnoescolaridade}" />
+
+								<xcp:cpf
+									id="txtCpf"
+									label="#{bundle.lbl_cpf}"
+									required="true"
+									value="#{propostasBacking.entity.cpf}"
+									size="15">
+									<p:ajax
+										event="blur"
+										update=":#{p:component('txtPer_c_end')}"
+										listener="#{propostasBacking.changeDtaIniPer}" />
+								</xcp:cpf>
+
+								<xcp:text
+									id="txtIdentidade"
+									label="#{bundle.lbl_identidade}"
+									value="#{propostasBacking.entity.identidade}"
+									size="15" />
+
+								<xcp:combo
+									id="cboSexo"
+									label="#{bundle.lbl_sexo}"
+									required="true"
+									value="#{propostasBacking.entity.sexo}"
+									itens="#{propostasBacking.itensSexo}"
+									styleClass="dadospessoaisselect"
+									class="combo_infogerais" />
+
+								<xcp:combo
+									id="cboEc"
+									value="#{propostasBacking.entity.ec}"
+									label="#{bundle.lbl_ec}"
+									itens="#{propostasBacking.itensEC}"
+									styleClass="dadospessoaisselect"
+									class="combo_infogerais" />
+
+								<xcp:combo
+									id="cboCor"
+									value="#{propostasBacking.entity.cor}"
+									required="true"
+									label="#{bundle.lbl_cor}"
+									itens="#{propostasBacking.itensCor}"
+									styleClass="dadospessoaisselect"
+									class="combo_infogerais" />
+
+								<xcp:combo
+									id="cboDeficiencias"
+									value="#{propostasBacking.entity.deficiente}"
+									required="true"
+									label="#{bundle.lbl_deficiencias}"
+									itens="#{propostasBacking.itensDeficiencias}"
+									styleClass="dadospessoaisselect"
+									class="combo_infogerais" />
+
+								<xcp:combo
+									id="cboTurno"
+									value="#{propostasBacking.entity.turno}"
+									label="#{bundle.lbl_turno}"
+									itens="#{propostasBacking.itensTurno}"
+									styleClass="dadospessoaisselect"
+									class="combo_infogerais" />
+
+								<xcp:combo
+									id="cboTrabalho"
+									value="#{propostasBacking.entity.trabalho}"
+									label="#{bundle.lbl_trabalho}"
+									required="true"
+									itens="#{propostasBacking.itensIndSimNao}"
+									styleClass="dadospessoaisselect"
+									class="combo_infogerais" />
+
+							</xcp:panelForm>
+
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovEntrevistador"
+									value="#{propostasBacking.entrevistador}"
+									label="#{bundle.lbl_entrevistador}"
+									query="funcionariosLov"
+									size="11"
+									sizeDesc="45"
+									readonly="true"
+									rendered="#{not propostasBacking.vagaIndividual}" />
+
+								<xcp:lov
+									id="lovPadrao"
+									value="#{propostasBacking.entity.padraoFk}"
+									params="#{propostasBacking.paramsPadrao}"
+									label="#{bundle.lbl_padrao}"
+									query="cargos_padroes_hor"
+									size="11"
+									sizeDesc="45"
+									required="true"
+									selectionListener="#{propostasBacking.selectPadrao}"
+									update="cboClasse,txtSalbase" />
+							</xcp:panelForm>
+							<div style="margin-left: 33px">
+								<xcp:panelForm
+									columns="4"
+									labelClass="null,label_prop_1xx">
+
+									<xcp:combo
+										id="cboClasse"
+										required="true"
+										label="#{bundle.lbl_nivel}"
+										value="#{propostasBacking.entity.classe}"
+										itens="#{propostasBacking.itensClasse}"
+										styleClass="dadospessoaisselect"
+										class="combo_infogerais">
+										<p:ajax
+											event="change"
+											update="txtSalbase"
+											listener="#{propostasBacking.actionBuscaSalarioNivel}" />
+									</xcp:combo>
+
+									<xcp:number
+										id="txtSalbase"
+										required="true"
+										label="#{bundle.lbl_salbase}"
+										readonly="true"
+										value="#{propostasBacking.vlrSalario}"
+										precision="14"
+										scale="2"
+										size="15" />
+								</xcp:panelForm>
+								<xcp:panelForm labelClass="label_prop_35">
+									<xcp:memo
+										id="txtObservacao"
+										label="#{bundle.lbl_observacao}"
+										value="#{propostasBacking.entity.observacao}"
+										size="500"
+										cols="78" />
+								</xcp:panelForm>
+							</div>
+
+
+						</div>
+					</h:panelGroup>
+
+				</h:panelGrid>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{propostasBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					immediate="true"
+					action="#{propostasBacking.actionOpenAnexos}" />
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<p:tabView
+					id="tabViewPropostas"
+					rendered="#{!propostasBacking.entity.novo}">
+					<p:tab
+						id="tabPropostasProf"
+						title="#{bundle.tit_propostasProf}">
+						<ui:include src="PropostasForm/PropostasProfForm.xhtml" />
+					</p:tab>
+
+					<p:tab
+						id="tabPropostasAval"
+						title="#{bundle.tit_propostasAval}">
+						<ui:include src="PropostasForm/PropostasAvalForm.xhtml" />
+					</p:tab>
+
+					<p:tab
+						id="tabPropostasEmpregos"
+						title="#{bundle.tit_propostasEmpregos}">
+						<ui:include src="PropostasForm/PropostasEmpregosForm.xhtml" />
+					</p:tab>
+				</p:tabView>
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<ui:include src="PropostasForm/PropostaDlgForm.xhtml" />
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{propostasBacking.listAnexos}"
+					var="rowAnex"
+					widgetVar="w_tblAnex"
+					filteredValue="#{propostasBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_documento}"
+						value="#{rowAnex.docprovFk.descricao}"
+						type="String"
+						size="30">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.docprovFk.descricao}" />
+					</xcp:column>
+
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{propostasBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo">
+							<f:setPropertyActionListener
+								value="#{rowAnex}"
+								target="#{propostasBacking.anexo}" />
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update=":frmAnexos :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{propostasBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{propostasBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{propostasBacking.anexo.descricao}" />
+
+					<xcp:lov
+						id="lovProv"
+						value="#{propostasBacking.anexo.docprovFk}"
+						label="#{bundle.lbl_documento}"
+						query="funcoesprovimento"
+						size="3"
+						params="#{propostasBacking.paramsProv}" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{propostasBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos :form:btn_anexos"
+							action="#{propostasBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

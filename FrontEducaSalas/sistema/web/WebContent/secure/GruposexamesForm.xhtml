@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Gruposexames"
+			backing="#{gruposexamesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_grupo}"
+					value="#{row.grupo}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.grupo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_cep}"
+					value="#{row.cep}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.cep}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cidade}"
+					value="#{row.cidade}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.cidade}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_bairro}"
+					value="#{row.bairro}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.bairro}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_logradouro}"
+					value="#{row.logradouro}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.logradouro}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numero}"
+					value="#{row.numero}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.numero}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_complemento}"
+					value="#{row.complemento}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.complemento}" />
+				</xcp:column>
+ -->
+				<xcp:column
+					headerText="#{bundle.col_fone}"
+					value="#{row.fone}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.fone}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_horariorealizado}"
+					value="#{row.horariorealizado}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.horariorealizado}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtGrupo"
+						label="#{bundle.lbl_grupo}"
+						required="true"
+						value="#{gruposexamesBacking.entity.grupo}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999"
+						readonly="#{not gruposexamesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{gruposexamesBacking.entity.descricao}"
+						size="30" />
+
+					<xcp:endereco
+						id="gruposexames"
+						required="false"
+						value="#{autonomosBacking.entity.endereco}" />
+
+					<xcp:fone
+						id="txtFone"
+						label="#{bundle.lbl_fone}"
+						value="#{gruposexamesBacking.entity.fone}"
+						size="20" />
+
+					<xcp:text
+						id="txtHorariorealizado"
+						label="#{bundle.lbl_horariorealizado}"
+						value="#{gruposexamesBacking.entity.horariorealizado}"
+						size="20" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

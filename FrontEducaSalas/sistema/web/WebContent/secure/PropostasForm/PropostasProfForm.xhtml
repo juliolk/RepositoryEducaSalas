@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelManutTabDetalhes
+		id="PropostasProf"
+		backing="#{propostasProfBacking}"
+		masterId="Propostas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_seq}"
+				value="#{row.seq}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.seq}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_instituicao}"
+				value="#{row.instituicao}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.instituicao}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_curso}"
+				value="#{row.cursoacadFk.descricao}"
+				type="String"
+				size="50"
+				rendered="#{propostasBacking.vagaIndividual}">
+				<xcp:outputSimple value="#{row.cursoacadFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="50"
+				rendered="#{not propostasBacking.vagaIndividual}">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtini}"
+				value="#{row.dtini}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfim}"
+				value="#{row.dtfim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+				<xcp:number
+					id="txtSeq_PropostasProf"
+					label="#{bundle.lbl_seq}"
+					required="true"
+					value="#{propostasProfBacking.entity.seq}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999"
+					readonly="#{not propostasProfBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovInstituicao_PropostasProf"
+					value="#{propostasProfBacking.entity.instituicaoFk}"
+					label="#{bundle.lbl_instituicao}"
+					required="true"
+					query="instituicoes"
+					size="3" />
+
+				<xcp:lov
+					id="lovCursoacad"
+					value="#{propostasProfBacking.entity.cursoacadFk}"
+					label="#{bundle.lbl_cursoacad}"
+					required="true"
+					query="cursoacad"
+					size="5"
+					rendered="#{propostasBacking.vagaIndividual}" />
+
+				<xcp:text
+					id="txtDescricao_PropostasProf"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{propostasProfBacking.entity.descricao}"
+					size="50"
+					rendered="#{not propostasBacking.vagaIndividual}" />
+
+				<xcp:date
+					id="txtDtini_PropostasProf"
+					required="true"
+					value="#{propostasProfBacking.entity.dtini}"
+					label="#{bundle.lbl_dtini}" />
+
+				<xcp:date
+					id="txtDtfim_PropostasProf"
+					value="#{propostasProfBacking.entity.dtfim}"
+					label="#{bundle.lbl_dtfim}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

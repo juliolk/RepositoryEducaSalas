@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+#form\:tabConsingatarios\:pnlOper td.ui-panelgrid-cell {
+	padding-left: 3px;
+	vertical-align: middle;
+}
+</style>
+		<xcp:panelManut
+			id="Consignacoes"
+			backing="#{consignacoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codconv}"
+					value="#{row.codconv}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.codconv}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="80">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtconv}"
+					value="#{row.dtconv}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtconv}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size ="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+					</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_responsavel}"
+					value="#{row.responsavel}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.responsavel}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="20"
+					itens="#{consignacoesBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{consignacoesBacking.itensTipo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtCodconv"
+						label="#{bundle.lbl_codconv}"
+						required="true"
+						value="#{consignacoesBacking.entity.codconv}"
+						size="6"
+						precision="10"
+						scale="0"
+						maxlength="10"
+						maxValue="9999999999"
+						readonly="#{not consignacoesBacking.entity.novo}" />
+
+				</xcp:panelForm>
+				<table>
+					<tr>
+						<td width="900px"><p:tabView id="tabConsingatarios">
+								<p:tab
+									id="tabDadosGerais"
+									title="#{bundle.tit_consignatario}">
+									<xcp:border
+										id="brd_dados_consignatario"
+										header="#{bundle.tit_dados_consignatario}">
+
+										<xcp:combo
+											id="cboTipo"
+											value="#{consignacoesBacking.entity.tipo}"
+											label="#{bundle.lbl_tipo}"
+											readonly="#{!consignacoesBacking.entity.novo}"
+											required="true"
+											itens="#{consignacoesBacking.itensTipo}">
+											<p:ajax
+												event="change"
+												update="grd_cedidos brd_dados_consignatario cboEntidade cboEntidade_l brd_periodo"
+												listener="#{consignacoesBacking.actionChangeTipo}" />
+										</xcp:combo>
+
+										<xcp:cnpj
+											id="txtCgc"
+											required="true"
+											label="#{bundle.lbl_cgc}"
+											value="#{consignacoesBacking.entity.cgc}" />
+
+										<xcp:text
+											id="txtNome"
+											required="true"
+											label="#{bundle.lbl_nome}"
+											value="#{consignacoesBacking.entity.nome}"
+											maxlength="80"
+											size="79" />
+
+										<xcp:lov
+											id="lovInstituicao"
+											value="#{consignacoesBacking.entity.instituicaoFk}"
+											label="#{bundle.lbl_instituicao}"
+											query="instituicoes"
+											size="6"
+											rendered="#{consignacoesBacking.entity.tipo == 6}" />
+
+										<xcp:number
+											id="txtVlrtaxaadm"
+											label="#{bundle.lbl_vlrtaxaadm}"
+											size="21"
+											value="#{consignacoesBacking.entity.vlrtaxaadm}"
+											precision="18"
+											scale="2"
+											rendered="#{consignacoesBacking.entity.tipo == 6}" />
+
+										<xcp:combo
+											id="cboIndestobrig"
+											value="#{consignacoesBacking.entity.indestobrig}"
+											label="#{bundle.lbl_indestobrig}"
+											itens="#{consignacoesBacking.itensIndSimNao}"
+											rendered="#{consignacoesBacking.entity.tipo == 6}" />
+
+										<xcp:combo
+											id="cboIndestrem"
+											value="#{consignacoesBacking.entity.indestrem}"
+											label="#{bundle.lbl_indestrem}"
+											itens="#{consignacoesBacking.itensIndSimNao}"
+											rendered="#{consignacoesBacking.entity.tipo == 6}" />
+
+										<xcp:combo
+											id="cboTipopoder"
+											value="#{consignacoesBacking.entity.tipopoder}"
+											label="#{bundle.lbl_tipopoder}"
+											rendered="#{consignacoesBacking.renderedTipoPoder}"
+											itens="#{consignacoesBacking.itensTipopoder}" />
+
+										<xcp:combo
+											id="cboTipoesfera"
+											value="#{consignacoesBacking.entity.esfera}"
+											label="#{bundle.lbl_tipoesfera}"
+											rendered="#{consignacoesBacking.renderedEsfera}"
+											itens="#{consignacoesBacking.itensEsfera}" />
+
+										<xcp:fone
+											id="txtFone"
+											label="#{bundle.lbl_fone}"
+											value="#{consignacoesBacking.entity.fone}" />
+
+										<xcp:text
+											id="txtEmail"
+											label="#{bundle.lbl_email}"
+											value="#{consignacoesBacking.entity.email}"
+											maxlength="60"
+											size="79" />
+
+										<xcp:text
+											id="txtResponsavel"
+											label="#{bundle.lbl_responsavel}"
+											value="#{consignacoesBacking.entity.responsavel}"
+											maxlength="100"
+											size="79" />
+
+										<xcp:text
+											id="txtNroconv"
+											label="#{bundle.lbl_nroconv}"
+											value="#{consignacoesBacking.entity.nroconv}"
+											size="10"
+											rendered="#{consignacoesBacking.renderedNroConv}" />
+
+										<xcp:date
+											id="txtDtpublicacao"
+											value="#{consignacoesBacking.entity.dtpublicacao}"
+											label="#{bundle.lbl_dtpublicacao}"
+											rendered="#{consignacoesBacking.renderedDtaPub}" />
+
+										<xcp:lov
+											id="lovCodconvOri"
+											value="#{consignacoesBacking.entity.codconvOriFk}"
+											label="#{bundle.lbl_codconvOri}"
+											query="consignacoes_orig"
+											size="10"
+											rendered="#{consignacoesBacking.renderedConsignatario}"
+											params="#{consignacoesBacking.paramsConvOri}" />
+
+										<xcp:number
+											id="txtQtdserv"
+											label="#{bundle.lbl_qtdserv}"
+											value="#{consignacoesBacking.entity.qtdserv}"
+											size="5"
+											precision="5"
+											scale="0"
+											maxValue="99999"
+											rendered="#{consignacoesBacking.renderedQtdServ}"
+											required="true" />
+
+										<xcp:memo
+											id="txtObs"
+											label="#{bundle.lbl_obs}"
+											value="#{consignacoesBacking.entity.obs}"
+											size="2000"
+											rendered="#{consignacoesBacking.renderedObs}" />
+
+										<xcp:lov
+											id="lovTipodoc_Feriados"
+											value="#{consignacoesBacking.entity.tipodocFk}"
+											label="#{bundle.lbl_tipodoc}"
+											query="tipodocumento"
+											selectionListener="#{consignacoesBacking.selectTipodocumento}"
+											update="lovDocumento_Feriados,btnDownloadDocumento"
+											size="6"
+											rendered="#{consignacoesBacking.renderedExtraFields}" />
+
+										<xcp:lov
+											id="lovDocumento_Feriados"
+											value="#{consignacoesBacking.entity.registroFk}"
+											params="#{consignacoesBacking.paramsTipodocumento}"
+											label="#{bundle.lbl_documento}"
+											query="documentos"
+											size="6"
+											update="btnDownloadDocumento"
+											rendered="#{consignacoesBacking.renderedExtraFields}" />
+
+										<p:spacer
+											height="1"
+											width="1" />
+										<xcp:commandButton
+											id="btnDownloadDocumento"
+											value="#{bundle.btn_visualizar}"
+											ajax="false"
+											immediate="true"
+											process="@this"
+											onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+											disabled="#{consignacoesBacking.entity.registroFk == null}"
+											rendered="#{consignacoesBacking.renderedExtraFields}">
+											<p:fileDownload
+												value="#{documentosBacking.getDownloadDocumento(consignacoesBacking.entity.registro)}"
+												contentDisposition="attachment" />
+										</xcp:commandButton>
+
+
+										<xcp:combo
+											id="cboEntidade"
+											value="#{consignacoesBacking.entity.entidadeSemlucro}"
+											label="#{bundle.lbl_entidadesemlucro}"
+											rendered="#{consignacoesBacking.entity.tipo == 6}"
+											itens="#{consignacoesBacking.itensIndSimNaoNull}" />
+
+									</xcp:border>
+
+									<xcp:border
+										id="brd_dadosBancarios"
+										header="#{bundle.tit_dados_bancarios}">
+										<xcp:lov
+											id="lovBanco"
+											value="#{consignacoesBacking.entity.bancoFk}"
+											label="#{bundle.lbl_banco}"
+											selectionListener="#{consignacoesBacking.selectBancoPgto}"
+											query="bancos"
+											update="lovAgencia"
+											size="5" />
+
+										<xcp:lov
+											id="lovAgencia"
+											value="#{consignacoesBacking.entity.agenciaFk}"
+											params="#{consignacoesBacking.paramsBanco}"
+											label="#{bundle.lbl_agencia}"
+											query="agencias"
+											size="5" />
+
+										<p:outputLabel
+											value="#{bundle.lbl_conta}"
+											for="txtConta" />
+
+										<p:panelGrid
+											id="pnlOper"
+											columns="3">
+											<xcp:text
+												id="txtConta"
+												label="#{bundle.lbl_conta}"
+												simple="true"
+												value="#{consignacoesBacking.entity.conta}"
+												size="12" />
+
+											<xcp:text
+												id="txtOperacao"
+												label="#{bundle.lbl_operacao}"
+												value="#{consignacoesBacking.entity.operacao}"
+												size="3" />
+										</p:panelGrid>
+
+									</xcp:border>
+
+									<p:fieldset
+										id="brd_periodo"
+										legend="#{bundle.tit_periodo_validade}">
+										<h:panelGrid
+											columns="6"
+											styleClass="tabela_alinhamento">
+											<xcp:date
+												id="txtDtconv"
+												value="#{consignacoesBacking.entity.dtconv}"
+												label="#{bundle.lbl_dtconv}"
+												rendered="#{consignacoesBacking.renderedDtaConv}" />
+
+											<xcp:date
+												id="txtDtfim"
+												value="#{consignacoesBacking.entity.dtfim}"
+												label="#{bundle.lbl_dtfimCedidos}"
+												rendered="#{consignacoesBacking.renderedDtfim}" />
+
+											<xcp:combo
+												id="cboSituacao"
+												value="#{consignacoesBacking.entity.situacao}"
+												label="#{bundle.lbl_situacao}"
+												required="true"
+												itens="#{consignacoesBacking.itensSituacao}" />
+
+
+										</h:panelGrid>
+									</p:fieldset>
+
+									<h:panelGroup id="grd_cedidos">
+										<p:fieldset
+											id="brd_cedidos"
+											rendered="#{consignacoesBacking.renderedPanelValidade}"
+											legend="#{consignacoesBacking.title}">
+
+											<p:dataTable
+												id="tabTermos"
+												value="#{consignacoesBacking.entity.listTermos}"
+												var="row"
+												emptyMessage="#{bundle.msg_sem_resultado}"
+												rowKey="#{row}">
+
+												<xcp:column
+													headerText="#{bundle.col_nroconv}"
+													value="#{row.nroconv}"
+													type="String"
+													size="10">
+													<xcp:outputSimple value="#{row.nroconv}" />
+												</xcp:column>
+
+												<xcp:column
+													headerText="#{bundle.col_dtini}"
+													value="#{row.dtini}"
+													type="Date"
+													size="7">
+													<xcp:outputSimpleDate value="#{row.dtini}" />
+												</xcp:column>
+
+												<xcp:column
+													headerText="#{bundle.col_dtfim}"
+													value="#{row.dtfim}"
+													type="Date"
+													size="7">
+													<xcp:outputSimpleDate value="#{row.dtfim}" />
+												</xcp:column>
+
+												<xcp:column
+													headerText="#{bundle.col_qtdserv}"
+													value="#{row.qtdserv}"
+													type="Number"
+													size="5">
+													<xcp:outputSimpleNumber
+														value="#{row.qtdserv}"
+														precision="5"
+														scale="0" />
+												</xcp:column>
+
+												<p:column
+													type="String"
+													width="1">
+													<xcp:commandButton
+														icon="icon-editar"
+														id="btn_editar_termo"
+														oncomplete="PF('w_termo').show();"
+														update=":frmTermo">
+														<f:setPropertyActionListener
+															target="#{consignacoesBacking.termoSel}"
+															value="#{row}" />
+													</xcp:commandButton>
+												</p:column>
+
+												<p:column
+													type="String"
+													width="1">
+													<xcp:commandButton
+														icon="ui-icon-trash"
+														id="btn_remover_termo"
+														action="#{consignacoesBacking.actionRemoveTermo(row)}"
+														update=":form:tabConsingatarios:tabTermos">
+														<p:confirm
+															header="#{bundle.tit_confirma_remover}"
+															message="#{bundle.msg_confirma_remover}"
+															icon="ui-icon-alert" />
+													</xcp:commandButton>
+												</p:column>
+
+											</p:dataTable>
+
+											<xcp:commandButton
+												id="btn_adicionar"
+												style="margin-top:5px"
+												action="#{consignacoesBacking.actionOpenTermo}"
+												update=":frmTermo"
+												process="@this"
+												value="#{bundle.btn_adicionar}"
+												icon="ui-icon-plusthick" />
+
+										</p:fieldset>
+
+									</h:panelGroup>
+
+								</p:tab>
+
+								<p:tab
+									id="tabDadosEndereco"
+									title="#{bundle.tit_dados_endereco}">
+									<xcp:endereco
+										id="consignacoes"
+										value="#{consignacoesBacking.entity.endereco}" />
+
+
+								</p:tab>
+
+								<p:tab
+									id="tabDadosContas"
+									rendered="#{consignacoesBacking.entity.tipo == 1 and !consignacoesBacking.entity.novo}"
+									title="#{bundle.tit_contas}">
+									<ui:include src="ConsignacoesForm/ConsignacoesContasForm.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabDadosDescontos"
+									rendered="#{consignacoesBacking.entity.tipo == 1 and !consignacoesBacking.entity.novo}"
+									title="#{bundle.tit_descontos}">
+									<ui:include
+										src="ConsignacoesForm/ConsignacoesDescontosForm.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabDadosCateg"
+									rendered="#{(consignacoesBacking.entity.tipo == 7 or consignacoesBacking.entity.tipo == 8) and !consignacoesBacking.entity.novo}"
+									title="#{bundle.tit_categorias}">
+									<ui:include src="ConsignacoesForm/ConsignacoesCategForm.xhtml" />
+								</p:tab>
+
+								<p:tab
+									id="tabColunasComplementares"
+									rendered="#{consignacoesBacking.xcpTabelaColunaVO.colunaComplementar}"
+									title="#{bundle.tit_colunas_complementares}">
+									<ui:include
+										src="ConsignacoesForm/ConsignacoesColunasForm.xhtml" />
+								</p:tab>
+
+
+							</p:tabView></td>
+					</tr>
+				</table>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{consignacoesBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					rendered="#{not consignacoesBacking.entity.novo}"
+					oncomplete="PF('w_anexos').show()" />
+			</ui:define>
+
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgTermo"
+			widgetVar="w_termo"
+			header="#{bundle.tit_dlgTermo}"
+			modal="true">
+			<xcp:form id="frmTermo">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtNroconv_TermoAditivo"
+						label="#{bundle.lbl_nrotermo}"
+						required="true"
+						value="#{consignacoesBacking.termoSel.nroconv}"
+						size="10" />
+
+					<xcp:date
+						id="txtDtpublicacao_TermoAditivo"
+						required="true"
+						value="#{consignacoesBacking.termoSel.dtpublicacao}"
+						label="#{bundle.lbl_dtpublicacao}" />
+
+					<xcp:dateRange
+						id="dtTermo"
+						requiredStart="true"
+						valueStart="#{consignacoesBacking.termoSel.dtini}"
+						valueEnd="#{consignacoesBacking.termoSel.dtfim}"
+						label="#{bundle.lbl_periodo}" />
+
+					<xcp:number
+						id="txtQtdserv_TermoAditivo"
+						label="#{bundle.lbl_qtdserv}"
+						value="#{consignacoesBacking.termoSel.qtdserv}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+
+					<xcp:memo
+						id="txtObs_TermoAditivo"
+						label="#{bundle.lbl_obs}"
+						value="#{consignacoesBacking.termoSel.obs}"
+						size="2000" />
+
+					<xcp:lov
+						id="lovTipodoc_TermoAditivo"
+						value="#{consignacoesBacking.termoSel.tipodocFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento"
+						size="6" />
+
+					<xcp:lov
+						id="lovRegistro_TermoAditivo"
+						value="#{consignacoesBacking.termoSel.registroFk}"
+						label="#{bundle.lbl_documento}"
+						params="#{consignacoesBacking.paramsTipodocumentoDlg}"
+						query="documentos"
+						update="btnDownloadDocumentoDlg"
+						size="6" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<xcp:commandButton
+						id="btnDownloadDocumentoDlg"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{consignacoesBacking.termoSel.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(consignacoesBacking.termoSel.registro)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_ok_env"
+							icon="ui-icon-disk"
+							action="#{consignacoesBacking.actionSalvarTermo}"
+							value="#{bundle.btn_gravar}"
+							update=":form:tabConsingatarios:tabTermos:" />
+
+						<xcp:commandButton
+							id="btn_voltar_env"
+							immediate="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_termo').hide();" />
+
+					</f:facet>
+
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{consignacoesBacking.listAnexos}"
+					var="rowAnex"
+					widgetVar="w_tblAnex"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update=":frmAnexos:tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{consignacoesBacking.getAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo"
+							action="#{consignacoesBacking.actionEditarAnexo(rowAnex)}">
+
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update=":frmAnexos :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{consignacoesBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{consignacoesBacking.consignacoesAnexos}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{consignacoesBacking.consignacoesAnexos.descricao}" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{consignacoesBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{consignacoesBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="VagasConsignacoes"
+		backing="#{vagasConsignacoesBacking}"
+		masterId="Vagas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codconv}"
+				value="#{row.codconv}"
+				type="Number"
+				size="2">
+				<xcp:outputSimpleNumber
+					value="#{row.codconv}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.codconvFk.nome}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.codconvFk.nome}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCodconv_VagasConsignacoes"
+					value="#{vagasConsignacoesBacking.entity.codconvFk}"
+					label="#{bundle.lbl_convenio}"
+					required="true"
+					query="consignacoes_estag"
+					size="10"
+					readonly="#{not vagasConsignacoesBacking.entity.novo}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

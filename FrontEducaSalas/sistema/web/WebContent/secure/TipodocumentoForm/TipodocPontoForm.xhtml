@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="TipodocPonto"
+		backing="#{tipodocPontoBacking}"
+		masterId="Tipodocumento">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codigo}"
+				value="#{row.tipoponto}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.tipoponto}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipoponto}"
+				value="#{row.tipopontoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.tipopontoFk.descricao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipoponto_TipodocPonto"
+					value="#{tipodocPontoBacking.entity.tipopontoFk}"
+					label="#{bundle.lbl_tipoponto}"
+					required="true"
+					query="tipopontoqtd"
+					params="#{tipodocPontoBacking.paramsTipoPonto}"
+					size="4"
+					readonly="#{not tipodocPontoBacking.entity.novo}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

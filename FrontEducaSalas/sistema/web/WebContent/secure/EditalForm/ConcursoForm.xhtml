@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_adicionar_concurso"
+				oncomplete="PF('dlgConcurso_w').show();"
+				disabled="#{editalBacking.entity.novo}"
+				update=":frmConcurso:formConcurso"
+				value="#{bundle.btn_adicionar}"
+				immediate="true"
+				action="#{editalBacking.setConcursoManut(null)}"
+				icon="ui-icon-plusthick" />
+		</f:facet>
+	</p:toolbar>
+
+	<p:outputPanel>
+		<p:dataTable
+			id="table_Concurso"
+			widgetVar="table_Concurso_w"
+			var="rowConcurso"
+			value="#{editalBacking.listaConcurso}"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			scrollable="true"
+			scrollHeight="161"
+			selectionMode="single"
+			selection="#{editalBacking.concursoManut}"
+			rowKey="#{rowConcurso.PK}">
+
+			<!-- update=":#{p:component('brd_provas')}" -->
+			<p:ajax
+				event="rowSelect"
+				listener="#{editalBacking.onRowConcurso()}"
+				update=":#{p:component('brd_vagas')}" />
+
+			<xcp:column
+				headerText="#{bundle.col_funcao}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{rowConcurso.funcao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desFuncao}"
+				type="String">
+				<xcp:outputSimple value="#{rowConcurso.funcaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vagas}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{rowConcurso.vagas}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_deficientes}"
+				type="Number"
+				size="11"
+				width="50">
+				<xcp:outputSimpleNumber
+					value="#{rowConcurso.deficientes}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_afro}"
+				type="Number"
+				size="11">
+				<xcp:outputSimpleNumber
+					value="#{rowConcurso.afro}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_validade}"
+				type="Date"
+				size="10">
+				<xcp:outputSimpleDate value="#{rowConcurso.validade}" />
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="3">
+				<xcp:commandButton
+					id="btn_removerSel"
+					immediate="true"
+					update="table_Concurso"
+					action="#{editalBacking.actionExcluirConcurso(rowConcurso)}"
+					icon="ui-icon-trash">
+					<!-- <h:graphicImage
+					title="#{bundle.hint_remover}"
+					value="/resources/img/remover_icon.png"
+					style="margin-top:3px;" /> -->
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="3">
+				<xcp:commandButton
+					id="btn_editarSel"
+					icon="icon-navegar"
+					update="table_Concurso,:#{p:component('formConcurso')}"
+					oncomplete="PF('dlgConcurso_w').show();"
+					action="#{editalBacking.setConcursoManut(rowConcurso)}">
+					<!-- <h:graphicImage
+					title="#{bundle.hint_editar}"
+					value="/resources/img/navegar.png"
+					style="margin-top:3px;" /> -->
+				</xcp:commandButton>
+			</xcp:column>
+
+		</p:dataTable>
+	</p:outputPanel>
+
+	<!--<p:spacer width="5px;" />
+	 <p:fieldset
+		id="brd_provas"
+		legend="#{bundle.tit_provas_concurso}">
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_adicionar_prova"
+					disabled="#{editalBacking.concursoManut.novo}"
+					oncomplete="PF('dlgProva_w').show();"
+					update=":frmProva:formProva"
+					value="#{bundle.btn_adicionar}"
+					action="#{editalBacking.setProvasConcursoManut(null)}"
+					icon="ui-icon-plusthick" />
+			</f:facet>
+		</p:toolbar>
+	<ui:include src="ProvasconcursosForm.xhtml" /> 
+	</p:fieldset> -->
+
+	<p:spacer
+		width="5px;"
+		rendered="#{editalBacking.vagasIndividuais}" />
+	<p:fieldset
+		id="brd_vagas"
+		legend="#{bundle.tit_vagas_concurso}"
+		rendered="#{editalBacking.vagasIndividuais}">
+		<ui:include src="ConcursoCargosVagasForm.xhtml" />
+	</p:fieldset>
+
+	<p:remoteCommand
+		name="closeDlgConcurso"
+		update="table_Concurso"
+		oncomplete="PF('dlgConcurso_w').hide();" />
+
+</ui:composition>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AvalDesempSindicancia"
+		backing="#{avalDesempSindicanciaBacking}"
+		masterId="AvalDesemp"
+		renderedRemover="true"
+		renderedGravar="true">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_sindicancia}"
+				value="#{row.sindicancia}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.sindicancia}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtinicio}"
+				value="#{row.dtinicio}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dttermino}"
+				value="#{row.dttermino}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dttermino}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_penalidade}"
+				value="#{row.penalidade}"
+				type="String"
+				size="5"
+				itens="#{avalDesempSindicanciaBacking.itensPenalidade}">
+				<xcp:outputSimple
+					value="#{row.penalidade}"
+					itens="#{avalDesempSindicanciaBacking.itensPenalidade}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtSindicancia_AvalDesemp"
+					label="#{bundle.lbl_sindicancia}"
+					required="true"
+					value="#{avalDesempSindicanciaBacking.entity.sindicancia}"
+					size="8"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					readonly="#{not avalDesempSindicanciaBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_AvalDesemp"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{avalDesempSindicanciaBacking.entity.descricao}"
+					size="75" />
+
+				<xcp:dateRange
+					id="txtDtinicio_AvalDesemp"
+					required="true"
+					valueStart="#{avalDesempSindicanciaBacking.entity.dtinicio}"
+					valueEnd="#{avalDesempSindicanciaBacking.entity.dttermino}"
+					label="#{bundle.lbl_dtinicio}"
+					margin="5px;"
+					size="8" />
+
+				<xcp:combo
+					id="cboPenalidade_AvalDesemp"
+					value="#{avalDesempSindicanciaBacking.entity.penalidade}"
+					label="#{bundle.lbl_penalidade}"
+					itens="#{avalDesempSindicanciaBacking.itensPenalidade}"
+					width="92px !important;" />
+
+				<xcp:memo
+					id="txtObs_AvalDesemp"
+					label="#{bundle.lbl_obs}"
+					value="#{avalDesempSindicanciaBacking.entity.obs}"
+					size="4000"
+					cols="77" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

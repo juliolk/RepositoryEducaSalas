@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgFgcc"
+		header="#{bundle.title_fgcc}"
+		widgetVar="dlgFgcc_w"
+		dynamic="true"
+		modal="true"
+		resizable="false">
+
+		<xcp:form id="formdlgFgcc">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtdtini"
+					required="true"
+					readonly="#{transferenciasBacking.readOnlyDtaInicio}"
+					value="#{transferenciasBacking.helper.transfSel.dtinicio}"
+					label="#{bundle.lbl_dtini}">
+					<p:ajax
+						update="@none"
+						event="change"
+						process="@this" />
+
+					<p:ajax
+						update="@none"
+						event="dateSelect"
+						process="@this" />
+				</xcp:date>
+
+				<xcp:date
+					id="txtdttermino"
+					required="true"
+					readonly="#{transferenciasBacking.readOnlyDtaInicio}"
+					value="#{transferenciasBacking.helper.transfSel.dttermino}"
+					label="#{bundle.lbl_dttermino}">
+					<p:ajax
+						update="@none"
+						event="change"
+						process="@this" />
+
+					<p:ajax
+						update="@none"
+						event="dateSelect"
+						process="@this" />
+				</xcp:date>
+
+				<xcp:lov
+					id="lovPadrao"
+					value="#{transferenciasBacking.helper.transfSel.padraoFgCcFk}"
+					label="#{bundle.lbl_padraofgcc}"
+					required="true"
+					query="padroes_fgcc"
+					size="4"
+					readonly="#{transferenciasBacking.readOnlyDtaInicio}" />
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{transferenciasBacking.helper.transfSel.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento_transf"
+					readonly="#{transferenciasBacking.readOnlyTipdoc}"
+					params="#{transferenciasBacking.paramsTipoDoc}"
+					selectionListener="#{transferenciasBacking.selectTipodocumento}"
+					update="lovDoc,lovProcesso,lovProcesso_l,txtObs"
+					size="5" />
+
+				<xcp:lov
+					id="lovDoc"
+					value="#{transferenciasBacking.helper.transfSel.registroFk}"
+					params="#{transferenciasBacking.paramsDoc}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					readonly="#{transferenciasBacking.readOnlyDoc}"
+					size="5"
+					update="lovProcesso,lovProcesso_l,txtObs"
+					selectionListener="#{transferenciasBacking.selectDocumento}" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{transferenciasBacking.helper.transfSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="#{transferenciasBacking.readOnlyProc}"
+					required="#{transferenciasBacking.requiredProc}"
+					size="25" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					size="2000"
+					styleClass="scrollarea"
+					value="#{transferenciasBacking.helper.transfSel.obs}">
+					<p:ajax
+						event="change"
+						process="@this" />
+				</xcp:memo>
+
+			</xcp:panelForm>
+			<h:panelGroup id="panelBotoesAverFgcc">
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							process="@form"
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							disabled="#{transferenciasBacking.disabledGravar}"
+							action="#{transferenciasBacking.actionGravarAverbacaoFgcc}" />
+					</f:facet>
+				</p:toolbar>
+			</h:panelGroup>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

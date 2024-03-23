@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Comissaofunc"
+		backing="#{comissaofuncBacking}"
+		masterId="Comissao">
+
+		<ui:define name="barraListaDet">
+			<xcp:commandButton
+				id="btnSortear"
+				icon="ui-icon-refresh"
+				value="#{bundle.btn_sortear}"
+				action="#{comissaoBacking.actionSortear}"
+				process="@this"
+				update=":form:table_Comissaofunc" />
+		</ui:define>
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.matricula}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.matriculaFk.nome}"
+				type="String"
+				size="40">
+				<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_sitcom}"
+				value="#{row.tipofunc}"
+				type="String"
+				size="10"
+				itens="#{comissaofuncBacking.itensTipFuncao}">
+				<xcp:outputSimple
+					itens="#{comissaofuncBacking.itensTipFuncao}"
+					value="#{row.tipofunc}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtini}"
+				value="#{row.dtini}"
+				type="String"
+				size="20">
+				<xcp:outputSimpleDate value="#{row.dtini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtfim}"
+				value="#{row.dtInativacao}"
+				type="Date"
+				size="20">
+				<xcp:outputSimpleDate value="#{row.dtInativacao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_sitcom}"
+				value="#{row.situacao}"
+				type="String"
+				size="10"
+				itens="#{comissaofuncBacking.itensSituacao}">
+				<xcp:outputSimple
+					itens="#{comissaofuncBacking.itensSituacao}"
+					value="#{row.situacao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_email}"
+				value="#{row.email}"
+				type="String"
+				size="60">
+				<xcp:outputSimple value="#{row.email}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovMatricula_Comissaofunc"
+					value="#{comissaofuncBacking.entity.matriculaFk}"
+					params="#{comissaofuncBacking.paramsFuncionario}"
+					label="#{bundle.lbl_matricula}"
+					required="true"
+					query="#{comissaofuncBacking.lov}"
+					size="8"
+					sizeDesc="74"
+					readonly="#{not comissaofuncBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboTipofunc_Comissaofunc"
+					value="#{comissaofuncBacking.entity.tipofunc}"
+					label="#{bundle.lbl_tipofunc}"
+					itens="#{comissaofuncBacking.itensTipFuncao}"
+					width="92px !important;" />
+
+				<xcp:combo
+					id="cboTipograt_Comissaofunc"
+					value="#{comissaofuncBacking.entity.tipograt}"
+					label="#{bundle.lbl_tipograt}"
+					itens="#{comissaofuncBacking.itensTipGrat}"
+					width="92px !important;">
+					<p:ajax update="txtVlrgrat, txtVlrgrat_l" />
+				</xcp:combo>
+
+				<xcp:number
+					id="txtVlrgrat"
+					label="#{comissaofuncBacking.labelVlr}"
+					size="9"
+					value="#{comissaofuncBacking.entity.vlrgrat}"
+					rendered="#{comissaofuncBacking.entity.tipograt > 0}"
+					precision="6"
+					scale="2"
+					required="true"/>
+
+				<xcp:combo
+					id="cboSituacao_Comissaofunc"
+					value="#{comissaofuncBacking.entity.situacao}"
+					label="#{bundle.lbl_situacao}"
+					required="true"
+					rendered="#{not comissaofuncBacking.entity.novo}"
+					itens="#{comissaofuncBacking.itensSituacao}"
+					width="92px !important;">
+
+					<p:ajax
+						event="change"
+						update="txtData_Comissaofunc_c_end"
+						listener="#{comissaofuncBacking.changeSituacao}" />
+
+				</xcp:combo>
+
+				<xcp:email
+					id="txtEmail_Comissaofunc"
+					label="#{bundle.lbl_email}"
+					value="#{comissaofuncBacking.entity.email}"
+					size="93" />
+
+				<xcp:dateRange
+					id="txtData_Comissaofunc"
+					valueStart="#{comissaofuncBacking.entity.dtini}"
+					valueEnd="#{comissaofuncBacking.entity.dtInativacao}"
+					requiredStart="true"
+					label="#{bundle.lbl_validade}" />
+
+				<xcp:combo
+					id="cboTipInativacao"
+					value="#{comissaofuncBacking.entity.tipInativacao}"
+					label="#{bundle.lbl_tipInativacao}"
+					readonly="true"
+					rendered="#{comissaofuncBacking.entity.tipInativacao != null}"
+					itens="#{comissaofuncBacking.itensTipInativacao}" />
+
+				<xcp:memo
+					id="txtObsFunc"
+					label="#{bundle.lbl_txtObs}"
+					value="#{comissaofuncBacking.entity.obs}"
+					size="4000"
+					cols="99" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Plantoes"
+			backing="#{plantoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setorFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.setorFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.matricula}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.funcionariosFk.nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.funcionariosFk.nome}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{plantoesBacking.entity.orgaosupFk}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos"
+						update="lovSetor"
+						size="10"
+						selectionListener="#{plantoesBacking.selectOrgao}" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{plantoesBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setoressup"
+						size="10"
+						params="#{plantoesBacking.paramsSetor}" />
+						
+					<xcp:lov
+						id="lovFuncionario"
+						value="#{plantoesBacking.entity.funcionariosFk}"
+						params="#{plantoesBacking.paramsEmpresa}"
+						label="#{bundle.lbl_funcionario}"
+						query="funcionariosLov"
+						size="8" />	
+
+					<xcp:dateTimeRange
+						id="txtData"
+						required="true"
+						valueStart="#{plantoesBacking.entity.dtinicio}"
+						valueEnd="#{plantoesBacking.entity.dtfim}"
+						label="#{bundle.lbl_dtinicio}" />
+					
+					<xcp:lov
+						id="lovTipodocumento"
+						value="#{plantoesBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipodocumento}"
+						selectionListener="#{plantoesBacking.selectTipodocumento}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,toolform"
+						query="tipodoc_escala_plant"
+						params="#{plantoesBacking.paramsTipoDoc}"
+						size="10"
+						readonly="#{plantoesBacking.readOnlyTipdoc}" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{plantoesBacking.entity.registroFk}"
+						params="#{plantoesBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						size="10"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento,toolform"
+						readonly="#{plantoesBacking.readOnlyDoc}"
+						selectionListener="#{plantoesBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{plantoesBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{plantoesBacking.readOnlyProc}"
+						required="#{plantoesBacking.requiredProc}"
+						size="25" />
+					
+					<p:spacer
+						height="1"
+						width="1" />
+					
+					<p:splitButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{plantoesBacking.entity.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(plantoesBacking.entity.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{plantoesBacking.model.actionOpenVisDialog(plantoesBacking.entity.registro)}"
+							process="@this" />
+					</p:splitButton>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{plantoesBacking.entity.obs}"
+						size="1000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:number
+			id="txtComissao"
+			label="#{bundle.lbl_comissao}"
+			required="true"
+			value="#{comissaoBacking.comDocSelecionada.comissao}"
+			size="8"
+			precision="5"
+			scale="0"
+			maxValue="99999"
+			readonly="true" />
+
+		<xcp:text
+			id="txtDescricao"
+			label="#{bundle.lbl_descricao}"
+			required="true"
+			readonly="true"
+			value="#{comissaoBacking.comDocSelecionada.descricao}"
+			style="width:610px;" />
+
+		<xcp:combo
+			id="cboTipo"
+			value="#{comissaoBacking.comDocSelecionada.tipo}"
+			label="#{bundle.lbl_tipo}"
+			required="true"
+			readonly="true"
+			itens="#{comissaoBacking.itensTipo}"
+			width="92px !important;">
+			<p:ajax
+				event="change"
+				update="lovSetor,lovOrgao,lovSetor_l,lovOrgao_l" />
+		</xcp:combo>
+
+		<xcp:lov
+			id="lovOrgao"
+			value="#{comissaoBacking.comDocSelecionada.orgaoFk}"
+			label="#{bundle.lbl_orgao}"
+			required="true"
+			readonly="true"
+			rendered="#{comissaoBacking.comDocSelecionada.tipo==2}"
+			query="orgaos"
+			size="8"
+			sizeDesc="70" />
+
+		<xcp:lov
+			id="lovSetor"
+			value="#{comissaoBacking.comDocSelecionada.setorFk}"
+			label="#{bundle.lbl_setor}"
+			query="set_validade"
+			rendered="#{comissaoBacking.comDocSelecionada.tipo==2}"
+			size="8"
+			sizeDesc="70"
+			readonly="true" />
+
+
+		<xcp:combo
+			id="cboSituacao"
+			value="#{comissaoBacking.comDocSelecionada.situacao}"
+			label="#{bundle.lbl_sitcom}"
+			required="true"
+			itens="#{comissaoBacking.itensSituacao}"
+			width="92px !important;"
+			readonly="true" />
+
+		<xcp:dateRange
+			id="txtDataPonto"
+			valueStart="#{comissaoBacking.comDocSelecionada.inicio}"
+			valueEnd="#{comissaoBacking.comDocSelecionada.termino}"
+			requiredStart="true"
+			label="#{bundle.lbl_validade}"
+			size="8"
+			margin="5px;"
+			readonly="true" />
+
+		<xcp:memo
+			id="txtObs"
+			label="#{bundle.lbl_obs}"
+			value="#{comissaoBacking.comDocSelecionada.obs}"
+			size="4000"
+			cols="99"
+			readonly="true" />
+
+		<xcp:text
+			id="txtEmail"
+			label="#{bundle.lbl_email}"
+			value="#{comissaoBacking.comDocSelecionada.email}"
+			style="width:610px;"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovTipodoc"
+			value="#{comissaoBacking.comDocSelecionada.tipodocFk}"
+			selectionListener="#{comissaoBacking.selectTipodocumento}"
+			size="5"
+			params="#{comissaoBacking.paramsTipoDoc}"
+			update="lovDocumento_l,lovDocumento,btnDownloadDocumento"
+			label="#{bundle.lbl_tipodoc}"
+			query="tipodocumento_util"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovDocumento"
+			value="#{comissaoBacking.comDocSelecionada.registroFk}"
+			required="#{comissaoBacking.comDocSelecionada.tipodocFk!=null}"
+			params="#{comissaoBacking.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			update="btnDownloadDocumento"
+			query="documentos"
+			size="5"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovProcesso"
+			value="#{comissaoBacking.comDocSelecionada.processoFk}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			size="25"
+			readonly="true" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+		<p:panelGrid>
+			<p:row>
+				<p:column>
+
+					<p:splitButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{comissaoBacking.comDocSelecionada.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(comissaoBacking.comDocSelecionada.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{comissaoBacking.model.actionOpenVisDialog(comissaoBacking.comDocSelecionada.registro)}"
+							process="@this" />
+					</p:splitButton>
+
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:dateTime
+							id="txtRetificacao"
+							value="#{comissaoBacking.comDocSelecionada.retificacao}"
+							label="#{bundle.lbl_retificacao}"
+							rendered="#{comissaoBacking.comDocSelecionada.retificacao!=null}"
+							readonly="true" />
+					</xcp:panelForm>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+	</xcp:panelForm>
+
+</ui:composition>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.combopadrao select {
+	width: 134px !important;
+}
+
+.combopadrao label {
+	width: 130px !important;
+}
+</style>
+
+		<xcp:panelManut
+			id="Tipodocumento"
+			backing="#{tipodocumentoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.tipo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_des_grupo}"
+					type="String"
+					size="30"
+					value="#{row.grupoFk.descricao}">
+					<xcp:outputSimple value="#{row.grupoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_forma}"
+					itens="#{tipodocumentoBacking.itensForma}"
+					value="#{row.forma}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.forma}"
+						itens="#{tipodocumentoBacking.itensForma}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.utilizacao}"
+					type="String"
+					itens="#{tipodocumentoBacking.itensUtilizacaoFull}"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.utilizacao}"
+						itens="#{tipodocumentoBacking.itensUtilizacaoFull}" />
+				</xcp:column>
+
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_codObjeto}"
+					value="#{row.codObjeto}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.codObjeto}" />
+				</xcp:column>
+ -->
+				<xcp:column
+					headerText="#{bundle.col_regra}"
+					value="#{row.regra}"
+					type="String"
+					itens="#{tipodocumentoBacking.itensRegraFull}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.regra}"
+						itens="#{tipodocumentoBacking.itensRegraFull}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<p:outputPanel id="panelaj">
+					<xcp:panelForm>
+
+						<xcp:number
+							id="txtTipo"
+							label="#{bundle.lbl_tipo}"
+							required="true"
+							value="#{tipodocumentoBacking.entity.tipo}"
+							maxlength="5"
+							size="10"
+							precision="5"
+							scale="0"
+							maxValue="99999"
+							readonly="#{not tipodocumentoBacking.entity.novo}" />
+
+						<xcp:text
+							id="txtDescricao"
+							label="#{bundle.lbl_descricao}"
+							required="true"
+							value="#{tipodocumentoBacking.entity.descricao}"
+							size="80"
+							maxlength="100" />
+
+						<xcp:combo
+							id="cboIndPortal"
+							value="#{tipodocumentoBacking.entity.indPortal}"
+							label="#{bundle.lbl_indPortal}"
+							required="true"
+							itens="#{tipodocumentoBacking.itensIndSimNao}" />
+
+						<xcp:combo
+							id="cboForma"
+							value="#{tipodocumentoBacking.entity.forma}"
+							label="#{bundle.lbl_forma}"
+							readonly="#{!tipodocumentoBacking.entity.novo}"
+							styleClass="combopadrao"
+							required="true"
+							itens="#{tipodocumentoBacking.itensForma}">
+							<p:ajax
+								event="change"
+								update="cboUtilizacao, cboUtilizacao_l,cboRegra,cboRegra_l,lovGrupo,lovGrupo_l,lovCodObjeto,lovCodObjeto_l,txtTexto,txtTexto_l" />
+						</xcp:combo>
+
+						<xcp:memo
+							id="txtTexto"
+							label="#{bundle.lbl_texto}"
+							value="#{tipodocumentoBacking.entity.texto}"
+							rendered="#{tipodocumentoBacking.entity.forma == 1}"
+							size="4000" />
+
+						<xcp:combo
+							id="cboUtilizacao"
+							value="#{tipodocumentoBacking.entity.utilizacao}"
+							rendered="#{tipodocumentoBacking.entity.forma != 3}"
+							readonly="#{!tipodocumentoBacking.entity.novo}"
+							required="true"
+							styleClass="combopadrao"
+							label="#{bundle.lbl_utilizacao}"
+							itens="#{tipodocumentoBacking.itensUtilizacao}">
+							<p:ajax
+								event="change"
+								update="cboIndObrig,cboIndObrig_l,cboAutoaval, cboAutoaval_l,txtPercefet, txtPercefet_l, cboRegra, cboRegra_l, txtDias, txtDias_l,cboRegra,cboRegra_l,lovGrupo,lovGrupo_l,lovCodObjeto,lovCodObjeto_l,cboTipoetapa,cboTipoetapa_l,cboGrupoProvimento,cboGrupoProvimento_l,lovTipodocpub,lovTipodocpub_l,cboindjud,cboindjud_l,cboTipoprocesso,cboTipoprocesso_l" />
+						</xcp:combo>
+
+						<xcp:combo
+							id="cboIndObrig"
+							value="#{tipodocumentoBacking.entity.indObrig}"
+							label="#{bundle.lbl_indObrig}"
+							required="true"
+							readonly="#{!tipodocumentoBacking.entity.novo}"
+							rendered="#{tipodocumentoBacking.entity.utilizacao != 21 and tipodocumentoBacking.entity.utilizacao != 22 and tipodocumentoBacking.entity.forma != 3}"
+							itens="#{tipodocumentoBacking.itensIndSimNao}" />
+
+						<xcp:combo
+							id="cboTipoetapa"
+							value="#{tipodocumentoBacking.entity.tipoetapa}"
+							label="#{bundle.lbl_tipoetapa}"
+							styleClass="combopadrao"
+							required="#{tipodocumentoBacking.renderedProbatorio or tipodocumentoBacking.avalExperiencia}"
+							itens="#{tipodocumentoBacking.itensEtapa}"
+							rendered="#{tipodocumentoBacking.renderedProbatorio or tipodocumentoBacking.avalExperiencia}">
+						</xcp:combo>
+
+						<xcp:number
+							id="txtPercefet"
+							label="#{bundle.lbl_percefet}"
+							value="#{tipodocumentoBacking.entity.percefet}"
+							size="3"
+							precision="3"
+							scale="0"
+							minValue="0"
+							maxValue="100"
+							required="true"
+							rendered="#{tipodocumentoBacking.avalDesempenho}" />
+
+						<xcp:combo
+							id="cboAutoaval"
+							value="#{tipodocumentoBacking.entity.autoaval}"
+							label="#{bundle.lbl_autoaval}"
+							itens="#{tipodocumentoBacking.itensIndSimNaoNull}"
+							required="true"
+							rendered="#{tipodocumentoBacking.avalDesempenho or tipodocumentoBacking.avalExperiencia or tipodocumentoBacking.renderedProbatorio}" />
+
+						<xcp:number
+							id="txtDias"
+							label="#{bundle.lbl_dias_prorrog}"
+							value="#{tipodocumentoBacking.entity.dias}"
+							size="5"
+							precision="5"
+							scale="0"
+							maxValue="99999"
+							required="true"
+							rendered="#{tipodocumentoBacking.renderedProbatorio or tipodocumentoBacking.avalExperiencia}" />
+
+						<xcp:combo
+							id="cboindjud"
+							value="#{tipodocumentoBacking.entity.indprocjudicial}"
+							label="#{bundle.lbl_indprocjudicial}"
+							required="true"
+							itens="#{tipodocumentoBacking.itensIndSimNao}"
+							rendered="#{tipodocumentoBacking.renderedProcJud}" />
+
+						<xcp:combo
+							id="cboRegra"
+							styleClass="combopadrao"
+							value="#{tipodocumentoBacking.entity.regra}"
+							rendered="#{tipodocumentoBacking.renderedRegras}"
+							required="true"
+							label="#{bundle.lbl_regra}"
+							itens="#{tipodocumentoBacking.itensRegra}">
+							<p:ajax
+								event="change"
+								update="lovGrupo,lovCodObjeto,lovGrupo_l,lovCodObjeto_l,pnlGeral,cboGrupoProvimento,cboGrupoProvimento_l" />
+						</xcp:combo>
+
+						<xcp:combo
+							id="cboGrupoProvimento"
+							value="#{tipodocumentoBacking.entity.grupoprovimento}"
+							label="#{bundle.lbl_grupoprovimento}"
+							styleClass="combopadrao"
+							itens="#{tipodocumentoBacking.itensGrupoProvimento}"
+							rendered="#{tipodocumentoBacking.renderedGrupoProvimento}">
+						</xcp:combo>
+
+						<xcp:combo
+							id="cboTipoprocesso"
+							value="#{tipodocumentoBacking.entity.tipoprocesso}"
+							label="#{bundle.lbl_tipoprocesso}"
+							required="true"
+							itens="#{tipodocumentoBacking.itensTipoprocesso}"
+							rendered="#{tipodocumentoBacking.renderedTipoProcesso}" />
+
+						<xcp:lov
+							id="lovGrupo"
+							value="#{tipodocumentoBacking.entity.grupoFk}"
+							label="#{bundle.lbl_grupo}"
+							query="grupocontrole"
+							rendered="#{tipodocumentoBacking.renderedRegras}"
+							required="true"
+							size="10" />
+
+						<xcp:lov
+							id="lovCodObjeto"
+							value="#{tipodocumentoBacking.entity.codObjetoFk}"
+							label="#{bundle.lbl_codObjeto}"
+							rendered="#{tipodocumentoBacking.renderedRegrasObjetos}"
+							required="true"
+							query="xcp_objeto"
+							size="10" />
+
+						<xcp:lov
+							id="lovTipodocpub"
+							value="#{tipodocumentoBacking.entity.tipodocpubFk}"
+							label="#{bundle.lbl_tipodocpub}"
+							query="tipodocpub"
+							size="5"
+							rendered="#{tipodocumentoBacking.renderedTipoDocPub}" />
+
+						<h:outputLabel value="#{bundle.lbl_cor}" />
+
+						<h:panelGrid columns="2">
+							<p:colorPicker
+								id="pckColor"
+								value="#{tipodocumentoBacking.entity.cor}" />
+
+							<xcp:commandLink
+								id="btn_remove_operador"
+								immediate="true"
+								update="pckColor">
+								<h:graphicImage
+									title="#{bundle.hint_remover}"
+									value="/resources/img/remover.png"
+									style="margin-top:3px;" />
+								<f:setPropertyActionListener
+									value="#{null}"
+									target="#{tipodocumentoBacking.entity.cor}" />
+							</xcp:commandLink>
+						</h:panelGrid>
+
+						<p:outputLabel
+							for="editor"
+							value="#{bundle.lbl_instrucoes}" />
+						<p:editor
+							id="editor"
+							widgetVar="editorWidget"
+							value="#{tipodocumentoBacking.entity.instrucoes}"
+							controls="" />
+
+					</xcp:panelForm>
+				</p:outputPanel>
+
+				<script>
+		  function ajusta(){
+			  var el = document.getElementById('form:panelaj');
+			  if (el != null){
+				  var divs = el.getElementsByTagName('div');
+		
+				  for(i = 0;i &lt;  divs.length; i++) {
+					 var currEl = divs[i];
+					 if(currEl.childNodes.length == 0 ){
+						 currEl.parentNode.style.paddingTop = '0px';
+						 currEl.parentNode.style.paddingBottom = '0px';
+				     }
+				  }
+			  }
+		  }
+
+		  ajusta();
+		</script>
+
+
+				<p:ajaxStatus oncomplete="ajusta()" />
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<p:outputPanel id="pnlGeral">
+
+					<p:outputPanel
+						rendered="#{tipodocumentoBacking.renderedDocAvulsos}">
+						<ui:include src="TipodocumentoForm/TipodocObrigForm.xhtml" />
+					</p:outputPanel>
+
+					<p:outputPanel
+						rendered="#{tipodocumentoBacking.renderedProbatorio or tipodocumentoBacking.avalExperiencia}">
+						<ui:include src="TipodocumentoForm/TipodocEtapaForm.xhtml" />
+					</p:outputPanel>
+
+					<p:outputPanel
+						rendered="#{tipodocumentoBacking.renderedProbatorio or tipodocumentoBacking.avalExperiencia or tipodocumentoBacking.avalDesempenho}">
+						<ui:include src="TipodocumentoForm/TipodocMvtoForm.xhtml" />
+					</p:outputPanel>
+
+					<p:outputPanel
+						rendered="#{tipodocumentoBacking.renderedProbatorio or tipodocumentoBacking.avalExperiencia or tipodocumentoBacking.avalDesempenho}">
+						<ui:include src="TipodocumentoForm/TipodocFuncaoForm.xhtml" />
+					</p:outputPanel>
+
+					<p:outputPanel
+						rendered="#{tipodocumentoBacking.renderedAssinaturas and tipodocumentoBacking.entity.regra != 5}">
+						<ui:include src="TipodocumentoForm/TipodocAssinaturaForm.xhtml" />
+					</p:outputPanel>
+
+					<p:outputPanel
+						rendered="#{tipodocumentoBacking.avalDesempenho or tipodocumentoBacking.renderedProbatorio}">
+						<ui:include src="TipodocumentoForm/TipodocPontoForm.xhtml" />
+					</p:outputPanel>
+
+				</p:outputPanel>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

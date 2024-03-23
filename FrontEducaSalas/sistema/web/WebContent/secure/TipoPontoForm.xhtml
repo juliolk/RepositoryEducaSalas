@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Tipoponto"
+			backing="#{tipoPontoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipoponto}"
+					value="#{row.tipoponto}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.tipoponto}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<style>
+					.aligntop {
+						vertical-align: top;
+					}
+				</style>
+				
+				<h:panelGrid
+					columns="3"
+					columnClasses=",,aligntop">
+					<xcp:panelForm>
+
+					<xcp:number
+						id="txtTipoponto"
+						label="#{bundle.lbl_tipoponto}"
+						required="true"
+						value="#{tipoPontoBacking.entity.tipoponto}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not tipoPontoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{tipoPontoBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:combo
+						id="cboTipoqtd"
+						value="#{tipoPontoBacking.entity.tipoqtd}"
+						label="#{bundle.lbl_tipoqtd}"
+						required="true"
+						itens="#{tipoPontoBacking.itensTipoqtd}" />
+
+					<xcp:check
+						id="chkDescben"
+						value="#{tipoPontoBacking.entity.indDescBeneficio}"
+						label="#{bundle.lbl_descbeneficio}" />
+
+					<xcp:check
+						id="chkIndObs"
+						value="#{tipoPontoBacking.entity.indObsCheck}"
+						label="#{bundle.lbl_indObs}" />
+
+					<xcp:combo
+						id="cboEstavel"
+						value="#{tipoPontoBacking.entity.estavel}"
+						label="#{bundle.lbl_estavel}"
+						required="true"
+						itens="#{tipoPontoBacking.itensEstavel}" />
+
+					<xcp:combo
+						id="cboTipolanc"
+						value="#{tipoPontoBacking.entity.tipolanc}"
+						label="#{bundle.lbl_tipolanc}"
+						required="true"
+						itens="#{tipoPontoBacking.itensIndSimNao}" />
+					
+					<xcp:text
+						id="txtFuncRest"
+						label="#{bundle.lbl_funcao}"
+						value="#{tipoPontoBacking.entity.funcao}"
+						size="60"
+						maxlength="100" />
+
+					<xcp:text
+						id="txtSigla"
+						label="#{bundle.lbl_sigla}"
+						value="#{tipoPontoBacking.entity.sigla}"
+						size="60"
+						maxlength="40" />
+						
+					</xcp:panelForm>
+
+					<p:spacer width="10" />
+
+					<xcp:panelForm>
+					
+					<xcp:combo
+						id="cboIndmarc"
+						value="#{tipoPontoBacking.entity.indmarc}"
+						label="#{bundle.lbl_indmarc}"
+						required="true"
+						itens="#{tipoPontoBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndPortal"
+						value="#{tipoPontoBacking.entity.indPortal}"
+						label="#{bundle.lbl_indPortal}"
+						itens="#{tipoPontoBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndGeraPendPort"
+						value="#{tipoPontoBacking.entity.indGeraPendPort}"
+						label="#{bundle.lbl_indGeraPendPort}"
+						required="true"
+						itens="#{tipoPontoBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndSobrepHortrab"
+						value="#{tipoPontoBacking.entity.indSobrepHortrab}"
+						label="#{bundle.lbl_indSobrepHortrab}"
+						required="true"
+						itens="#{tipoPontoBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndFamiliar"
+						value="#{tipoPontoBacking.entity.indFamiliar}"
+						label="#{bundle.lbl_indFamiliar}"
+						required="true"
+						itens="#{tipoPontoBacking.itensIndSimNao}" />
+
+					
+					</xcp:panelForm>
+
+				</h:panelGrid>
+				
+					<p:fieldset
+						legend="#{bundle.title_avisos}"
+						style="margin-left: 0px !important">
+						<xcp:panelForm>
+	
+							<xcp:lov
+								id="lovTexto"
+								value="#{tipoPontoBacking.entity.seqTextoFk}"
+								label="#{bundle.lbl_textoAviso}"
+								query="xcp_texto"
+								size="10" />
+	
+							<xcp:memo
+								id="txtEmail"
+								label="#{bundle.lbl_emails}"
+								value="#{tipoPontoBacking.entity.desEmail}" />	
+	
+							<xcp:combo
+								id="cboIndEnviachefia"
+								value="#{tipoPontoBacking.entity.indEnviachefia}"
+								label="#{bundle.lbl_indEnviachefia}"
+								itens="#{tipoPontoBacking.itensIndSimNao}" />
+	
+							<xcp:combo
+								id="cboIndEnviaServ"
+								value="#{tipoPontoBacking.entity.indEnviaserv}"
+								label="#{bundle.lbl_indEnviaserv}"
+								itens="#{tipoPontoBacking.itensIndSimNao}" />
+	
+							<xcp:combo
+								id="cboTipMsgchefia"
+								value="#{tipoPontoBacking.entity.tipMsgchefia}"
+								label="#{bundle.lbl_tipMsgchefia}"
+								itens="#{tipoPontoBacking.itensTipMsgchefia}"
+								required="true" />
+	
+						</xcp:panelForm>
+					</p:fieldset>
+
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="TipopontoForm/TipopontoRestricoesForm.xhtml" />
+				<ui:include src="TipopontoForm/TipopontoRestricoesCodForm.xhtml" />
+				<ui:include src="TipopontoForm/TipopontoRestricoesQtdForm.xhtml" />
+
+				<p:outputPanel
+					rendered="#{tipoPontoBacking.entity.indGeraPendPort == 1}">
+					<ui:include src="TipopontoForm/TipopontojustForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.column_top {
+	vertical-align: top;
+}
+
+.column_top_min {
+	vertical-align: top;
+	width: 48%;
+}
+</style>
+
+		<xcp:panelContent>
+
+			<p:fieldset
+				id="fldOpcoes"
+				legend="#{bundle.title_opcoes}">
+
+				<xcp:panelForm>
+
+					<p:outputLabel value="#{bundle.lbl_tipTela}:" />
+					<p:selectOneButton value="#{turmaConfigBacking.helper.tipTela}">
+						<f:selectItems value="#{turmaConfigBacking.itensTela}" />
+						<p:ajax
+							update="fldOpcoes pnlDados"
+							listener="#{turmaConfigBacking.actionSelecionaTipTela}" />
+					</p:selectOneButton>
+
+					<p:outputLabel
+						id="lblOpcoes"
+						value="#{bundle.lbl_tipOpcoes}:"
+						rendered="#{!turmaConfigBacking.telaOrdenacao}" />
+
+					<p:selectOneButton
+						id="optOcoes"
+						value="#{turmaConfigBacking.helper.tipOpcao}"
+						rendered="#{!turmaConfigBacking.telaOrdenacao}">
+						<f:selectItems value="#{turmaConfigBacking.itensOpcoes}" />
+						<p:ajax
+							update="pnlDados"
+							listener="#{turmaConfigBacking.actionSelecionaTipOpcao}" />
+					</p:selectOneButton>
+
+					<xcp:lov
+						id="lovTreinamentoGeral"
+						value="#{turmaConfigBacking.helper.treinamentoGeral}"
+						label="#{bundle.lbl_treinamento}"
+						required="true"
+						rendered="#{turmaConfigBacking.telaComFila}"
+						query="treinamento"
+						size="10" />
+
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:spacer height="5px" />
+
+			<h:panelGrid
+				id="pnlDados"
+				columns="#{turmaConfigBacking.columnsGrid}"
+				columnClasses="#{turmaConfigBacking.styleGrid}">
+				<p:fieldset
+					legend="#{bundle.title_selecao_inscritos}"
+					id="fldInscritos"
+					rendered="#{!turmaConfigBacking.telaOrdenacao}">
+					<h:panelGrid columns="1">
+						<xcp:panelForm>
+
+							<xcp:lov
+								id="lovTreinamentoOrig"
+								value="#{turmaConfigBacking.helper.treinamentoOrig}"
+								label="#{bundle.lbl_treinamento}"
+								rendered="#{!turmaConfigBacking.telaComFila}"
+								query="treinamento"
+								size="10" />
+
+							<xcp:lov
+								id="lovTurmaOrig"
+								value="#{turmaConfigBacking.helper.turmaOrig}"
+								size="10"
+								label="#{bundle.lbl_turma}"
+								params="#{turmaConfigBacking.parEspTurmaOrig}"
+								query="turmas_trei" />
+
+						</xcp:panelForm>
+
+						<p:separator />
+
+						<xcp:panelForm>
+
+							<xcp:lov
+								id="lovOrgao"
+								value="#{turmaConfigBacking.helper.orgao}"
+								selectionListener="#{turmaConfigBacking.selectOrgao}"
+								label="#{bundle.lbl_orgao}"
+								query="orgaos"
+								update="lovDivisao,lovSetor"
+								size="10" />
+
+							<xcp:lov
+								id="lovDivisao"
+								value="#{turmaConfigBacking.helper.divisao}"
+								label="#{bundle.lbl_divisao}"
+								query="divisoes_orgao"
+								selectionListener="#{turmaConfigBacking.selectDivisao}"
+								params="#{turmaConfigBacking.paramsDivisao}"
+								update="lovSetor"
+								size="10" />
+
+							<xcp:lov
+								id="lovSetor"
+								value="#{turmaConfigBacking.helper.setor}"
+								label="#{bundle.lbl_setor}"
+								params="#{turmaConfigBacking.paramsSetor}"
+								query="setores_divisao"
+								size="10" />
+
+							<xcp:lov
+								id="lovVinculo"
+								value="#{turmaConfigBacking.helper.vinculo}"
+								label="#{bundle.lbl_vinculo}"
+								query="vinculos"
+								size="10" />
+
+							<xcp:lov
+								id="lovCargo"
+								value="#{turmaConfigBacking.helper.cargo}"
+								label="#{bundle.lbl_cargo}"
+								query="cargos"
+								size="10" />
+
+							<xcp:lov
+								id="lovTreinamentoFaltante"
+								value="#{turmaConfigBacking.helper.treinamentoFaltante}"
+								label="#{bundle.lbl_treinamentofaltante}"
+								query="treinamento"
+								size="10" />
+
+							<xcp:lov
+								id="lovEdital"
+								value="#{turmaConfigBacking.helper.editalNomFk}"
+								label="#{bundle.lbl_edital}"
+								query="edital_nom"
+								size="10" />
+
+							<xcp:dateRange
+								id="dtaPesq"
+								valueStart="#{turmaConfigBacking.helper.dtaAdmissaoIni}"
+								valueEnd="#{turmaConfigBacking.helper.dtaAdmissaoFim}"
+								label="#{bundle.lbl_dtaAdmissao}" />
+
+							<xcp:combo
+								id="cboIndFG"
+								value="#{turmaConfigBacking.helper.indFG}"
+								label="#{bundle.lbl_indFG}"
+								itens="#{turmaConfigBacking.itensIndSimNaoNull}" />
+
+							<xcp:combo
+								id="cboIndEPI"
+								value="#{turmaConfigBacking.helper.indEPI}"
+								label="#{bundle.lbl_indEPI}"
+								itens="#{turmaConfigBacking.itensIndSimNaoNull}" />
+
+						</xcp:panelForm>
+
+						<p:spacer height="2" />
+
+						<p:toolbar>
+							<f:facet name="left">
+
+								<xcp:commandButton
+									id="btn_buscar"
+									value="#{bundle.btn_buscar}"
+									icon="ui-icon-search"
+									action="#{turmaConfigBacking.actionBuscar}"
+									update="tblOrig"
+									process="fldInscritos lovTreinamentoGeral" />
+
+								<xcp:commandButton
+									id="btn_limpar"
+									immediate="true"
+									value="#{bundle.btn_limpartabelas}"
+									icon="ui-icon-trash"
+									action="#{turmaConfigBacking.actionLimparSelecao}"
+									update="@form" />
+
+							</f:facet>
+						</p:toolbar>
+
+						<p:spacer height="2" />
+
+						<p:dataTable
+							id="tblOrig"
+							var="row"
+							rowKey="#{row}"
+							rows="10"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							paginator="true"
+							sortMode="multiple"
+							paginatorPosition="bottom"
+							selection="#{turmaConfigBacking.helper.listOrigSel}"
+							value="#{turmaConfigBacking.helper.listaOrig}">
+
+							<p:column
+								selectionMode="multiple"
+								width="5%"
+								style="text-align:center" />
+
+							<p:column
+								headerText="#{bundle.col_empresa}"
+								width="7%">
+								<xcp:outputSimpleNumber
+									value="#{row.func.codEmpresa}"
+									precision="8"
+									scale="0" />
+							</p:column>
+
+							<xcp:column
+								headerText="#{bundle.col_matricula}"
+								width="10%">
+								<xcp:outputSimpleNumber
+									value="#{row.func.numMatricula}"
+									precision="8"
+									scale="0" />
+							</xcp:column>
+
+							<p:column
+								headerText="#{bundle.col_nome}"
+								width="30%">
+								<xcp:outputSimple value="#{row.func.desNome}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_turma}"
+								width="10%"
+								rendered="#{turmaConfigBacking.telaComFila}">
+								<xcp:outputSimpleNumber
+									value="#{row.turma.turma}"
+									scale="0"
+									precision="8" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_desturma}"
+								width="30%"
+								rendered="#{turmaConfigBacking.telaComFila}">
+								<xcp:outputSimple value="#{row.turma.descricao}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_origem}"
+								width="15%">
+								<xcp:outputSimple
+									value="#{row.tipInscricao}"
+									itens="#{turmaConfigBacking.itensTipInscricao}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_acomp}"
+								width="10%"
+								rendered="#{turmaConfigBacking.telaComFila}">
+								<xcp:outputSimple
+									value="#{row.indAcompanhante}"
+									itens="#{turmaConfigBacking.itensIndSimNao}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:outputPanel
+					layout="vertical"
+					rendered="#{turmaConfigBacking.helper.tipTela != 3}">
+					<xcp:commandLink
+						id="btnRight"
+						action="#{turmaConfigBacking.actionSelecionar}"
+						process="@this tblOrig"
+						update="tblOrig tblDest toolbarconf txtQtdVagas">
+						<h:graphicImage
+							value="/resources/img/right_arrow.png"
+							style="margin-left:3px;margin-right:3px;margin-bottom:5px;" />
+					</xcp:commandLink>
+
+					<xcp:commandLink
+						id="btnLeft"
+						action="#{turmaConfigBacking.actionDeselecionar}"
+						process="@this tblDest"
+						update="tblOrig tblDest toolbarconf">
+						<h:graphicImage
+							value="/resources/img/left_arrow.png"
+							style="margin-left:3px;margin-right:3px;margin-top:5px;" />
+					</xcp:commandLink>
+
+				</p:outputPanel>
+
+				<p:fieldset
+					id="fldDest"
+					legend="#{turmaConfigBacking.titleDest}">
+
+					<h:panelGrid columns="1">
+						<xcp:panelForm>
+
+							<xcp:lov
+								id="lovTreinamentoDest"
+								value="#{turmaConfigBacking.helper.treinamentoDest}"
+								label="#{bundle.lbl_treinamento}"
+								query="treinamento"
+								rendered="#{!turmaConfigBacking.telaComFila}"
+								selectionListener="#{turmaConfigBacking.selectTreinamentoDest}"
+								required="true"
+								update="lovTurmaDest txtDescricao txtQtdVagas"
+								size="10" />
+
+							<xcp:lov
+								id="lovTurmaDest"
+								value="#{turmaConfigBacking.helper.turmaDest}"
+								size="10"
+								label="#{bundle.lbl_turma}"
+								rendered="#{turmaConfigBacking.telaOrdenacao or (!turmaConfigBacking.telaOrdenacao and turmaConfigBacking.opcaoExistente)}"
+								required="true"
+								update="txtQtdVagas"
+								params="#{turmaConfigBacking.parEspTurmaDest}"
+								query="turmas_trei" />
+
+							<xcp:text
+								id="txtDescricao"
+								required="true"
+								value="#{turmaConfigBacking.helper.turmaDest.descricao}"
+								rendered="#{turmaConfigBacking.helper.tipTela != 3 and turmaConfigBacking.opcaoNovo}"
+								size="70"
+								label="#{bundle.lbl_descricao}" />
+
+							<xcp:number
+								id="txtQtdVagas"
+								size="5"
+								precision="5"
+								scale="0"
+								required="true"
+								readonly="#{turmaConfigBacking.telaOrdenacao or turmaConfigBacking.opcaoExistente}"
+								rendered="#{turmaConfigBacking.opcaoNovo or !turmaConfigBacking.telaOrdenacao}"
+								value="#{turmaConfigBacking.helper.turmaDest.qtdvagas}"
+								label="#{bundle.lbl_qtdvagas}">
+								<p:ajax
+									event="blur"
+									process="@this"
+									update="@this" />
+							</xcp:number>
+
+						</xcp:panelForm>
+
+						<p:spacer height="2" />
+
+						<p:toolbar rendered="#{turmaConfigBacking.telaOrdenacao}">
+							<f:facet name="left">
+
+								<xcp:commandButton
+									id="btn_buscar_dest"
+									value="#{bundle.btn_buscar}"
+									icon="ui-icon-search"
+									action="#{turmaConfigBacking.actionBuscarDest}"
+									update="fldDest"
+									process="fldDest" />
+
+								<xcp:commandButton
+									id="btn_limpar_dest"
+									immediate="true"
+									value="#{bundle.btn_limpartabelas}"
+									icon="ui-icon-trash"
+									action="#{turmaConfigBacking.actionLimparSelecao}"
+									update="@form" />
+
+							</f:facet>
+						</p:toolbar>
+
+
+						<p:spacer height="2" />
+
+						<p:dataTable
+							id="tblDest"
+							var="row"
+							rowKey="#{row}"
+							paginator="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							paginatorPosition="bottom"
+							value="#{turmaConfigBacking.helper.listaDest}"
+							selection="#{turmaConfigBacking.helper.listDestSel}"
+							draggableRows="#{turmaConfigBacking.telaOrdenacao}">
+
+							<f:facet name="header">#{turmaConfigBacking.titleOrdenacao}</f:facet>
+
+							<p:ajax
+								event="rowReorder"
+								listener="#{turmaConfigBacking.onRowReorder}"
+								update="tblDest" />
+
+							<p:column
+								rendered="#{!turmaConfigBacking.telaOrdenacao}"
+								selectionMode="multiple"
+								width="5%"
+								draggableRows="#{!turmaConfigBacking.telaOrdenacao}"
+								style="text-align:center" />
+
+							<p:column
+								headerText="#{bundle.col_numLinha}"
+								width="#{turmaConfigBacking.telaOrdenacao ? '4%' : '5%'}"
+								rendered="#{turmaConfigBacking.telaOrdenacao}">
+								<xcp:outputSimpleNumber
+									value="#{row.numLinha}"
+									scale="0"
+									precision="8" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_empresa}"
+								width="#{turmaConfigBacking.telaOrdenacao ? '4%' : '7%'}">
+								<xcp:outputSimpleNumber
+									value="#{row.func.codEmpresa}"
+									precision="3"
+									scale="0" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_matricula}"
+								width="#{turmaConfigBacking.telaOrdenacao ? '5%' : '8%'}">
+								<xcp:outputSimpleNumber
+									value="#{row.func.numMatricula}"
+									precision="8"
+									scale="0" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_nome}"
+								width="#{turmaConfigBacking.telaOrdenacao ? '15%' : '12%'}">
+								<xcp:outputSimple value="#{row.func.desNome}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_setor}"
+								width="10%"
+								rendered="#{turmaConfigBacking.telaOrdenacao}">
+								<xcp:outputSimple value="#{row.func.desSetor}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_descargo}"
+								width="10%"
+								rendered="#{turmaConfigBacking.telaOrdenacao}">
+								<xcp:outputSimple value="#{row.func.desCargo}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_funcao}"
+								width="10%"
+								rendered="#{turmaConfigBacking.telaOrdenacao}">
+								<xcp:outputSimple value="#{row.func.desFuncao}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_indcursoano}"
+								width="5%"
+								rendered="#{turmaConfigBacking.telaOrdenacao}">
+								<xcp:outputSimple
+									value="#{row.indCursoAno}"
+									itens="#{turmaConfigBacking.itensIndSimNao}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_temposerv}"
+								width="10%"
+								rendered="#{turmaConfigBacking.telaOrdenacao}">
+								<xcp:outputSimple value="#{row.desTempoServico}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_turma}"
+								width="10%"
+								rendered="#{turmaConfigBacking.telaComFila}">
+								<xcp:outputSimpleNumber
+									value="#{row.turma.turma}"
+									scale="0"
+									precision="8" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_desturma}"
+								width="#{turmaConfigBacking.telaOrdenacao ? '30%' : '15%'}"
+								rendered="#{turmaConfigBacking.telaComFila}">
+								<xcp:outputSimple value="#{row.turma.descricao}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_origem}"
+								width="#{turmaConfigBacking.telaOrdenacao ? '10%' : '12%'}">
+								<xcp:outputSimple
+									value="#{row.tipInscricao}"
+									itens="#{turmaConfigBacking.itensTipInscricao}" />
+							</p:column>
+
+							<p:column
+								headerText="#{bundle.col_acomp}"
+								width="5%"
+								rendered="#{turmaConfigBacking.telaComFila or turmaConfigBacking.telaOrdenacao}">
+								<xcp:outputSimple
+									value="#{row.indAcompanhante}"
+									itens="#{turmaConfigBacking.itensIndSimNao}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:toolbar id="toolbarconf">
+							<f:facet name="left">
+								<xcp:commandButton
+									id="btn_confirmar"
+									icon="ui-icon-disk"
+									update="@form"
+									action="#{turmaConfigBacking.actionConfirmar}"
+									value="#{bundle.btn_confirmar}" />
+							</f:facet>
+						</p:toolbar>
+
+					</h:panelGrid>
+				</p:fieldset>
+			</h:panelGrid>
+		</xcp:panelContent>
+
+		<p:confirmDialog
+			widgetVar="confirm_w"
+			header="#{bundle.title_confirmacao}"
+			message="#{bundle.msg_qtd_vagas_excede}">
+			<p:commandButton
+				value="#{bundle.btn_sim}"
+				icon="ui-icon-check"
+				update=":form"
+				action="#{turmaConfigBacking.actionConfirmarMsg}"
+				onclick="PF('confirm_w').hide()" />
+			<p:commandButton
+				value="#{bundle.btn_nao}"
+				icon="ui-icon-close"
+				onclick="PF('confirm_w').hide()" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

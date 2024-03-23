@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="MotivoTransf"
+			backing="#{motivoTransfBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="Number"
+					size="15"
+					itens="#{motivoTransfBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{motivoTransfBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indMotivo}"
+					value="#{row.indMotivo}"
+					type="Number"
+					size="15"
+					itens="#{motivoTransfBacking.itensMotivoTransf}">
+					<xcp:outputSimple
+						value="#{row.indMotivo}"
+						itens="#{motivoTransfBacking.itensMotivoTransf}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_permuta}"
+					value="#{row.permuta}"
+					type="Number"
+					size="10"
+					itens="#{motivoTransfBacking.itensIndSimNaoNull}">
+					<xcp:outputSimple
+						value="#{row.permuta}"
+						itens="#{motivoTransfBacking.itensIndSimNao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{motivoTransfBacking.entity.codigo}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not motivoTransfBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{motivoTransfBacking.entity.descricao}"
+						size="80"
+						maxlength="200" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{motivoTransfBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{motivoTransfBacking.itensTipo}">
+						<p:ajax
+							update="cboIndMotivo cboIndMotivo_l"
+							process="@this" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboPermuta"
+						value="#{motivoTransfBacking.entity.permuta}"
+						label="#{bundle.lbl_permuta}"
+						required="true"
+						itens="#{motivoTransfBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndProcjudic"
+						value="#{motivoTransfBacking.entity.indProcjudic}"
+						label="#{bundle.lbl_indProcjudic}"
+						required="true"
+						itens="#{motivoTransfBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboIndMotivo"
+						value="#{motivoTransfBacking.entity.indMotivo}"
+						label="#{bundle.lbl_indMotivo}"
+						itens="#{motivoTransfBacking.itensMotivoTransf}"
+						required="true"
+						rendered="#{motivoTransfBacking.renderedMotivo}" />
+						
+					<xcp:lov
+						id="lovVariavel"
+						value="#{motivoTransfBacking.entity.variavelFk}"
+						label="#{bundle.lbl_variavel}"
+						query="variaveis"
+						size="10"/>	
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

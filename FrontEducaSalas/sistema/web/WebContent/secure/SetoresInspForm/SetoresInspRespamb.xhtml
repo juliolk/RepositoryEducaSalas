@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="pnlUpdRespamb">
+		<p:outputPanel rendered="#{setoresInspBacking.telaRespambLista}">
+
+			<p:dataTable
+				id="tableRespamb"
+				var="rowRespamb"
+				rowKey="#{rowRespamb.uuid}"
+				value="#{setoresInspBacking.entity.listRespamb}"
+				filteredValue="#{setoresInspBacking.entity.listRespambFilter}"
+				sortMode="multiple"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				selection="#{setoresInspBacking.helper.respambSel}"
+				selectionMode="single"
+				rows="#{viewUtil.tableRows}">
+
+				<p:ajax
+					event="rowSelect"
+					listener="#{setoresInspBacking.onRowSelectRespamb}"
+					update=":form:tabView:pnlUpdRespamb" />
+
+				<xcp:column
+					headerText="#{bundle.col_prestador}"
+					value="#{rowRespamb.pessoaFk.nome}"
+					type="Number"
+					size="2">
+					<xcp:outputSimple value="#{rowRespamb.pessoaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_servidor}"
+					value="#{rowRespamb.matriculaFk.nome}"
+					type="String"
+					size="2">
+					<xcp:outputSimple value="#{rowRespamb.matriculaFk.nome}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<xcp:commandButton
+				id="btn_novo_respamb"
+				style="margin-top:5px"
+				update=":form:tabView:pnlUpdRespamb"
+				process="@this"
+				action="#{setoresInspBacking.actionNovoRespamb}"
+				value="#{bundle.btn_novo}"
+				icon="ui-icon-plusthick" />
+
+		</p:outputPanel>
+
+
+		<p:outputPanel rendered="#{setoresInspBacking.telaRespambForm}">
+
+			<p:outputPanel style="margin:10px">
+
+				<xcp:panelForm>
+
+					<xcp:combo
+						id="cboTipPessoa"
+						value="#{setoresInspBacking.helper.tipPessoa}"
+						label="#{bundle.lbl_tipoPessoa}"
+						required="true"
+						itens="#{setoresInspBacking.itensTipPessoa}"
+						readonly="#{not setoresInspBacking.helper.respambSel.novo}">
+						<p:ajax
+							event="change"
+							listener="#{setoresInspBacking.actionChangeTipPessoa}"
+							update="lovMatricula,lovMatricula_l,lovPessoa,lovPessoa_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovPessoa"
+						required="true"
+						value="#{setoresInspBacking.helper.respambSel.pessoaFk}"
+						label="#{bundle.lbl_pessoa}"
+						query="autonomos"
+						size="10"
+						rendered="#{setoresInspBacking.helper.tipPessoa == 2}"
+						readonly="#{not setoresInspBacking.helper.respambSel.novo}" />
+
+					<xcp:lov
+						id="lovMatricula"
+						required="true"
+						value="#{setoresInspBacking.helper.respambSel.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						query="funcionariosLov"
+						size="10"
+						rendered="#{setoresInspBacking.helper.tipPessoa == 1}"
+						readonly="#{not setoresInspBacking.helper.respambSel.novo}" />
+
+				</xcp:panelForm>
+
+				<p:toolbar style="margin-top:5px">
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_ok_resp"
+							icon="ui-icon-disk"
+							process=":form:tabView:pnlUpdRespamb"
+							update=":form:tabView:pnlUpdRespamb"
+							action="#{setoresInspBacking.actionSalvarRespamb}"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_excluir_resp"
+							icon="ui-icon-trash"
+							update=":form:tabView:pnlUpdRespamb"
+							value="#{bundle.btn_remover}"
+							rendered="#{not setoresInspBacking.helper.respambSel.novo}"
+							action="#{setoresInspBacking.actionRemoveRespamb}"
+							process="@this">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+
+						<xcp:commandButton
+							id="btn_voltar_resp"
+							immediate="true"
+							update=":form:tabView:pnlUpdRespamb"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							action="#{setoresInspBacking.actionVoltarRespamb}" />
+
+					</f:facet>
+				</p:toolbar>
+
+
+			</p:outputPanel>
+		</p:outputPanel>
+	</p:outputPanel>
+
+</ui:composition>

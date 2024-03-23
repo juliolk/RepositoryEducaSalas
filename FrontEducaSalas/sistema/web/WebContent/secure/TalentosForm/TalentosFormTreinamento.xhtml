@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tabListaTreinamento"
+		value="#{talentosBacking.helper.listaTreinamento}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="row"
+		rowKey="#{row.PK}"
+		emptyMessage="#{bundle.msg_sem_resultado}">
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="10">
+			<h:outputText
+				value="#{row.desHorario}"
+				escape="false" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_descricao}"
+			type="String"
+			size="5">
+			<xcp:outputSimple value="#{row.treinamentoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_carga}"
+			type="Date"
+			size="5">
+			<xcp:outputSimpleNumber value="#{row.treinamentoFk.duracao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_horasfalta}"
+			type="Date"
+			size="5">
+			<xcp:outputSimpleNumber
+				value="#{row.horasfalta}"
+				precision="3"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_conceito}"
+			type="String"
+			size="2">
+			<xcp:outputSimple value="#{row.desConceito}" />
+		</xcp:column>
+
+	</p:dataTable>
+</ui:composition>

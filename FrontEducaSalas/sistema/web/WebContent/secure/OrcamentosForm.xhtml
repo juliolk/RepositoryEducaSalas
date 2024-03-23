@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Orcamentos"
+			backing="#{orcamentosBacking}">
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_criar_novo"
+					value="#{bundle.btn_duplicar}"
+					action="#{orcamentosBacking.actionDuplicarOrcamento}"
+					rendered="#{!orcamentosBacking.entity.novo}"
+					onclick="if(!confirm('#{bundle.msg_confirma_duplicar}')) return false;"
+					update="@form" />
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtorcamento}"
+					value="#{row.dtorcamento}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtorcamento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_pessoa}"
+					value="#{row.pessoaFk.nome}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.pessoaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvalidade}"
+					value="#{row.dtvalidade}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtvalidade}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{orcamentosBacking.entity.codigo}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						rendered="#{not orcamentosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{orcamentosBacking.entity.descricao}"
+						required="true"
+						size="60" />
+
+					<xcp:date
+						id="txtDtorcamento"
+						required="true"
+						value="#{orcamentosBacking.entity.dtorcamento}"
+						label="#{bundle.lbl_dtorcamento}" />
+
+					<xcp:lov
+						id="lovPessoa"
+						value="#{orcamentosBacking.entity.pessoaFk}"
+						label="#{bundle.lbl_pessoa}"
+						required="true"
+						query="autonomos"
+						size="10" />
+
+					<xcp:date
+						id="txtDtvalidade"
+						value="#{orcamentosBacking.entity.dtvalidade}"
+						label="#{bundle.lbl_dtvalidade}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{orcamentosBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="OrcamentosForm/OrcamentosItensForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_inqueritos}"
+		modal="true"
+		id="dlgInqDoc"
+		widgetVar="dlgInqDoc_w"
+		dynamic="true">
+
+		<xcp:form id="frmDlgDocInq">
+			<xcp:panelForm>
+
+				<xcp:text
+					id="txtDescricao"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.descricao}"
+					size="50"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDtinicio"
+					required="true"
+					value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.dtinicio}"
+					label="#{bundle.lbl_dtinicio}"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDttermino"
+					value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.dttermino}"
+					label="#{bundle.lbl_dttermino}"
+					readonly="true" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:splitButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								disabled="#{comissaoInqueritoBacking.helper.inqueritoDocSel.registroFk == null}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(comissaoInqueritoBacking.helper.inqueritoDocSel.registro)}"
+									contentDisposition="attachment" />
+								<p:menuitem
+									value="#{bundle.btn_detalhes_doc}"
+									action="#{comissaoInqueritoBacking.model.actionOpenVisDialog(comissaoInqueritoBacking.helper.inqueritoDocSel.registro)}"
+									process="@this" />
+							</p:splitButton>
+						</p:column>
+						<p:column>
+							<xcp:panelForm>
+								<xcp:dateTime
+									id="txtRetificacao"
+									value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.retificacao}"
+									label="#{bundle.lbl_retificacao}"
+									rendered="#{comissaoInqueritoBacking.helper.inqueritoDocSel.retificacao!=null}"
+									readonly="true" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					selectionListener="#{comissaoInqueritoBacking.selectTipodocumento}"
+					update=":frmDlgDocInq:lovPortaria,:frmDlgDocInq:btnDownloadDocumento"
+					query="tipodocumento_inq"
+					params="#{comissaoInqueritoBacking.paramsTipoDoc}"
+					size="10"
+					readonly="true" />
+
+				<xcp:lov
+					id="lovPortaria"
+					value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.registroFk}"
+					params="#{comissaoInqueritoBacking.paramsDocumento}"
+					label="#{bundle.lbl_documento}"
+					query="documentosman"
+					readonly="true"
+					size="10"
+					update=":frmDlgDocInq:btnDownloadDocumento" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="true"
+					size="25" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{comissaoInqueritoBacking.helper.inqueritoDocSel.obs}"
+					size="4000"
+					readonly="true" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btnVoltar"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgInqDoc_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

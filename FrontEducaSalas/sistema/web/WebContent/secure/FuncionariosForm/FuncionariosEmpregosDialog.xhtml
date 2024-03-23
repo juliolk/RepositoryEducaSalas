@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_empregos}"
+		modal="true"
+		id="dlgEmp"
+		widgetVar="dlgEmp_w"
+		dynamic="true"
+		onShow="XCUtil.selecttab('tabFuncionarios_w','tabEmpregos')"
+		resizable="true">
+		<xcp:form id="frmEmp">
+			<p:outputPanel style="max-height: 600px; overflow-y: scroll;">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtadm"
+						required="true"
+						value="#{funcionariosBacking.empregoSel.dtadm}"
+						label="#{bundle.lbl_dtadm}"
+						size="8"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}">
+						<p:ajax
+							event="change"
+							listener="#{funcionariosBacking.calculaDias}"
+							update="txtTotdias" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{funcionariosBacking.calculaDias}"
+							update="txtTotdias" />
+					</xcp:date>
+
+					<h:outputLabel value="#{bundle.lbl_dtdem}:*" />
+
+					<h:panelGroup
+						layout="block"
+						style="width: 500px">
+
+						<xcp:date
+							id="txtDtdem"
+							required="true"
+							simple="true"
+							value="#{funcionariosBacking.empregoSel.dtdem}"
+							readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+							label="#{bundle.lbl_dtdem}"
+							size="8"
+							style="float:left">
+							<p:ajax
+								event="change"
+								listener="#{funcionariosBacking.calculaDias}"
+								update="txtTotdias" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{funcionariosBacking.calculaDias}"
+								update="txtTotdias" />
+						</xcp:date>
+
+						<h:panelGrid
+							columns="4"
+							style="float:left;margin-left:5px">
+
+							<xcp:dateTime
+								id="txtCancelamentoEmpregos"
+								value="#{funcionariosBacking.empregoSel.dtcancelamento}"
+								label="#{bundle.lbl_cancelado}"
+								rendered="#{funcionariosBacking.empregoSel.dtcancelamento!=null and funcionariosBacking.permitidoCancelarEmp}"
+								readonly="true" />
+
+							<xcp:check
+								id="chk_bloq_lib_emprego"
+								label="#{funcionariosBacking.helper.canceladoEmprego ? bundle.lbl_lib_emprego : bundle.lbl_canc_emprego}"
+								rendered="#{funcionariosBacking.permitidoCancelarEmp and !funcionariosBacking.empregoSel.novo}"
+								value="#{funcionariosBacking.helper.canceladoEmprego}">
+								<p:ajax
+									event="change"
+									update="@form"
+									listener="#{funcionariosBacking.cancelaLiberaEmprego}" />
+							</xcp:check>
+
+						</h:panelGrid>
+					</h:panelGroup>
+
+					<xcp:text
+						id="txtNomeempresa"
+						label="#{bundle.lbl_nomeempresa}"
+						required="true"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						value="#{funcionariosBacking.empregoSel.nomeempresa}"
+						size="70">
+						<p:ajax
+							event="change"
+							update="@none"
+							process="@this" />
+					</xcp:text>
+
+					<xcp:cnpj
+						id="txtCnpj"
+						label="#{bundle.lbl_cnpj}"
+						value="#{funcionariosBacking.empregoSel.cnpj}" />
+
+					<xcp:memo
+						id="txtFuncao"
+						label="#{bundle.lbl_funcaoexer}"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						value="#{funcionariosBacking.empregoSel.funcao}"
+						maxlength="1000" />
+
+					<xcp:number
+						id="txtFaltas"
+						label="#{bundle.lbl_faltas}"
+						value="#{funcionariosBacking.empregoSel.faltas}"
+						size="8"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						precision="5"
+						scale="0"
+						maxValue="99999">
+						<p:ajax
+							event="blur"
+							listener="#{funcionariosBacking.calculaDias}"
+							update="txtTotdias" />
+					</xcp:number>
+
+					<xcp:number
+						id="txtAfastamentos"
+						label="#{bundle.lbl_afastamentos}"
+						value="#{funcionariosBacking.empregoSel.afastamentos}"
+						size="8"
+						precision="5"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						scale="0"
+						maxValue="99999">
+						<p:ajax
+							event="blur"
+							listener="#{funcionariosBacking.calculaDias}"
+							update="txtTotdias" />
+					</xcp:number>
+
+					<xcp:number
+						id="txtAts"
+						label="#{bundle.lbl_ats}"
+						value="#{funcionariosBacking.empregoSel.ats}"
+						size="8"
+						precision="5"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						scale="0"
+						minValue="-99999"
+						maxValue="99999">
+					</xcp:number>
+
+					<xcp:number
+						id="txtProgressao"
+						label="#{bundle.lbl_progressao}"
+						value="#{funcionariosBacking.empregoSel.progressao}"
+						size="8"
+						precision="5"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						scale="0"
+						maxValue="99999">
+					</xcp:number>
+
+					<xcp:number
+						id="txtTotdias"
+						label="#{bundle.lbl_totdias}"
+						value="#{funcionariosBacking.empregoSel.totdias}"
+						size="8"
+						precision="5"
+						scale="0"
+						minValue="1"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						maxValue="99999" />
+
+					<xcp:number
+						id="txtNumerocert"
+						label="#{bundle.lbl_numerocert}"
+						value="#{funcionariosBacking.empregoSel.numerocert}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999" />
+
+					<xcp:lov
+						id="lovCategoria_empregos"
+						value="#{funcionariosBacking.empregoSel.categoriaFk}"
+						label="#{bundle.lbl_categoria}"
+						query="emp_cat_rest"
+						required="true"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						size="14" />
+
+					<xcp:lov
+						id="lovTipoReflexoEmp_empregos"
+						value="#{funcionariosBacking.empReflexo}"
+						label="#{bundle.lbl_reflexo}"
+						query="empreflexo"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						size="14"
+						selectionListener="#{funcionariosBacking.selectEmpReflexo}"
+						update="tblReflexo"
+						rendered="#{funcionariosBacking.renderedReflexos}" />
+
+					<p:spacer
+						width="1"
+						rendered="#{funcionariosBacking.renderedReflexos}" />
+
+					<p:dataTable
+						id="tblReflexo"
+						var="row"
+						value="#{funcionariosBacking.listEmpReflexo}"
+						rowKey="#{row}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="width:450px"
+						rendered="#{funcionariosBacking.renderedReflexos}">
+
+						<p:column
+							headerText="#{bundle.col_reflexo}"
+							type="String"
+							width="25">
+							<xcp:outputSimple value="#{row.reflexoFk.descricao}" />
+						</p:column>
+
+						<p:column
+							width="1"
+							headerText="#{bundle.col_remover}">
+
+							<p:commandButton
+								icon="ui-icon-trash"
+								id="btn_remover"
+								update="tblReflexo"
+								disabled="#{funcionariosBacking.readOnlyFieldsEmp}"
+								action="#{funcionariosBacking.actionRemoverReflexo(row)}"
+								immediate="true" />
+
+						</p:column>
+
+
+					</p:dataTable>
+
+					<xcp:lov
+						id="lovTipodoc_empregos"
+						value="#{funcionariosBacking.empregoSel.tipodocFk}"
+						selectionListener="#{funcionariosBacking.selectTipodocumentoEmpregos}"
+						update=":frmEmp:lovDocumento_empregos,:frmEmp:lovProcesso_empregos,:frmEmp:lovProcesso_empregos_l,:frmEmp:btnDownloadDocumento,:frmEmp:lovProcessoRev_emp,:frmEmp:lovProcessoRev_emp_l,:frmEmp:pnlinfotipodoc,:frmEmp:toolform,:frmEmp:txtObs,:frmEmp:btnAddDocEmp"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_aver"
+						params="#{funcionariosBacking.paramsTipoDoc}"
+						readonly="#{funcionariosBacking.readOnlyTipdocEmp}"
+						size="14" />
+
+					<xcp:lov
+						id="lovDocumento_empregos"
+						value="#{funcionariosBacking.empregoSel.registroFk}"
+						params="#{funcionariosBacking.paramsTipodocumentoEmpregos}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						size="14"
+						readonly="#{funcionariosBacking.readOnlyDocEmp}"
+						update=":frmEmp:lovProcesso_empregos,:frmEmp:lovProcesso_empregos_l,:frmEmp:btnDownloadDocumento,:frmEmp:toolform,:frmEmp:toolform"
+						selectionListener="#{funcionariosBacking.selectDocumentoEmp}" />
+
+					<xcp:lov
+						id="lovProcesso_empregos"
+						value="#{funcionariosBacking.empregoSel.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{funcionariosBacking.readOnlyProcEmp}"
+						required="#{funcionariosBacking.requiredProcEmp}"
+						size="25" />
+
+					<xcp:lov
+						id="lovProcessoRev_emp"
+						value="#{funcionariosBacking.empregoSel.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{funcionariosBacking.renderedProcessoRevEmp}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{funcionariosBacking.empregoSel.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(funcionariosBacking.empregoSel.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{funcionariosBacking.modelPub.actionOpenVisDialog(funcionariosBacking.empregoSel.registro)}"
+										process="@this" />
+
+								</p:splitButton>
+							</p:column>
+
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDocEmp"
+									model="#{funcionariosBacking.modelEmp}" />
+							</p:column>
+
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty funcionariosBacking.empregoSel.tipodocFk.instrucoes}" />
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{funcionariosBacking.empregoSel.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{funcionariosBacking.empregoSel.retificacao}"
+										label="#{funcionariosBacking.labelRetifEmp}"
+										rendered="#{funcionariosBacking.empregoSel.retificacao!=null}"
+										readonly="true">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{funcionariosBacking.actionRemoveRetificacaoEmpregos}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{funcionariosBacking.labelRetifEmp}"
+										rendered="#{funcionariosBacking.renderedRetificacaoEmp}"
+										value="#{funcionariosBacking.helper.retificacao}">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_txtPort}"
+						value="#{funcionariosBacking.empregoSel.obs}"
+						readonly="#{funcionariosBacking.readOnlyFieldsEmp}"
+						size="3000"
+						cols="85" />
+
+					<xcp:memo
+						id="txtObsLivre"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{funcionariosBacking.empregoSel.obsLivre}"
+						size="3000"
+						cols="85" />
+
+				</xcp:panelForm>
+
+				<p:toolbar id="toolform">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok_emprego"
+							disabled="#{funcionariosBacking.disabledGravar}"
+							icon="ui-icon-disk"
+							action="#{funcionariosBacking.actionGravarEmprego}"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_emitir_portaria"
+							value="#{bundle.btn_emitir_portaria}"
+							action="#{averbacoesPortariaDiretaBacking.actionOpenOrExecute}"
+							update="#{averbacoesPortariaDiretaBacking.btnEmitirUpdate}"
+							rendered="#{averbacoesPortariaDiretaBacking.renderedEmissao}" />
+
+						<xcp:commandButton
+							id="btn_excluir_portaria"
+							value="#{bundle.btn_excluir_portaria}"
+							action="#{averbacoesPortariaDiretaBacking.actionExcluirPortariaDireta}"
+							rendered="#{averbacoesPortariaDiretaBacking.renderedExcluir}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

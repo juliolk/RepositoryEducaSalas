@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="EstacaoPontoAutorizacao"
+		backing="#{estacaoPontoAutorizacaoBacking}" masterId="EstacaoPonto">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.col_codigo}" value="#{row.codigo}"
+				type="Number" width="5%">
+				<xcp:outputSimpleNumber value="#{row.codigo}" precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_inicioval}"
+				value="#{row.dataInicioValidade}" type="Date" width="5%">
+				<xcp:outputSimpleDate value="#{row.dataInicioValidade}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_fimval}"
+				value="#{row.dataFimValidade}" type="Date" width="5%">
+				<xcp:outputSimpleDate value="#{row.dataFimValidade}" />
+			</xcp:column>
+
+			<xcp:column headerText="Forma de Identificação Autorizada"
+				value="#{estacaoPontoAutorizacaoBacking.getLabelFormaIdentificacao(row)}" width="10%">
+				<xcp:outputSimple value="#{estacaoPontoAutorizacaoBacking.getLabelFormaIdentificacao(row)}" />
+			</xcp:column>
+			
+			<xcp:column headerText="Tipo de Autorização"
+				value="#{estacaoPontoAutorizacaoBacking.getLabelTipoAutorizacao(row)}" width="5%">
+				<xcp:outputSimple value="#{estacaoPontoAutorizacaoBacking.getLabelTipoAutorizacao(row)}" />
+			</xcp:column>
+			
+			<xcp:column headerText="Autorizado"
+				value="#{estacaoPontoAutorizacaoBacking.getAutorizado(row)}" width="15%">
+				<xcp:outputSimple value="#{estacaoPontoAutorizacaoBacking.getAutorizado(row)}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm id="pnlForm">
+				<xcp:combo id="comboTipo"
+					value="#{estacaoPontoAutorizacaoBacking.tipoAutorizacao}"
+					label="Tipo de Autorização"
+					itens="#{estacaoPontoAutorizacaoBacking.itensTipoAutorizacao}">
+					<p:ajax event="change" update="@form" />
+				</xcp:combo>
+				
+				<xcp:date id="txtDataInicioValidade_EstacaoPontoAutorizacao"
+					value="#{estacaoPontoAutorizacaoBacking.entity.dataInicioValidade}"
+					label="#{bundle.col_inicioval}"/>
+
+				<xcp:date id="txtDataFimValidade_EstacaoPontoAutorizacao"
+					value="#{estacaoPontoAutorizacaoBacking.entity.dataFimValidade}"
+					label="#{bundle.col_fimval}" />
+					
+				<xcp:combo id="comboFormaIdentificacao"
+					value="#{estacaoPontoAutorizacaoBacking.entity.formaIdentificacao}"
+					label="Forma de Identificação Autorizada"
+					itens="#{estacaoPontoAutorizacaoBacking.itensFormaIdentificacao}"/>
+
+				<xcp:lov id="lovCodOrgao"
+					rendered="#{estacaoPontoAutorizacaoBacking.tipoAutorizacao == estacaoPontoAutorizacaoBacking.TIPO_ORGAO}"
+					value="#{estacaoPontoAutorizacaoBacking.entity.codOrgaoFk}"
+					label="#{bundle.col_empresa}" query="orgaos" size="4" />
+
+				<xcp:lov id="lovCodSetor"
+					rendered="#{estacaoPontoAutorizacaoBacking.tipoAutorizacao == estacaoPontoAutorizacaoBacking.TIPO_SETOR}"
+					value="#{estacaoPontoAutorizacaoBacking.entity.codSetorFk}"
+					label="#{bundle.col_setor}" query="setores" size="10" />
+
+				<xcp:lov id="lovMatricula"
+					rendered="#{estacaoPontoAutorizacaoBacking.tipoAutorizacao == estacaoPontoAutorizacaoBacking.TIPO_MATRICULA}"
+					value="#{estacaoPontoAutorizacaoBacking.entity.matriculaFk}"
+					label="#{bundle.lbl_matricula}" query="funcionarios" size="8" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

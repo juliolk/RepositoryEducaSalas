@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+
+		<p:blockUI
+			block=":form"
+			widgetVar="blockForm_w">
+			<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+		</p:blockUI>
+
+		<xcp:panelContent>
+			<h:panelGroup id="filtroSelecao">
+				<p:fieldset
+					id="brd_opcoes"
+					legend="#{bundle.title_dados}">
+					<xcp:panelForm>
+
+						<xcp:lov
+							id="lovMatricula_empregos"
+							value="#{consLctosBacking.helper.funcionario}"
+							label="#{bundle.lbl_matricula}"
+							readonly="#{consLctosBacking.helper.statusTela != 1}"
+							query="funcionariosRest"
+							selectionListener="#{consLctosBacking.selectFuncionario}"
+							update="txtCpfInc txtDataLctos"
+							size="8" />
+
+						<xcp:cpf
+							id="txtCpfInc"
+							label="#{bundle.lbl_cpf}"
+							value="#{consLctosBacking.helper.cpf}"
+							size="26"
+							readonly="#{consLctosBacking.helper.statusTela != 1}">
+							<p:ajax
+								update="lovMatricula_empregos"
+								listener="#{consLctosBacking.changeCpf}" />
+						</xcp:cpf>
+
+						<xcp:dateRange
+							id="txtDataLctos"
+							valueStart="#{consLctosBacking.helper.dtaIni}"
+							valueEnd="#{consLctosBacking.helper.dtaFim}"
+							readonly="#{consLctosBacking.helper.statusTela != 1}"
+							label="#{bundle.lbl_periodo}"
+							size="8" />
+
+						<xcp:check
+							id="chkMostraCanc"
+							label="#{bundle.lbl_mostraCanc}"
+							value="#{consLctosBacking.helper.mostraCancelados}"
+							readonly="#{consLctosBacking.helper.statusTela != 1}" />
+
+						<xcp:outputSimple value="#{bundle.lbl_selecao_lctos}:" />
+						<p:selectManyCheckbox
+							value="#{consLctosBacking.helper.selectedLctos}"
+							disabled="#{consLctosBacking.helper.statusTela != 1}"
+							layout="grid"
+							columns="4">
+							<f:selectItem
+								itemLabel="#{bundle.chk_comissao}"
+								itemValue="1"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_com')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_empregos}"
+								itemValue="2"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_emp')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_ferias}"
+								itemValue="3"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_fer')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_funchoras}"
+								itemValue="4"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_funchoras')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_historicos}"
+								itemValue="5"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_hist')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_licencapremio}"
+								itemValue="6"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_licpremio')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_transferencias}"
+								itemValue="7"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_transf')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_parfunc}"
+								itemValue="8"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_parfunc')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_ponto}"
+								itemValue="9"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_ponto')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_publicacoes}"
+								itemValue="10"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_pub')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_afastamentos}"
+								itemValue="11"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_afast')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_avallabor}"
+								itemValue="12"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_avalab')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_familiares}"
+								itemValue="13"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_familiares')}" />
+							<f:selectItem
+								itemLabel="#{bundle.chk_formacao}"
+								itemValue="14"
+								itemDisabled="#{viewUtil.isBloqueado('chk_lctos_formacao')}" />
+								
+						</p:selectManyCheckbox>
+					</xcp:panelForm>
+				</p:fieldset>
+			</h:panelGroup>
+			<h:panelGroup id="toolBarForm">
+				<p:toolbar style="margin:4px;">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_selecionar_lctos"
+							value="#{bundle.btn_selecionar_lctos}"
+							action="#{consLctosBacking.actionSelecionarLctos}"
+							rendered="#{consLctosBacking.helper.statusTela == 1}"
+							update="panelFiltrosCodigos,panelConsulta,toolBarForm,filtroSelecao"
+							icon="ui-icon-gear" />
+
+						<xcp:commandButton
+							id="btn_refazer_busca"
+							value="#{bundle.btn_refazer_busca}"
+							action="#{consLctosBacking.actionRefazerBusca}"
+							rendered="#{consLctosBacking.helper.statusTela > 1}"
+							update="@form"
+							icon="ui-icon-gear" />
+
+						<xcp:commandButton
+							id="btn_selecionar_novo"
+							value="#{bundle.btn_selecionar_novos}"
+							action="#{consLctosBacking.actionNovoFiltro}"
+							rendered="#{consLctosBacking.helper.statusTela > 1}"
+							update="@form"
+							icon="ui-icon-gear" />
+
+						<xcp:commandButton
+							id="btn_relatorio"
+							value="#{bundle.btn_relatorio}"
+							action="#{consLctosBacking.actionGeraRelatorio}"
+							rendered="#{consLctosBacking.helper.statusTela == 3}"
+							update="@form"
+							icon="ui-icon-print" />
+					</f:facet>
+				</p:toolbar>
+			</h:panelGroup>
+			<h:panelGroup id="panelFiltrosCodigos">
+				<h:panelGroup rendered="#{consLctosBacking.helper.statusTela == 2}">
+					<p:wizard
+						id="wizardTab"
+						nextLabel="#{bundle.btn_proximo}"
+						backLabel="#{bundle.btn_anterior}"
+						flowListener="#{consLctosBacking.onNext}"
+						widgetVar="wWizardSelecao"
+						style="margin-left:5px;margin-top:5px">
+
+						<p:tab
+							id="TABCOMISSOES"
+							rendered="#{consLctosBacking.helper.filtraComissao}"
+							title="#{bundle.tit_filtros_comissoes}">
+
+							<p:fieldset
+								id="brd_comissao"
+								legend="#{bundle.tit_filtros_comissoes}">
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovComissao"
+										value="#{consLctosBacking.helper.comissaoFk}"
+										label="#{bundle.lbl_comis}"
+										query="comissao"
+										size="8" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_comiss"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABCOMISSOES')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_comissao" />
+
+								<xcp:commandButton
+									id="btn_limpar_comiss"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABCOMISSOES')}"
+									update="comissoes" />
+
+								<p:dataTable
+									id="comissoes"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaComissoes}"
+									selection="#{consLctosBacking.helper.listaComissoesSelecionadas}"
+									rowKey="#{rowMult}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_comissao}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.comissao}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desComissao}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABEMPREGOS"
+							title="#{bundle.tit_empregos}"
+							rendered="#{consLctosBacking.helper.filtraEmpregos}">
+
+							<p:fieldset
+								id="brd_empregos"
+								legend="#{bundle.tit_empregos}">
+
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovCategoria_empregos"
+										value="#{consLctosBacking.helper.categoriaFk}"
+										label="#{bundle.lbl_categoria}"
+										query="emp_cat_rest"
+										size="14" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_emp"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABEMPREGOS')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_empregos" />
+
+								<xcp:commandButton
+									id="btn_limpar_emp"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABEMPREGOS')}"
+									update="empregoscategoria" />
+
+								<p:dataTable
+									id="empregoscategoria"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaEmpregosCategoria}"
+									selection="#{consLctosBacking.helper.listaEmpregosCategoriaSelecionadas}"
+									rowKey="#{rowMult.PK}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_categoria}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.categoria}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desCategoria}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABBANCOHORAS"
+							rendered="#{consLctosBacking.helper.filtraBancoHoras}"
+							title="#{bundle.tit_filtros_banco_horas}">
+
+							<p:fieldset
+								id="brd_bancohoras"
+								legend="#{bundle.tit_filtros_banco_horas}">
+
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovAcordo"
+										value="#{consLctosBacking.helper.bancohorasFk}"
+										label="#{bundle.lbl_acordo}"
+										query="bancohoras"
+										size="5" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_banco"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABBANCOHORAS')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_bancohoras" />
+
+								<xcp:commandButton
+									id="btn_limpar_banco"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABBANCOHORAS')}"
+									update="bancohoras" />
+
+								<p:dataTable
+									id="bancohoras"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaBancohoras}"
+									selection="#{consLctosBacking.helper.listaBancohorasSelecionadas}"
+									rowKey="#{rowMult.PK}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_acordo}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.acordo}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desAcordo}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABTRANSF"
+							rendered="#{consLctosBacking.helper.filtraTipoMovtos}"
+							title="#{bundle.tit_filtros_tipomovtos}">
+
+							<p:fieldset
+								id="brd_transf"
+								legend="#{bundle.tit_filtros_tipomovtos}">
+
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovTipoMov"
+										value="#{consLctosBacking.helper.tipmovtoFk}"
+										label="#{bundle.lbl_tipMovTransf}"
+										query="tipomovtos_transf"
+										size="4" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_transf"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABTRANSF')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_transf" />
+
+								<xcp:commandButton
+									id="btn_limpar_transf"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABTRANSF')}"
+									update="tipomovtos" />
+
+								<p:dataTable
+									id="tipomovtos"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaTipomovtos}"
+									selection="#{consLctosBacking.helper.listaTipomovtosSelecionadas}"
+									rowKey="#{rowMult.PK}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_tipmov}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.tipmov}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desTipmov}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABVARIAVEIS"
+							rendered="#{consLctosBacking.helper.filtraVariaveis}"
+							title="#{bundle.tit_filtros_listaVariaveis}">
+
+							<p:fieldset
+								id="brd_variaveis"
+								legend="#{bundle.tit_filtros_listaVariaveis}">
+
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovVariavel"
+										value="#{consLctosBacking.helper.variavelFk}"
+										label="#{bundle.lbl_variavel}"
+										query="variaveis"
+										size="10" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_variaveis"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABVARIAVEIS')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_variaveis" />
+
+								<xcp:commandButton
+									id="btn_limpar_variaveis"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABVARIAVEIS')}"
+									update="listaVariaveis" />
+
+								<p:dataTable
+									id="listaVariaveis"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaVariaveis}"
+									selection="#{consLctosBacking.helper.listaVariaveisSelecionadas}"
+									rowKey="#{rowMult.PK}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_grupo}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.grupo}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desGrupo}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABAFAST"
+							rendered="#{consLctosBacking.helper.filtraAfastamentos}"
+							title="#{bundle.tit_filtros_afastamentos}">
+
+							<p:fieldset
+								id="brd_afast"
+								legend="#{bundle.tit_filtros_afastamentos}">
+
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovTipmov"
+										value="#{consLctosBacking.helper.afastamentoFk}"
+										label="#{bundle.lbl_tipmov}"
+										query="tipomvtoprob"
+										size="5" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_afast"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABAFAST')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_afast" />
+
+								<xcp:commandButton
+									id="btn_limpar_afast"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABAFAST')}"
+									update="afastamentos" />
+
+								<p:dataTable
+									id="afastamentos"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaAfastamentos}"
+									selection="#{consLctosBacking.helper.listaAfastamentosSelecionadas}"
+									rowKey="#{rowMult.PK}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_tipmov}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.tipmov}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desTipmov}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABPONTO"
+							rendered="#{consLctosBacking.helper.filtraPonto}"
+							title="#{bundle.tit_filtros_listaPonto}">
+
+							<p:fieldset
+								id="brd_ponto"
+								legend="#{bundle.tit_filtros_listaPonto}">
+
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovTipoPonto"
+										value="#{consLctosBacking.helper.tipopontoFk}"
+										label="#{bundle.lbl_tipoponto}"
+										query="tipoponto"
+										size="4" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_ponto"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABPONTO')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_ponto" />
+
+								<xcp:commandButton
+									id="btn_limpar_ponto"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABPONTO')}"
+									update="listaPonto" />
+
+
+								<p:dataTable
+									id="listaPonto"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaPonto}"
+									selection="#{consLctosBacking.helper.listaPontoSelecionadas}"
+									rowKey="#{rowMult.PK}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_tipoponto}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.tipoponto}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desGrupo}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABAVALLAB"
+							rendered="#{consLctosBacking.helper.filtraAvalLab}"
+							title="#{bundle.tit_filtros_listaAvalLab}">
+
+							<p:fieldset
+								id="brd_avallab"
+								legend="#{bundle.tit_filtros_listaAvalLab}">
+
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovAssistencia"
+										value="#{consLctosBacking.helper.assistenciaFk}"
+										label="#{bundle.lbl_assistencia}"
+										query="assistencia_aval"
+										size="8" />
+								</xcp:panelForm>
+
+								<xcp:commandButton
+									id="btn_add_avallab"
+									style="margin-top:5px;margin-bottom:5px;"
+									action="#{consLctosBacking.actionAdicionar('TABAVALLAB')}"
+									value="#{bundle.btn_adicionar_acao}"
+									icon="ui-icon-plusthick"
+									update="brd_avallab" />
+
+								<xcp:commandButton
+									id="btn_limpar_avallab"
+									value="#{bundle.btn_limparSelecao}"
+									style="margin-top:10px;margin-bottom:10px"
+									icon="ui-icon-trash"
+									immediate="true"
+									action="#{consLctosBacking.actionLimparSelecao('TABAVALLAB')}"
+									update="listaAvalLab" />
+
+
+								<p:dataTable
+									id="listaAvalLab"
+									var="rowMult"
+									value="#{consLctosBacking.helper.listaAssistencia}"
+									selection="#{consLctosBacking.helper.listaAssistenciaSelecionadas}"
+									rowKey="#{rowMult.PK}"
+									emptyMessage="#{bundle.msg_sem_resultado}">
+
+									<p:column
+										selectionMode="multiple"
+										style="width:20px;text-align:center" />
+
+									<xcp:column
+										headerText="#{bundle.col_assistencia}"
+										type="Number"
+										size="6">
+										<xcp:outputSimpleNumber
+											value="#{rowMult.descricao}"
+											precision="8"
+											scale="0" />
+									</xcp:column>
+
+									<xcp:column
+										headerText="#{bundle.col_desAvalLab}"
+										type="String"
+										size="70">
+										<xcp:outputSimple value="#{rowMult.descricao}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="TABLISTAGEM"
+							title="#{bundle.tit_filtros_conclusao}">
+							<div style="width: 450px;"></div>
+						</p:tab>
+					</p:wizard>
+				</h:panelGroup>
+			</h:panelGroup>
+
+
+			<h:panelGroup id="panelConsulta">
+				<h:panelGroup rendered="#{consLctosBacking.helper.statusTela == 3}">
+
+					<p:dataTable
+						id="tableConsulta"
+						var="row"
+						value="#{consLctosBacking.helper.listaLctos}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						rowStyleClass="#{row.dtcancelamento !=null ? 'stiloCancelado' : null}"
+						paginator="false"
+						style="white-space:normal"
+						resizableColumns="true">
+
+						<xcp:column
+							type="String"
+							size="15"
+							headerText="#{bundle.col_tipRegistro}">
+							<xcp:outputSimple value="#{row.desTipRegistro}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_num_matricula}"
+							type="Number"
+							size="6"
+							rendered="#{consLctosBacking.helper.cpf != null}">
+							<xcp:outputSimpleNumber
+								value="#{row.numMatricula}"
+								precision="10"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dta_ini}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.dtaIni}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dta_fim}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.dtaFim}" />
+						</xcp:column>
+
+						<xcp:column
+							type="Number"
+							size="4"
+							headerText="#{bundle.col_numDias}">
+							<xcp:outputSimpleNumber
+								value="#{row.numDias}"
+								precision="5"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dta_per_ini}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtaPerIni}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dta_per_fim}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{row.dtaPerFim}" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="30"
+							headerText="#{bundle.col_desRegistro}">
+							<h:outputLabel
+								style="white-space: normal"
+								value="#{row.desRegistro}"
+								escape="false" />
+						</xcp:column>
+
+						<xcp:column
+							type="Number"
+							size="6"
+							headerText="#{bundle.col_numPortaria}">
+							<xcp:outputSimpleNumber
+								value="#{row.numPortaria}"
+								precision="10"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="15"
+							headerText="#{bundle.col_desProcesso}">
+							<xcp:outputSimple value="#{row.desProcesso}" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="20"
+							headerText="#{bundle.col_documento}">
+							<xcp:commandButton
+								id="btnIrPara"
+								value="#{bundle.btn_irpara}"
+								immediate="true"
+								process="@this"
+								action="#{consLctosBacking.actionToRegistry(row)}" />
+
+							<xcp:commandButton
+								id="btnDownloadDocumento"
+								value="#{bundle.btn_visualizar}"
+								ajax="false"
+								immediate="true"
+								process="@this"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+								rendered="#{row.indDocumento == 1}">
+								<p:fileDownload
+									value="#{documentosBacking.getDownloadDocumento(row.numRegistro)}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+						</xcp:column>
+
+
+					</p:dataTable>
+
+				</h:panelGroup>
+			</h:panelGroup>
+
+			<p:remoteCommand
+				name="rcUpdate"
+				update="toolBarForm,panelFiltrosCodigos,panelConsulta,toolBarForm,filtroSelecao" />
+
+			<p:remoteCommand
+				name="rcUpdateToolbar"
+				update="toolBarForm" />
+
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

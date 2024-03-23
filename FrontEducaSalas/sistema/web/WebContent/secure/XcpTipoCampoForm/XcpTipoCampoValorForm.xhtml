@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelManutDetalhes
+		id="XcpTipoCampoValor"
+		masterId="XcpTipoCampo"
+		backing="#{xcpTipoCampoValorBacking}"
+		rendered="#{xcpTipoCampoBacking.entity.indRespostas == 1}">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.vlrResposta}"
+				type="Number"
+				size="20"
+				rendered="#{xcpTipoCampoBacking.entity.tipParametro == 0}">
+				<xcp:outputSimpleNumber
+					value="#{row.vlrResposta}"
+					precision="20"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.vlrResposta}"
+				type="Number"
+				size="20"
+				rendered="#{xcpTipoCampoBacking.entity.tipParametro == 1}">
+				<xcp:outputSimpleNumber
+					value="#{row.vlrResposta}"
+					precision="20"
+					scale="4" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.dtaResposta}"
+				type="Date"
+				size="20"
+				rendered="#{xcpTipoCampoBacking.entity.tipParametro == 2}">
+				<xcp:outputSimpleDate value="#{row.dtaResposta}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor}"
+				value="#{row.desResposta}"
+				type="String"
+				size="100"
+				rendered="#{xcpTipoCampoBacking.entity.tipParametro == 3}">
+				<xcp:outputSimple value="#{row.desResposta}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.txtResposta}"
+				type="String"
+				size="100">
+				<xcp:outputSimple value="#{row.txtResposta}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtNumResposta_XcpTipoCampoValor"
+					label="#{bundle.lbl_valor}"
+					value="#{xcpTipoCampoValorBacking.entity.vlrResposta}"
+					precision="#{xcpTipoCampoBacking.entity.numTamanho}"
+					required="true"
+					rendered="#{xcpTipoCampoBacking.entity.tipParametro == 0}" />
+
+				<xcp:number
+					id="txtVlrResposta_XcpTipoCampoValor"
+					label="#{bundle.lbl_valor}"
+					value="#{xcpTipoCampoValorBacking.entity.vlrResposta}"
+					required="true"
+					precision="#{xcpTipoCampoBacking.entity.numTamanho}"
+					scale="#{xcpTipoCampoBacking.entity.numDecimais}"
+					rendered="#{xcpTipoCampoBacking.entity.tipParametro == 1}" />
+
+				<xcp:date
+					id="txtDtaResposta_XcpTipoCampoValor"
+					value="#{xcpTipoCampoValorBacking.entity.dtaResposta}"
+					label="#{bundle.lbl_valor}"
+					rendered="#{xcpTipoCampoBacking.entity.tipParametro == 2}"
+					required="true" />
+
+				<xcp:text
+					id="txtDesResposta_XcpTipoCampoValor"
+					value="#{xcpTipoCampoValorBacking.entity.desResposta}"
+					label="#{bundle.lbl_valor}"
+					size="100"
+					required="true"
+					rendered="#{xcpTipoCampoBacking.entity.tipParametro == 3}" />
+
+				<xcp:text
+					id="txtTxtResposta_XcpTipoCampoValor"
+					size="100"
+					value="#{xcpTipoCampoValorBacking.entity.txtResposta}"
+					label="#{bundle.lbl_descricao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+	</xcp:panelManutDetalhes>
+</ui:composition>

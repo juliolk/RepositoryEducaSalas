@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<xcp:panelForm>
+
+			<xcp:text
+				id="cargo"
+				required="true"
+				maxlength="100"
+				value="#{declaracaobensPortalBacking.cargoEdicao.descricao}"
+				label="#{bundle.lbl_cargo}" />
+				
+			<xcp:text
+				id="empresaOrgao"
+				required="true"
+				maxlength="100"
+				value="#{declaracaobensPortalBacking.cargoEdicao.nomeEmpresaOrgao}"
+				label="#{bundle.lbl_empresa_orgao}" />
+				
+			<xcp:dateRange
+				id="dataCargo"
+				label="#{bundle.lbl_periodo}"
+				valueStart="#{declaracaobensPortalBacking.cargoEdicao.dataInicial}"
+				valueEnd="#{declaracaobensPortalBacking.cargoEdicao.dataFinal}"
+				requiredStart="true" />
+
+		</xcp:panelForm>
+
+		<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btnGravarCargos"
+					value="#{bundle.btn_gravar}"
+					process="@form"
+					update=":#{p:component('tabCargos')}"
+					action="#{declaracaobensPortalBacking.actionGravarCargo}"
+					icon="ui-icon-disk" />
+
+				<xcp:commandButton
+					id="btnVoltarCargos"
+					immediate="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgCargos_w').hide();" />
+			</f:facet>
+		</p:toolbar>
+
+	</p:outputPanel>
+</ui:composition>

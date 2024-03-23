@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		
+		<xcp:panelManut
+			id="Paremp"
+			backing="#{parempBacking}">
+
+			<ui:define name="filtro">
+
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+
+					<h:panelGrid>
+
+						<xcp:panelForm>
+
+							<xcp:lov
+								id="lovContas"
+								required="true"
+								value="#{parempBacking.contaFk}"
+								label="#{bundle.lbl_conta}"
+								query="contas"
+								update="form"
+								size="5">
+							</xcp:lov>
+
+						</xcp:panelForm>
+
+					</h:panelGrid>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.lbl_conta}"
+					value="#{row.conta}"
+					type="Center"
+					size="12">
+					<xcp:outputSimpleNumber
+						value="#{row.conta}"
+						precision="12"
+						scale="0" />
+				</xcp:column>
+				
+				
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.dataini}"
+					type="Center"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_variavel}"
+					value="#{row.variavel}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.variavel}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_refer1}"
+					value="#{row.valor}"
+					type="Center"
+					size="12">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="12"
+						scale="2" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_refer2}"
+					value="#{row.refer}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.refer}" />
+				</xcp:column>
+				
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+
+					<xcp:lov
+						id="lovConta"
+						value="#{parempBacking.contaFk}"
+						label="#{bundle.lbl_conta}"
+						query="contas"
+						readonly="true"
+						size="5">
+					</xcp:lov>
+
+
+					<xcp:date
+						id="txtDtini"
+						label="#{bundle.lbl_dtini}"
+						required="true"
+						value="#{parempBacking.entity.dataini}"
+						readonly="#{not parempBacking.entity.novo}"/>
+
+					<xcp:text
+						id="txtVariavel"
+						label="#{bundle.lbl_variavel}"
+						required="true"
+						value="#{parempBacking.entity.variavel}"
+						size="80" 
+						readonly="#{not parempBacking.entity.novo}"/>
+						
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_refer1}"
+						required="true"
+						size="10"
+						value="#{parempBacking.entity.valor}"
+						precision="12"
+						scale="2"/>
+
+					<xcp:text
+						id="txtRefer"
+						label="#{bundle.lbl_refer2}"
+						required="true"
+						value="#{parempBacking.entity.refer}"
+						size="80" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_formacao}"
+		modal="true"
+		id="dlgForAnex"
+		width="600"
+		widgetVar="dlgFormAnexo_w">
+
+		<xcp:form
+			id="frmForAnex"
+			multipart="true">
+
+			<p:dataTable
+				id="tabAnex"
+				filteredValue="#{funcionariosBacking.formacaoSel.listAnexosFilter}"
+				value="#{funcionariosBacking.formacaoSel.listAnexos}"
+				var="rowAnex"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{rowAnex}">
+
+				<xcp:column
+					headerText="#{bundle.col_numero}"
+					value="#{rowAnex.numero}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple
+						id="outArq"
+						value="#{rowAnex.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{rowAnex.nome}"
+					type="String"
+					size="50">
+					<xcp:outputSimple
+						id="outNome"
+						value="#{rowAnex.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandLink
+						immediate="true"
+						id="btn_download_anex"
+						update="tabAnex"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						ajax="false">
+						<h:graphicImage
+							value="/resources/img/download.png"
+							style="margin-top:3px;" />
+						<p:fileDownload
+							value="#{funcionariosBacking.getFormacaoAnexo(rowAnex)}"
+							contentDisposition="attachment" />
+					</xcp:commandLink>
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandLink
+						immediate="true"
+						id="btn_remove_lin"
+						update=":frmForAnex :form:tabFuncionarios"
+						action="#{funcionariosBacking.actionRemoveFormacaoAnexo(rowAnex)}">
+						<h:graphicImage
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" />
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandLink>
+				</xcp:column>
+			</p:dataTable>
+
+			<h:panelGroup
+				layout="block"
+				style="text-align:center;margin-top:5px;margin-bottom:5px">
+				<xcp:commandButton
+					id="btn_novo_anexo"
+					process="@this"
+					icon="ui-icon-plusthick"
+					value="#{bundle.btn_novo}"
+					oncomplete="PF('w_anexo').show()" />
+			</h:panelGroup>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_vtl_anx_car"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						process="@this"
+						oncomplete="PF('dlgFormAnexo_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+
+	<p:dialog
+		id="dlgAnexo"
+		widgetVar="w_anexo"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true"
+		dynamic="true">
+		<xcp:form id="frmAnexo">
+
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				fileUploadListener="#{funcionariosBacking.actionGravarFormacaoAnexo}"
+				update=":frmForAnex :form:tabFuncionarios:tabListaFormacao" />
+
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_anexo').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

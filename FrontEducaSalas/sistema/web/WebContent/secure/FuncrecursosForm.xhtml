@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 100px;
+}
+</style>
+
+		<xcp:panelFuncionario
+			id="Funcrecursos"
+			backing="#{funcrecursosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.referencia}"
+					type="Date"
+					size="1">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_natur}"
+					value="#{row.contabilFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.contabilFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_percentual}"
+					value="#{row.qtd}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.qtd}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtReferencia"
+						required="true"
+						value="#{funcrecursosBacking.entity.referencia}"
+						label="#{bundle.lbl_referencia}" />
+
+					<xcp:lov
+						id="lovContabil"
+						value="#{funcrecursosBacking.entity.contabilFk}"
+						label="#{bundle.lbl_contabil}"
+						required="true"
+						query="recursosall"
+						size="8" />
+
+					<xcp:number
+						id="txtQtd"
+						label="#{bundle.lbl_qtd}"
+						value="#{funcrecursosBacking.entity.qtd}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" 
+						required="true"/>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{funcrecursosBacking.entity.obs}"
+						size="500" />
+
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

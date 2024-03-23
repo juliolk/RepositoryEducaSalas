@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="OrcamentosItens"
+		backing="#{orcamentosItensBacking}"
+		masterId="Orcamentos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_itemOrc}"
+				value="#{row.itemFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.itemFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_qtdOrcada}"
+				value="#{row.qtdOrcada}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.qtdOrcada}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtvalidadePreco}"
+				value="#{row.dtvalidade}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtvalidade}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vlrOrcado}"
+				value="#{row.vlrOrcado}"
+				type="Number"
+				size="21">
+				<xcp:outputSimpleNumber
+					value="#{row.vlrOrcado}"
+					precision="18"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_qtdComprada}"
+				value="#{row.qtdComprada}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.qtdComprada}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+			<!-- 
+			<xcp:column
+				headerText="#{bundle.col_obs}"
+				value="#{row.obs}"
+				type="String"
+				size="4000">
+				<xcp:outputSimple value="#{row.obs}" />
+			</xcp:column>
+			 -->
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovItem_OrcamentosItens"
+					value="#{orcamentosItensBacking.entity.itemFk}"
+					label="#{bundle.lbl_itemOrc}"
+					required="true"
+					query="itens"
+					size="4" />
+
+				<xcp:number
+					id="txtQtdOrcada_OrcamentosItens"
+					label="#{bundle.lbl_qtdOrcada}"
+					required="true"
+					value="#{orcamentosItensBacking.entity.qtdOrcada}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:date
+					id="txtDtvalidade_OrcamentosItens"
+					value="#{orcamentosItensBacking.entity.dtvalidade}"
+					label="#{bundle.lbl_dtvalidadePreco}" />
+
+				<xcp:number
+					id="txtVlrOrcado_OrcamentosItens"
+					label="#{bundle.lbl_vlrOrcado}"
+					size="21"
+					value="#{orcamentosItensBacking.entity.vlrOrcado}"
+					precision="18"
+					scale="2" />
+
+				<xcp:number
+					id="txtQtdComprada_OrcamentosItens"
+					label="#{bundle.lbl_qtdComprada}"
+					value="#{orcamentosItensBacking.entity.qtdComprada}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:memo
+					id="txtObs_OrcamentosItens"
+					label="#{bundle.lbl_obs}"
+					value="#{orcamentosItensBacking.entity.obs}"
+					size="4000" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

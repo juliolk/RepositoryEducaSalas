@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+						<p:fieldset
+							legend="#{bundle.tit_filtros_geracao}"
+							style="width:1000px;height:400px;">
+							<xcp:panelForm>
+
+								<xcp:lov
+									id="lovPeriodo"
+									value="#{progressaoBacking.periodo}"
+									label="#{bundle.lbl_periodo}"
+									required="true"
+									query="periodos"
+									params="#{progressaoBacking.paramsPeriodo}"
+									size="8"
+									sizeDesc="60"
+									update="funcList"
+									selectionListener="#{progressaoBacking.selectPeriodo}"
+									rendered="#{not progressaoBacking.filtroPreenchidoTela}" />
+
+								<xcp:date
+									id="txtDt"
+									value="#{progressaoBacking.data}"
+									label="#{bundle.lbl_data}"
+									required="true"
+									rendered="#{progressaoBacking.filtroPreenchidoTela}" />
+
+
+								<xcp:lov
+									id="lovTipoprogressao"
+									value="#{progressaoBacking.tipo}"
+									label="#{bundle.lbl_tipo}"
+									query="tipo_progressao"
+									selectionListener="#{progressaoBacking.actionBuscarTable}"
+									update="funcList"
+									required="true"
+									size="6"/>
+									
+							</xcp:panelForm>
+
+							<p:dataTable
+								id="funcList"
+								var="rowMult"
+								value="#{progressaoBacking.listaFuncionarios}"
+								selection="#{progressaoBacking.listaFuncionariosSel}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="270"
+								scrollWidth="980"
+								scrollable="true"
+								rowIndexVar="idx"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+
+								<p:ajax
+									event="toggleSelect"
+									update=":#{p:component('btn_gerar')}" />
+								<p:ajax
+									event="rowSelectCheckbox"
+									update=":#{p:component('btn_gerar')}" />
+								<p:ajax
+									event="rowUnselectCheckbox"
+									update=":#{p:component('btn_gerar')}" />
+
+								<p:column
+									selectionMode="multiple"
+									style="width:6px;text-align:center" />
+
+								<xcp:column
+									headerText="#{bundle.col_numMatricula}"
+									type="Number"
+									size="4"
+									sortBy="#{rowMult.matricula}">
+									<xcp:outputSimpleNumber
+										value="#{rowMult.matricula}"
+										precision="8"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desNomeFunc}"
+									type="String"
+									size="20"
+									sortBy="#{rowMult.nome}">
+									<xcp:outputSimple value="#{rowMult.nome}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_dtinicio}"
+									sortBy="#{rowMult.dtinicio}"
+									type="Date"
+									size="7">
+									<xcp:outputSimpleDate value="#{rowMult.dtinicio}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_acoes}"
+									type="String"
+									size="5">
+
+									<xcp:commandButton
+										icon="ui-icon-search"
+										oncomplete="PF('dlgObs_w').show()"
+										update=":frmObs">
+										<f:setPropertyActionListener
+											target="#{progressaoBacking.obs}"
+											value="#{rowMult.obs}" />
+									</xcp:commandButton>
+
+								</xcp:column>
+							</p:dataTable>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_buscar"
+						update="funcList"
+						value="#{bundle.btn_busca_boletim}"
+						action="#{progressaoBacking.actionBuscar}"
+						icon="ui-icon-search" />
+
+					<xcp:commandButton
+						id="btn_gerar"
+						update=":frmDoc"
+						value="#{bundle.btn_gerar}"
+						action="#{progressaoBacking.actionGerar}"
+						disabled="#{progressaoBacking.disabledActions}"
+						icon="ui-icon-gear" />
+
+					<xcp:commandButton
+						id="btn-imprimir"
+						value="#{bundle.btn_imprimir}"
+						styleClass="btn-main-action"
+						ajax="false"
+						action="#{progressaoBacking.imprimir}"
+						icon="ui-icon-print" />
+
+				</f:facet>
+			</p:toolbar>
+
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.lbl_documento}"
+			modal="true"
+			minWidth="400"
+			id="dlgAnexos"
+			widgetVar="dlgDoc_w"
+			closeOnEscape="true">
+			<xcp:form id="frmDoc">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{progressaoBacking.doc.descricao}"
+						maxlength="100"
+						size="75"
+						required="true" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{progressaoBacking.doc.tipoDocFk}"
+						label="#{bundle.lbl_tipodocdlg}"
+						required="true"
+						query="tipodocumento_transf"
+						size="6"
+						params="#{progressaoBacking.paramsTipoDoc}"
+						update="lovProcesso lovProcesso_l" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{progressaoBacking.doc.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						required="#{progressaoBacking.requiredProcNovo}"
+						size="25" />
+
+					<xcp:text
+						id="txtNrdoc"
+						label="#{bundle.lbl_nrdoc}"
+						required="#{progressaoBacking.requiredDoc}"
+						value="#{progressaoBacking.doc.nrdoc}"
+						size="20"
+						maxlength="18" />
+
+					<xcp:date
+						id="txtDtpublicacao"
+						value="#{progressaoBacking.doc.dtpublicacao}"
+						label="#{bundle.lbl_dtpublicacao_doc}"
+						size="13" />
+
+					<xcp:date
+						id="txtDtassinatura"
+						value="#{progressaoBacking.doc.dtassinatura}"
+						label="#{bundle.lbl_dtassinatura}"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:date
+						id="txtDtini"
+						value="#{progressaoBacking.doc.dtini}"
+						label="#{bundle.lbl_dtini_doc}"
+						size="13"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:combo
+						id="cboTiporgaopub"
+						value="#{progressaoBacking.doc.tiporgaopub}"
+						label="#{bundle.lbl_tiporgaopub}"
+						itens="#{documentosBacking.itensTiporgaopub}"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:number
+						id="txtNumpublicacao"
+						label="#{bundle.lbl_numpublicacao}"
+						value="#{progressaoBacking.doc.numpublicacao}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:text
+						id="txtNropaginadiario"
+						label="#{bundle.lbl_nropaginadiario}"
+						value="#{progressaoBacking.doc.nropaginadiario}"
+						size="20"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:number
+						id="txtNropagina"
+						label="#{bundle.lbl_nropagina}"
+						value="#{progressaoBacking.doc.nropagina}"
+						size="13"
+						precision="11"
+						scale="0"
+						maxValue="9999999999"
+						rendered="#{not diarioBacking.renderedDiario}" />
+
+					<xcp:date
+						id="txtDtdispub"
+						value="#{progressaoBacking.doc.dtdispub}"
+						label="#{bundle.lbl_dtdispub}"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:memo
+						id="txtObservacoes"
+						value="#{progressaoBacking.doc.observacoes}"
+						label="#{bundle.lbl_observacoes}"
+						rendered="#{diarioBacking.renderedDiario}" />
+				</xcp:panelForm>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gerar_dialog"
+							value="#{bundle.btn_gerar}"
+							action="#{progressaoBacking.actionGerarDialog}"
+							icon="ui-icon-search"
+							update=":form:funcList" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_obs}"
+			modal="true"
+			minWidth="400"
+			id="dlgObs"
+			widgetVar="dlgObs_w"
+			closeOnEscape="true">
+			<xcp:form id="frmObs">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtObs"
+						value="#{progressaoBacking.obs}"
+						label="#{bundle.lbl_obs}"
+						readonly="true" />
+				</xcp:panelForm>
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							value="#{bundle.btn_sair}"
+							icon="ui-icon-arrowthickstop-1-s"
+							update=":form:funcList"
+							onclick="PF('dlgObs_w').hide()" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+
+
+</ui:composition>

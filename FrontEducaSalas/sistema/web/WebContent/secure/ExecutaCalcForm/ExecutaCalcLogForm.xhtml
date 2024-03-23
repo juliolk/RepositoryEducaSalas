@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="table_logErros"
+		var="rowLog"
+		value="#{executaCalcBacking.helper.listaLog}"
+		filteredValue="#{executaCalcBacking.helper.listaFiltradosLog}"
+		rows="6"
+		selectionMode="single"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		paginator="true"
+		paginatorPosition="bottom"
+		selection="#{executaCalcBacking.logSelecionado}"
+		rowKey="#{rowLog.PK}"
+		resizableColumns="true">
+
+		<xcp:column
+			headerText="#{bundle.col_matricula}"
+			value="#{rowLog.matricula}"
+			type="Number"
+			size="8">
+			<xcp:outputSimpleNumber
+				value="#{rowLog.matricula}"
+				precision="8"
+				scale="0" />
+		</xcp:column>
+		<xcp:column
+			headerText="#{bundle.col_nome}"
+			value="#{rowLog.matriculaFk.nome}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{rowLog.matriculaFk.nome}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_msgerro}"
+			value="#{rowLog.msgerro}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{rowLog.msgerro}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_log}"
+			size="40"
+			type="String">
+			<xcp:memo
+				simple="true"
+				value="#{rowLog.log}" />
+		</xcp:column>
+	</p:dataTable>
+</ui:composition>

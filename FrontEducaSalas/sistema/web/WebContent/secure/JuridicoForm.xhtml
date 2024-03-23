@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Juridico"
+			backing="#{juridicoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.matriculaFk.nome}"
+					type="String"
+					size="8">
+					<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					value="#{row.processo}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{juridicoBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_junta}"
+					value="#{row.juntaFk.descricao}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.juntaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtprotocolo}"
+					value="#{row.dtprotocolo}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtprotocolo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{juridicoBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="funcionarios"
+						size="8"
+						readonly="#{not juridicoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtProcesso"
+						label="#{bundle.lbl_processo}"
+						required="true"
+						value="#{juridicoBacking.entity.processo}"
+						size="40"
+						readonly="#{not juridicoBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						size="15"
+						value="#{juridicoBacking.entity.valor}"
+						precision="12"
+						scale="2" />
+
+					<xcp:number
+						id="txtValorganho"
+						label="#{bundle.lbl_valorganho}"
+						size="15"
+						value="#{juridicoBacking.entity.valorganho}"
+						precision="12"
+						scale="2" />
+
+					<xcp:number
+						id="txtCustoadvg"
+						label="#{bundle.lbl_custoadvg}"
+						required="true"
+						size="15"
+						value="#{juridicoBacking.entity.custoadvg}"
+						precision="12"
+						scale="2" />
+
+					<xcp:number
+						id="txtDespesas"
+						label="#{bundle.lbl_despesas}"
+						size="15"
+						value="#{juridicoBacking.entity.despesas}"
+						precision="12"
+						scale="2" />
+
+					<xcp:text
+						id="txtAdvdefesa"
+						label="#{bundle.lbl_advdefesa}"
+						value="#{juridicoBacking.entity.advdefesa}"
+						size="40" />
+
+					<xcp:text
+						id="txtAdvre"
+						label="#{bundle.lbl_advre}"
+						value="#{juridicoBacking.entity.advre}"
+						size="40" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{juridicoBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{juridicoBacking.itensTipo}" />
+
+					<xcp:lov
+						id="lovJunta"
+						value="#{juridicoBacking.entity.juntaFk}"
+						label="#{bundle.lbl_juntaFk}"
+						required="true"
+						query="juntas"
+						size="3" />
+
+					<xcp:date
+						id="txtDtprotocolo"
+						value="#{juridicoBacking.entity.dtprotocolo}"
+						label="#{bundle.lbl_dtprotocolo}" />
+
+					<xcp:memo
+						id="txtReclamatoria"
+						label="#{bundle.lbl_reclamatoria}"
+						value="#{juridicoBacking.entity.reclamatoria}"
+						size="4000" />
+
+					<xcp:date
+						id="txtDatarecolhimento"
+						value="#{juridicoBacking.entity.datarecolhimento}"
+						label="#{bundle.lbl_datarecolhimento}" />
+
+					<xcp:number
+						id="txtBaseinss"
+						label="#{bundle.lbl_baseinss}"
+						size="15"
+						value="#{juridicoBacking.entity.baseinss}"
+						precision="12"
+						scale="2" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="JuridicoForm/AudienciaForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<ui:include src="JuridicoForm/JuridicoDialogs.xhtml" />
+	</ui:define>
+
+</ui:composition>

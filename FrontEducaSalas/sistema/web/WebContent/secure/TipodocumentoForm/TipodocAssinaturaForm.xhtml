@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="TipodocAssinatura"
+		backing="#{tipodocAssinaturaBacking}"
+		masterId="Tipodocumento">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_ordem}"
+				value="#{row.ordem}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.ordem}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="100">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_assinatura}"
+				value="#{row.assinaturasFk.descricao}"
+				type="String"
+				size="100">
+				<xcp:outputSimpleNumber
+					value="#{row.assinaturasFk.descricao}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtOrdem_ass"
+					label="#{bundle.lbl_ordem}"
+					required="true"
+					value="#{tipodocAssinaturaBacking.entity.ordem}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999"
+					readonly="#{not tipodocAssinaturaBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_ass"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{tipodocAssinaturaBacking.entity.descricao}"
+					size="100" />
+
+				<xcp:lov
+					id="lovAssinatura_ass"
+					value="#{tipodocAssinaturaBacking.entity.assinaturasFk}"
+					label="#{bundle.lbl_assinatura}"
+					required="true"
+					query="assinaturas"
+					size="8" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Ldap"
+			backing="#{ldapBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codldap}"
+					value="#{row.codldap}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.codldap}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_conexao}"
+					value="#{row.conexao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.conexao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_host}"
+					value="#{row.host}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.host}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodldap"
+						label="#{bundle.lbl_codldap}"
+						required="true"
+						value="#{ldapBacking.entity.codldap}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not ldapBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{ldapBacking.entity.descricao}"
+						size="50" />
+
+					<xcp:text
+						id="txtHost"
+						label="#{bundle.lbl_host}"
+						required="true"
+						value="#{ldapBacking.entity.host}"
+						size="100" />
+
+					<xcp:memo
+						id="txtConexao"
+						label="#{bundle.lbl_conexao}"
+						required="true"
+						value="#{ldapBacking.entity.conexao}"
+						size="200" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

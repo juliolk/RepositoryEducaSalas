@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="SetoresInsp"
+			backing="#{setoresInspBacking}">
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_copiar"
+					value="#{bundle.btn_copy}"
+					update="@all"
+					rendered="#{not setoresInspBacking.entity.novo}"
+					action="#{setoresInspBacking.actionDuplicar}">
+					<p:confirm
+						header="#{bundle.tit_conf_copiar}"
+						message="#{bundle.msg_conf_copiar}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_inspecao}"
+					value="#{row.inspecao}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.inspecao}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setor}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.setor}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.setor}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.setorFk.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.inicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.inicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{row.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.termino}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtInspecao"
+						label="#{bundle.lbl_inspecao}"
+						required="true"
+						value="#{setoresInspBacking.entity.inspecao}"
+						size="18"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999"
+						readonly="true"
+						rendered="#{not setoresInspBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{setoresInspBacking.entity.descricao}"
+						size="60" />
+
+					<!--  <xcp:combo
+						id="cboTipPessoa"
+						value="#{setoresInspBacking.helper.tipPessoa}"
+						label="#{bundle.lbl_tipoPessoa}"
+						required="true"
+						itens="#{setoresInspBacking.itensTipPessoa}">
+						<p:ajax
+							event="change"
+							listener="#{setoresInspBacking.actionChangeTipPessoa}"
+							update="lovMatricula,lovMatricula_l,lovPessoa,lovPessoa_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovPessoa"
+						required="true"
+						value="#{setoresInspBacking.entity.pessoaFk}"
+						label="#{bundle.lbl_pessoa}"
+						query="autonomos"
+						size="10"
+						rendered="#{setoresInspBacking.helper.tipPessoa == 2}" />
+
+					<xcp:lov
+						id="lovMatricula"
+						required="true"
+						value="#{setoresInspBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						query="funcionariosLov"
+						size="10"
+						rendered="#{setoresInspBacking.helper.tipPessoa == 1}" />-->
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{setoresInspBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						required="true"
+						query="set_validade"
+						size="10"
+						readonly="#{not setoresInspBacking.entity.novo}" />
+
+					<h:outputLabel value="#{bundle.lbl_inicio}:	*" />
+
+					<xcp:date
+						id="txtInicio"
+						required="true"
+						simple="true"
+						value="#{setoresInspBacking.entity.inicio}"
+						label="#{bundle.lbl_inicio}"
+						readonly="#{not setoresInspBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtPrazo"
+						value="#{setoresInspBacking.entity.prazo}"
+						label="#{bundle.lbl_prazo}" />
+
+					<xcp:date
+						id="txtTermino"
+						value="#{setoresInspBacking.entity.termino}"
+						label="#{bundle.lbl_termino}" />
+
+					<xcp:memo
+						id="txtSituacoes"
+						label="#{bundle.lbl_situacoes}"
+						value="#{setoresInspBacking.entity.situacoes}"
+						size="4000" />
+
+					<xcp:memo
+						id="txtMedidas"
+						label="#{bundle.lbl_medidas}"
+						value="#{setoresInspBacking.entity.medidas}"
+						size="4000" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="5" />
+
+				<div style="width: 1000px;">
+					<p:tabView id="tabView">
+						
+
+						<p:tab
+							id="tabOcor"
+							title="#{bundle.tit_ocorrencias}">
+							<ui:include src="SetoresInspForm/SetoresInspOcor.xhtml" />
+						</p:tab>
+
+						<p:tab title="#{bundle.tit_funcoes}">
+							<ui:include src="SetoresInspForm/SetoresInspFuncoes.xhtml" />
+						</p:tab>
+
+						<p:tab title="#{bundle.tit_respamb}">
+							<ui:include src="SetoresInspForm/SetoresInspRespamb.xhtml" />
+						</p:tab>
+
+						<p:tab
+							title="#{bundle.tit_funcaoagente}"
+							rendered="#{not setoresInspBacking.entity.novo}">
+							<ui:include src="SetoresInspForm/SetoresInspMedFuncAg.xhtml" />
+						</p:tab>
+
+						<p:tab title="#{bundle.tit_prodquim}">
+							<ui:include src="SetoresInspForm/SetoresInspProdQuim.xhtml" />
+						</p:tab>
+
+						<p:tab
+							title="#{bundle.tit_anexos}"
+							rendered="#{not setoresInspBacking.entity.novo}">
+							<ui:include src="SetoresInspForm/SetoresInspAnexos.xhtml" />
+						</p:tab>
+
+					</p:tabView>
+				</div>
+
+			</ui:define>
+
+		</xcp:panelManut>
+
+
+		<script type="text/javascript">
+					function xcpDownloadConsultaStart() {
+						PF('w_dlgXcpExecStatus').show();
+					}
+			
+					function xcpDownloadConsultaStop() {
+						PF('w_dlgXcpExecStatus').hide();
+					}
+	   </script>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<ui:include src="SetoresInspForm/SetoresInspDialogs.xhtml" />
+	</ui:define>
+
+</ui:composition>

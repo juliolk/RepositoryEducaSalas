@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	
+	<f:event
+		type="preRenderView"
+		listener="#{perguntasFrequentesPortalBacking.preRenderView}" />
+	
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<section id="perguntas">
+					<h1>Perguntas Frequentes</h1>
+					<div class="row">
+						<div class="col-sm-6 questions-topic-form">
+				  			<xcp:panelForm 
+				  				controlsSizeClass="big-controls"
+								floatingLabel="true">
+								<h2 class="questions-topic-form-label">Assunto</h2>
+								<xcp:combo
+									id="cboTopico"
+									simple="true"
+									label=""
+									value="#{perguntasFrequentesPortalBacking.topicoSelecionado}"
+									>
+									
+									<f:selectItem 
+										itemValue="#{-1}"
+										itemLabel="Todos" />
+									
+									<f:selectItems
+										value="#{perguntasFrequentesPortalBacking.listaPerguntasTopicos}"
+										var="topico"
+										itemLabel="#{topico.descricao}"
+										itemValue="#{topico.topico}" />
+									
+				                                <p:ajax
+				                                    event="change"
+				                                    update="listaPerguntas"
+				                                 listener="#{perguntasFrequentesPortalBacking.actionChangeTopico}" />
+								</xcp:combo>
+							</xcp:panelForm>
+						</div>
+					</div>
+					<p:outputPanel id="listaPerguntas" styleClass="content row">
+						<c:if test="#{perguntasFrequentesPortalBacking.listaPerguntasFrequentes.isEmpty()}">
+							<div class="col-md-12">
+								<h2>Nenhuma pergunta disponível.</h2>
+							</div>
+						</c:if>
+													
+						<c:if test="#{!perguntasFrequentesPortalBacking.listaPerguntasFrequentes.isEmpty()}">
+							<ul class="question-list">
+								<ui:repeat value="#{perguntasFrequentesPortalBacking.listaPerguntasFrequentes}"
+									var="pergunta">
+									<li class="question">
+										<h2 class="question-title">#{pergunta.descricao} <small>#{pergunta.topicoFk.descricao}</small></h2>
+										<p class="question-answer">#{pergunta.resposta}</p>
+									</li>
+								</ui:repeat>
+							</ul>
+						</c:if>
+					</p:outputPanel>
+	
+				</section>
+			</div>
+		</div>
+	</div>
+		
+</ui:composition>

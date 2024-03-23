@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.scrollarea {
+	overflow-y: scroll;
+	max-height: 180px;
+	width: 470px;
+}
+</style>
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(2)}"
+			escape="false" />
+
+		<xcp:panelFuncionarioLazy
+			id="Movimentacoes"
+			backing="#{movimentacoesBacking}"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc,row.dtcancelamento)}">
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_emitir_portaria"
+					value="#{bundle.btn_emitir_portaria}"
+					action="#{afastamentosPortariaDiretaBacking.actionOpenOrExecute}"
+					update="#{afastamentosPortariaDiretaBacking.btnEmitirUpdate}"
+					rendered="#{afastamentosPortariaDiretaBacking.renderedEmissao}" />
+
+				<xcp:commandButton
+					id="btn_excluir_portaria"
+					value="#{bundle.btn_excluir_portaria}"
+					action="#{afastamentosPortariaDiretaBacking.actionExcluirPortariaDireta}"
+					update="@form"
+					rendered="#{afastamentosPortariaDiretaBacking.renderedExcluir}">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{movimentacoesBacking.anexoIcon}"
+					update=":frmAnexos"
+					process="@this"
+					value="#{bundle.btn_anexos}"
+					oncomplete="PF('w_anexos').show()" />
+
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<p:column style="width:16px">
+					<p:rowToggler rendered="#{row.detalhes}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipmov}"
+					value="#{row.tipmovFk.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.tipmovFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dttermino}"
+					value="#{row.dttermino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dttermino}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdDias}"
+					value="#{movimentacoesBacking.calcQtdDiasAfas(row)}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{movimentacoesBacking.calcQtdDiasAfas(row)}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					style="background-color:inherit;"
+					headerText="#{bundle.col_observ}"
+					size="40"
+					type="String">
+					<p:outputPanel styleClass="funcionario-col-memo">#{row.obsLivre}</p:outputPanel>
+				</xcp:column>
+
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabDoc"
+						var="rowDoc"
+						value="#{row.listaMovDoc}"
+						rowKey="#{rowDoc.PK}"
+						paginator="true"
+						selectionMode="single"
+						paginatorPosition="bottom"
+						rowIndexVar="idx"
+						selection="#{movimentacoesBacking.helper.movDocSelecionada}"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-bottom:0;">
+
+						<p:ajax
+							event="rowSelect"
+							update=":frmDlgHist"
+							oncomplete="PF('dlgHist_w').show();" />
+
+
+						<ui:include src="DocManual/DocUnificadoDetalhesDoc.xhtml">
+							<ui:param
+								name="rowDoc"
+								value="#{rowDoc}" />
+
+							<ui:param
+								name="rowPrincipal"
+								value="#{row}" />
+
+							<ui:param
+								name="actionExclusao"
+								value="#{movimentacoesBacking.model}" />
+						</ui:include>
+
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipmov"
+						value="#{movimentacoesBacking.entity.tipmovFk}"
+						label="#{bundle.lbl_tipmov}"
+						required="true"
+						query="#{movimentacoesBacking.tipMovLov}"
+						size="5"
+						params="#{movimentacoesBacking.paramsTipMov}"
+						selectionListener="#{movimentacoesBacking.actionSelectTipMov}"
+						readonly="#{movimentacoesBacking.readOnlyTipMov}"
+						update="lovConv,lovConv_l,txtDtefeito,txtDtefeito_l,cboIndJuizo,cboIndJuizo_l,cboTipoReintegracao,cboTipoReintegracao_l,txtDttermino,txtDttermino_l,txtDiasAfastamento,txtDiasAfastamento_l,txtObsLivre,txtObsLivre_l,txtDtprevretorno,txtDtprevretorno_l,lovSituacaovaga,lovSituacaovaga_l,txtDtocorrencia,txtDtocorrencia_l,lovParaVagaIndiv,lovParaVagaIndiv_l,lovAtestado,lovAtestado_l,lovConvTip,lovConvTip_l" />
+
+					<p:outputLabel
+						value="#{movimentacoesBacking.helper.canceladoAfast ? bundle.lbl_lib : bundle.lbl_canc}"
+						rendered="#{movimentacoesBacking.renderedChkCancelar or movimentacoesBacking.renderedDtCancelamento}" />
+
+					<h:panelGrid
+						columns="4"
+						rendered="#{movimentacoesBacking.renderedChkCancelar or movimentacoesBacking.renderedDtCancelamento}">
+						<xcp:check
+							id="chk_bloq_lib"
+							label="#{movimentacoesBacking.helper.canceladoAfast ? bundle.lbl_lib : bundle.lbl_canc}"
+							rendered="#{movimentacoesBacking.renderedChkCancelar}"
+							value="#{movimentacoesBacking.helper.canceladoAfast}"
+							simple="true">
+							<p:ajax
+								event="change"
+								update="@form"
+								listener="#{movimentacoesBacking.cancelaLiberaAfast}" />
+						</xcp:check>
+
+						<xcp:dateTime
+							id="txtCancelamento"
+							value="#{movimentacoesBacking.entity.dtcancelamento}"
+							label="#{bundle.lbl_cancelado}"
+							rendered="#{movimentacoesBacking.renderedDtCancelamento}"
+							readonly="true" />
+
+					</h:panelGrid>
+
+					<xcp:border
+						id="brd_datas"
+						header="#{bundle.tit_periodo_afastamento}"
+						stylefieldset="width:460px !important; margin-left: 0px !important">
+
+						<xcp:date
+							id="txtDtocorrencia"
+							required="true"
+							value="#{movimentacoesBacking.entity.dtocorrencia}"
+							label="#{bundle.lbl_dtocorrencia}"
+							rendered="#{movimentacoesBacking.entity.tipmovFk.indDtocorrencia == 1}" />
+
+						<xcp:date
+							id="txtDtinicio"
+							required="true"
+							value="#{movimentacoesBacking.entity.dtinicio}"
+							label="#{bundle.lbl_dtinicio}"
+							readonly="#{movimentacoesBacking.readOnlyDtaInicio}">
+							<p:ajax
+								event="change"
+								listener="#{movimentacoesBacking.calculaDiasIni}"
+								update="txtDiasAfastamento,txtDttermino,lovConv,lovConv_l" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{movimentacoesBacking.calculaDiasIni}"
+								update="txtDiasAfastamento,txtDttermino,lovConv,lovConv_l" />
+						</xcp:date>
+
+						<xcp:date
+							id="txtDttermino"
+							value="#{movimentacoesBacking.entity.dttermino}"
+							label="#{bundle.lbl_dttermino}"
+							readonly="#{movimentacoesBacking.readOnlyFieldsTermino}">
+							<p:ajax
+								event="change"
+								listener="#{movimentacoesBacking.calculaDias}"
+								update="txtDiasAfastamento" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{movimentacoesBacking.calculaDias}"
+								update="txtDiasAfastamento" />
+						</xcp:date>
+
+						<xcp:number
+							id="txtDiasAfastamento"
+							value="#{movimentacoesBacking.helper.qtdDiasAfastamento}"
+							label="#{bundle.lbl_diasAfastamento}"
+							size="10"
+							precision="5"
+							scale="0"
+							readonly="#{movimentacoesBacking.readOnlyFieldsTermino}">
+							<p:ajax
+								event="change"
+								listener="#{movimentacoesBacking.calculaData}"
+								update="txtDttermino" />
+						</xcp:number>
+					</xcp:border>
+
+
+					<xcp:date
+						id="txtDtprevretorno"
+						value="#{movimentacoesBacking.entity.dtprevretorno}"
+						label="#{bundle.lbl_dtprevretorno}"
+						rendered="#{movimentacoesBacking.renderedPrevRetorno}" />
+
+					<xcp:lov
+						id="lovConv"
+						value="#{movimentacoesBacking.entity.codconvFk}"
+						label="#{bundle.lbl_convenio}"
+						query="consignacoes_cedido"
+						size="10"
+						rendered="#{movimentacoesBacking.renderedLovConv}"
+						required="true"
+						params="#{movimentacoesBacking.parEspConsig}"
+						readonly="#{movimentacoesBacking.readOnlyFields}" />
+						
+					<xcp:lov
+						id="lovConvTip"
+						value="#{movimentacoesBacking.entity.codconvFk}"
+						label="#{bundle.lbl_convenio}"
+						query="consignacoes_org"
+						size="10"
+						rendered="#{movimentacoesBacking.renderedLovConvTip}"
+						required="true"
+						readonly="#{movimentacoesBacking.readOnlyFields}" />	
+
+
+					<xcp:combo
+						id="cboTipoReintegracao"
+						value="#{movimentacoesBacking.entity.tipReintegracao}"
+						label="#{bundle.lbl_tipoReintegracao}"
+						required="true"
+						rendered="#{movimentacoesBacking.entity.tipmovFk.classificacao == 13}"
+						itens="#{movimentacoesBacking.itensReintegracao}">
+
+						<p:ajax
+							event="change"
+							process="@this"
+							update="txtProcjudic,txtProcjudic_l" />
+
+					</xcp:combo>
+
+					<xcp:date
+						id="txtDtefeito"
+						required="true"
+						rendered="#{movimentacoesBacking.entity.tipmovFk.classificacao == 13}"
+						value="#{movimentacoesBacking.entity.dtEfeito}"
+						label="#{bundle.lbl_dtefeito}" />
+
+					<xcp:combo
+						id="cboIndJuizo"
+						required="true"
+						value="#{movimentacoesBacking.entity.indPagamentoJuizo}"
+						label="#{bundle.lbl_pagamentojuizo}"
+						rendered="#{movimentacoesBacking.entity.tipmovFk.classificacao == 13}"
+						itens="#{movimentacoesBacking.itensIndSimNaoNull}" />
+
+
+					<!-- 
+					<xcp:number
+						id="txtSetor"
+						label="#{bundle.lbl_setor}"
+						value="#{movimentacoesBacking.entity.setor}"
+						size="15"
+						precision="15"
+						scale="0"
+						maxValue="999999999999999" />
+
+					<xcp:number
+						id="txtCodretorno"
+						label="#{bundle.lbl_codretorno}"
+						value="#{movimentacoesBacking.entity.codretorno}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{movimentacoesBacking.entity.orgaoFk}"
+						label="#{bundle.lbl_orgao}"
+						query="consignacoes"
+						size="8" />
+
+ -->
+					<xcp:lov
+						id="lovOrigem"
+						value="#{movimentacoesBacking.entity.origemFk}"
+						label="#{bundle.lbl_origem}"
+						query="origemmov"
+						size="5"
+						rendered="#{movimentacoesBacking.renderedOrigem}" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{movimentacoesBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_afas"
+						params="#{movimentacoesBacking.paramsTipoDoc}"
+						selectionListener="#{movimentacoesBacking.selectTipodocumento}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,lovProcessoRev,lovProcessoRev_l,panelRetificacao,pnlinfotipodoc,toolform,btnAddDoc,txtProcjudic,txtProcjudic_l"
+						size="5"
+						readonly="#{movimentacoesBacking.readOnlyTipdoc}" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{movimentacoesBacking.entity.registroFk}"
+						params="#{movimentacoesBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						size="5"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento,toolform"
+						readonly="#{movimentacoesBacking.readOnlyDoc}"
+						selectionListener="#{movimentacoesBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{movimentacoesBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{movimentacoesBacking.readOnlyProc}"
+						required="#{movimentacoesBacking.requiredProc}"
+						size="25" />
+
+					<xcp:lov
+						id="lovProcessoRev"
+						value="#{movimentacoesBacking.entity.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{movimentacoesBacking.renderedProcessoRev}"
+						size="25" />
+
+					<xcp:lov
+						id="lovAtestado"
+						value="#{movimentacoesBacking.helper.atestado}"
+						label="#{bundle.lbl_atendimento}"
+						query="atestados"
+						size="12"
+						readonly="#{not movimentacoesBacking.helper.atestadoEditavel}"
+						rendered="#{movimentacoesBacking.entity.tipmovFk.indLaudo == 1}"
+						params="#{movimentacoesBacking.paramsAtestado}" />
+
+					<xcp:lov
+						id="lovSituacaovaga"
+						value="#{movimentacoesBacking.entity.situacaovagaFk}"
+						label="#{bundle.lbl_situacaovaga}"
+						query="sitvagalibocu"
+						required="true"
+						rendered="#{movimentacoesBacking.renderedSituacaoVaga}"
+						size="4"
+						readonly="#{movimentacoesBacking.readonlySituacaoVaga}" />
+
+					<xcp:lov
+						id="lovParaVagaIndiv"
+						value="#{movimentacoesBacking.helper.numSeqVagaFk}"
+						label="#{bundle.lbl_vagaindiv}"
+						query="cargosvagasatu"
+						rendered="#{movimentacoesBacking.renderedVagaIndiv}"
+						params="#{movimentacoesBacking.paramsVagaIndiv}"
+						readonly="#{not movimentacoesBacking.entity.novo}"
+						size="5"
+						required="true" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid id="panelRetificacao">
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{movimentacoesBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(movimentacoesBacking.entity.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{movimentacoesBacking.model.actionOpenVisDialog(movimentacoesBacking.entity.registro)}"
+										process="@this" />
+								</p:splitButton>
+							</p:column>
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDoc"
+									model="#{movimentacoesBacking.model}" />
+							</p:column>
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty movimentacoesBacking.entity.tipodocFk.instrucoes}" />
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{movimentacoesBacking.entity.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{movimentacoesBacking.entity.retificacao}"
+										label="#{movimentacoesBacking.labelRetif}"
+										rendered="#{movimentacoesBacking.entity.retificacao!=null}"
+										readonly="true">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{movimentacoesBacking.actionRemoveRetificacao}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{movimentacoesBacking.labelRetif}"
+										rendered="#{movimentacoesBacking.renderedRetificacao}"
+										value="#{movimentacoesBacking.helper.retificacao}">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:text
+						id="txtProcjudic"
+						label="#{bundle.lbl_procjudic}"
+						value="#{movimentacoesBacking.entity.procjudic}"
+						size="25"
+						rendered="#{movimentacoesBacking.renderedProcJud}"
+						required="#{movimentacoesBacking.entity.tipReintegracao == 1}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_txtPort}"
+						value="#{movimentacoesBacking.entity.obs}"
+						size="4000"
+						styleClass="scrollarea"
+						readonly="#{movimentacoesBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:memo>
+
+					<xcp:memo
+						id="txtObsLivre"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{movimentacoesBacking.entity.obsLivre}"
+						size="4000"
+						styleClass="scrollarea"
+						required="#{movimentacoesBacking.requiredObsLivre}" />
+					<!-- 
+					<xcp:memo
+						id="txtObs2"
+						label="#{bundle.lbl_obs2}"
+						value="#{movimentacoesBacking.entity.obs2}"
+						size="1000" />
+
+					<xcp:memo
+						id="txtObs3"
+						label="#{bundle.lbl_obs3}"
+						value="#{movimentacoesBacking.entity.obs3}"
+						size="1000" />
+ -->
+
+					<xcp:date
+						id="txtDtlancamento"
+						readonly="true"
+						rendered="#{not movimentacoesBacking.entity.novo and movimentacoesBacking.entity.dtlancamento != null}"
+						value="#{movimentacoesBacking.entity.dtlancamento}"
+						label="#{bundle.lbl_dtlancamento}" />
+
+
+					<p:spacer width="1" />
+					<xcp:panelEsoc
+						backing="#{movimentacoesBacking}"
+						tipoesoc="2"
+						stylefieldset="width: 100px" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_historico}"
+			modal="true"
+			id="dlgHist"
+			widgetVar="dlgHist_w">
+			<xcp:form id="frmDlgHist">
+				<ui:include src="MovimentacoesForm/MovimentacoesDetalhesForm.xhtml" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlgHist_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{movimentacoesBacking.model}" />
+		</ui:include>
+
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{afastamentosPortariaDiretaBacking}" />
+		</ui:include>
+
+
+		<p:confirmDialog
+			widgetVar="confirm_w"
+			header="#{bundle.title_confirmacao}"
+			message="#{bundle.msg_periodos_serao_canc}">
+			<p:commandButton
+				value="#{bundle.btn_sim}"
+				icon="ui-icon-check"
+				update=":form"
+				action="#{movimentacoesBacking.actionGravarFromMsg}"
+				onclick="PF('confirm_w').hide()" />
+			<p:commandButton
+				value="#{bundle.btn_nao}"
+				icon="ui-icon-close"
+				onclick="PF('confirm_w').hide()" />
+		</p:confirmDialog>
+
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{movimentacoesBacking.helper.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{movimentacoesBacking.helper.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{movimentacoesBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo"
+							action="#{movimentacoesBacking.actionEditarAnexo(rowAnex)}">
+
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update="tblAnex :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{movimentacoesBacking.actionRemoveFile(rowAnex)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{movimentacoesBacking.helper.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{movimentacoesBacking.helper.anexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{movimentacoesBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{movimentacoesBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

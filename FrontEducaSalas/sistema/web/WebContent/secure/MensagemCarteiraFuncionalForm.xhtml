@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+	
+		<xcp:panelManut id="MensagemCarteiraFuncional"
+			backing="#{mensagemCarteiraFuncionalBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_orgao}" value="#{row.orgaoFk.descricao}" type="String" size="10">
+					<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+					<p:outputPanel rendered="#{row.orgaoFk == null}">#{bundle.opt_todos}</p:outputPanel>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_divisao}" value="#{row.divisaoFk.descricao}" type="String" size="10">
+					<xcp:outputSimple value="#{row.divisaoFk.descricao}" />
+					<p:outputPanel rendered="#{row.divisaoFk == null}">#{bundle.opt_todos}</p:outputPanel>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_setor}" value="#{row.setorFk.descricao}" type="String" size="10">
+					<xcp:outputSimple value="#{row.setorFk.descricao}"  />
+					<p:outputPanel rendered="#{row.setorFk == null}">#{bundle.opt_todos}</p:outputPanel>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_vinculo}" value="#{row.vinculoFk.descricao}" type="String" size="10">
+					<xcp:outputSimple value="#{row.vinculoFk.descricao}" />
+					<p:outputPanel rendered="#{row.vinculoFk == null}">#{bundle.opt_todos}</p:outputPanel>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.lbl_cargo}" value="#{row.cargoFk.descricao}" type="String" size="10">
+					<xcp:outputSimple value="#{row.cargoFk.descricao}" />
+					<p:outputPanel rendered="#{row.cargoFk == null}">#{bundle.opt_todos}</p:outputPanel>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_funcao}" value="#{row.funcaoFk.descricao}" type="String" size="10">
+					<xcp:outputSimple value="#{row.funcaoFk.descricao}"  />
+					<p:outputPanel rendered="#{row.funcaoFk == null}">#{bundle.opt_todos}</p:outputPanel>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_mensagem}" value="#{row.mensagem}" type="String" size="100">
+					<xcp:outputSimple value="#{row.mensagem}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{mensagemCarteiraFuncionalBacking.entity.orgaoFk}"
+						selectionListener="#{mensagemCarteiraFuncionalBacking.selectOrgao}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos_all"
+						update="lovDivisao,lovSetor"
+						size="4" />
+	
+					<xcp:lov
+						id="lovDivisao"
+						value="#{mensagemCarteiraFuncionalBacking.entity.divisaoFk}"
+						label="#{bundle.lbl_divisao}"
+						query="divisoes_orgao_all"
+						selectionListener="#{mensagemCarteiraFuncionalBacking.selectDivisao}"
+						params="#{mensagemCarteiraFuncionalBacking.paramsDivisao}"
+						update="lovSetor"
+						size="4" />
+	
+					<xcp:lov
+						id="lovSetor"
+						value="#{mensagemCarteiraFuncionalBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						params="#{mensagemCarteiraFuncionalBacking.paramsSetor}"
+						query="setores_divisao_all"
+						size="4" />
+	
+					<xcp:lov
+						id="lovCargo"
+						value="#{mensagemCarteiraFuncionalBacking.entity.cargoFk}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="8" />
+
+					<xcp:lov
+						id="lovFuncao"
+						value="#{mensagemCarteiraFuncionalBacking.entity.funcaoFk}"
+						label="#{bundle.lbl_funcao}"
+						query="funcoes"
+						size="10" />
+		
+					<xcp:lov
+						id="lovVinculo"
+						value="#{mensagemCarteiraFuncionalBacking.entity.vinculoFk}"
+						label="#{bundle.lbl_vinculo}"
+						query="vinculos_all"
+						size="4" />
+
+					<xcp:text id="txtMensagem" label="#{bundle.lbl_mensagem}"
+						required="true"
+						value="#{mensagemCarteiraFuncionalBacking.entity.mensagem}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.title_aviso}">
+				<h:outputText
+					value="#{bundle.msg_info_avaldesempaceite}"
+					style="font-weight: bold;" />
+			</p:fieldset>
+
+			<p:spacer height="5px" />
+
+			<p:fieldset>
+				<xcp:panelForm>
+					<xcp:date
+						id="dtaAceite"
+						required="true"
+						label="#{bundle.dta_aceite}"
+						value="#{avalDesempAceiteLoteBacking.dtaAceite}" />
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:spacer height="5px" />
+
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<xcp:commandButton
+						value="#{bundle.btn_executar}"
+						action="#{avalDesempAceiteLoteBacking.actionConfirmar}"
+						icon="ui-icon-gear">
+						<p:confirm
+							header="#{bundle.tit_confirma_execucao}"
+							message="#{bundle.msg_confirma_execucao}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</p:toolbarGroup>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

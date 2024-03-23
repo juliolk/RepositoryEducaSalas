@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="EditalNomCarCan"
+		backing="#{editalNomCarCanBacking}"
+		renderedRemover="false"
+		renderedNovo="false"
+		masterId="EditalNom">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_edital}"
+				value="#{row.editalFk.edital}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.editalFk.edital}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.editalFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.editalFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_ordem}"
+				value="#{row.citacao}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.citacao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_funcao}"
+				value="#{row.funcao}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.funcao}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.funcaoFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.funcaoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_codigo}"
+				value="#{row.codigo}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.codigo}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.candidatoFk.nome}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.candidatoFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vaga}"
+				value="#{row.numSeqVaga}"
+				type="String"
+				size="10"
+				rendered="#{editalNomCarCanBacking.renderedVagaIndividual}">
+				<xcp:outputSimple value="#{row.numSeqVaga}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="String"
+				size="10"
+				itens="#{editalNomCarCanBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{editalNomCarCanBacking.itensTipo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_situacao}"
+				value="#{row.situacao}"
+				type="String"
+				size="10"
+				itens="#{editalNomCarCanBacking.itensSit}">
+				<xcp:outputSimple
+					value="#{row.situacao}"
+					itens="#{editalNomCarCanBacking.itensSit}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovEdital_EditalNomCarCan"
+					value="#{editalNomCarCanBacking.entity.candidatoFk}"
+					label="#{bundle.lbl_candidato}"
+					readonly="true"
+					required="true"
+					query="candidatos"
+					size="8" />
+
+				<xcp:lov
+					id="lovFuncao"
+					value="#{editalNomCarCanBacking.entity.funcaoFk}"
+					readonly="true"
+					label="#{bundle.lbl_funcao}"
+					query="funcoes"
+					size="8" />
+
+				<xcp:number
+					id="txtCitacao_EditalNomCarCan"
+					label="#{bundle.lbl_citacao}"
+					required="true"
+					value="#{editalNomCarCanBacking.entity.citacao}"
+					size="8"
+					readonly="true"
+					precision="4"
+					scale="0"
+					maxValue="9999" />
+
+				<xcp:text
+					id="txtSubstituto_EditalNomCarCan"
+					label="#{bundle.lbl_substituindo}"
+					readonly="true"
+					rendered="#{editalNomCarCanBacking.entity.substituto!=null}"
+					value="#{editalNomCarCanBacking.entity.substituto.nome}"
+					size="80" />
+
+				<xcp:combo
+					id="cboTipo_EditalNomCarCan"
+					readonly="true"
+					value="#{editalNomCarCanBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{editalNomCarCanBacking.itensTipo}" />
+
+				<xcp:combo
+					id="cboSituacao_EditalNomCarCan"
+					value="#{editalNomCarCanBacking.entity.situacao}"
+					readonly="#{editalNomCarCanBacking.readOnlySituacao}"
+					label="#{bundle.lbl_situacao}"
+					required="true"
+					itens="#{editalNomCarCanBacking.itensSit}">
+
+					<p:ajax
+						event="change"
+						update="lovCargoVaga lovCargoVaga_l" />
+						
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovLiminarCan_EditalNomCarCan"
+					value="#{editalNomCarCanBacking.entity.liminarCanFk}"
+					label="#{bundle.lbl_liminarCan}"
+					readonly="true"
+					query="liminar_can"
+					size="10" />
+
+				<xcp:lov
+					id="lovEmpresaNom"
+					value="#{editalNomCarCanBacking.entity.empresaNomFk}"
+					readonly="#{editalNomCarCanBacking.disabledGravarEmpNom}"
+					rendered="#{editalNomCarCanBacking.entity.editalNomCarFk.vagasOut gt 0}"
+					label="#{bundle.lbl_empresaNom}"
+					query="empresas_out"
+					size="10" />
+
+				<xcp:memo
+					id="txtMotivo_EditalNomCarCan"
+					readonly="true"
+					label="#{bundle.lbl_motivo}"
+					value="#{editalNomCarCanBacking.entity.motivo}"
+					size="4000" />
+
+				<xcp:lov
+					id="lovCargoVaga"
+					value="#{editalNomCarCanBacking.entity.numSeqVagaFk}"
+					label="#{bundle.lbl_vaga}"
+					query="#{editalNomCarCanBacking.queryVaga}"
+					params="#{editalNomCarCanBacking.paramsCargosVagas}"
+					size="4"
+					required="#{editalNomCarCanBacking.requiredVaga}"
+					rendered="#{editalNomCarCanBacking.renderedVagaIndividual}"
+					readonly="#{editalNomCarCanBacking.disabledGravarEmpNom}" />
+
+			</xcp:panelForm>
+
+			<!--  <p:fieldset legend="#{bundle.title_setor_escolhido}">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovSetor"
+						value="#{editalNomCarCanBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setor_carset"
+						size="10"
+						params="#{editalNomCarCanBacking.paramsSetor}" />
+
+					<xcp:combo
+						id="txtTipo"
+						value="#{editalNomCarCanBacking.entity.tipSetSel}"
+						label="#{bundle.lbl_tipSetSel}"
+						itens="#{editalNomCarCanBacking.itensTipSetSel}" />
+				</xcp:panelForm>
+			</p:fieldset>-->
+		</ui:define>
+
+
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

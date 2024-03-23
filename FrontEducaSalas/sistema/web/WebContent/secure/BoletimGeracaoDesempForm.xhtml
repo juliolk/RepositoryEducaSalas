@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.ui-selectonemenu {
+	width: 95% !important;
+}
+
+.ui-selectonemenu-label {
+	width: 95% !important;
+}
+
+#form\:funcBoletim_data td{
+	padding: 1px 10px;
+	border-style: unset;
+}
+
+#form\:funcBoletim_data .form_label{
+	width: 20%;
+	padding: 0px;
+}
+
+</style>
+		<xcp:panelContent>
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+
+						<p:fieldset
+							legend="#{bundle.tit_filtros_geracao}"
+							style="width:1200px;height:400px;">
+							<xcp:panelForm>
+
+								<xcp:dateRange
+									id="txtDta"
+									required="true"
+									valueStart="#{boletimGeracaoDesempBacking.dtinicio}"
+									valueEnd="#{boletimGeracaoDesempBacking.dtfim}"
+									label="#{bundle.lbl_data_inicial}"
+									margin="5px"
+									rendered="#{boletimGeracaoDesempBacking.geracaoTipoProbatorio}"
+									size="8" />
+
+								<xcp:lov
+									id="lovPeriodo"
+									value="#{boletimGeracaoDesempBacking.periodo}"
+									label="#{bundle.lbl_periodo}"
+									required="true"
+									query="periodos"
+									params="#{boletimGeracaoDesempBacking.paramsPeriodo}"
+									size="8"
+									sizeDesc="60"
+									update="funcBoletim"
+									rendered="#{!boletimGeracaoDesempBacking.geracaoTipoProbatorio}"
+									selectionListener="#{boletimGeracaoDesempBacking.selectPeriodo}" />
+
+								<xcp:lov
+									id="lovDocumento"
+									value="#{boletimGeracaoDesempBacking.documento}"
+									label="#{bundle.lbl_documento}"
+									required="true"
+									query="documentoslov"
+									params="#{boletimGeracaoDesempBacking.paramsDocProb}"
+									rendered="#{boletimGeracaoDesempBacking.geracaoTipoProbatorio}"
+									size="8"
+									sizeDesc="60" />
+
+								<xcp:dateRange
+									id="txtDtaAdmissao"
+									label="#{bundle.lbl_dtaAdmissao}"
+									valueStart="#{boletimGeracaoDesempBacking.dtadmissaoini}"
+									valueEnd="#{boletimGeracaoDesempBacking.dtadmissaofim}"
+									rendered="#{!boletimGeracaoDesempBacking.geracaoTipoProbatorio}"
+									margin="5px"
+									size="8" />
+
+							</xcp:panelForm>
+
+							<p:spacer width="4" />
+							<p:dataTable
+								id="funcBoletim"
+								var="rowMult"
+								value="#{boletimGeracaoDesempBacking.listaFuncionarios}"
+								selection="#{boletimGeracaoDesempBacking.listaFuncionariosSel}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="270"
+								scrollWidth="1160"
+								scrollable="true"
+								rowIndexVar="idx"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+
+								<p:ajax
+									event="toggleSelect"
+									update=":#{p:component('btn_gerar_boletim')}" />
+								<p:ajax
+									event="rowSelectCheckbox"
+									update=":#{p:component('btn_gerar_boletim')}" />
+								<p:ajax
+									event="rowUnselectCheckbox"
+									update=":#{p:component('btn_gerar_boletim')}" />
+								<p:column
+									selectionMode="multiple"
+									style="width:15px;text-align:center" />
+
+								<xcp:column
+									headerText="#{bundle.col_numMatricula}"
+									type="Number"
+									size="6"
+									sortBy="#{rowMult.matricula}">
+									<xcp:outputSimpleNumber
+										value="#{rowMult.matricula}"
+										precision="8"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desNomeFunc}"
+									type="String"
+									size="25"
+									sortBy="#{rowMult.nome}">
+									<xcp:outputSimple value="#{rowMult.nome}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_regraaval}"
+									type="String"
+									size="40"
+									rendered="#{!boletimGeracaoDesempBacking.geracaoTipoProbatorio}">
+									<p:selectOneMenu value="#{rowMult.seqRegra}">
+										<f:selectItems
+											value="#{rowMult.listRegras}"
+											var="mult"
+											itemValue="#{mult.seq}"
+											itemLabel="#{mult.avaliacaoFk.descricao} - DIAS: #{mult.qtddias}" />
+									</p:selectOneMenu>
+
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.lbl_codcomissao}"
+									type="String"
+									size="50"
+									rendered="#{!boletimGeracaoDesempBacking.geracaoTipoProbatorio}">
+									<xcp:panelForm>
+										<xcp:lov
+											id="aval#{idx}"
+											value="#{rowMult.comissaoFk}"
+											label="#{bundle.lbl_codcomissao}"
+											query="comissao_aval_desemp"
+											size="3"
+											params="#{boletimGeracaoDesempBacking.paramsCom}"
+											sizeDesc="30" />
+
+										<xcp:lov
+											id="avalpares#{idx}"
+											value="#{rowMult.comissaoparesFk}"
+											label="#{bundle.lbl_codcomissaopares}"
+											query="comissao_aval_desemp"
+											size="3"
+											params="#{boletimGeracaoDesempBacking.paramsCom}"
+											sizeDesc="30"
+											rendered="#{boletimGeracaoDesempBacking.temAvaliacaoPares}" />
+									</xcp:panelForm>
+								</xcp:column>
+
+							</p:dataTable>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_busca_boletim"
+						update="funcBoletim"
+						value="#{bundle.btn_busca_boletim}"
+						action="#{boletimGeracaoDesempBacking.actionBuscar}"
+						icon="ui-icon-gear" />
+
+					<xcp:commandButton
+						id="btn_gerar_boletim"
+						update="funcBoletim"
+						value="#{bundle.btn_gerar_boletim}"
+						action="#{boletimGeracaoDesempBacking.actionGerar}"
+						disabled="#{boletimGeracaoDesempBacking.listaFuncionariosSel.size()==0}"
+						icon="ui-icon-gear" />
+
+				</f:facet>
+			</p:toolbar>
+
+			<script type="text/javascript">
+				function downloadFileStart() {
+					PF('w_dlgXcpExecStatus').show();
+				}
+		
+				function downloadFileStop() {
+					PF('w_dlgXcpExecStatus').hide();
+				}
+			</script>
+
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

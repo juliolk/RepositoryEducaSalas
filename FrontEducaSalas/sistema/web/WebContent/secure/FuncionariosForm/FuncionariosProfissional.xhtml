@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags">
+
+	<xcpfunc:menuDocumento
+		idComponente="lovSetor"
+		tipdocumento="13"
+		rendered="#{funcionariosBacking.canRenderDocSetor()}" />
+
+	<xcpfunc:menuDocumento
+		idComponente="brd_dados_cnh"
+		tipdocumento="15" />
+
+	<p:tooltip
+		for=":form:tabFuncionarios:lovSetor"
+		trackMouse="true"
+		value="#{bundle.lbl_orgao_superior}: #{funcionariosBacking.getLotacaoMacro().codigo} - #{funcionariosBacking.getLotacaoMacro().descricao}"
+		rendered="#{funcionariosBacking.getLotacaoMacro() != null and !funcionariosBacking.getEntity().novo}" />
+
+
+	<p:panelGrid>
+		<p:row>
+			<p:column>
+
+				<xcp:panelForm>
+					<!-- 
+						<xcp:lov
+							id="lovTipmov"
+							value="#{funcionariosBacking.entity.tipmovFk}"
+							label="#{bundle.lbl_tipmov}"
+							query="tipomovtos"
+							size="4" />
+ -->
+					<xcp:lov
+						id="lovSetor"
+						inputPanelClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(13) }"
+						value="#{funcionariosBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						required="true"
+						query="set_validade"
+						size="8"
+						readonly="#{funcionariosBacking.readOnlySetor}" />
+
+					<xcp:lov
+						id="lovLotacaoOriginal"
+						value="#{funcionariosBacking.getLotacaoOriginal()}"
+						label="#{bundle.lbl_lotacao_origem}"
+						required="false"
+						query="setores"
+						size="8"
+						rendered="#{funcionariosBacking.renderedLotacao}"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{funcionariosBacking.entity.cargoFk}"
+						selectionListener="#{funcionariosBacking.selectCargo}"
+						label="#{bundle.lbl_cargo}"
+						required="true"
+						update="txtHrsemanais lovPadrao cboNivel txtSalbase lovSindicatoPanel pnlSindVaga"
+						query="#{funcionariosBacking.queryCargo}"
+						size="8"
+						readonly="#{funcionariosBacking.readOnlyCargo}"
+						params="#{funcionariosBacking.paramsCargoFuncao}" />
+
+					<xcp:lov
+						id="lovFuncao"
+						value="#{funcionariosBacking.entity.funcaoFk}"
+						label="#{bundle.lbl_funcao}"
+						required="true"
+						selectionListener="#{funcionariosBacking.selectFuncao}"
+						query="#{funcionariosBacking.queryFuncao}"
+						size="8"
+						readonly="#{funcionariosBacking.readOnlyFuncao}"
+						params="#{funcionariosBacking.paramsCargoFuncao}" />
+
+					<xcp:lov
+						id="lovCcusto"
+						value="#{funcionariosBacking.entity.ccustoFk}"
+						label="#{bundle.lbl_ccusto}"
+						required="true"
+						query="ccusto"
+						size="8"
+						readonly="#{funcionariosBacking.readOnlyCamposMov}" />
+
+					<!-- 
+ 
+					<xcp:lov
+						id="lovCbo"
+						value="#{funcionariosBacking.entity.cboFk}"
+						label="#{bundle.lbl_cbo}"
+						query="cbo"
+						size="8" />
+-->
+				</xcp:panelForm>
+
+				<xcp:border
+					id="brd_remuneracao"
+					header="#{bundle.tit_remuneracao}">
+
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column colspan="2">
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovPadrao"
+										value="#{funcionariosBacking.entity.padraoFk}"
+										params="#{funcionariosBacking.paramsPadrao}"
+										selectionListener="#{funcionariosBacking.selectPadrao}"
+										label="#{bundle.lbl_padrao}"
+										required="true"
+										update="cboNivel,txtSalbase"
+										query="cargos_padroes"
+										size="3"
+										readonly="#{funcionariosBacking.readOnlyCamposMov}" />
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:combo
+										id="cboNivel"
+										label="#{bundle.lbl_nivel}"
+										value="#{funcionariosBacking.entity.nivel}"
+										itens="#{funcionariosBacking.itensNives}"
+										width="50px !important"
+										styleClass="comboclasse"
+										readonly="#{funcionariosBacking.readOnlyCamposMov}">
+										<p:ajax
+											event="change"
+											update="txtSalbase"
+											listener="#{funcionariosBacking.actionBuscaSalarioNivel}" />
+									</xcp:combo>
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm labelClass="label_prop_emp">
+									<xcp:combo
+										id="txtModalidadepg"
+										label="#{bundle.lbl_modalidadepg}"
+										required="true"
+										value="#{funcionariosBacking.entity.modalidadepg}"
+										itens="#{funcionariosBacking.itensModalidadePg}">
+										<p:ajax
+											process="@this"
+											event="change"
+											update="@none" />
+									</xcp:combo>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:number
+										id="txtSalbase"
+										label="#{bundle.lbl_salbase}"
+										required="true"
+										readonly="#{funcionariosBacking.readOnlySalBase}"
+										value="#{funcionariosBacking.entity.salbase}"
+										precision="16"
+										scale="2"
+										style="width:153px" />
+								</xcp:panelForm>
+							</p:column>
+
+							<p:column>
+								<xcp:panelForm labelClass="label_prop_emp">
+									<xcp:combo
+										id="cboTiposalbase"
+										label="#{bundle.lbl_tiposalbase}"
+										required="true"
+										value="#{funcionariosBacking.entity.tiposalbase}"
+										itens="#{funcionariosBacking.itensTipoSalBase}"
+										styleClass="combotipopag"
+										width="140px !important"
+										readonly="#{funcionariosBacking.readOnlyCamposMovFormaPag}">
+										<p:ajax
+											process="@this"
+											event="change"
+											update="@none" />
+									</xcp:combo>
+								</xcp:panelForm>
+							</p:column>
+
+
+						</p:row>
+					</p:panelGrid>
+					<!-- <xcp:number
+						id="txtSalbase"
+						label="#{bundle.lbl_salbase}"
+						required="true"
+						readonly="#{funcionariosBacking.entity.salbase!=null}"
+						value="#{funcionariosBacking.entity.salbase}"
+						precision="16"
+						scale="2" />
+
+					<xcp:combo
+						id="cboTiposalbase"
+						label="#{bundle.lbl_tiposalbase}"
+						value="#{funcionariosBacking.entity.tiposalbase}"
+						itens="#{funcionariosBacking.itensTipoSalBase}" /> -->
+
+					<!-- 
+						<xcp:number
+							id="txtHrmensais"
+							label="#{bundle.lbl_hrmensais}"
+							value="#{funcionariosBacking.entity.hrmensais}"
+							precision="7"
+							scale="2" />
+ -->
+				</xcp:border>
+
+				<p:fieldset legend="#{bundle.tit_banco_pgto}">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovBancopgto"
+							value="#{funcionariosBacking.entity.bcopgtoFk}"
+							update="lovAgenciapgto"
+							selectionListener="#{funcionariosBacking.selectBancoPgto}"
+							label="#{bundle.lbl_banco_pgto}"
+							query="bancos"
+							size="4" />
+
+						<xcp:lov
+							id="lovAgenciapgto"
+							value="#{funcionariosBacking.entity.agenciapgtoFk}"
+							params="#{funcionariosBacking.paramsBanco}"
+							label="#{bundle.lbl_agencia_pgto}"
+							query="agencias"
+							size="4" />
+					</xcp:panelForm>
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:text
+										id="txtContapgto"
+										label="#{bundle.lbl_contapgto}"
+										value="#{funcionariosBacking.entity.contapgto}"
+										style="width: 120px;">
+										<p:ajax
+											process="@this"
+											event="change"
+											update="@none" />
+									</xcp:text>
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:combo
+										id="cboTipocontapgto"
+										value="#{funcionariosBacking.entity.tipocontapgto}"
+										label="#{bundle.lbl_tipocontapgto}"
+										itens="#{funcionariosBacking.itensTipoContaPgto}"
+										styleClass="combotipopag2"
+										width="140px">
+										<p:ajax
+											process="@this"
+											event="change"
+											update="@none" />
+									</xcp:combo>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column style="vertical-align: middle;">
+								<p:outputPanel id="pnlespout">
+									<p:commandLink
+										id="lnkOutroTit"
+										value="#{bundle.lnk_outrotit}"
+										rendered="#{funcionariosBacking.renderedOutroTitular}"
+										style="#{funcionariosBacking.styleOutroTitular}"
+										update=":frmOutroTit"
+										oncomplete="PF('dlgOutroTit_w').show()" />
+								</p:outputPanel>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<p:outputPanel style="margin-left: 10px;margin-top: 5px">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovSindicatoPanel"
+							value="#{funcionariosBacking.entity.sindicatoFk}"
+							label="#{bundle.lbl_sindicato}"
+							required="true"
+							rendered="#{funcionariosBacking.renderedVagaIndividual}"
+							query="sindicatos"
+							size="7" />
+					</xcp:panelForm>
+				</p:outputPanel>
+			</p:column>
+			<p:column>
+
+				<!-- <xcp:panelForm> -->
+
+				<p:panelGrid>
+					<p:row>
+						<p:column
+							colspan="2"
+							styleClass="tabela_alinha_profissional">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovVinculo"
+									value="#{funcionariosBacking.entity.vinculoFk}"
+									selectionListener="#{funcionariosBacking.selectVinculo}"
+									update=":form"
+									label="#{bundle.lbl_vinculo}"
+									required="true"
+									query="vinculos"
+									size="7" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<!-- 
+					<p:row>
+						<p:column
+							colspan="2"
+							styleClass="tabela_alinha_profissional">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovCcusto"
+									value="#{funcionariosBacking.entity.ccustoFk}"
+									label="#{bundle.lbl_ccusto}"
+									required="true"
+									query="ccusto"
+									size="7" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					 -->
+					<p:row>
+						<p:column
+							colspan="2"
+							styleClass="tabela_alinha_profissional">
+
+							<p:outputPanel id="pnlSindVaga">
+								<xcp:panelForm
+									rendered="#{!funcionariosBacking.renderedVagaIndividual}">
+
+									<xcp:lov
+										id="lovSindicato"
+										value="#{funcionariosBacking.entity.sindicatoFk}"
+										label="#{bundle.lbl_sindicato}"
+										required="true"
+										query="sindicatos"
+										size="7" />
+								</xcp:panelForm>
+
+								<xcp:panelForm
+									rendered="#{funcionariosBacking.renderedVagaIndividual}">
+
+									<xcp:lov
+										id="lovCargoVaga"
+										value="#{funcionariosBacking.entity.numSeqVagaFk}"
+										label="#{bundle.lbl_vaga}"
+										query="cargosvagasatucri"
+										params="#{funcionariosBacking.paramsCargosVagas}"
+										size="7"
+										readonly="#{funcionariosBacking.readOnlyVagaIndiv}" />
+
+								</xcp:panelForm>
+							</p:outputPanel>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column
+							colspan="2"
+							styleClass="tabela_alinha_profissional">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovAdmissao"
+									value="#{funcionariosBacking.entity.tipoadmFk}"
+									label="#{bundle.lbl_admissao}"
+									required="true"
+									params="#{funcionariosBacking.paramsTipo}"
+									query="tadmissao"
+									size="7" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column styleClass="tabela_alinha_profissional_2">
+							<xcp:panelForm>
+								<xcp:date
+									id="txtDtbasets"
+									value="#{funcionariosBacking.entity.dtbasets}"
+									size="8"
+									label="#{bundle.lbl_dtbasets}" />
+							</xcp:panelForm>
+						</p:column>
+
+						<p:column>
+							<xcp:panelForm>
+								<xcp:number
+									id="txtReg"
+									label="#{bundle.lbl_reg}"
+									value="#{funcionariosBacking.entity.reg}"
+									style="width:87px !important;"
+									maxValue="99999999"
+									rendered="#{funcionariosBacking.renderedReg}" />
+							</xcp:panelForm>
+						</p:column>
+
+					</p:row>
+
+					<!-- </xcp:panelForm> -->
+				</p:panelGrid>
+
+				<p:fieldset legend="#{bundle.tit_ponto}">
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:number
+										id="txtNcartao"
+										label="#{bundle.lbl_ncartao}"
+										value="#{funcionariosBacking.entity.ncartao}"
+										size="12"
+										maxValue="999999999999" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:number
+										id="txtHrsemanais"
+										label="#{bundle.lbl_hrsemanais}"
+										value="#{funcionariosBacking.hrsemanais}"
+										size="6"
+										precision="6"
+										scale="2"
+										readonly="true" />
+								</xcp:panelForm>
+							</p:column>
+
+							<p:column>
+								<xcp:panelDisable disabled="false">
+									<xcp:panelForm>
+
+										<xcp:number
+											id="txtMtoutrovinc"
+											label="#{bundle.lbl_mtoutrovinc}"
+											value="#{funcionariosBacking.matOutVinc}"
+											size="8"
+											readonly="true"
+											maxValue="99999999"
+											rendered="#{funcionariosBacking.singleMatOutVinc}" />
+
+										<p:outputLabel
+											value="#{bundle.lbl_mtoutrovinc}"
+											rendered="#{not funcionariosBacking.singleMatOutVinc}"
+											style="margin-left:10px" />
+
+										<p:commandButton
+											icon="ui-icon-search"
+											id="btnSingleMat"
+											rendered="#{not funcionariosBacking.singleMatOutVinc}" />
+
+										<p:overlayPanel
+											for="btnSingleMat"
+											hideEffect="fade"
+											rendered="#{not funcionariosBacking.singleMatOutVinc}">
+											<p:dataTable
+												value="#{funcionariosBacking.listMatOutVincInt}"
+												var="row"
+												style="width: 110px">
+												<p:column headerText="#{bundle.title_matriculas}">
+													<h:outputText value="#{row}" />
+												</p:column>
+											</p:dataTable>
+										</p:overlayPanel>
+
+									</xcp:panelForm>
+								</xcp:panelDisable>
+							</p:column>
+
+						</p:row>
+					</p:panelGrid>
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovHorario"
+							value="#{funcionariosBacking.entity.horarioFk}"
+							label="#{bundle.lbl_horario}"
+							query="horarios_geral"
+							required="true"
+							selectionListener="#{funcionariosBacking.selectHorario}"
+							size="6"
+							update="txtSalbase"
+							readonly="#{funcionariosBacking.readOnlyCamposMov}">
+						</xcp:lov>
+						<xcp:lov
+							id="lovHoramp"
+							value="#{funcionariosBacking.entity.horampFk}"
+							label="#{bundle.lbl_horamp}"
+							query="horarios_amp"
+							size="6"
+							readonly="#{funcionariosBacking.readOnlyCamposMov}">
+						</xcp:lov>
+						<xcp:lov
+							id="lovRelogio"
+							value="#{funcionariosBacking.entity.relogioFk}"
+							label="#{bundle.lbl_relogio}"
+							query="relogios"
+							size="6" />
+					</xcp:panelForm>
+				</p:fieldset>
+
+				<p:fieldset
+					legend="#{bundle.tit_cnh}"
+					styleClass="#{ funcionariosBacking.getClasseAnexoDocPessoal(15) }"
+					id="brd_dados_cnh">
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:cnh
+										id="txtCnh"
+										label="#{bundle.lbl_cnh}"
+										value="#{funcionariosBacking.entity.cnh}"
+										size="10" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:text
+										id="txtCategoriacnh"
+										label="#{bundle.lbl_categoriacnh}"
+										value="#{funcionariosBacking.entity.categoriacnh}"
+										size="2" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:date
+										id="txtDtvenccnh"
+										value="#{funcionariosBacking.entity.dtvenccnh}"
+										label="#{bundle.lbl_dtvenccnh}"
+										size="8" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:combo
+										id="cboCnhuf"
+										value="#{funcionariosBacking.entity.cnhuf}"
+										label="#{bundle.lbl_cnhuf}"
+										itens="#{funcionariosBacking.itensUfNull}"
+										styleClass="combouf" />
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+
+				<h:panelGroup id="panelVinculo">
+
+					<xcp:border
+						id="brdAdidos"
+						rendered="#{funcionariosBacking.helper.adidos}"
+						header="#{bundle.lbl_orgaoOri}">
+
+						<xcp:lov
+							id="lovConvAdi"
+							value="#{funcionariosBacking.entity.codconvFk}"
+							label="#{bundle.lbl_convenio}"
+							required="true"
+							query="#{funcionariosBacking.queryConv}"
+							size="7"
+							params="#{funcionariosBacking.paramsConv}"
+							rendered="#{funcionariosBacking.renderedLovConv}" />
+
+
+						<xcp:date
+							id="txtDtbasetsAdi"
+							value="#{funcionariosBacking.entity.dtfimcontrato}"
+							size="8"
+							label="#{bundle.lbl_dtfimcontrato}"
+							rendered="#{funcionariosBacking.renderedDtFimContrato}" />
+
+						<xcp:date
+							id="txtDtestab"
+							value="#{funcionariosBacking.entity.dtestabilidade}"
+							size="8"
+							label="#{bundle.lbl_dtfimcontrato_probatorio}" />
+
+						<xcp:text
+							id="txtTermoadi"
+							value="#{funcionariosBacking.entity.termo}"
+							label="#{bundle.lbl_termo}"
+							size="10" />
+
+					</xcp:border>
+
+
+					<p:fieldset
+						id="brdOutros"
+						rendered="#{funcionariosBacking.helper.regOutros}"
+						legend="#{bundle.lbl_outros}">
+
+						<p:panelGrid styleClass="tabela_alinhamento">
+							<p:row>
+								<p:column colspan="2">
+									<xcp:panelForm labelClass="label_prop_empl">
+										<xcp:lov
+											id="lovConvOut"
+											value="#{funcionariosBacking.entity.codconvFk}"
+											label="#{bundle.lbl_convenio}"
+											query="consignacoes_outr"
+											size="7"
+											params="#{funcionariosBacking.paramsConv}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2">
+									<xcp:panelForm labelClass="label_prop_empl">
+										<xcp:lov
+											id="txtSuperOut"
+											value="#{funcionariosBacking.entity.supervisorFK}"
+											label="#{bundle.lbl_supervisor}"
+											query="funcionariosLov"
+											size="7"
+											selectionListener="#{funcionariosBacking.selectSuper}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<xcp:panelForm labelClass="label_prop_empl">
+										<xcp:date
+											id="txtDtfimcontratoFuncOut"
+											value="#{funcionariosBacking.entity.dtfimcontrato}"
+											size="8"
+											label="#{bundle.lbl_dtfimcontrato_func}"
+											rendered="#{funcionariosBacking.renderedDtFimContrato}" />
+									</xcp:panelForm>
+								</p:column>
+								<p:column>
+									<xcp:panelForm>
+
+										<xcp:date
+											id="txtDtfimprorogFuncOut"
+											value="#{funcionariosBacking.entity.dtfimprorog}"
+											size="8"
+											label="#{bundle.lbl_dtfimprorrogacao_func}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+					</p:fieldset>
+
+
+					<xcp:border
+						id="brdEstatutariosEdital"
+						rendered="#{funcionariosBacking.helper.estatutarioEdital}"
+						header="#{bundle.tit_estatutario_edital}">
+
+						<xcp:lov
+							id="lovEdital"
+							value="#{funcionariosBacking.entity.editalFk}"
+							label="#{bundle.lbl_edital}"
+							query="edital"
+							size="8" />
+
+						<xcp:number
+							id="txtClassificacao"
+							label="#{bundle.lbl_classificacao}"
+							value="#{funcionariosBacking.entity.classificacao}"
+							size="8" />
+					</xcp:border>
+
+					<p:fieldset
+						id="brdFuncionario"
+						rendered="#{funcionariosBacking.helper.funcionario}"
+						legend="#{bundle.tit_funcionario}">
+
+						<p:panelGrid styleClass="tabela_alinhamento">
+							<p:row>
+								<p:column>
+									<xcp:panelForm>
+										<xcp:date
+											id="txtDtfimcontratoFunc"
+											value="#{funcionariosBacking.entity.dtfimcontrato}"
+											size="8"
+											label="#{bundle.lbl_dtfimcontrato_func}"
+											rendered="#{funcionariosBacking.renderedDtFimContrato}" />
+									</xcp:panelForm>
+								</p:column>
+								<p:column>
+									<xcp:panelForm>
+
+										<xcp:date
+											id="txtDtfimprorogFunc"
+											value="#{funcionariosBacking.entity.dtfimprorog}"
+											size="8"
+											label="#{bundle.lbl_dtfimprorrogacao_func}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2">
+									<xcp:panelForm labelClass="label_prop_empl">
+										<xcp:lov
+											id="lovLeiFunc"
+											value="#{funcionariosBacking.entity.leiFk}"
+											label="#{bundle.lbl_lei}"
+											query="leis"
+											size="7" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column colspan="2">
+									<xcp:panelForm labelClass="label_prop_empl">
+										<xcp:lov
+											id="lovConvFunc"
+											value="#{funcionariosBacking.entity.codconvFk}"
+											label="#{bundle.lbl_convenio}"
+											required="true"
+											query="#{funcionariosBacking.queryConv}"
+											size="7"
+											params="#{funcionariosBacking.paramsConv}"
+											rendered="#{funcionariosBacking.renderedLovConv}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:fieldset>
+
+					<xcp:border
+						id="brdEdital"
+						rendered="#{funcionariosBacking.helper.contrato}"
+						header="#{bundle.tit_per_contrato}">
+
+						<p:panelGrid styleClass="tabela_alinhamento">
+							<p:row>
+								<p:column colspan="2">
+									<xcp:panelForm labelClass="label_prop_empl">
+										<xcp:lov
+											id="lovLei"
+											required="true"
+											value="#{funcionariosBacking.entity.leiFk}"
+											label="#{bundle.lbl_lei}"
+											query="leis"
+											size="7" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<xcp:panelForm labelClass="label_prop_empl">
+										<xcp:date
+											id="txtDtfimcontratoFuncLei"
+											value="#{funcionariosBacking.entity.dtfimcontrato}"
+											size="8"
+											label="#{bundle.lbl_dtfimcontrato_func}"
+											rendered="#{funcionariosBacking.renderedDtFimContrato}" />
+									</xcp:panelForm>
+								</p:column>
+								<p:column>
+									<xcp:panelForm>
+										<xcp:date
+											id="txtDtfimprorogFuncLei"
+											value="#{funcionariosBacking.entity.dtfimprorog}"
+											size="8"
+											label="#{bundle.lbl_dtfimprorrogacao_func}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</xcp:border>
+
+
+					<xcp:border
+						id="brdContrato"
+						rendered="#{funcionariosBacking.helper.estatutario}"
+						header="#{bundle.tit_est_probatorio}">
+
+						<xcp:date
+							id="txtDtfimcontratoProbatorio"
+							value="#{funcionariosBacking.entity.dtestabilidade}"
+							size="8"
+							label="#{bundle.lbl_dtfimcontrato_probatorio}" />
+
+						<xcp:lov
+							id="lovEditalContrato"
+							value="#{funcionariosBacking.entity.editalFk}"
+							label="#{bundle.lbl_edital}"
+							query="edital"
+							size="8" />
+
+					</xcp:border>
+
+					<xcp:border
+						id="brdInativos"
+						rendered="#{funcionariosBacking.helper.inativos}"
+						header="#{bundle.tit_inativos}">
+
+						<xcp:lov
+							id="lovTipInativo"
+							value="#{funcionariosBacking.entity.tipoadmInatFk}"
+							label="#{bundle.lbl_tipoapos}"
+							query="tadmissaoinat"
+							required="true"
+							size="8" />
+
+
+						<xcp:date
+							id="txtDtfimcontratoFuncLeiPensao"
+							value="#{funcionariosBacking.entity.dtfimcontrato}"
+							size="8"
+							label="#{bundle.lbl_dtfimcontrato_func}"
+							rendered="#{funcionariosBacking.renderedDtFimContrato}" />
+
+
+
+						<xcp:lov
+							id="lovConvInativ"
+							value="#{funcionariosBacking.entity.codconvFk}"
+							label="#{bundle.lbl_orgorig}"
+							query="consignacoes_org"
+							size="8" />
+
+					</xcp:border>
+
+
+					<xcp:border
+						id="brdEstagiario"
+						rendered="#{funcionariosBacking.helper.estagiario}"
+						header="#{bundle.tit_estagiario}">
+
+						<p:panelGrid styleClass="tabela_alinhamento">
+							<p:row>
+								<p:column colspan="2">
+									<xcp:panelForm labelClass="label_prop_emp">
+										<xcp:lov
+											id="lovConv"
+											value="#{funcionariosBacking.entity.codconvFk}"
+											label="#{bundle.lbl_convenio}"
+											required="true"
+											query="#{funcionariosBacking.queryConv}"
+											size="7"
+											params="#{funcionariosBacking.paramsConv}"
+											rendered="#{funcionariosBacking.renderedLovConv}" />
+
+										<xcp:text
+											id="txtTermo"
+											value="#{funcionariosBacking.entity.termo}"
+											label="#{bundle.lbl_termo}"
+											required="true"
+											rendered="#{funcionariosBacking.renderedTermo}"
+											size="10" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<xcp:panelForm labelClass="label_prop_emp">
+										<xcp:date
+											id="txtDtfimcontratoEstagio"
+											value="#{funcionariosBacking.entity.dtfimcontrato}"
+											size="8"
+											label="#{bundle.lbl_dtfimcontrato_fimest}"
+											rendered="#{funcionariosBacking.renderedDtFimContrato}" />
+									</xcp:panelForm>
+								</p:column>
+								<p:column>
+									<xcp:panelForm>
+										<xcp:date
+											id="txtDtfimprorogEstagiario"
+											value="#{funcionariosBacking.entity.dtfimprorog}"
+											size="8"
+											label="#{bundle.lbl_dtfimprorog_estatiafio}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2">
+									<xcp:panelForm labelClass="label_prop_emp">
+										<xcp:lov
+											id="txtSuper"
+											value="#{funcionariosBacking.entity.supervisorFK}"
+											label="#{bundle.lbl_supervisor}"
+											query="funcionariosLov"
+											size="7"
+											selectionListener="#{funcionariosBacking.selectSuper}" />
+									</xcp:panelForm>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</xcp:border>
+				</h:panelGroup>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+
+</ui:composition>

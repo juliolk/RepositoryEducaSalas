@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:spacer width="5px;" />
+			<p:fieldset style="width: 300px;">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtMin"
+						label="#{bundle.lbl_minimo}"
+						value="#{regraSenhaBacking.entity.minimo}"
+						size="3"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtNum"
+						label="#{bundle.lbl_numericos}"
+						value="#{regraSenhaBacking.entity.numericos}"
+						size="3"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtAlfa"
+						label="#{bundle.lbl_alfabeticos}"
+						value="#{regraSenhaBacking.entity.alfabeticos}"
+						size="3"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtEsp"
+						label="#{bundle.lbl_especiais}"
+						value="#{regraSenhaBacking.entity.especiais}"
+						size="3"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtVal"
+						label="#{bundle.lbl_qtdDiasValidade}"
+						value="#{regraSenhaBacking.entity.validade}"
+						size="3"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtAviso"
+						label="#{bundle.lbl_qtdDiasAviso}"
+						value="#{regraSenhaBacking.entity.aviso}"
+						size="3"
+						maxValue="999" />
+
+				</xcp:panelForm>
+			</p:fieldset>
+			<p:spacer width="5px;" />
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}"
+						action="#{regraSenhaBacking.actionGravar}" />
+				</f:facet>
+
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

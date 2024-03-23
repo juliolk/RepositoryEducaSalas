@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ConcessoesMvto"
+		backing="#{concessoesMvtoBacking}"
+		masterId="Concessoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_tipmov}"
+				value="#{row.tipmovFk.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.tipmovFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_perSoma}"
+				value="#{row.perSoma}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.perSoma}"
+					precision="3"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipoSoma}"
+				value="#{row.tipoSoma}"
+				type="String"
+				size="20"
+				rendered="#{concessoesBacking.entity.tipo==1}"
+				itens="#{concessoesMvtoBacking.itensTipoSoma}">
+				<xcp:outputSimple
+					value="#{row.tipoSoma}"
+					itens="#{concessoesMvtoBacking.itensTipoSoma}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipoCol}"
+				type="String"
+				size="20"
+				itens="#{concessoesMvtoBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipoCol}"
+					itens="#{concessoesMvtoBacking.itensTipo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diasMinimo}"
+				value="#{row.diasMinimoCol}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.diasMinimoCol}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diasRetorno}"
+				value="#{row.diasRetornoCol}"
+				type="Number"
+				rendered="#{concessoesBacking.entity.tipo==1}"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.diasRetornoCol}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovTipmov_ConcessoesMvto"
+					value="#{concessoesMvtoBacking.entity.tipmovFk}"
+					label="#{bundle.lbl_tipmov}"
+					required="true"
+					query="tipomovtos"
+					size="4"
+					readonly="#{not concessoesMvtoBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtPerSoma"
+					label="#{bundle.lbl_perSoma}"
+					size="9"
+					value="#{concessoesMvtoBacking.entity.perSoma}"
+					precision="6"
+					scale="2" />
+
+				<xcp:combo
+					id="cboTipoSoma"
+					value="#{concessoesMvtoBacking.entity.tipoSoma}"
+					label="#{bundle.lbl_tipoSoma}"
+					required="true"
+					itens="#{concessoesMvtoBacking.itensTipoSoma}">
+					<p:ajax
+						event="change"
+						update="cboTipo_ConcessoesMvto,cboTipo_ConcessoesMvto_l,lovAgrupador,lovAgrupador_l,txtDiasMinimo_ConcessoesMvto,txtDiasMinimo_ConcessoesMvto_l,txtDiasRetorno_ConcessoesMvto,txtDiasRetorno_ConcessoesMvto_l,cboIndLancaSaldo,cboIndLancaSaldo_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboTipo_ConcessoesMvto"
+					value="#{concessoesMvtoBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					rendered="#{concessoesMvtoBacking.entity.tipoSoma == 1}"
+					itens="#{concessoesMvtoBacking.itensTipo}">
+					<p:ajax
+						event="change"
+						update="txtDiasRetorno_ConcessoesMvto,txtDiasRetorno_ConcessoesMvto_l,cboIndLancaSaldo,cboIndLancaSaldo_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboIndLancaSaldo"
+					value="#{concessoesMvtoBacking.entity.indLancaSaldo}"
+					label="#{bundle.lbl_indLancaSaldo}"
+					required="true"
+					rendered="#{concessoesMvtoBacking.entity.tipo == 2 and concessoesMvtoBacking.entity.tipoSoma == 1}"
+					itens="#{concessoesMvtoBacking.itensIndSimNao}">
+					<p:ajax
+						event="change"
+						update="txtDiasRetorno_ConcessoesMvto,txtDiasRetorno_ConcessoesMvto_l" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovAgrupador"
+					value="#{concessoesMvtoBacking.entity.agrupadorFk}"
+					label="#{bundle.lbl_agrupador}"
+					required="true"
+					params="#{concessoesMvtoBacking.paramsAgrupador}"
+					rendered="#{concessoesMvtoBacking.entity.tipoSoma == 2}"
+					query="concessoes_limites"
+					size="5" />
+
+				<xcp:number
+					id="txtDiasRetorno_ConcessoesMvto"
+					label="#{bundle.lbl_diasRetorno}"
+					value="#{concessoesMvtoBacking.entity.diasRetorno}"
+					size="4"
+					rendered="#{concessoesBacking.entity.tipo==1 and concessoesMvtoBacking.entity.tipo!=3 and concessoesMvtoBacking.entity.tipoSoma == 1}"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+				<xcp:number
+					id="txtDiasMinimo_ConcessoesMvto"
+					label="#{bundle.lbl_diasMinimo}"
+					value="#{concessoesMvtoBacking.entity.diasMinimo}"
+					rendered="#{concessoesMvtoBacking.entity.tipoSoma == 1}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

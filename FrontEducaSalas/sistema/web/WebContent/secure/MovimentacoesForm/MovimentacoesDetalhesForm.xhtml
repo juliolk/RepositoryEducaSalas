@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:lov
+			id="lovTipmov"
+			value="#{movimentacoesBacking.helper.movDocSelecionada.tipmovFk}"
+			label="#{bundle.lbl_tipmov}"
+			required="true"
+			query="tipomovtos_afast"
+			size="4"
+			readonly="true" />
+
+		<xcp:border
+			id="brd_datas"
+			header="#{bundle.tit_periodo_afastamento}">
+			<xcp:date
+				id="txtDtinicio"
+				required="true"
+				value="#{movimentacoesBacking.helper.movDocSelecionada.dtinicio}"
+				label="#{bundle.lbl_dtinicio}"
+				readonly="true">
+			</xcp:date>
+
+			<xcp:date
+				id="txtDttermino"
+				value="#{movimentacoesBacking.helper.movDocSelecionada.dttermino}"
+				label="#{bundle.lbl_dttermino}"
+				readonly="true">
+			</xcp:date>
+
+			<xcp:number
+				id="txtDiasAfastamento"
+				value="#{movimentacoesBacking.calcQtdDias(movimentacoesBacking.helper.movDocSelecionada.dtinicio,movimentacoesBacking.helper.movDocSelecionada.dttermino)}"
+				label="#{bundle.lbl_diasAfastamento}"
+				size="4"
+				precision="4"
+				scale="0"
+				readonly="true">
+			</xcp:number>
+
+		</xcp:border>
+
+
+		<xcp:lov
+			id="lovTipodoc"
+			value="#{movimentacoesBacking.helper.movDocSelecionada.tipodocFk}"
+			label="#{bundle.lbl_tipodoc}"
+			query="tipodocumento"
+			selectionListener="#{movimentacoesBacking.selectTipodocumento}"
+			update="lovDocumento,btnDownloadDocumento"
+			size="4"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovDocumento"
+			value="#{movimentacoesBacking.helper.movDocSelecionada.registroFk}"
+			params="#{movimentacoesBacking.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			query="documentos"
+			size="20"
+			update="btnDownloadDocumento"
+			readonly="true" />
+
+		<xcp:lov
+			id="lovProcesso"
+			value="#{movimentacoesBacking.helper.movDocSelecionada.processoFk}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			size="25"
+			readonly="true" />
+
+		<p:spacer
+			height="1"
+			width="1" />
+
+		<p:panelGrid>
+			<p:row>
+				<p:column>
+					<p:splitButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{movimentacoesBacking.helper.movDocSelecionada.registroFk == null}">
+						<p:fileDownload
+							value="#{documentosBacking.getDownloadDocumento(movimentacoesBacking.helper.movDocSelecionada.registro)}"
+							contentDisposition="attachment" />
+						<p:menuitem
+							value="#{bundle.btn_detalhes_doc}"
+							action="#{movimentacoesBacking.model.actionOpenVisDialog(movimentacoesBacking.helper.movDocSelecionada.registro)}"
+							process="@this" />
+
+					</p:splitButton>
+				</p:column>
+				<p:column>
+					<xcp:panelForm>
+						<xcp:dateTime
+							id="txtRetificacao"
+							value="#{movimentacoesBacking.helper.movDocSelecionada.retificacao}"
+							label="#{bundle.lbl_retificacao}"
+							rendered="#{movimentacoesBacking.helper.movDocSelecionada.retificacao!=null}"
+							readonly="true" />
+					</xcp:panelForm>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+		<xcp:memo
+			id="txtObs"
+			label="#{bundle.lbl_obs}"
+			value="#{movimentacoesBacking.helper.movDocSelecionada.obs}"
+			size="1000"
+			style="width:429px;"
+			readonly="true" />
+	</xcp:panelForm>
+</ui:composition>

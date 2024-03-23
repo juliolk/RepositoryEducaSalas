@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:panel
+		id="panelCopiaGeral"
+		header="#{bundle.tit_CopiaGeral}">
+		<xcp:panelForm>
+
+			<xcp:lov
+				id="lovFuncCpfCopia"
+				value="#{funcionariosCopiaFormBacking.cadgeral}"
+				label="#{bundle.lbl_cpf}"
+				query="cadgeral"
+				size="10" 
+				required="true"/>
+
+		</xcp:panelForm>
+	</p:panel>
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_copiar_geral"
+				value="#{bundle.btn_copiar_geral}"
+				update="@form"
+				process="@this panelCopiaGeral"
+				action="#{funcionariosCopiaFormBacking.actionGravarCopiaGeral}" />
+		</f:facet>
+	</p:toolbar>
+
+</ui:composition>

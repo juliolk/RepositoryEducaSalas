@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManutLazy id="ConsultaDeclaracaoBens"
+			renderedRemover="false" renderedGravar="false" renderedNovo="false"
+			renderedAtualizar="false" backing="#{consultaDeclaracaoBensBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset id="brdPesq" legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<h:outputLabel value="#{bundle.lbl_ano}: "
+							style="display: block; margin-top: 5px; margin-right:5px" />
+						<xcp:combo id="cboReferencia" simple="true"
+							value="#{consultaDeclaracaoBensBacking.periodoSelecionado}"
+							itens="#{consultaDeclaracaoBensBacking.itensPeriodo}">
+						</xcp:combo>
+					</xcp:panelForm>
+				</p:fieldset>
+				<p:fieldset
+					id="brdPendencia"
+					legend="Filtros"
+					style="width: 100px"
+					rendered="#{declaracaobensPortalBacking.habilitaConferencia}">
+					<xcp:panelForm>
+						<xcp:check
+							id="txtFiltroSemPendencia"
+							label="Declarações sem pendências"
+							value="#{consultaDeclaracaoBensBacking.filtroSemPendencia}" />
+						<xcp:check
+							id="txtFiltroComPendencia"
+							label="Declarações com pendências"
+							value="#{consultaDeclaracaoBensBacking.filtroComPendencia}" />
+						<xcp:check
+							id="txtFiltroConferidas"
+							label="Declarações Conferidas"
+							value="#{consultaDeclaracaoBensBacking.filtroConferidas}" />
+						<xcp:check
+							id="txtFiltroNaoConferidas"
+							label="Declarações Não Conferidas"
+							value="#{consultaDeclaracaoBensBacking.filtroNaoConferidas}" />		
+							
+					</xcp:panelForm>
+					
+				</p:fieldset>				
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton id="btn_pesquisar" icon="icon-pesquisar_azul"
+					value="#{bundle.btn_pesquisar}" update="table_#{id}"
+					onclick="PF('table_#{id}_w').filter()" />
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column headerText="#{bundle.col_conferido}" width="10%"
+					style="text-align:center; vertical-align:middle"
+					rendered="#{declaracaobensPortalBacking.habilitaConferencia}">
+					<h:selectBooleanCheckbox value="#{row.conferido}">
+						<p:ajax event="change"
+							listener="#{consultaDeclaracaoBensBacking.actionConferido(row)}"
+							update=":#{p:component('panelManut_ConsultaDeclaracaoBens')}" />
+					</h:selectBooleanCheckbox>
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_ano}" type="Date" width="10%"
+					sortBy="#{row.referencia}" >
+					<xcp:outputSimple value="#{consultaDeclaracaoBensBacking.getAno(row.referencia)}" />
+				</xcp:column>
+				
+				<xcp:column headerText="#{bundle.col_dtenvio}" type="Date" width="10%"
+					sortBy="#{row.seqExecucaoFk.dthExecucao}" value="#{row.seqExecucaoFk.dthExecucao}">
+					<xcp:outputSimpleDate value="#{row.seqExecucaoFk.dthExecucao}" />
+				</xcp:column>
+				
+				<xcp:column headerText="#{bundle.col_matricula}" type="Number"
+					width="10%" sortBy="#{row.operadorFk.matricula}"
+					value="#{row.operadorFk.matricula}">
+					<xcp:outputSimpleNumber value="#{row.operadorFk.matricula}"
+						precision="8" scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_nome}" type="String"
+					width="25%" sortBy="#{row.operadorFk.funcionarioFk.nome}"
+					value="#{row.operadorFk.funcionarioFk.nome}">
+					<xcp:outputSimple value="#{row.operadorFk.funcionarioFk.nome}" />
+				</xcp:column>
+
+				<xcp:column type="String" headerText="#{bundle.col_acoes}">
+					<xcp:commandButton id="btnDownload" ajax="false" immediate="true"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						value="#{bundle.btn_download}">
+						<p:fileDownload
+							value="#{consultaDeclaracaoBensBacking.getDownloadDocumento(row)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+					
+					<xcp:commandButton id="btnDownloadFormulario" ajax="false" immediate="true"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						value="#{bundle.btn_formulario}"
+						rendered="#{consultaDeclaracaoBensBacking.canRenderDownloadFormulario(row)}">
+						<p:fileDownload
+							value="#{consultaDeclaracaoBensBacking.getDownloadFormulario(row)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+					
+					<xcp:commandButton
+						id="btn_registrapendencia"
+						rendered="#{declaracaobensPortalBacking.habilitaConferencia}"
+						disabled="#{row.conferido}"
+						value="Registrar Pendência"
+						action="#{consultaDeclaracaoBensBacking.setEntity(row)}"
+						update=":dlgMsg"
+						oncomplete="PF('dlgMsg_w').show();" />
+										
+				</xcp:column>
+
+			</ui:define>
+		</xcp:panelManutLazy>
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="Registrar Pendência"
+			modal="true"
+			id="dlgMsg"
+			widgetVar="dlgMsg_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo
+							id="obsMsg"
+							label="#{bundle.lbl_mensagem}"
+							value="#{consultaDeclaracaoBensBacking.mensagem}"
+							size="2000" />
+					</xcp:panelForm>
+			
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_finalizar"
+								value="Registrar Pendência"
+								process="@form"
+								action="#{consultaDeclaracaoBensBacking.actionRegistrarPendencia}"
+								icon="icon-navegar"
+								update=":#{p:component('panelManut_ConsultaDeclaracaoBens')}"
+								oncomplete="PF('dlgMsg_w').hide();">
+								<p:confirm
+									header="Confirmação"
+									message="Confirma o apontamento de pendências na declaração de bens?"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+
+						</f:facet>
+					</p:toolbar>
+			
+				</p:outputPanel>
+				<p:remoteCommand
+					name="closeDlgMsg"
+					oncomplete="PF('dlgMsg_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>	
+</ui:composition>

@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Assistenciasocial"
+			backing="#{assistenciaavaliacoesBacking}">
+
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<xcp:panelForm>
+
+						<xcp:lov
+							id="lovAssistenciaSelecao"
+							value="#{assistenciaavaliacoesBacking.assistencia}"
+							label="#{bundle.lbl_assistencia_lov}"
+							params="#{assistenciaavaliacoesBacking.paramsAssistenciaFuncao}"
+							selectionListener="#{assistenciaavaliacoesBacking.selectAssistencia}"
+							query="assistencia_aval"
+							required="true"
+							update="table_Assistenciasocial btnNovo_Assistenciasocial btnPesq_Assistenciasocial"
+							readonly="#{assistenciaavaliacoesBacking.funcionario==null}"
+							size="5" />
+
+					</xcp:panelForm>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtiniatendimento}"
+					value="#{row.dtatendimento}"
+					type="Date"
+					size="1">
+					<xcp:outputSimpleDate value="#{row.dtatendimento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfimatendimento}"
+					value="#{row.dtfimatendimento}"
+					type="Date"
+					size="1">
+					<xcp:outputSimpleDate value="#{row.dtfimatendimento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cod_medico}"
+					value="#{row.medicoFk.medico}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.medicoFk.medico}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_des_medico}"
+					value="#{row.medicoFk.nomeLista}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.medicoFk.nomeLista}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					value="#{row.processo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{assistenciaavaliacoesBacking.entity.dtatendimento}"
+						label="#{bundle.lbl_dtatendimento}"
+						readonly="#{not assistenciaavaliacoesBacking.entity.novo}">
+
+						<p:ajax
+							event="change"
+							update="txtQtdLimite,txtQtdLimite_l,txtQtdAtend,txtQtdAtend_l"
+							listener="#{assistenciaavaliacoesBacking.calculaQtdAAtend}" />
+						<p:ajax
+							event="dateSelect"
+							update="txtQtdLimite,txtQtdLimite_l,txtQtdAtend,txtQtdAtend_l"
+							listener="#{assistenciaavaliacoesBacking.calculaQtdAAtend}" />
+
+					</xcp:date>
+
+					<xcp:date
+						id="txtDataFim"
+						required="true"
+						value="#{assistenciaavaliacoesBacking.entity.dtfimatendimento}"
+						label="#{bundle.lbl_fimdtatendimento}" />
+
+					<xcp:lov
+						id="lovAssistencia"
+						value="#{assistenciaavaliacoesBacking.assistencia}"
+						label="#{bundle.lbl_assistencia_social}"
+						readonly="true"
+						required="true"
+						query="assistencia"
+						size="8" />
+
+					<xcp:combo
+						id="txtSituacao"
+						label="#{bundle.lbl_situacaoAssist}"
+						required="true"
+						value="#{assistenciaavaliacoesBacking.entity.situacao}"
+						itens="#{assistenciaavaliacoesBacking.itensSituacao}" />
+
+					<xcp:lov
+						id="lovMedico"
+						value="#{assistenciaavaliacoesBacking.entity.medicoFk}"
+						label="#{bundle.lbl_medico}"
+						query="lov_medicos"
+						selectionListener="#{assistenciaavaliacoesBacking.selectMedico}"
+						size="8"
+						update="txtQtdLimite,txtQtdLimite_l,txtQtdAtend,txtQtdAtend_l" />
+
+					<xcp:number
+						id="txtQtdLimite"
+						label="#{bundle.lbl_qtdLimite}"
+						value="#{assistenciaavaliacoesBacking.qtdLimite}"
+						size="10"
+						readonly="true"
+						rendered="#{assistenciaavaliacoesBacking.entity.atendenteFk != null and assistenciaavaliacoesBacking.qtdLimite != null}" />
+
+
+					<xcp:number
+						id="txtQtdAtend"
+						label="#{bundle.lbl_qtdAtend}"
+						value="#{assistenciaavaliacoesBacking.qtdAtend}"
+						size="10"
+						readonly="true"
+						rendered="#{assistenciaavaliacoesBacking.entity.atendenteFk != null and assistenciaavaliacoesBacking.qtdLimite != null}" />
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{assistenciaavaliacoesBacking.entity.tipoFk}"
+						params="#{assistenciaavaliacoesBacking.paramsAssistencia}"
+						label="#{bundle.lbl_tipoAtend}"
+						query="assistenciatipo"
+						required="true"
+						size="8" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{assistenciaavaliacoesBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="8"
+						readonly="true"
+						update="txtFone, txtFone_l" />
+
+					<xcp:fone
+						id="txtFone"
+						label="#{bundle.lbl_fone}"
+						value="#{assistenciaavaliacoesBacking.entity.setorFk.fone}"
+						readonly="true"
+						rendered="#{assistenciaavaliacoesBacking.entity.setorFk != null}" />
+
+					<xcp:lov
+						id="lovResponsavel"
+						value="#{assistenciaavaliacoesBacking.entity.responsavelFk}"
+						label="#{bundle.lbl_responsavel}"
+						query="funcionarios"
+						size="8"
+						readonly="true" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{assistenciaavaliacoesBacking.entity.obs}"
+						size="16000" />
+						
+						
+					<xcp:memo
+						id="txtExamescomp"
+						label="#{bundle.title_lov_examesmedicos}"
+						value="#{assistenciaavaliacoesBacking.entity.examescomp}"
+						size="16000" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{assistenciaavaliacoesBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						size="25" />
+
+					<xcp:combo
+						id="cboProrrogaprobatorio"
+						value="#{assistenciaavaliacoesBacking.entity.prorrogaprobatorio}"
+						label="#{bundle.lbl_prorrogaprobatorio}"
+						itens="#{assistenciaavaliacoesBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboHe"
+						value="#{assistenciaavaliacoesBacking.entity.he}"
+						label="#{bundle.lbl_he}"
+						itens="#{assistenciaavaliacoesBacking.itensHe}" />
+
+
+					<p:outputLabel
+						value="#{bundle.lbl_lancvinculos}"
+						rendered="#{assistenciaavaliacoesBacking.renderedCheckVinc}" />
+
+					<h:panelGroup
+						layout="block"
+						rendered="#{assistenciaavaliacoesBacking.renderedCheckVinc}">
+
+						<xcp:check
+							simple="true"
+							style="float:left"
+							id="chk_duplovinc"
+							label="#{bundle.lbl_lancvinculos}"
+							value="#{assistenciaavaliacoesBacking.lancVinculos}" />
+
+						<p:outputLabel
+							value="#{assistenciaavaliacoesBacking.matsDuploVinc}"
+							style="display: table-cell;vertical-align: middle;height:20px;" />
+
+					</h:panelGroup>
+				</xcp:panelForm>
+
+				<p:fieldset
+					legend="#{bundle.tit_cid_atend}"
+					rendered="#{!assistenciaavaliacoesBacking.entity.novo}">
+
+					<p:row>
+						<p:column>
+							<p:outputLabel
+								style="float: left; padding: 5px"
+								value="#{bundle.lbl_lancvinculoscid}"
+								rendered="#{assistenciaavaliacoesBacking.renderedCheckVincCID}" />
+						</p:column>
+						<p:column>
+							<xcp:check
+								simple="true"
+								style="float:left"
+								rendered="#{assistenciaavaliacoesBacking.renderedCheckVincCID}"
+								id="chk_duplovinccid"
+								label="#{bundle.lbl_lancvinculoscid}"
+								value="#{assistenciaavaliacoesBacking.lancVinculosCID}">
+								<p:ajax process="@this" />
+							</xcp:check>
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="#{assistenciaavaliacoesBacking.matsDuploVinc}"
+								style="display: table-cell;vertical-align: middle;height:20px;" />
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:dataTable
+								id="tabCIDs"
+								editable="true"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								value="#{assistenciaavaliacoesBacking.listAssistenciaCid}"
+								var="cid"
+								style="float:left;width:680px">
+
+								<p:ajax
+									event="rowEdit"
+									update="tabCIDs"
+									listener="#{assistenciaavaliacoesBacking.onRowEdit}" />
+
+								<p:column
+									headerText="#{bundle.lbl_cid}"
+									style="width:550px;">
+									<p:cellEditor>
+										<f:facet name="output">
+											<xcp:lov
+												id="lovCidOut"
+												value="#{cid.cidFk}"
+												label="#{bundle.lbl_cid}"
+												simple="true"
+												readonly="true"
+												query="cid"
+												size="15" />
+										</f:facet>
+										<f:facet name="input">
+											<xcp:lov
+												id="lovCid"
+												value="#{cid.cidFk}"
+												label="#{bundle.lbl_cid}"
+												simple="true"
+												required="true"
+												query="cid"
+												size="15" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column
+									style="width:10px;"
+									rendered="#{!assistenciaavaliacoesBacking.disabledExcluir}">
+									<xcp:commandLink
+										id="btn_remove_cid"
+										icon="ui-icon-trash"
+										immediate="true"
+										rendered="#{cid.cid!=null}"
+										action="#{assistenciaavaliacoesBacking.actionRemoveCid(cid)}">
+										<h:graphicImage
+											title="#{bundle.hint_remover}"
+											value="/resources/img/remover.png"
+											style="margin-top:3px;" />
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink>
+								</p:column>
+
+								<p:column
+									style="width:15px"
+									rendered="#{!assistenciaavaliacoesBacking.disabledGravar}">
+									<p:rowEditor rendered="#{cid.novo}" />
+								</p:column>
+							</p:dataTable>
+						</p:column>
+					</p:row>
+				</p:fieldset>
+
+				<p:remoteCommand
+					name="rcCid"
+					update="tabCIDs" />
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcpfunc:anexosButton
+					id="assistenciasocial"
+					entity="#{assistenciaavaliacoesBacking.entity}"
+					disabledGravar="#{assistenciaavaliacoesBacking.disabledGravar}"
+					disabledNovo="#{assistenciaavaliacoesBacking.disabledNovo}"
+					disabledExcluir="#{assistenciaavaliacoesBacking.disabledExcluir}"
+					funcionarioPK="#{assistenciaavaliacoesBacking.funcionario.PK}" />
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<xcpfunc:anexosDialog />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="XcpScripts"
+			backing="#{xcpScriptsBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_numScript}"
+					value="#{row.numScript}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.numScript}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dthAplicacao}"
+					value="#{row.dthAplicacao}"
+					type="Date"
+					size="10">
+					<xcp:outputSimpleTimestamp value="#{row.dthAplicacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipObjeto}"
+					value="#{row.tipObjeto}"
+					itens="#{xcpScriptsBacking.itensTipObjeto}"
+					type="String"
+					filterMatchMode="exact"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipObjeto}"
+						itens="#{xcpScriptsBacking.itensTipObjeto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desTerminal}"
+					value="#{row.desTerminal}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.desTerminal}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desIp}"
+					value="#{row.desIp}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.desIp}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desUsuario}"
+					value="#{row.desUsuario}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.desUsuario}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desOperacao}"
+					value="#{row.desOperacao}"
+					type="String"
+					size="7">
+					<xcp:outputSimple value="#{row.desOperacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desObjeto}"
+					value="#{row.desObjeto}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.desObjeto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codCliente}"
+					value="#{row.codCliente}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple value="#{row.codCliente}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numOs}"
+					value="#{row.numOs}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple value="#{row.numOs}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dthGeracao}"
+					value="#{row.dthGeracao}"
+					type="Date"
+					size="10">
+					<xcp:outputSimpleTimestamp value="#{row.dthGeracao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtNumScript"
+						label="#{bundle.lbl_numScript}"
+						required="true"
+						value="#{xcpScriptsBacking.entity.numScript}"
+						size="20"
+						precision="20"
+						scale="0"
+						maxValue="99999999999999999999"
+						readonly="#{not xcpScriptsBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDesTerminal"
+						label="#{bundle.lbl_desTerminal}"
+						required="true"
+						value="#{xcpScriptsBacking.entity.desTerminal}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						size="50" />
+
+					<xcp:text
+						id="txtDesIp"
+						label="#{bundle.lbl_desIp}"
+						required="true"
+						value="#{xcpScriptsBacking.entity.desIp}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						size="50" />
+
+					<xcp:text
+						id="txtDesUsuario"
+						label="#{bundle.lbl_desUsuario}"
+						required="true"
+						value="#{xcpScriptsBacking.entity.desUsuario}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						size="50" />
+
+					<xcp:text
+						id="txtDesOperacao"
+						label="#{bundle.lbl_desOperacao}"
+						required="true"
+						value="#{xcpScriptsBacking.entity.desOperacao}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						size="50" />
+
+					<xcp:text
+						id="txtDesSchema"
+						label="#{bundle.lbl_desSchema}"
+						required="true"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						value="#{xcpScriptsBacking.entity.desSchema}"
+						size="50" />
+
+					<xcp:text
+						id="txtDesObjeto"
+						label="#{bundle.lbl_desObjeto}"
+						required="true"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						value="#{xcpScriptsBacking.entity.desObjeto}"
+						size="50" />
+
+					<xcp:text
+						id="txtDesUsuarioBanco"
+						label="#{bundle.lbl_desUsuarioBanco}"
+						required="true"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						value="#{xcpScriptsBacking.entity.desUsuarioBanco}"
+						size="50" />
+
+					<xcp:dateTime
+						id="txtDthAplicacao"
+						required="true"
+						value="#{xcpScriptsBacking.entity.dthAplicacao}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						label="#{bundle.lbl_dthAplicacao}" />
+
+					<xcp:number
+						id="txtCodOperador"
+						label="#{bundle.lbl_codOperador}"
+						required="true"
+						value="#{xcpScriptsBacking.entity.codOperador}"
+						size="20"
+						precision="20"
+						scale="0"
+						maxValue="99999999999999999999"
+						readonly="#{not xcpScriptsBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtNumOs"
+						label="#{bundle.lbl_numOs}"
+						required="true"
+						value="#{xcpScriptsBacking.entity.numOs}"
+						size="20"
+						precision="20"
+						scale="0"
+						maxValue="99999999999999999999"
+						readonly="#{not xcpScriptsBacking.entity.novo}" />
+
+					<p:outputLabel
+						value="#{bundle.lbl_desScript}"
+						for="txtDesScript" />
+
+					<p:inputTextarea
+						id="txtDesScript"
+						value="#{xcpScriptsBacking.entity.desScript}"
+						label="#{bundle.lbl_txtErro}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						rows="20"
+						cols="100"
+						autoResize="false"
+						style="height:100px; width:100%; resize:none; font-family: monospace; white-space: nowrap;" />
+
+					<!--  
+					<xcp:memo
+						id="txtDesScript"
+						required="true"
+						value="#{xcpScriptsBacking.entity.desScript}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						label="#{bundle.lbl_desScript}" />
+-->
+					<xcp:number
+						id="txtNumVersao"
+						label="#{bundle.lbl_numVersao}"
+						value="#{xcpScriptsBacking.entity.numVersao}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999" />
+
+					<xcp:dateTime
+						id="txtDthGeracao"
+						value="#{xcpScriptsBacking.entity.dthGeracao}"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						label="#{bundle.lbl_dthGeracao}" />
+
+					<xcp:combo
+						id="cboTipObjeto"
+						value="#{xcpScriptsBacking.entity.tipObjeto}"
+						label="#{bundle.lbl_tipObjeto}"
+						required="true"
+						readonly="#{not xcpScriptsBacking.entity.novo}"
+						itens="#{xcpScriptsBacking.itensTipObjeto}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

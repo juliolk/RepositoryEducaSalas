@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	
+ 	<style type="text/css">
+
+		.ui-outputpanel.ui-widget.carteira-funcional h2.section-title {
+			font-size: 24px !important;
+		}
+
+		.carteira-funcional .foto {
+			width: 35vw;
+		    height: 45vw;
+		    background-position: center center;
+		    background-size: cover;
+		    border-radius: 5px;
+		    box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.4);
+		    flex: 0 0 auto;
+		    margin-right: 40px;
+		    margin-top: 5px;
+		    max-width: 250px;
+		    max-height: 330px;
+		}
+		
+		.carteira-funcional .mensagens-carteira h2 {
+			margin-top: 40px;
+			text-transform: uppercase;
+		}
+		
+		.carteira-funcional .mensagens-carteira div {
+		    margin-top: 15px;
+		    text-align: justify;
+		}
+		
+		@media(max-width:767px) {
+		
+			.carteira-funcional .section-title small {
+				display: block;
+				margin-top: 10px;
+			}	
+		
+			.carteira-funcional .foto-container {
+				text-align: center;
+			}
+			
+			.carteira-funcional .foto {
+				margin: auto;
+				margin-bottom: 20px;
+			}
+			
+		}
+ 	
+	</style>
+
+	<p:outputPanel class="carteira-funcional"  rendered="#{ validadorBacking.funcionarioCarteira != null}">
+	
+		<p:outputPanel>
+			<div class="row">
+				<div class="col-sm-offset-1 col-lg-10 alert alert-success">
+					<h3>#{ bundle.tit_carteira_funcional_encontrada }</h3>
+					<p>
+						#{ bundle.msg_carteira_funcional_encontrada_com_codigo_informado }
+					</p>
+				</div>
+			</div>
+		</p:outputPanel>
+	
+	
+		<div class="row">
+			<div class="col-sm-offset-1 col-sm-10">
+				<h2 class="section-title">
+					#{ bundle.tit_carteira_funcional } <small>#{ bundle.tit_dados_funcionario }</small>
+				</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 col-sm-push-6 foto-container">
+				<div class="foto" 
+					style="background-image: url(#{xcpLayoutAppBacking.requestContextPath}#{validadorBacking.urlFoto})">
+				</div>
+			</div>
+
+			<div class="col-sm-offset-1 col-sm-5 col-sm-pull-6">
+
+				<div class="documentos-infocontainer">
+					<h2>#{validadorBacking.funcionarioCarteira.desNome}</h2>
+
+					<div class="documentos-infodocumento">
+						<p:outputLabel value="#{ bundle.lbl_cpf }" />
+						<div>
+							<xcp:outputSimple
+								value="#{ validadorBacking.CPFCodificado }" />
+						</div>
+					</div>
+					<div class="documentos-infodocumento">
+						<p:outputLabel value="#{ bundle.lbl_data_nascimento }" />
+						<div>
+							<xcp:outputSimpleDate
+								value="#{ validadorBacking.funcionarioCarteira.dtaNascimento }" />
+						</div>
+					</div>
+					<div class="documentos-infodocumento">
+						<p:outputLabel value="#{ bundle.lbl_matricula }" />
+						<div>
+							<xcp:outputSimple
+								value="#{ validadorBacking.funcionarioCarteira.numMatricula }" />
+						</div>
+					</div>
+					<div class="documentos-infodocumento">
+						<p:outputLabel value="#{ bundle.lbl_orgao }" />
+						<div>
+							<xcp:outputSimple
+								value="#{ validadorBacking.funcionarioCarteira.desOrgao }" />
+						</div>
+					</div>
+					<div class="documentos-infodocumento">
+						<p:outputLabel value="#{ bundle.lbl_cargo }" />
+						<div>
+							<xcp:outputSimple
+								value="#{ validadorBacking.funcionarioCarteira.desCargo }" />
+						</div>
+					</div>
+					<div class="documentos-infodocumento">
+						<p:outputLabel value="#{ bundle.lbl_funcao }" />
+						<div>
+							<xcp:outputSimple
+								value="#{ validadorBacking.funcionarioCarteira.desFuncao }" />
+						</div>
+					</div>
+					<div class="documentos-infodocumento">
+						<p:outputLabel value="#{ bundle.lbl_data_admissao }" />
+						<div>
+							<xcp:outputSimpleDate
+								value="#{ validadorBacking.funcionarioCarteira.dtaAdmissao }" />
+						</div>
+					</div>
+
+					<ui:fragment rendered="#{ validadorBacking.mensagensCarteira.size() > 0 }">
+						<div class="mensagens-carteira">
+							<h2>#{ bundle.lbl_observacoes }</h2>
+							<div class="documentos-infodocumento">
+								<ui:repeat var="msg" value="#{ validadorBacking.mensagensCarteira }">
+									<div>
+										<xcp:outputSimple
+											value="#{ msg }" />
+									</div>
+								</ui:repeat>
+							</div>
+						</div>
+					</ui:fragment>
+
+
+				</div>						
+			</div>
+
+		</div>
+	</p:outputPanel>
+
+	<p:outputPanel rendered="#{ validadorBacking.funcionarioCarteira == null and validadorBacking.hash != null}">
+		<div class="row">
+			<div class="col-sm-offset-1 col-lg-10 alert alert-error">
+				<h3>#{ bundle.tit_carteira_funcional_nao_encontrada }</h3>
+				<p>#{ bundle.msg_nao_localizado_funcionario_com_codigo_enviado }<br/>
+				#{ bundle.msg_tente_novamente_refazendo_leitura_qrcode }
+				</p>
+			</div>
+		</div>
+	</p:outputPanel>
+
+
+</ui:composition>

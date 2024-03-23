@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="SetoresTransformacao"
+		backing="#{setoresTransformacaoBacking}"
+		masterId="Setores">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_dtinicio}"
+				value="#{row.dtinicio}"
+				type="Date"
+				size="2">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_setortransf}"
+				value="#{row.setortransf}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.setortransfFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDtinicio_SetTrans"
+					required="true"
+					value="#{setoresTransformacaoBacking.entity.dtinicio}"
+					label="#{bundle.lbl_dtinicio}" />
+
+				<xcp:lov
+					id="lovSetortransf_SetTrans"
+					value="#{setoresTransformacaoBacking.entity.setortransfFk}"
+					label="#{bundle.lbl_setortransf}"
+					required="true"
+					query="setores"
+					size="10" />
+
+				<xcp:text
+					id="txtDescricao_SetTrans"
+					label="#{bundle.lbl_descricao}"
+					value="#{setoresTransformacaoBacking.entity.descricao}"
+					size="100" />
+
+			</xcp:panelForm>
+		</ui:define>
+	</xcp:panelManutDetalhes>
+</ui:composition>

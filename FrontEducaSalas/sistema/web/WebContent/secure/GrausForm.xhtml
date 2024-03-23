@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Graus"
+			backing="#{grausBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_grauinst}"
+					value="#{row.grauinst}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.grauinst}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="35">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_rais}"
+					value="#{row.rais}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.rais}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_caged}"
+					value="#{row.caged}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.caged}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fgts}"
+					value="#{row.fgts}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.fgts}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_anexo_obrigatorio}"
+					value="#{row.anexoObrigatorio}"
+					type="String"
+					size="15"
+					itens="#{grausBacking.itensIndSimNaoNull}">
+					<xcp:outputSimple
+						value="#{row.anexoObrigatorio}"
+						itens="#{grausBacking.itensIndSimNao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtGrauinst"
+						label="#{bundle.lbl_grauinst}"
+						required="true"
+						value="#{grausBacking.entity.grauinst}"
+						size="4"
+						maxValue="9999"
+						readonly="#{not grausBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{grausBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:text
+						id="txtRais"
+						label="#{bundle.lbl_rais}"
+						required="true"
+						value="#{grausBacking.entity.rais}"
+						size="4" />
+
+					<xcp:text
+						id="txtCaged"
+						label="#{bundle.lbl_caged}"
+						required="true"
+						value="#{grausBacking.entity.caged}"
+						size="4" />
+
+					<xcp:text
+						id="txtFgts"
+						label="#{bundle.lbl_fgts}"
+						required="true"
+						value="#{grausBacking.entity.fgts}"
+						size="4" />
+						
+					<xcp:combo id="cboAnexoObrigatorio"
+						value="#{grausBacking.entity.anexoObrigatorio}"
+						label="#{bundle.lbl_anexo_obrigatorio}" 
+						required="true"
+						itens="#{grausBacking.itensIndSimNaoNull}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

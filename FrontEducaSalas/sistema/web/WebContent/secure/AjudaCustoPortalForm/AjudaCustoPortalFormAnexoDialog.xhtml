@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.lbl_anexos} #{ajudaCustoPortalBacking.desTitulo}"
+		modal="true"
+		minWidth="400"
+		id="dlgAnexos"
+		widgetVar="dlgAnexos_w"
+		closeOnEscape="true"
+		styleClass="full-page-dialog rightside-dialog"
+		dynamic="true"
+		resizable="false"
+		draggable="false"
+		closable="false">
+
+		<xcp:form
+			id="frmAnexos"
+			multipart="true">
+
+			<p:outputPanel id="pnl_anexos">
+				<table
+					class="table material table-inspector table-medium table-noborder table-striped">
+					<thead>
+						<tr>
+							<th></th>
+							<th>#{bundle.col_nome}</th>
+							<th>#{bundle.col_valor}</th>
+							<th>#{bundle.col_acoes}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:repeat
+							value="#{ajudaCustoPortalBacking.anexos}"
+							var="anexo">
+							<tr>
+								<td
+									data-title="#{bundle.lbl_tipo_solicitacao}"
+									class="table-icon-column"><span> <i
+										class="fa fa-fw fa-plus-circle"></i>
+								</span></td>
+								<td data-title="#{bundle.col_nome}"><xcp:outputSimple
+										id="outNome"
+										value="#{anexo.nome}" /></td>
+								<td data-title="#{bundle.col_valor}"><xcp:outputSimpleNumber
+										id="outValor"
+										value="#{anexo.valor}"
+										precision="9"
+										scale="2" /></td>
+								<td
+									data-title="#{bundle.col_acoes}"
+									class="table-actions-column"><xcp:commandLink
+										immediate="true"
+										id="btn_download_anex"
+										update="pnl_anexos"
+										title="Download"
+										onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+										ajax="false">
+										<i class="fa fa-fw fa-download"></i>
+										<p:fileDownload
+											value="#{ajudaCustoPortalBacking.getStreamAnexo(anexo)}"
+											contentDisposition="attachment" />
+									</xcp:commandLink> <xcp:commandLink
+										immediate="true"
+										id="btn_remove_lin"
+										rendered="#{ajudaCustoPortalBacking.ajuda.situacao == 1 or  ajudaCustoPortalBacking.ajuda.situacao == 4}"
+										update=":frmAnexos :dlgAnexo :form"
+										title="#{bundle.lbl_remover}"
+										action="#{ajudaCustoPortalBacking.actionRemoverAnexo(anexo)}">
+										<i class="fa fa-fw fa-trash"></i>
+										<p:confirm
+											header="#{bundle.tit_confirma_remover}"
+											message="#{bundle.msg_confirma_remover}"
+											icon="ui-icon-alert" />
+									</xcp:commandLink></td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+
+				<ui:fragment rendered="#{empty ajudaCustoPortalBacking.anexos }">
+					<div class="datacard-empty-message">
+						#{bundle.msg_nenhum_anexo_informado}</div>
+				</ui:fragment>
+
+			</p:outputPanel>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						process="@this"
+						update=":frmAnexo"
+						rendered="#{ajudaCustoPortalBacking.ajuda.situacao == 1}"
+						value="#{bundle.btn_novo} #{bundle.lbl_anexo}"
+						action="#{ajudaCustoPortalBacking.actionNovoAnexo}" />
+
+					<xcp:commandButton
+						id="btn_vtl_anx_car"
+						immediate="true"
+						value="#{bundle.btn_voltar}"
+						process="@this"
+						oncomplete="PF('dlgAnexos_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+
+	<p:dialog
+		id="dlgAnexo"
+		widgetVar="dlgAnexo_w"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true"
+		width="320">
+		<xcp:form id="frmAnexo">
+
+			<xcp:panelForm>
+				<xcp:number
+					id="txtValor"
+					label="#{bundle.lbl_valor}"
+					value="#{ajudaCustoPortalBacking.anexo.valor}"
+					precision="9"
+					required="true"
+					scale="2" />
+
+				<p:outputLabel value="#{bundle.lbl_anexo}" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{ajudaCustoPortalBacking.actionUploadAnexo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					requiredMessage='#{ empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+					validator="xcpInputFileValidator" />
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_gravar_anexo"
+						process="@this txtValor"
+						value="#{bundle.btn_gravar}"
+						action="#{ajudaCustoPortalBacking.actionGravarAnexo}"
+						update=":frmAnexos :form" />
+
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						value="#{bundle.btn_cancelar}"
+						oncomplete="PF('dlgAnexo_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

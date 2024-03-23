@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.tit_filtros}"
+				style="margin-bottom: 5px">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCanCpf"
+						value="#{concursosRastreioBacking.helper.candidatoCpf}"
+						label="#{bundle.lbl_candidato}"
+						query="candidato_cpf"
+						size="11"
+						update="lovMatricula"
+						selectionListener="#{concursosRastreioBacking.selectCandidato}" />
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{concursosRastreioBacking.helper.funcionarioFk}"
+						label="#{bundle.lbl_matricula}"
+						query="funcionariosLov"
+						size="11"
+						update="lovCanCpf"
+						selectionListener="#{concursosRastreioBacking.selectMatricula}" />
+
+				</xcp:panelForm>
+
+				<xcp:commandButton
+					id="btn_buscar"
+					value="#{bundle.btn_buscar}"
+					style="margin-top:10px;margin-bottom:10px"
+					icon="ui-icon-search"
+					action="#{concursosRastreioBacking.actionBuscaConcursos}"
+					update="tblConcursos" />
+
+				<p:spacer height="5" />
+			</p:fieldset>
+
+			<p:dataTable
+				id="tblConcursos"
+				var="row"
+				value="#{concursosRastreioBacking.helper.list}"
+				rows="#{viewUtil.tableRows}"
+				rowKey="#{row}"
+				paginator="true"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginatorPosition="bottom">
+
+				<p:column style="width:16px">
+					<p:rowToggler rendered="#{row.listNom.size() > 0}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{row.editalFk.edital}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.editalFk.edital}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.editalFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.editalFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classific}"
+					value="#{row.classfinal}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						precision="5"
+						scale="0"
+						value="#{row.classfinal}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cargo}"
+					value="#{row.funcaoFk.cargo}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.funcaoFk.cargo}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.funcaoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.funcaoFk.descricao}" />
+				</xcp:column>
+
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabNom"
+						var="rowNom"
+						value="#{row.listNom}"
+						rowKey="#{row}"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-left:10px;margin-right:10px;margin-top:10px">
+						<f:facet name="header">#{bundle.tit_nomeacoes}</f:facet>
+
+						<xcp:column
+							headerText="#{bundle.col_editaNom}"
+							type="Number"
+							size="2">
+							<xcp:outputSimple value="#{rowNom.editalNomFk.numero}" />
+						</xcp:column>
+
+
+						<xcp:column
+							headerText="#{bundle.col_descricao}"
+							type="String"
+							size="20">
+							<xcp:outputSimple value="#{rowNom.editalNomFk.descricao}" />
+						</xcp:column>
+
+
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							size="20">
+							<xcp:outputSimple
+								value="#{rowNom.tipo}"
+								itens="#{concursosBacking.itensTipo}" />
+						</xcp:column>
+
+					</p:dataTable>
+
+					<p:spacer height="1px" />
+
+					<p:dataTable
+						id="tabHist"
+						var="rowHist"
+						value="#{row.listHist}"
+						rowKey="#{rowHist}"
+						paginator="true"
+						rendered="#{row.listHist.size() > 0}"
+						paginatorPosition="bottom"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-left:10px;margin-right:10px;margin-bottom:10px">
+						<f:facet name="header">#{bundle.tit_publicacoes}</f:facet>
+
+						<xcp:column
+							headerText="#{bundle.col_portaria_public}"
+							type="String"
+							size="12">
+							<xcp:outputSimple value="#{rowHist.registroFk.nrdoc}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_tipodoc}"
+							type="String"
+							size="12">
+							<xcp:outputSimple value="#{rowHist.tipodocFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_sequencia}"
+							type="Number"
+							size="2">
+							<xcp:outputSimpleNumber
+								value="#{rowHist.sequencia}"
+								precision="2"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dataIni}"
+							type="Date"
+							size="4">
+							<xcp:outputSimpleDate value="#{rowHist.data}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dataFim}"
+							type="Date"
+							size="4">
+							<xcp:outputSimpleDate value="#{rowHist.dataFim}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_obs}"
+							type="String"
+							size="40">
+							<xcp:outputSimple value="#{rowHist.obs}" />
+						</xcp:column>
+
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</p:dataTable>
+
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

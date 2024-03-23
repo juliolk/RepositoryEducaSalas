@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Cid"
+			backing="#{cidBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_cid}"
+					value="#{row.cid}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.cid}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtCid"
+						label="#{bundle.lbl_cid}"
+						required="true"
+						value="#{cidBacking.entity.cid}"
+						size="15"
+						readonly="#{not cidBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{cidBacking.entity.descricao}" />
+
+				</xcp:panelForm>
+			</ui:define>
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_importar"
+					icon="ui-icon-arrowthickstop-1-s"
+					value="#{bundle.btn_importar}"
+					oncomplete="PF('w_up').show()" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgUpload}"
+			widgetVar="w_up"
+			dynamic="true"
+			modal="true">
+			<xcp:form
+				id="formUpload"
+				multipart="true">
+				<p:fileUpload
+					id="fUplo"
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					uploadLabel="#{bundle.btn_upload}"
+					invalidFileMessage="#{bundle.msg_upload_arquivo}"
+					converterMessage="#{bundle.msg_upload_conversao}"
+					fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+					invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+					messageTemplate="#{bundle.msg_upload_mensagem}"
+					requiredMessage="#{bundle.msg_upload_requerido}"
+					validatorMessage="#{bundle.msg_upload_validacao}"
+					cancelLabel="#{bundle.btn_upload_cancel}"
+					dragDropSupport="false"
+					allowTypes="/(\.|\/)(txt)$/"
+					fileUploadListener="#{cidBacking.actionUploadFile}" />
+			</xcp:form>
+		</p:dialog>
+		<p:dialog
+			header="#{bundle.tit_dlgMsg}"
+			widgetVar="w_msg"
+			dynamic="true"
+			modal="true"
+			height="500"
+			width="600">
+			<xcp:form id="formDlg">
+				<h:panelGrid columns="1">
+					<p:fieldset legend="#{bundle.title_aviso}">
+						<h:outputText value="#{bundle.msg_linhas_nao_inseridas}" />
+					</p:fieldset>
+					<p:spacer height="5px;" />
+					<p:dataTable
+						id="tblErro"
+						var="row"
+						value="#{cidBacking.errorList}"
+						rows="#{viewUtil.tableRows}"
+						paginator="true">
+						<p:column headerText="#{bundle.col_linha}">
+							<h:outputText value="#{row.desLinha}" />
+						</p:column>
+						<p:column headerText="#{bundle.col_msg}">
+							<h:outputText value="#{row.desMessage}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

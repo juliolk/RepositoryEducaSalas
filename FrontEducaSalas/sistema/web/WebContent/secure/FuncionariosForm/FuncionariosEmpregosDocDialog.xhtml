@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_empregos}"
+		modal="true"
+		id="dlgEmpDoc"
+		widgetVar="dlgEmpDoc_w"
+		dynamic="true">
+		<xcp:form id="frmEmpDoc">
+
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDtadm"
+					required="true"
+					value="#{funcionariosBacking.empregoDocSel.dtadm}"
+					label="#{bundle.lbl_dtadm}"
+					readonly="true"
+					size="8" />
+
+				<xcp:date
+					id="txtDtdem"
+					value="#{funcionariosBacking.empregoDocSel.dtdem}"
+					label="#{bundle.lbl_dtdem}"
+					readonly="true"
+					size="8" />
+
+				<xcp:text
+					id="txtNomeempresa"
+					label="#{bundle.lbl_nomeempresa}"
+					readonly="true"
+					value="#{funcionariosBacking.empregoDocSel.nomeempresa}"
+					size="70" />
+
+				<xcp:cnpj
+					id="txtCnpj"
+					label="#{bundle.lbl_cnpj}"
+					readonly="true"
+					value="#{funcionariosBacking.empregoDocSel.cnpj}" />
+
+				<xcp:number
+					id="txtTotdias"
+					label="#{bundle.lbl_totdias}"
+					value="#{funcionariosBacking.empregoDocSel.totdias}"
+					readonly="true"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:number
+					id="txtFaltas"
+					label="#{bundle.lbl_faltas}"
+					value="#{funcionariosBacking.empregoDocSel.faltas}"
+					size="8"
+					readonly="true"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:number
+					id="txtAfastamentos"
+					label="#{bundle.lbl_afastamentos}"
+					value="#{funcionariosBacking.empregoDocSel.afastamentos}"
+					size="8"
+					readonly="true"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:number
+					id="txtAts"
+					label="#{bundle.lbl_ats}"
+					value="#{funcionariosBacking.empregoDocSel.ats}"
+					size="8"
+					readonly="true"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:number
+					id="txtProgressao"
+					label="#{bundle.lbl_progressao}"
+					value="#{funcionariosBacking.empregoDocSel.progressao}"
+					size="8"
+					readonly="true"
+					precision="5"
+					scale="0"
+					maxValue="99999" />
+
+				<xcp:lov
+					id="lovCategoria_empregos"
+					value="#{funcionariosBacking.empregoDocSel.categoriaFk}"
+					label="#{bundle.lbl_categoria}"
+					query="empregos_categoria"
+					size="14" />
+
+				<xcp:lov
+					id="lovTipodoc_empregos"
+					value="#{funcionariosBacking.empregoDocSel.tipodocFk}"
+					readonly="true"
+					label="#{bundle.lbl_tipodoc}"
+					query="tipodocumento"
+					size="14" />
+
+				<xcp:lov
+					id="lovDocumento_empregos"
+					value="#{funcionariosBacking.empregoDocSel.registroFk}"
+					params="#{funcionariosBacking.paramsTipodocumentoEmpregos}"
+					label="#{bundle.lbl_documento}"
+					query="documentos"
+					size="14"
+					readonly="true" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{funcionariosBacking.empregoDocSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="true"
+					size="25" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+
+				<p:splitButton
+					id="btnDownloadDocumento"
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					disabled="#{funcionariosBacking.empregoDocSel.registroFk == null}">
+					<p:fileDownload
+						value="#{documentosBacking.getDownloadDocumento(funcionariosBacking.empregoDocSel.registro)}"
+						contentDisposition="attachment" />
+					<p:menuitem
+						value="#{bundle.btn_detalhes_doc}"
+						action="#{funcionariosBacking.modelEmp.actionOpenVisDialog(funcionariosBacking.empregoDocSel.registro)}"
+						process="@this" />
+
+				</p:splitButton>
+
+				<xcp:memo
+					id="txtObs"
+					readonly="true"
+					label="#{bundle.lbl_obs}"
+					value="#{funcionariosBacking.empregoDocSel.obs}"
+					size="3000"
+					cols="85" />
+
+			</xcp:panelForm>
+
+
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

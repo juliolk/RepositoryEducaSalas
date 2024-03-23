@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="Sala" backing="#{salaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_id}" value="#{row.id}"
+					type="Number" size="6">
+					<xcp:outputSimpleNumber value="#{row.id}" precision="6" scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_nome}" value="#{row.nome}"
+					type="String" size="50">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_local}" value="#{row.local}"
+					type="String" size="100">
+					<xcp:outputSimple value="#{row.local}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number id="txtId" label="#{bundle.lbl_id}" required="true"
+						value="#{salaBacking.entity.id}" size="6" precision="6" scale="0"
+						maxValue="999999" readonly="#{not salaBacking.entity.novo}" 
+						rendered="#{not salaBacking.entity.novo}" />
+
+					<xcp:text id="txtNome" label="#{bundle.lbl_nome}" required="true"
+						value="#{salaBacking.entity.nome}" size="50" />
+
+					<xcp:lov id="lovTipoSala" value="#{salaBacking.entity.tipoSalaFk}"
+						label="#{bundle.lbl_tipoSala}" required="true" query="tipo_sala"
+						size="3" />
+
+					<xcp:text id="txtLocal" label="#{bundle.lbl_local}"
+						value="#{salaBacking.entity.local}" size="100" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

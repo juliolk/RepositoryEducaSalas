@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="EventoRabbitmq" backing="#{eventoRabbitmqBacking}" 
+			renderedNovo="false" renderedRemover="false" renderedGravar="false">
+
+			<ui:define name="colunas">
+
+				<xcp:column headerText="#{bundle.col_seq}" value="#{row.seq}"
+					type="Number" size="10">
+					<xcp:outputSimpleNumber value="#{row.seq}" precision="18" scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_evento}" value="#{row.evento}"
+					type="String" size="30">
+					<xcp:outputSimple value="#{row.evento}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_chave}" value="#{row.chave}"
+					type="String" size="20" >
+					<xcp:outputSimple value="#{row.chave}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_situacao}" value="#{row.situacao}"
+					size="20" itens="#{eventoRabbitmqBacking.itensSituacaoNull}" >
+					<xcp:outputSimple
+					    value="#{row.situacao}"
+					    itens="#{eventoRabbitmqBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_dtcriacao}"
+					value="#{row.dtcriacao}" type="Date" size="12">
+					<xcp:outputSimpleTimestamp  value="#{row.dtcriacao}" />
+				</xcp:column>
+				
+				<xcp:column headerText="#{bundle.col_dtenvio}"
+					value="#{row.dtenvio}" type="Date" size="12">
+					<xcp:outputSimpleTimestamp value="#{row.dtenvio}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_json}" value="#{row.json}"
+					type="String" size="20">
+					<xcp:commandLink
+					  action="#{eventoRabbitmqBacking.actionJson(row)}"
+					  rendered="#{row.situacao > 0}"
+					  update=":frmFor">
+					  <xcp:outputSimple
+					    value="Json" />
+					</xcp:commandLink>
+					<xcp:outputSimple rendered="#{row.situacao == 0}" value="#{row.json}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_motivoInvalido}"
+					value="#{row.motivoInvalido}" type="String" size="20">
+					<xcp:outputSimple value="#{row.motivoInvalido}" length="20"/>
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number id="txtSeq" label="#{bundle.lbl_seq}" required="true"
+						value="#{eventoRabbitmqBacking.entity.seq}" size="18"
+						precision="18" scale="0" maxValue="999999999999999999"
+						readonly="#{not eventoRabbitmqBacking.entity.novo}" />
+
+					<xcp:text id="txtEvento" label="#{bundle.lbl_evento}"
+						required="true" value="#{eventoRabbitmqBacking.entity.evento}"
+						readonly="true"
+						size="60" />
+
+					<xcp:text id="txtChave" label="#{bundle.lbl_chave}" required="true"
+						value="#{eventoRabbitmqBacking.entity.chave}"
+						readonly="true" size="60" />
+
+					<xcp:combo id="cboSituacao"
+						value="#{eventoRabbitmqBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}" required="true"
+						itens="#{eventoRabbitmqBacking.itensSituacao}"
+						readonly="true" />
+
+					<xcp:dateTime id="txtDtcriacao" 
+						value="#{eventoRabbitmqBacking.entity.dtcriacao}"
+						label="#{bundle.lbl_dtcriacao}"
+						readonly="true" />
+					
+					<xcp:dateTime id="txtDtenvio" 
+						value="#{eventoRabbitmqBacking.entity.dtenvio}"
+						label="#{bundle.lbl_dtenvio}"
+						readonly="true" />
+
+					<xcp:memo id="txtJson" value="#{eventoRabbitmqBacking.entity.json}"
+					    readonly="true"
+						label="#{bundle.lbl_json}" />
+
+					<xcp:memo id="txtMotivoInvalido"
+						label="#{bundle.lbl_motivoInvalido}"
+						value="#{eventoRabbitmqBacking.entity.motivoInvalido}" 
+						readonly="true" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+	  <p:dialog
+	    header="#{bundle.title_json}"
+	    modal="true"
+	    id="dlgFor"
+	    widgetVar="wJson">
+	    <xcp:form id="frmFor">
+	      <p:inputTextarea
+	        value="#{eventoRabbitmqBacking.json}"
+	        cols="90"
+	        rows="40"
+	        autoResize="false" />	      
+	    </xcp:form>
+	  </p:dialog>
+	</ui:define>
+</ui:composition>

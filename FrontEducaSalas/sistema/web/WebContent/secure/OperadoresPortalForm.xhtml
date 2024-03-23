@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="conteudo">
+		<xcp:panelManutLazy
+			id="OperadoresPortal"
+			backing="#{operadoresPortalBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					value="#{row.operador}"
+					size="15"
+					type="Number"
+					headerText="#{bundle.col_operador}">
+					<xcp:outputSimpleNumber
+						value="#{row.operador}"
+						size="15"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					value="#{row.matricula}"
+					size="8"
+					scale="0"
+					type="Number"
+					headerText="#{bundle.col_matricula}">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						size="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					value="#{row.funcionarioFk.nome}"
+					size="40"
+					type="String"
+					headerText="#{bundle.col_nome}">
+					<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+				</xcp:column>
+				
+				<xcp:column
+					value="#{row.nome}"
+					size="40"
+					type="String"
+					headerText="#{bundle.col_operador}">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+				
+			</ui:define>
+
+			<ui:define name="form">
+				<table>
+					<tr>
+						<td width="1500px"><p:tabView
+								id="tabOperador"
+								dynamic="true"
+								cache="false"
+								activeIndex="#{operadoresPortalBacking.activeIdx}">
+								<p:tab title="#{bundle.tit_operador}">
+									<ui:include
+										src="OperadoresPortalForm/OperadoresPortalOperadorForm.xhtml" />
+								</p:tab>
+								<p:tab title="#{bundle.tit_perfis}">
+									<ui:include
+										src="OperadoresPortalForm/OperadoresPortalPerfisForm.xhtml" />
+								</p:tab>
+							</p:tabView></td>
+					</tr>
+				</table>
+			</ui:define>
+		</xcp:panelManutLazy>
+	</ui:define>
+</ui:composition>

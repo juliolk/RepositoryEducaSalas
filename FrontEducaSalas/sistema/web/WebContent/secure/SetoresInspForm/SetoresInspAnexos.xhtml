@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="pnlUpdAnexos">
+
+		<p:dataTable
+			id="tabAnex"
+			value="#{setoresInspBacking.entity.listAnexos}"
+			var="rowAnex"
+			filteredValue="#{setoresInspBacking.entity.listAnexosFilter}"
+			draggableRows="true"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			rowKey="#{rowAnex}">
+
+			<f:facet name="header">#{bundle.title_arrastar}</f:facet>
+
+			<p:ajax
+				event="rowReorder"
+				listener="#{setoresInspBacking.actionReorder}" />
+
+			<xcp:column
+				headerText="#{bundle.col_arquivo}"
+				value="#{rowAnex.nome}"
+				type="String"
+				size="50">
+				<xcp:outputSimple
+					id="outNome"
+					value="#{rowAnex.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{rowAnex.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple
+					id="outDescricao"
+					value="#{rowAnex.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="1">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_download_anex"
+					update="tabAnex"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					ajax="false">
+					<h:graphicImage
+						value="/resources/img/download.png"
+						style="margin-top:3px;" />
+					<p:fileDownload
+						value="#{setoresInspBacking.getAnexo(rowAnex)}"
+						contentDisposition="attachment" />
+				</xcp:commandLink>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="2">
+				<xcp:commandButton
+					id="btn_editar"
+					icon="icon-editar"
+					immediate="true"
+					update=":frmAnexo"
+					action="#{setoresInspBacking.actionOpenAnexo(rowAnex)}" />
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="2">
+				<xcp:commandButton
+					immediate="true"
+					id="btn_remove_lin"
+					update="tabAnex"
+					icon="ui-icon-trash"
+					action="#{setoresInspBacking.actionRemoveFile(rowAnex)}">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</xcp:column>
+
+		</p:dataTable>
+
+		<xcp:commandButton
+			id="btn_novo_anexo"
+			style="margin-top:5px"
+			process="@this"
+			icon="ui-icon-plusthick"
+			value="#{bundle.btn_novo}"
+			update=":frmAnexo"
+			action="#{setoresInspBacking.actionNovoAnexo}" />
+
+	</p:outputPanel>
+
+</ui:composition>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="LinhaValores"
+		backing="#{linhaValoresBacking}"
+		masterId="Linha">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valor_transporte}"
+				value="#{row.valor}"
+				type="Number"
+				size="15">
+				<xcp:outputSimpleNumber
+					value="#{row.valor}"
+					precision="12"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData_LinhaValores"
+					required="true"
+					value="#{linhaValoresBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					readonly="#{not linhaValoresBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtValor_LinhaValores"
+					label="#{bundle.lbl_valor_transporte}"
+					size="15"
+					value="#{linhaValoresBacking.entity.valor}"
+					precision="12"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

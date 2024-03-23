@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:date
+			id="txtDataOcor"
+			required="true"
+			readonly="true"
+			value="#{lancLotesBacking.helper.calculos.referencia}"
+			label="#{bundle.lbl_referencia}" />
+
+		<xcp:lov
+			id="lovContaOcor"
+			value="#{lancLotesBacking.helper.calculos.contaFk}"
+			label="#{bundle.lbl_conta}"
+			required="true"
+			query="contas"
+			size="4" />
+
+		<xcp:number
+			id="txtCalcValorOcor"
+			label="#{bundle.lbl_calcValor}"
+			required="true"
+			value="#{lancLotesBacking.helper.calculos.valor}"
+			size="18"
+			precision="16"
+			scale="2" />
+
+		<xcp:number
+			id="txtCalcQtdOcor"
+			label="#{bundle.lbl_calcQtd}"
+			required="true"
+			value="#{lancLotesBacking.helper.calculos.qtd}"
+			size="18"
+			precision="16"
+			scale="2" />
+
+		<xcp:number
+			id="txtCalcIncidenOcor"
+			label="#{bundle.lbl_calcInciden}"
+			required="true"
+			value="#{lancLotesBacking.helper.calculos.incidencia}"
+			size="3"
+			precision="3"
+			scale="0" />
+
+		<xcp:memo
+			id="txtDescricaoOcor"
+			required="true"
+			label="#{bundle.lbl_obs}"
+			value="#{lancLotesBacking.helper.calculos.obs}"
+			size="200" />
+
+	</xcp:panelForm>
+
+</ui:composition>

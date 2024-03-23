@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.tit_filtros}">
+				<xcp:panelForm>
+
+					<xcp:dateRange
+						id="txtDataPeriodo"
+						valueStart="#{programacaoFeriasGestorBacking.helper.dtaIni}"
+						readonly="true"
+						valueEnd="#{programacaoFeriasGestorBacking.helper.dtaFim}"
+						label="#{bundle.lbl_data_ferias}" />
+
+					<xcp:lov
+						id="lovVinculo"
+						value="#{programacaoFeriasGestorBacking.helper.vinculo}"
+						label="#{bundle.lbl_vinculo}"
+						readonly="#{programacaoFeriasGestorBacking.ejbVars.restricaoVinculo != null}"
+						query="vinculos"
+						size="8" />
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{programacaoFeriasGestorBacking.helper.cargo}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="8" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_buscar"
+							value="#{bundle.btn_buscar}"
+							icon="ui-icon-search"
+							action="#{programacaoFeriasGestorBacking.actionBuscaFuncionarios}"
+							update="tblFuncionarios" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:fieldset legend="#{bundle.tit_selecionados}">
+				<p:dataTable
+					id="tblFuncionarios"
+					var="row"
+					rowKey="#{row.PK}"
+					value="#{programacaoFeriasGestorBacking.helper.listaProgramacaoFerias}"
+					selection="#{programacaoFeriasGestorBacking.helper.ferias}"
+					selectionMode="single"
+					sortMode="multiple"
+					scrollHeight="240"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					scrollable="true">
+
+					<p:ajax
+						event="rowSelect"
+						update=":formdialog"
+						listener="#{programacaoFeriasGestorBacking.actionOpenDialog}" />
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						value="#{row.matricula}"
+						type="Number"
+						width="10%">
+						<xcp:outputSimple value="#{row.matricula}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{programacaoFeriasGestorBacking.helper.mapNomeFuncionario.get(row.matricula)}"
+						type="String"
+						width="25%">
+						<xcp:outputSimple
+							value="#{programacaoFeriasGestorBacking.helper.mapNomeFuncionario.get(row.matricula)}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtvcto}"
+						value="#{row.dtvcto}"
+						type="Date"
+						width="15%">
+						<xcp:outputSimpleDate value="#{row.dtvcto}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_seq}"
+						value="#{row.seq}"
+						type="Number"
+						width="15%">
+						<xcp:outputSimpleNumber
+							value="#{row.seq}"
+							precision="4"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataprevista}"
+						value="#{row.dataprevista}"
+						type="Date"
+						width="15%">
+						<xcp:outputSimpleDate value="#{row.dataprevista}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_diasferias}"
+						value="#{row.diasferprev}"
+						type="Number"
+						width="10%">
+						<xcp:outputSimpleNumber
+							value="#{row.diasferprev}"
+							precision="2"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_obs}"
+						value="#{row.obs}"
+						type="String"
+						width="35%">
+						<xcp:outputSimple value="#{row.obs}" />
+					</xcp:column>
+
+				</p:dataTable>
+			</p:fieldset>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgForm"
+			header="#{bundle.tit_previsao_ferias}"
+			widgetVar="wDlgForm"
+			resizable="true"
+			modal="true">
+			<xcp:form id="formdialog">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtDataprevista"
+						value="#{programacaoFeriasGestorBacking.helper.ferias.dataprevista}"
+						label="#{bundle.lbl_dataprevista}" />
+
+					<xcp:number
+						id="txtDiasferprev"
+						label="#{bundle.lbl_diasferprev}"
+						value="#{programacaoFeriasGestorBacking.helper.ferias.diasferprev}"
+						size="15"
+						precision="3"
+						scale="0"
+						maxValue="#{programacaoFeriasGestorBacking.helper.qtdDiasFerias}" />
+
+					<xcp:number
+						id="cboDiasaboprev"
+						value="#{programacaoFeriasGestorBacking.helper.ferias.diasaboprev}"
+						label="#{bundle.lbl_diasaboprev}"
+						size="15"
+						precision="2"
+						scale="0" />
+
+					<xcp:date
+						id="txtDataaceite"
+						value="#{programacaoFeriasGestorBacking.helper.ferias.aceite}"
+						label="#{bundle.lbl_aceite}"
+						rendered="#{programacaoFeriasGestorBacking.renderedAceite}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_txtPort}"
+						value="#{programacaoFeriasGestorBacking.helper.ferias.obs}"
+						size="4000"
+						maxlength="4000" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							update="@form :form:tblFuncionarios"
+							value="#{bundle.btn_gravar}"
+							action="#{programacaoFeriasGestorBacking.actionGravar}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('wDlgForm').hide();return false;" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

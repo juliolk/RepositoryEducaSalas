@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="SindicatosVinc"
+		backing="#{sindicatosVincBacking}"
+		masterId="Sindicatos">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_vinculo}"
+				value="#{row.vinculo}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.vinculoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_inicioadn}"
+				value="#{row.inicioadn}"
+				type="Number"
+				size="7">
+				<xcp:outputSimpleNumber
+					value="#{row.inicioadn}"
+					precision="4"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_fimadn}"
+				value="#{row.fimadn}"
+				type="Number"
+				size="7">
+				<xcp:outputSimpleNumber
+					value="#{row.fimadn}"
+					precision="4"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_percadn}"
+				value="#{row.percadn}"
+				type="Number"
+				size="7">
+				<xcp:outputSimpleNumber
+					value="#{row.percadn}"
+					precision="4"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovVinculo_SindicatosVinc"
+					value="#{sindicatosVincBacking.entity.vinculoFk}"
+					label="#{bundle.lbl_vinculo}"
+					required="true"
+					query="vinculos"
+					size="4"
+					readonly="#{not sindicatosVincBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtInicioadn_SindicatosVinc"
+					label="#{bundle.lbl_inicioadn}"
+					required="true"
+					size="7"
+					value="#{sindicatosVincBacking.entity.inicioadn}"
+					precision="4"
+					scale="2" />
+
+				<xcp:number
+					id="txtFimadn_SindicatosVinc"
+					label="#{bundle.lbl_fimadn}"
+					required="true"
+					size="7"
+					value="#{sindicatosVincBacking.entity.fimadn}"
+					precision="4"
+					scale="2" />
+
+				<xcp:number
+					id="txtPercadn_SindicatosVinc"
+					label="#{bundle.lbl_percadn}"
+					required="true"
+					size="7"
+					value="#{sindicatosVincBacking.entity.percadn}"
+					precision="4"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

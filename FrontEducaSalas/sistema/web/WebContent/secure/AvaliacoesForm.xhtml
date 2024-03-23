@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Avaliacoes"
+			backing="#{avaliacoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_avaliacao}"
+					value="#{row.avaliacao}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.avaliacao}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{avaliacoesBacking.itensTipo}"
+					size="15">
+					<xcp:outputSimple
+						itens="#{avaliacoesBacking.itensTipo}"
+						value="#{row.tipo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtAvaliacao"
+						label="#{bundle.lbl_avaliacao}"
+						required="true"
+						value="#{avaliacoesBacking.entity.avaliacao}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not avaliacoesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{avaliacoesBacking.entity.descricao}"
+						size="40" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{avaliacoesBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{avaliacoesBacking.itensTipo}"
+						readonly="#{not avaliacoesBacking.entity.novo}">
+						<p:ajax
+							event="change"
+							update="txtQtdpontos txtQtdpontos_l txtPercaval txtPercaval_l txtPercauto txtPercauto_l" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtQtdpontos"
+						label="#{bundle.lbl_qtdpontos}"
+						rendered="#{avaliacoesBacking.renderedQtdPontos}"
+						value="#{avaliacoesBacking.entity.qtdpontos}"
+						size="10"
+						precision="12"
+						scale="2"
+						maxValue="9999999999.99" />
+
+					<xcp:number
+						id="txtPercaval"
+						label="#{bundle.lbl_percaval}"
+						value="#{avaliacoesBacking.entity.percaval}"
+						rendered="#{avaliacoesBacking.renderedPerc}"
+						size="3"
+						precision="3"
+						required="#{avaliacoesBacking.entity.tipo == 4}"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtPercauto"
+						label="#{bundle.lbl_percauto}"
+						value="#{avaliacoesBacking.entity.percauto}"
+						rendered="#{avaliacoesBacking.renderedPerc}"
+						size="3"
+						precision="3"
+						required="#{avaliacoesBacking.entity.tipo == 4}"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtPercpares"
+						label="#{bundle.lbl_percpares}"
+						value="#{avaliacoesBacking.entity.percpares}"
+						rendered="#{avaliacoesBacking.renderedPercPares}"
+						size="3"
+						precision="3"
+						required="#{avaliacoesBacking.entity.tipo == 4}"
+						scale="0"
+						maxValue="999" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<p:outputPanel>
+					<ui:include src="AvaliacoesForm/ConhecimentosForm.xhtml" />
+				</p:outputPanel>
+
+				<p:outputPanel rendered="#{avaliacoesBacking.entity.tipo == 4}">
+					<ui:include src="AvaliacoesForm/AvaliacoesParametroForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgNotas"
+			header="#{bundle.title_adicionarNotas}"
+			widgetVar="dlgNotas_w">
+			<xcp:form id="frmNotas">
+				<ui:include src="AvaliacoesForm/ConhecimentosNotasDlg.xhtml" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

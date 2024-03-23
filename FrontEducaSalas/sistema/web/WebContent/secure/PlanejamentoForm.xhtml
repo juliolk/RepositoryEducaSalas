@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut id="Planejamento" backing="#{planejamentoBacking}">
+
+			<ui:define name="colunas">
+			
+				<xcp:column headerText="#{bundle.col_dtini}" value="#{row.dtini}"
+					type="Date" size="15">
+					<xcp:outputSimpleDate value="#{row.dtini}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_dtfim}" value="#{row.dtfim}"
+					type="Date" size="15">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_missao}" value="#{row.missao}"
+					type="String" size="100">
+					<xcp:outputSimple value="#{row.missao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date id="txtDtini" required="true"
+						value="#{planejamentoBacking.entity.dtini}"
+						label="#{bundle.lbl_dtini}" />
+
+					<xcp:date id="txtDtfim" required="true"
+						value="#{planejamentoBacking.entity.dtfim}"
+						label="#{bundle.lbl_datafim}" />
+
+					<xcp:memo id="txtMissao"
+						required="true"  size="4000"
+						value="#{planejamentoBacking.entity.missao}"
+						label="#{bundle.lbl_missao}" />
+
+					<xcp:memo id="txtVisao" value="#{planejamentoBacking.entity.visao}"
+						required="true"  size="4000"
+						label="#{bundle.lbl_visao}" />
+
+					<xcp:memo id="txtValores"
+						required="true"  size="4000"
+						value="#{planejamentoBacking.entity.valores}"
+						label="#{bundle.lbl_valores}" />
+
+					<xcp:memo id="txtPoliticas" size="4000"
+						value="#{planejamentoBacking.entity.politicas}"
+						label="#{bundle.lbl_politicas}" />
+
+					<xcp:memo id="txtDiretrizes"  size="4000"
+						value="#{planejamentoBacking.entity.diretrizes}"
+						label="#{bundle.lbl_diretrizes}" />
+
+					<xcp:memo id="txtContextualizacao" size="4000"
+						value="#{planejamentoBacking.entity.contextualizacao}"
+						label="#{bundle.lbl_contextualizacao}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="PlanejamentoForm/PlanejamentoSwotForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

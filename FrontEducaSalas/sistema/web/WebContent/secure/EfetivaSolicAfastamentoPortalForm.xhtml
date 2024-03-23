@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManutLazy
+			id="EfetivaSolicAfastamentoPortal"
+			renderedRemover="false"
+			renderedGravar="false"
+			renderedNovo="false"
+			renderedAtualizar="false"
+			backing="#{efetivaSolicAfastamentoPortalBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					id="brdPesq"
+					legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="dtaSolicitacao"
+							valueStart="#{efetivaSolicAfastamentoPortalBacking.dtaIni}"
+							valueEnd="#{efetivaSolicAfastamentoPortalBacking.dtaFim}"
+							label="#{bundle.lbl_data}" />
+					
+					
+					<xcp:lov id="lovFunc" 
+						value="#{efetivaSolicAfastamentoPortalBacking.funcionario}"
+						label="#{bundle.lbl_funcionario}" 
+						query="funcionariosLovAll"
+					 	size="10" />
+					 	
+					 <xcp:lov id="lovTipmvto" 
+						value="#{efetivaSolicAfastamentoPortalBacking.tipoMovto}"
+						label="#{bundle.lbl_tipmovto}" 
+						query="tipmov_afastportal"
+					 	size="10" />
+					 	
+					</xcp:panelForm>
+					<p:fieldset
+						id="brdSelecao"
+						legend="#{bundle.tit_situacao}"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtSitSolicitada"
+								label="#{bundle.opt_situacao_solicitacao_1}"
+								value="#{efetivaSolicAfastamentoPortalBacking.situacaoSolicitada}" />
+							<xcp:check
+								id="txtSitEfetivada"
+								label="#{bundle.opt_situacao_solicitacao_2}"
+								value="#{efetivaSolicAfastamentoPortalBacking.situacaoEfetivada}" />
+							<xcp:check
+								id="txtSitNaoAceita"
+								label="#{bundle.opt_situacao_solicitacao_3}"
+								value="#{efetivaSolicAfastamentoPortalBacking.situacaoNaoAceita}" />
+						</xcp:panelForm>
+					</p:fieldset>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_pesquisar"
+					icon="icon-pesquisar_azul"
+					value="#{bundle.btn_pesquisar}"
+					update="table_#{id}"
+					onclick="PF('table_#{id}_w').filter()" />
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_efetiva_solicitacao"
+					icon="ui-icon-arrowthickstop-1-s"
+					actionListener="#{efetivaSolicAfastamentoPortalBacking.actionConfirmaAceiteSolicitacao}"
+					update=":dlgMsg"
+					rendered="#{efetivaSolicAfastamentoPortalBacking.entity.situacao == 1}"
+					value="#{bundle.btn_aceita_solicitacao}" />
+				<xcp:commandButton
+					id="btn_rejeita_solicitacao"
+					icon="ui-icon-cancelar"
+					actionListener="#{efetivaSolicAfastamentoPortalBacking.actionRejeitaAceiteSolicitacao}"
+					update=":dlgMsg"
+					rendered="#{efetivaSolicAfastamentoPortalBacking.entity.situacao == 1}"
+					value="#{bundle.btn_rejeita_solicitacao}" />
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_data_solicitacao}"
+					type="Date"
+					size="12"
+					sortBy="data">
+					<xcp:outputSimpleTimestamp value="#{row.datasolicitacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					type="Number"
+					size="7"
+					sortBy="matricula">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_tipmovto}"
+					type="String"
+					size="50"
+					sortBy="tipmov">
+					<xcp:outputSimple value="#{row.tipmovFk.getDescricao()}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					type="Date"
+					size="12"
+					sortBy="data">
+					<xcp:outputSimpleTimestamp value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dttermino}"
+					type="Date"
+					size="12"
+					sortBy="data">
+					<xcp:outputSimpleTimestamp value="#{row.dttermino}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{efetivaSolicAfastamentoPortalBacking.itensSituacao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<p:fieldset>
+					<h:panelGrid
+						columns="2"
+						columnClasses="form_label,form_content">
+
+						<p:outputLabel
+							value="#{bundle.lbl_NomeFuncionario}:"
+							style="font-weight: bold;" />
+
+						<h:panelGroup layout="block">
+							<h:outputText
+								value="#{efetivaSolicAfastamentoPortalBacking.entity.funcionario.desNome}" />
+
+							<p:outputLabel
+								value="#{bundle.lbl_numMatFunc}:"
+								style="padding-left: 10px;font-weight: bold;" />
+
+							<h:outputText
+								value="#{efetivaSolicAfastamentoPortalBacking.entity.funcionario.numMatricula}"
+								style="padding-left: 2px;" />
+
+							<!-- -Vinculo: -->
+							<p:outputLabel
+								value="#{bundle.lbl_numVincFunc}:"
+								style="padding-left: 10px;font-weight: bold;" />
+
+							<h:outputText
+								value="#{efetivaSolicAfastamentoPortalBacking.entity.funcionario.desVinculo}"
+								style="padding-left: 2px;" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+				</p:fieldset>
+
+				<p:spacer height="5" />
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipmov"
+						value="#{efetivaSolicAfastamentoPortalBacking.entity.tipmovFk}"
+						label="#{bundle.lbl_tipmov}"
+						required="true"
+						query="tipmov_afastportal"
+						size="5"
+						selectionListener="#{efetivaSolicAfastamentoPortalBacking.actionSelectTipMov}"
+						update="txtDtocorrencia txtDtocorrencia_l" />
+
+					<xcp:border
+						id="brd_datas"
+						header="#{bundle.tit_periodo_afastamento}"
+						stylefieldset="width:460px !important; margin-left: 0px !important">
+
+						<xcp:date
+							id="txtDtocorrencia"
+							required="true"
+							value="#{efetivaSolicAfastamentoPortalBacking.entity.dtocorrencia}"
+							label="#{bundle.lbl_dtocorrencia}"
+							rendered="#{efetivaSolicAfastamentoPortalBacking.entity.tipmovFk.indDtocorrencia == 1}" />
+
+						<xcp:date
+							id="txtDtinicio"
+							required="true"
+							value="#{efetivaSolicAfastamentoPortalBacking.entity.dtinicio}"
+							label="#{bundle.lbl_dtinicio}">
+							<p:ajax
+								event="change"
+								listener="#{efetivaSolicAfastamentoPortalBacking.calculaDias}"
+								update="txtDiasAfastamento" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{efetivaSolicAfastamentoPortalBacking.calculaDias}"
+								update="txtDiasAfastamento" />
+						</xcp:date>
+
+						<xcp:date
+							id="txtDttermino"
+							value="#{efetivaSolicAfastamentoPortalBacking.entity.dttermino}"
+							label="#{bundle.lbl_dttermino}">
+							<p:ajax
+								event="change"
+								listener="#{efetivaSolicAfastamentoPortalBacking.calculaDias}"
+								update="txtDiasAfastamento" />
+							<p:ajax
+								event="dateSelect"
+								listener="#{efetivaSolicAfastamentoPortalBacking.calculaDias}"
+								update="txtDiasAfastamento" />
+						</xcp:date>
+
+						<xcp:number
+							id="txtDiasAfastamento"
+							value="#{efetivaSolicAfastamentoPortalBacking.qtdDiasAfastamento}"
+							label="#{bundle.lbl_diasAfastamento}"
+							size="10"
+							precision="5"
+							scale="0">
+						</xcp:number>
+
+					</xcp:border>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{efetivaSolicAfastamentoPortalBacking.entity.obs}"
+						size="1000"
+						style="width:470px;" />
+
+					<xcp:border
+						id="brdButtonDoc"
+						header=" "
+						stylefieldset="border: none; padding: 0; margin-left: 0 !important; margin-bottom: 10px">
+						<p:button
+							href="#{efetivaSolicAfastamentoPortalBacking.getDesPathDoc()}"
+							value="#{bundle.lbl_visualizar_documento}"
+							target="_blank"
+							icon="icon-pesquisar" />
+					</xcp:border>
+
+					<xcp:combo
+						id="cboSituacao"
+						label="#{bundle.lbl_situacao}"
+						value="#{efetivaSolicAfastamentoPortalBacking.entity.situacao}"
+						itens="#{efetivaSolicAfastamentoPortalBacking.itensSituacao}"
+						readonly="true" />
+
+				</xcp:panelForm>
+
+			</ui:define>
+
+		</xcp:panelManutLazy>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{efetivaSolicAfastamentoPortalBacking.msgDialogHeader}"
+			modal="true"
+			id="dlgMsg"
+			widgetVar="dlgMsg_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo
+							id="obsMsg"
+							label="#{bundle.lbl_mensagem}"
+							value="#{efetivaSolicAfastamentoPortalBacking.mensagem}"
+							size="2000" />
+
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_finalizar"
+								value="#{efetivaSolicAfastamentoPortalBacking.msgDialogHeader}"
+								process="@form"
+								action="#{efetivaSolicAfastamentoPortalBacking.actionFinalizar}"
+								icon="#{efetivaSolicAfastamentoPortalBacking.msgDialogButtonIcon}"
+								update=":form"
+								oncomplete="PF('dlgMsg_w').hide();">
+								<p:confirm
+									header="#{efetivaSolicAfastamentoPortalBacking.msgDialogConfirmHeader}"
+									message="#{efetivaSolicAfastamentoPortalBacking.msgDialogConfirmMessage}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

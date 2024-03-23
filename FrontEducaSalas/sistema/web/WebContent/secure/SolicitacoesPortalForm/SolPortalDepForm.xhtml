@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+    <p:outputPanel id="panelGeral">
+        <xcp:panelForm
+            id="pnl_form_dados_dependentes"
+            style="min-width: 350px;"
+            floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+            <xcp:combo
+                id="comboDepServidorMagistrado"
+                value="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor}"
+                itens="#{solicitacoesPortalBacking.itensIndSimNao}"
+                noFloat="true"
+                label="#{bundle.lbl_familiar_servidor}"
+                required="true"
+                rendered="#{solicitacoesPortalBacking.isClienteTribunal()}">
+                <p:ajax
+                    event="change"
+                    listener="#{solicitacoesPortalBacking.actionSelecionaFuncionarioFamiliar}"
+                    update="pnl_nome_dep pnl_aux_creche pnl_cpf_dtn pnl_sexo" />
+            </xcp:combo>
+
+            <p:outputPanel id="pnl_nome_dep">
+                <xcp:text
+                    id="txtNome_SolPortalDep"
+                    label="#{bundle.lbl_nome}"
+                    required="true"
+                    noFloat="true"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.nome}"
+                    size="60"
+                    rendered="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor == 0}" />
+
+                <xcp:lov
+                    id="lovFuncionarios"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.funcionarioFamiliarFk}"
+                    label="#{bundle.lbl_funcionario}"
+                    query="funcionarios"
+                    size="6"
+                    rendered="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor == 1}"
+                    update="pnl_nome_dep txtCargo_SolPortalDep"
+                    selectionListener="#{solicitacoesPortalBacking.actionSelecionaFuncionarioFamiliar}" />
+
+                <xcp:text
+                    id="txtCargo_SolPortalDep"
+                    label="#{bundle.lbl_cargo}"
+                    disabled="true"
+                    readonly="true"
+                    noFloat="true"
+                    value="#{solicitacoesPortalBacking.getFuncionarioFamiliarCargo(solicitacoesPortalBacking.dependenteSelecionado)}"
+                    size="60"
+                    rendered="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor == 1}" />
+
+            </p:outputPanel>
+
+
+            <xcp:combo
+                id="lovGrau_SolPortalDep"
+                noFloat="true"
+                required="true"
+                value="#{solicitacoesPortalBacking.dependenteSelecionado.grau}"
+                itens="#{solicitacoesPortalBacking.itensParentesco}"
+                label="#{bundle.lbl_grau}"
+                rendered="#{solicitacoesPortalBacking.renderedGrau}">
+                <p:ajax
+                    update="pnl_ind_estu pnl_sexo pnl_ec"
+                    process="@this"
+                    listener="#{solicitacoesPortalBacking.changeGrau}" />
+            </xcp:combo>
+
+            <xcp:combo
+                id="cboDependenteir_SolPortalDep"
+                value="#{solicitacoesPortalBacking.dependenteSelecionado.dependenteir}"
+                noFloat="true"
+                required="true"
+                label="#{bundle.lbl_dependenteir}"
+                itens="#{solicitacoesPortalBacking.itensDependentesIRRF}">
+                <p:ajax
+                    event="change"
+                    update="pnl_cpf_dtn" />
+            </xcp:combo>
+
+            <xcp:combo
+                id="cboBeneficiarioPrev_SolPortalDep"
+                value="#{solicitacoesPortalBacking.dependenteSelecionado.beneficiarioprev}"
+                label="#{bundle.lbl_beneficiarioprev}"
+                itens="#{solicitacoesPortalBacking.itensBeneficiarioPrev}"
+                rendered="#{solicitacoesPortalBacking.renderedBeneficiarioPrevDep}"
+                noFloat="true" />
+
+            <p:outputPanel id="pnl_aux_creche">
+                <xcp:combo
+                    id="cboBeneficiario_SolPortalDep"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.beneficiario}"
+                    label="#{bundle.lbl_beneficiario}"
+                    noFloat="true"
+                    required="true"
+                    itens="#{solicitacoesPortalBacking.itensDependentesIRRF}"
+                    rendered="#{!solicitacoesPortalBacking.isFiliacao(solicitacoesPortalBacking.dependenteSelecionado.grau) and solicitacoesPortalBacking.dependenteSelecionado.familiarServidor != 1}" />
+            </p:outputPanel> 
+
+            <p:outputPanel id="pnl_ind_estu">
+                <xcp:combo
+                    id="cboIndEstudante"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.indEstudante}"
+                    label="#{bundle.lbl_indestudante}"
+                    itens="#{solicitacoesPortalBacking.itensIndSimNaoNull}"
+                    required="true"
+                    rendered="#{solicitacoesPortalBacking.renderedEstudante}"
+                    noFloat="true" />
+            </p:outputPanel>
+
+            <p:outputPanel id="pnl_sexo">
+                <xcp:combo
+                    id="cboSexo"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.sexo}"
+                    label="#{bundle.lbl_sexo}"
+                    itens="#{solicitacoesPortalBacking.itensSexo}"
+                    rendered="#{solicitacoesPortalBacking.renderedSexoDep}"
+                    required="true"
+                    noFloat="true" />
+            </p:outputPanel>
+
+            <p:outputPanel id="pnl_ec">
+
+                <xcp:combo
+                    id="cboEC"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.ec}"
+                    label="#{bundle.lbl_ec}"
+                    itens="#{solicitacoesPortalBacking.itensEC}"
+                    rendered="#{solicitacoesPortalBacking.renderedEcDep}"
+                    noFloat="true" />
+
+            </p:outputPanel>
+
+            <xcp:combo
+                id="cboDeficienciasDep"
+                value="#{solicitacoesPortalBacking.dependenteSelecionado.deficiencia}"
+                label="#{bundle.lbl_def}"
+                itens="#{solicitacoesPortalBacking.itensDeficiencias}"
+                noFloat="true" />
+
+            <p:outputPanel id="pnl_cpf_dtn">
+                <xcp:cpf
+                    id="txtCpf_SolPortalDep"
+                    noFloat="true"
+                    label="#{bundle.lbl_cpf}"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.cpf}"
+                    rendered="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor != 1}"
+                    required="#{solicitacoesPortalBacking.dependenteSelecionado.dependenteir == 1}"
+                    readonly="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor == 1}" />
+
+                <xcp:date
+                    id="txtDtn_SolPortalDep"
+                    noFloat="true"
+                    value="#{solicitacoesPortalBacking.dependenteSelecionado.dtn}"
+                    label="#{bundle.lbl_dtn}"
+                    rendered="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor != 1}"
+                    required="#{solicitacoesPortalBacking.dependenteSelecionado.dependenteir == 1}"
+                    readonly="#{solicitacoesPortalBacking.dependenteSelecionado.familiarServidor == 1}" />
+            </p:outputPanel>
+
+            <xcp:memo
+                id="txtObs_SolPortalDep"
+                label="#{bundle.lbl_obs}"
+                value="#{solicitacoesPortalBacking.dependenteSelecionado.obs}"
+                size="50"
+                rendered="false" />
+
+        </xcp:panelForm>
+
+        <p:toolbar styleClass="xcp_pmanut_form_toolbar">
+            <f:facet name="left">
+                <xcp:commandButton
+                    id="btn_confirmaAlteracao"
+                    value="#{bundle.btn_gravar}"
+                    process="@form"
+                    update="@form"
+                    oncomplete="$(this).eachHasValue();"
+                    action="#{solicitacoesPortalBacking.actionGravaDependente}" />
+
+                <xcp:commandButton
+                    id="btnVoltar_Alteracao"
+                    immediate="true"
+                    value="#{bundle.btn_cancelar}"
+                    onclick="PF('dlgDep_w').hide();" />
+
+            </f:facet>
+        </p:toolbar>
+
+    </p:outputPanel>
+</ui:composition>

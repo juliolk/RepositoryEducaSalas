@@ -1,0 +1,995 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 100px;
+}
+</style>
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(1)}"
+			escape="false" />
+
+		<xcp:panelFuncionarioLazy
+			id="FeriasForm"
+			backing="#{feriasBacking}"
+			rowStyleClass="#{feriasBacking.getStyelclass(row.tipodoc,row.dtcancelamento,row.situacaoFk.tipo)}"
+			tabindexcompl="500"
+			tabindexbtn="600">
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_emitir_portaria"
+					value="#{bundle.btn_emitir_portaria}"
+					action="#{feriasPortariaDiretaBacking.actionOpenOrExecute}"
+					update="#{feriasPortariaDiretaBacking.btnEmitirUpdate}"
+					rendered="#{feriasPortariaDiretaBacking.renderedEmissao}" />
+
+				<xcp:commandButton
+					id="btn_excluir_portaria"
+					value="#{bundle.btn_excluir_portaria}"
+					action="#{feriasPortariaDiretaBacking.actionExcluirPortariaDireta}"
+					update="@form"
+					rendered="#{feriasPortariaDiretaBacking.renderedExcluir}">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+			</ui:define>
+
+
+			<ui:define name="barraLista">
+				<p:column>
+					<xcp:commandButton
+						id="btn_atualiza_protelacoes"
+						value="#{bundle.btn_atualiza_protelacoes}"
+						action="#{feriasBacking.actionAtualizaProtelacoes}"
+						update="@form">
+					</xcp:commandButton>
+				</p:column>
+
+				<p:column>
+					<xcp:commandButton
+						id="btn_inserir_atualizar_faltas"
+						value="#{bundle.btn_inserir_atualizar_faltas}"
+						action="#{feriasBacking.actionAtualizarFaltas}"
+						update="@form">
+					</xcp:commandButton>
+				</p:column>
+				<p:column>
+					<xcp:commandButton
+						id="btn_inserir_periodos"
+						value="#{bundle.btn_inserir_periodos}"
+						action="#{feriasBacking.actionInserirPeriodos}"
+						update="@form">
+					</xcp:commandButton>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<h:panelGrid
+						columns="6"
+						columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+						<xcp:number
+							id="txtDiasTotais"
+							value="#{feriasBacking.helper.qtdTotalDias}"
+							label="#{bundle.lbl_qtd_total_dias}"
+							size="5"
+							readonly="true"
+							scale="0" />
+
+						<xcp:number
+							id="txtDiasGozados"
+							value="#{feriasBacking.helper.qtdDiasGozados}"
+							label="#{bundle.lbl_qtd_dias_gozados}"
+							size="5"
+							readonly="true"
+							scale="0" />
+
+						<xcp:number
+							id="txtDiasPendentes"
+							value="#{feriasBacking.helper.qtdDiasPendentes}"
+							label="#{bundle.lbl_qtd_dias_pendentes}"
+							size="3"
+							readonly="true"
+							scale="0" />
+					</h:panelGrid>
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<p:column style="width:16px">
+					<p:rowToggler rendered="#{row.detalhes}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvctoIni}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtvctoIni}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvcto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtvcto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtgozo}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtgozo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtret}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtret}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasferias}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.diasferias}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_saldo}"
+					type="Number"
+					size="2"
+					rendered="#{feriasBacking.renderedSaldo}">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdDiasSaldo}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datapgto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datapgto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasperdidos}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasperdidos}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_diasprorrog}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasprorrog}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataprevista}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataprevista}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasabono}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.diasabono}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_portaria}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.registroFk.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="25">
+					<xcp:outputSimple value="#{row.situacaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_gera13}"
+					itens="#{feriasBacking.itensIndSimNaoNull}"
+					type="Number"
+					size="3">
+					<xcp:outputSimple
+						value="#{row.gera13}"
+						itens="#{feriasBacking.itensIndSimNao}" />
+				</xcp:column>
+
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabDoc"
+						var="rowDoc"
+						value="#{row.listaFeriasDoc}"
+						rowKey="#{rowDoc.PK}"
+						paginator="true"
+						selectionMode="single"
+						paginatorPosition="bottom"
+						rowIndexVar="idx"
+						selection="#{feriasBacking.helper.feriasDocSelecionada}"
+						rows="#{viewUtil.tableRows}"
+						rowStyleClass="#{feriasBacking.getStyelclass(rowDoc.tipodoc,rowDoc.dtcancelamento,rowDoc.situacaoFk.tipo)}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-bottom:0;">
+						<p:ajax
+							event="rowSelect"
+							update=":frmDlg"
+							oncomplete="PF('dlg_w').show();" />
+
+						<xcp:column
+							headerText="#{bundle.col_dtgozo}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{rowDoc.dtgozo}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtret}"
+							type="Date"
+							size="7">
+							<xcp:outputSimpleDate value="#{rowDoc.dtret}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_diasferias}"
+							type="Number"
+							size="2">
+							<xcp:outputSimpleNumber
+								value="#{rowDoc.diasferias}"
+								precision="2"
+								scale="0" />
+						</xcp:column>
+
+						<ui:include src="DocManual/DocUnificadoDetalhesDoc.xhtml">
+							<ui:param
+								name="rowDoc"
+								value="#{rowDoc}" />
+
+							<ui:param
+								name="rowPrincipal"
+								value="#{row}" />
+
+							<ui:param
+								name="actionExclusao"
+								value="#{feriasBacking.model}" />
+
+						</ui:include>
+
+
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelGrid>
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:date
+									id="txtDtvctoIni"
+									required="true"
+									value="#{feriasBacking.entity.dtvctoIni}"
+									label="#{bundle.lbl_dtvctoIni}"
+									readonly="#{feriasBacking.readOnlyDtaVcto}"
+									tabindex="10">
+									<p:ajax
+										event="dateSelect"
+										process="@this"
+										update="@none" />
+									<p:ajax
+										process="@this"
+										update="@none"
+										event="change" />
+								</xcp:date>
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:date
+									id="txtDtvcto"
+									required="true"
+									value="#{feriasBacking.entity.dtvcto}"
+									label="#{bundle.lbl_dtvcto}"
+									readonly="#{feriasBacking.readOnlyDtaVcto}"
+									tabindex="20">
+									<p:ajax
+										event="dateSelect"
+										process="@this"
+										update="@none" />
+									<p:ajax
+										process="@this"
+										update="@none"
+										event="change" />
+								</xcp:date>
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:number
+									id="cboSeq"
+									value="#{feriasBacking.entity.seq}"
+									label="#{bundle.lbl_seq}"
+									required="true"
+									maxValue="99"
+									size="2"
+									readonly="#{not feriasBacking.entity.novo}"
+									tabindex="30" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+				<xcp:panelForm>
+					<p:outputLabel value=" " />
+					<xcp:panelGrid>
+						<p:row>
+							<p:column>
+								<xcp:border
+									id="brdFerias"
+									header="#{bundle.lbl_ferias}"
+									stylefieldset="margin-left: 0px !important">
+									<xcp:date
+										id="txtDtminima"
+										value="#{feriasBacking.entity.dtminima}"
+										rendered="#{feriasBacking.entity.dtminima!=null}"
+										readonly="true"
+										label="#{bundle.lbl_dtminima}"
+										tabindex="40">
+									</xcp:date>
+									<xcp:date
+										id="txtDtgozo"
+										value="#{feriasBacking.entity.dtgozo}"
+										label="#{bundle.lbl_dtgozo}"
+										readonly="#{feriasBacking.readOnlyFields}"
+										onblur="PrimeFaces.focus('form:txtDiasferias_c')"
+										tabindex="50">
+										<p:ajax
+											event="change"
+											listener="#{feriasBacking.calculaDias}"
+											update="txtDiasferias,txtDatapgto,txtDtret" />
+										<p:ajax
+											event="dateSelect"
+											listener="#{feriasBacking.calculaDias}"
+											update="txtDiasferias,txtDatapgto,txtDtret" />
+									</xcp:date>
+
+									<xcp:date
+										id="txtDtret"
+										value="#{feriasBacking.entity.dtret}"
+										label="#{bundle.lbl_dtret}"
+										readonly="#{feriasBacking.readOnlyFields}"
+										tabindex="70">
+										<p:ajax
+											event="change"
+											listener="#{feriasBacking.calculaDias}"
+											update="txtDiasferias,txtDatapgto" />
+										<p:ajax
+											event="dateSelect"
+											listener="#{feriasBacking.calculaDias}"
+											update="txtDiasferias,txtDatapgto" />
+									</xcp:date>
+
+									<xcp:date
+										id="txtDatapgto"
+										value="#{feriasBacking.entity.datapgto}"
+										label="#{bundle.lbl_datapgto}"
+										readonly="#{feriasBacking.readOnlyFields}"
+										tabindex="80">
+										<p:ajax
+											event="change"
+											process="@this"
+											update="@none" />
+										<p:ajax
+											event="dateSelect"
+											process="@this"
+											update="@none" />
+									</xcp:date>
+
+								</xcp:border>
+								<xcp:border
+									id="brdPrevisao"
+									header="#{bundle.lbl_previsao}"
+									stylefieldset="margin-left: 0px !important; margin-bottom: 5px !important">
+									<xcp:date
+										id="txtDataprevista"
+										readonly="#{feriasBacking.readOnlyFields}"
+										value="#{feriasBacking.entity.dataprevista}"
+										label="#{bundle.lbl_dataprevista}"
+										tabindex="90">
+										<ui:define name="right">
+											<p:outputPanel
+												rendered="#{feriasBacking.entity.origem != null}"
+												style="float: right;">
+												<h:outputLink
+													id="hindprev"
+													onclick="return false;">
+													<h:graphicImage
+														value="#{feriasBacking.iconOrigem}"
+														styleClass="xcp_fav_icon2" />
+												</h:outputLink>
+												<p:tooltip
+													id="toolTipTrack"
+													for="hindprev"
+													value="#{feriasBacking.labelOrigem}" />
+											</p:outputPanel>
+										</ui:define>
+									</xcp:date>
+									<xcp:number
+										id="txtDiasferprev"
+										readonly="#{feriasBacking.readOnlyFields}"
+										label="#{bundle.lbl_diasferprev}"
+										value="#{feriasBacking.entity.diasferprev}"
+										size="15"
+										precision="3"
+										scale="0"
+										maxValue="#{feriasBacking.qtdDiasFerias}"
+										tabindex="100" />
+									<xcp:number
+										id="cboDiasaboprev"
+										readonly="#{feriasBacking.readOnlyFields}"
+										value="#{feriasBacking.entity.diasaboprev}"
+										label="#{bundle.lbl_diasaboprev}"
+										size="15"
+										precision="2"
+										scale="0"
+										tabindex="110" />
+
+									<xcp:date
+										id="txtDataaceite"
+										value="#{feriasBacking.entity.aceite}"
+										label="#{bundle.lbl_aceite}"
+										readonly="true"
+										rendered="#{feriasBacking.entity.aceite != null}"
+										tabindex="120" />
+									<xcp:date
+										id="txtDatarejeite"
+										value="#{feriasBacking.entity.rejeite}"
+										label="#{bundle.lbl_rejeite}"
+										readonly="true"
+										rendered="#{feriasBacking.entity.rejeite != null}"
+										tabindex="120" />
+
+								</xcp:border>
+
+							</p:column>
+							<p:column>
+
+								<xcp:border
+									id="brd_pagamento"
+									header="#{bundle.lbl_dia_pagamento}">
+
+									<xcp:number
+										id="txtDiasferias"
+										value="#{feriasBacking.entity.diasferias}"
+										readonly="#{feriasBacking.readOnlyFields}"
+										label="#{bundle.lbl_diasferias}"
+										size="4"
+										precision="2"
+										scale="0"
+										tabindex="60">
+										<p:ajax
+											event="change"
+											listener="#{feriasBacking.calculaDataGozo}"
+											update="txtDtret,txtDatapgto,@this" />
+									</xcp:number>
+
+									<xcp:number
+										id="txtDiasabono"
+										value="#{feriasBacking.entity.diasabono}"
+										readonly="#{feriasBacking.readOnlyFields}"
+										label="#{bundle.lbl_diasabono}"
+										size="4"
+										maxValue="#{feriasBacking.qtdDiasAbono}"
+										precision="2"
+										scale="0"
+										tabindex="120" />
+
+									<xcp:number
+										id="txtDiasperdidos"
+										label="#{bundle.lbl_diasperdidos}"
+										value="#{feriasBacking.entity.diasperdidos}"
+										readonly="#{feriasBacking.readOnlyFields}"
+										size="4"
+										precision="3"
+										scale="0"
+										maxValue="999"
+										tabindex="130" />
+
+									<xcp:number
+										id="txtDiasprorrog"
+										label="#{bundle.lbl_diasprorrog}"
+										value="#{feriasBacking.entity.diasprorrog}"
+										size="4"
+										precision="4"
+										scale="0"
+										readonly="true"
+										maxValue="9999"
+										tabindex="140" />
+
+									<xcp:number
+										id="txtDiasMinimo"
+										label="#{bundle.lbl_diasMinimo}"
+										size="4"
+										value="#{feriasBacking.entity.diasMinimo}"
+										rendered="#{feriasBacking.entity.dtminima!=null}"
+										readonly="true"
+										precision="8"
+										scale="2"
+										tabindex="150" />
+
+								</xcp:border>
+
+							</p:column>
+						</p:row>
+					</xcp:panelGrid>
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{feriasBacking.entity.tipodocFk}"
+						selectionListener="#{feriasBacking.selectTipodocumento}"
+						readonly="#{feriasBacking.readOnlyTipdoc}"
+						size="5"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,lovProcessoRev,lovProcessoRev_l,pnlinfotipodoc,toolform,txtObs, btnAddDoc"
+						label="#{bundle.lbl_tipodoc}"
+						params="#{feriasBacking.paramsTipoDoc}"
+						query="tipodocumento_ferias"
+						tabindex="160" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{feriasBacking.entity.registroFk}"
+						params="#{feriasBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						readonly="#{feriasBacking.readOnlyDoc}"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento,toolform"
+						query="documentosman"
+						size="5"
+						selectionListener="#{feriasBacking.selectDocumento}"
+						tabindex="170" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{feriasBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{feriasBacking.readOnlyProc}"
+						required="#{feriasBacking.requiredProc}"
+						size="25"
+						tabindex="180" />
+
+					<xcp:lov
+						id="lovProcessoRev"
+						value="#{feriasBacking.entity.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{feriasBacking.renderedProcessoRev}"
+						size="25"
+						tabindex="190" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{feriasBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(feriasBacking.entity.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{feriasBacking.model.actionOpenVisDialog(feriasBacking.entity.registro)}"
+										process="@this" />
+
+								</p:splitButton>
+							</p:column>
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDoc"
+									model="#{feriasBacking.model}" />
+							</p:column>
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty feriasBacking.entity.tipodocFk.instrucoes}"
+										tabindex="230" />
+
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{feriasBacking.entity.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{feriasBacking.entity.retificacao}"
+										label="#{feriasBacking.labelRetif}"
+										rendered="#{feriasBacking.entity.retificacao!=null}"
+										readonly="true"
+										tabindex="240">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{feriasBacking.actionRemoveRetificacao}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{feriasBacking.labelRetif}"
+										rendered="#{feriasBacking.renderedRetificacao}"
+										value="#{feriasBacking.helper.retificacao}"
+										tabindex="250">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:radio
+						id="txtGera13"
+						label="#{bundle.lbl_gera13}"
+						required="true"
+						readonly="#{feriasBacking.readOnlyFields}"
+						value="#{feriasBacking.entity.gera13}"
+						itens="#{feriasBacking.itensIndSimNao}"
+						tabindex="270" />
+					<!-- 
+					<xcp:number
+						id="txtPergozado"
+						label="#{bundle.lbl_pergozado}"
+						value="#{feriasBacking.entity.pergozado}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999" />
+
+					<xcp:number
+						id="txtDiaspagos"
+						label="#{bundle.lbl_diaspagos}"
+						value="#{feriasBacking.entity.diaspagos}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+ -->
+					<xcp:lov
+						id="lovSituacaoFerias"
+						value="#{feriasBacking.helper.situacaoFk}"
+						label="#{bundle.lbl_situacao_ferias}"
+						query="tipoferiasrest"
+						size="3"
+						tabindex="280"
+						update="lovProcessointerrup lovProcessointerrup_l txtDtcancelamento txtDtcancelamento_l txtDiaspagos txtDiaspagos_l txtDtret txtDtret_l txtDiasferias"
+						selectionListener="#{feriasBacking.selectSituacao}"
+						readonly="#{feriasBacking.readOnlyFields}" />
+
+					<xcp:lov
+						id="lovProcessointerrup"
+						value="#{feriasBacking.entity.processointerrupFk}"
+						label="#{feriasBacking.labelProcessointerrup}"
+						query="processos"
+						rendered="#{feriasBacking.cancelamentoOrInterrup}"
+						size="25"
+						tabindex="285"
+						readonly="#{feriasBacking.readOnlyFields}" />
+
+					<xcp:number
+						id="txtDiaspagos"
+						label="#{bundle.lbl_diaspagos}"
+						value="#{feriasBacking.entity.diaspagos}"
+						size="3"
+						precision="3"
+						scale="0"
+						tabindex="287"
+						maxValue="999"
+						rendered="#{feriasBacking.pagasOrInterrup}" />
+
+					<xcp:date
+						id="txtDtcancelamento"
+						value="#{feriasBacking.helper.dtcanc}"
+						label="#{feriasBacking.labelDtCanc}"
+						required="true"
+						rendered="#{feriasBacking.cancelamentoOrInterrup}"
+						tabindex="290"
+						readonly="#{feriasBacking.readOnlyFields}">
+
+						<p:ajax
+							event="change"
+							listener="#{feriasBacking.calculaDtRet}"
+							update="txtDtret txtDiasferias" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{feriasBacking.calculaDtRet}"
+							update="txtDtret txtDiasferias" />
+
+					</xcp:date>
+
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_txtPort}"
+						value="#{feriasBacking.entity.obs}"
+						readonly="#{feriasBacking.readOnlyFields}"
+						size="4000"
+						maxlength="4000"
+						tabindex="300">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:memo>
+
+					<xcp:memo
+						id="txtObsLivre"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{feriasBacking.entity.obsLivre}"
+						size="4000"
+						maxlength="4000"
+						tabindex="310" />
+
+					<p:spacer width="1" />
+					<xcp:panelEsoc
+						backing="#{feriasBacking}"
+						tipoesoc="3"
+						stylefieldset="width: 100px"
+						tabindex="320" />
+
+				</xcp:panelForm>
+				
+				<p:fieldset legend="#{bundle.tit_averbacoes}">
+					<p:dataTable
+						id="tabListaEmpregos"
+						value="#{feriasBacking.helper.listFeriasEmp}"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="14"
+						var="empregos"
+						rowKey="#{empregos}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						selectionMode="single"
+						selection="#{feriasBacking.helper.feriasEmpSel}">
+
+						<p:ajax
+							event="rowSelect"
+							listener="#{feriasBacking.onSelFeriasEmp}" />
+
+						<xcp:column
+							headerText="#{bundle.col_nomeempresa}"
+							type="String"
+							size="20">
+							<xcp:outputSimple value="#{empregos.descricao}" />
+						</xcp:column>
+
+
+						<xcp:column
+							headerText="#{bundle.col_dtadm}"
+							type="Date"
+							size="5">
+							<xcp:outputSimpleDate value="#{empregos.empregoFk.dtadm}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtdem}"
+							type="Date"
+							size="5">
+							<xcp:outputSimpleDate value="#{empregos.empregoFk.dtdem}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_totdias}"
+							type="Number"
+							size="3">
+							<xcp:outputSimpleNumber
+								value="#{empregos.totdias}"
+								precision="5"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							size="1"
+							type="String">
+							<xcp:commandButton
+								id="btn_removerSel_emp"
+								immediate="true"
+								action="#{feriasBacking.actionRemoverFeriasEmp(empregos)}"
+								update="tabListaEmpregos"
+								process="@this"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+						</xcp:column>
+					</p:dataTable>
+
+					<xcp:commandButton
+						id="btn_adic_emp"
+						immediate="true"
+						action="#{feriasBacking.actionAdicionarFeriasEmp}"
+						value="#{bundle.btn_adicionar}"
+						icon="ui-icon-plusthick"
+						update=":frmEmp"
+						process="@this" />
+
+				</p:fieldset>
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_historico}"
+			modal="true"
+			id="dlg"
+			widgetVar="dlg_w">
+			<xcp:form id="frmDlg">
+				<ui:include src="FeriasForm/FeriasDetalhesForm.xhtml" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlg_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{feriasBacking.model}" />
+		</ui:include>
+
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{feriasPortariaDiretaBacking}" />
+		</ui:include>
+
+		<p:dialog
+			header="#{bundle.title_empregos}"
+			modal="true"
+			id="dlgEmp"
+			widgetVar="dlgEmp_w"
+			dynamic="true">
+			<xcp:form id="frmEmp">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovEmp"
+						value="#{feriasBacking.helper.feriasEmpEdit.empregoFk}"
+						label="#{bundle.lbl_emprego}"
+						query="emp_ferias"
+						required="true"
+						size="6"
+						update="dtaIntevalo,txtTotdias"
+						selectionListener="#{feriasBacking.selectEmprego}"
+						readonly="#{feriasBacking.helper.feriasEmpEdit.manual != 1}"
+						params="#{feriasBacking.paramsAverb}" />
+
+					<xcp:dateRange
+						id="dtaIntevalo"
+						readonly="true"
+						label="#{bundle.lbl_periodo}"
+						valueStart="#{feriasBacking.helper.feriasEmpEdit.empregoFk.dtadm}"
+						valueEnd="#{feriasBacking.helper.feriasEmpEdit.empregoFk.dtdem}" />
+
+					<xcp:number
+						id="txtTotdias"
+						label="#{bundle.lbl_totdias}"
+						value="#{feriasBacking.helper.feriasEmpEdit.totdias}"
+						readonly="#{feriasBacking.helper.feriasEmpEdit.manual != 1}"
+						size="8"
+						precision="5"
+						scale="0"
+						minValue="1"
+						maxValue="99999"
+						required="true" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok_emp"
+							icon="ui-icon-check"
+							action="#{feriasBacking.actionAplicarFeriasEmp()}"
+							value="#{bundle.btn_aplicar}"
+							update=":form:tabListaEmpregos"
+							disabled="#{feriasBacking.helper.feriasEmpEdit.manual != 1}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

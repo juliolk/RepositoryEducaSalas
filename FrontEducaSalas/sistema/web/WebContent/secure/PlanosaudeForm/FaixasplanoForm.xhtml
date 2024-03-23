@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Faixasplano"
+		backing="#{faixasplanoBacking}"
+		masterId="Planosaude">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_faixa}"
+				value="#{row.faixa}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.faixa}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valortitular}"
+				value="#{row.valortitular}"
+				type="Number"
+				size="19">
+				<xcp:outputSimpleNumber
+					value="#{row.valortitular}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valordep}"
+				value="#{row.valordep}"
+				type="Number"
+				size="19">
+				<xcp:outputSimpleNumber
+					value="#{row.valordep}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_valoroutros}"
+				value="#{row.valoroutros}"
+				type="Number"
+				size="19">
+				<xcp:outputSimpleNumber
+					value="#{row.valoroutros}"
+					precision="16"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData_Faixasplano"
+					required="true"
+					value="#{faixasplanoBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					readonly="#{not faixasplanoBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtFaixa_Faixasplano"
+					label="#{bundle.lbl_faixa}"
+					required="true"
+					value="#{faixasplanoBacking.entity.faixa}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999"
+					readonly="#{not faixasplanoBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtValortitular_Faixasplano"
+					label="#{bundle.lbl_valortitular}"
+					required="true"
+					size="19"
+					value="#{faixasplanoBacking.entity.valortitular}"
+					precision="16"
+					scale="2" />
+
+				<xcp:number
+					id="txtValordep_Faixasplano"
+					label="#{bundle.lbl_valordep}"
+					size="19"
+					value="#{faixasplanoBacking.entity.valordep}"
+					precision="16"
+					scale="2" />
+
+				<xcp:number
+					id="txtValoroutros_Faixasplano"
+					label="#{bundle.lbl_valoroutros}"
+					size="19"
+					value="#{faixasplanoBacking.entity.valoroutros}"
+					precision="16"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

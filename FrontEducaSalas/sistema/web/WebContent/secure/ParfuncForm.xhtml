@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(3)}"
+			escape="false" />		
+	
+		<xcp:panelFuncionario
+			id="Parfunc"
+			backing="#{parfuncBacking}"
+			scrollable="false"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc,row.dtcancelamento)}">
+
+
+			<ui:define name="barraForm">
+			
+				<c:set
+					var="anxicon"
+					value="#{parfuncAnexosBacking.getIcon(parfuncBacking.entity.PK, parfuncBacking.entity,parfuncBacking)}" />
+				
+				<c:if test="#{anxicon.isEmpty()}">
+					<xcp:commandButton
+						id="btnParfuncAnexos"
+						value="#{bundle.btn_anexos}"
+						action="#{parfuncAnexosBacking.actionAbrir(parfuncBacking.entity.PK, parfuncBacking.entity, parfuncBacking.disabledGravar, parfuncBacking.disabledNovo, parfuncBacking.disabledExcluir)}"
+						disabled="#{parfuncBacking.entity.novo}"
+						update=":frmParfuncAnexos" />
+				</c:if>
+				<c:if test="#{!anxicon.isEmpty()}">
+					<xcp:commandButton
+						id="btnParfuncAnexos"
+						value="#{bundle.btn_anexos}"
+						action="#{parfuncAnexosBacking.actionAbrir(parfuncBacking.entity.PK, parfuncBacking.entity, parfuncBacking.disabledGravar, parfuncBacking.disabledNovo, parfuncBacking.disabledExcluir)}"
+						disabled="#{parfuncBacking.entity.novo}"
+						update=":frmParfuncAnexos"
+						icon="#{anxicon}" />
+				</c:if>
+
+				<xcp:commandButton
+					id="btn_emitir_portaria"
+					value="#{bundle.btn_emitir_portaria}"
+					action="#{parfuncPortariaDiretaBacking.actionOpenOrExecute}"
+					update="#{parfuncPortariaDiretaBacking.btnEmitirUpdate}"
+					rendered="#{parfuncPortariaDiretaBacking.renderedEmissao}" />
+
+				<xcp:commandButton
+					id="btn_excluir_portaria"
+					value="#{bundle.btn_excluir_portaria}"
+					action="#{parfuncPortariaDiretaBacking.actionExcluirPortariaDireta}"
+					update="@form"
+					rendered="#{parfuncPortariaDiretaBacking.renderedExcluir}">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+			</ui:define>
+
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<xcp:commandButton
+						id="btn_filtrar_dtini"
+						value="#{parfuncBacking.labelDtFim}"
+						action="#{parfuncBacking.actionFiltrarDtFim}"
+						update="@form"
+						process="@this" />
+
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<p:column style="width:16px">
+					<p:rowToggler rendered="#{row.detalhes}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_grupo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.grupo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.variavelFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo_variavel}"
+					type="String"
+					size="12">
+					<xcp:outputSimple
+						value="#{row.variavelFk.tipo}"
+						itens="#{variaveisBacking.itensTipo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_conteudo}"
+					type="Center"
+					size="12">
+					<xcp:outputSimpleNumber
+						value="#{row.conteudo}"
+						precision="16"
+						scale="4" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_conteudo2}"
+					type="Center"
+					size="10">
+					<xcp:outputSimple value="#{row.conteudo2}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_conteudo3}"
+					type="Center"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.conteudo3}"
+						precision="10"
+						scale="4" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_inicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_documento}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.documento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					value="#{row.obs}"
+					type="String"
+					size="500">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+ -->
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabDoc"
+						var="rowDoc"
+						value="#{row.listaParFuncDoc}"
+						rowKey="#{rowDoc.PK}"
+						paginator="true"
+						selectionMode="single"
+						paginatorPosition="bottom"
+						rowIndexVar="idx"
+						selection="#{parfuncBacking.helper.parfuncDocSelecionada}"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-bottom:0;">
+
+						<p:ajax
+							event="rowSelect"
+							update=":frmDlgHist"
+							oncomplete="PF('dlgHist_w').show();" />
+
+						<ui:include src="DocManual/DocUnificadoDetalhesDoc.xhtml">
+							<ui:param
+								name="rowDoc"
+								value="#{rowDoc}" />
+							<ui:param
+								name="rowPrincipal"
+								value="#{row}" />
+							<ui:param
+								name="actionExclusao"
+								value="#{parfuncBacking.model}" />
+						</ui:include>
+
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovVariavel"
+						value="#{parfuncBacking.entity.variavelFk}"
+						label="#{bundle.lbl_variavel}"
+						required="true"
+						selectionListener="#{parfuncBacking.selectVariavel}"
+						update="lovCategoria,lovCategoria_l,cboTipRemunemp,cboTipRemunemp_l,txtCnpj,txtCnpj_l,txtConteudo,txtConteudo_l,txtConteudo2,txtConteudo2_l,vlrConteudo2,vlrConteudo2_l,cboConteudo2,cboConteudo2_l,lovConteudo2,lovConteudo2_l,txtConteudo3,txtConteudo3_l,cboConteudo3,cboConteudo3_l,lovConteudo3,lovConteudo3_l,txtProcjudic,txtProcjudic_l,txtConteudo4,txtConteudo4_l,vlrConteudo4,vlrConteudo4_l,cboConteudo4,cboConteudo4_l,lovConteudo4,lovConteudo4_l"
+						query="variaveis"
+						size="10"
+						readonly="#{not parfuncBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtConteudo"
+						label="#{parfuncBacking.getDescricao(parfuncBacking.entity.variavelFk.tipo)}"
+						required="true"
+						size="10"
+						rendered="#{parfuncBacking.entity.variavelFk.tipo!=null}"
+						value="#{parfuncBacking.entity.conteudo}"
+						precision="16"
+						scale="4"
+						readonly="#{parfuncBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:number>
+
+					<xcp:combo
+						id="cboTipRemunemp"
+						value="#{parfuncBacking.entity.tipRemunemp}"
+						label="#{bundle.lbl_tipRemunemp}"
+						itens="#{parfuncBacking.itensTipRemunemp}"
+						rendered="#{parfuncBacking.renderedCmpEsoc}"
+						required="true" />
+
+					<xcp:cnpj
+						id="txtCnpj"
+						label="#{bundle.lbl_cnpj}"
+						value="#{parfuncBacking.entity.cnpj}"
+						rendered="#{parfuncBacking.renderedCmpEsoc or parfuncBacking.renderedCmpEsocPar}"
+						required="true" />
+
+					<xcp:lov
+						id="lovCategoria"
+						value="#{parfuncBacking.entity.categoriaFk}"
+						label="#{bundle.lbl_categoria}"
+						query="categoriatrabesocial"
+						size="3"
+						rendered="#{parfuncBacking.renderedCmpEsoc}"
+						required="true" />
+
+					<!-- PRIMERO CAMPO DINAMICO -->
+					<xcp:text
+						id="txtConteudo2"
+						label="#{parfuncBacking.entity.variavelFk.campo1}"
+						value="#{parfuncBacking.entity.conteudo2}"
+						size="50"
+						maxlength="4000"
+						rendered="#{parfuncBacking.tipoCampo1 == 4}"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<xcp:number
+						id="vlrConteudo2"
+						label="#{parfuncBacking.entity.variavelFk.campo1}"
+						size="10"
+						rendered="#{parfuncBacking.tipoCampo1 == 5}"
+						value="#{parfuncBacking.entity.conteudo2Number}"
+						precision="15"
+						maxlength="15"
+						scale="#{parfuncBacking.qtdDecimaisCampo1}"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<xcp:combo
+						id="cboConteudo2"
+						value="#{parfuncBacking.helper.vlrCombo1}"
+						rendered="#{parfuncBacking.tipoCampo1 == 2}"
+						label="#{parfuncBacking.entity.variavelFk.campo1}"
+						itens="#{parfuncBacking.itensCombo1}"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+
+					<xcp:lov
+						id="lovConteudo2"
+						value="#{parfuncBacking.helper.objLov1}"
+						rendered="#{parfuncBacking.tipoCampo1 == 3}"
+						label="#{parfuncBacking.entity.variavelFk.campo1}"
+						query="#{parfuncBacking.helper.xcpTipoCampo1.codLov}"
+						size="10"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<!-- SEGUNDO CAMPO DINAMICO -->
+
+					<xcp:number
+						id="txtConteudo3"
+						label="#{parfuncBacking.entity.variavelFk.campo2}"
+						size="10"
+						rendered="#{parfuncBacking.tipoCampo2 == 5}"
+						value="#{parfuncBacking.entity.conteudo3}"
+						precision="15"
+						maxlength="15"
+						scale="4"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<xcp:combo
+						id="cboConteudo3"
+						value="#{parfuncBacking.helper.vlrCombo2}"
+						rendered="#{parfuncBacking.tipoCampo2 == 2}"
+						label="#{parfuncBacking.entity.variavelFk.campo2}"
+						itens="#{parfuncBacking.itensCombo2}"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<xcp:lov
+						id="lovConteudo3"
+						value="#{parfuncBacking.helper.objLov2}"
+						rendered="#{parfuncBacking.tipoCampo2 == 3}"
+						label="#{parfuncBacking.entity.variavelFk.campo2}"
+						query="#{parfuncBacking.helper.xcpTipoCampo2.codLov}"
+						size="10"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+
+					<!-- TERCEIRO CAMPO DINAMICO -->
+					<xcp:text
+						id="txtConteudo4"
+						label="#{parfuncBacking.entity.variavelFk.campo3}"
+						value="#{parfuncBacking.entity.conteudo4}"
+						size="50"
+						maxlength="4000"
+						rendered="#{parfuncBacking.tipoCampo3 == 4}"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<xcp:number
+						id="vlrConteudo4"
+						label="#{parfuncBacking.entity.variavelFk.campo3}"
+						size="10"
+						rendered="#{parfuncBacking.tipoCampo3 == 5}"
+						value="#{parfuncBacking.entity.conteudo4Number}"
+						precision="15"
+						maxlength="15"
+						scale="#{parfuncBacking.qtdDecimaisCampo3}"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<xcp:combo
+						id="cboConteudo4"
+						value="#{parfuncBacking.helper.vlrCombo3}"
+						rendered="#{parfuncBacking.tipoCampo3 == 2}"
+						label="#{parfuncBacking.entity.variavelFk.campo3}"
+						itens="#{parfuncBacking.itensCombo3}"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+					<xcp:lov
+						id="lovConteudo4"
+						value="#{parfuncBacking.helper.objLov3}"
+						rendered="#{parfuncBacking.tipoCampo3 == 3}"
+						label="#{parfuncBacking.entity.variavelFk.campo3}"
+						query="#{parfuncBacking.helper.xcpTipoCampo3.codLov}"
+						size="10"
+						readonly="#{parfuncBacking.readOnlyFields}" />
+
+
+
+					<h:outputLabel value="#{bundle.lbl_dtini}:*" />
+
+					<h:panelGroup
+						layout="block"
+						style="width: 650px">
+						<xcp:date
+							id="txtDtini"
+							simple="true"
+							style="float:left"
+							required="true"
+							value="#{parfuncBacking.entity.dtini}"
+							label="#{bundle.lbl_dtini}"
+							readonly="#{parfuncBacking.readOnlyDtaInicio}">
+							<p:ajax
+								process="@this"
+								update="@none"
+								event="change" />
+							<p:ajax
+								event="dateSelect"
+								process="@this"
+								update="@none" />
+						</xcp:date>
+
+						<h:panelGrid
+							columns="8"
+							style="float:left;margin-left:5px">
+
+							<xcp:number
+								id="txtMeses"
+								label="#{bundle.lbl_qtdMeses}"
+								size="3"
+								rendered="#{parfuncBacking.renderedMeses}"
+								value="#{parfuncBacking.helper.qtdMeses}"
+								precision="4"
+								maxlength="4"
+								scale="0"
+								readonly="#{parfuncBacking.readOnlyFields}">
+								<p:ajax
+									event="change"
+									process="@this form:txtDtini"
+									update=":form:txtDtfim"
+									listener="#{parfuncBacking.actionChangeQtdMeses}" />
+							</xcp:number>
+
+
+							<xcp:date
+								id="txtDtfim"
+								style="float:left"
+								value="#{parfuncBacking.entity.dtfim}"
+								label="#{bundle.lbl_dtfim}"
+								readonly="#{parfuncBacking.readOnlyFields}">
+								<p:ajax
+									process="@this"
+									update="@none"
+									event="change" />
+								<p:ajax
+									event="dateSelect"
+									process="@this"
+									update="@none" />
+							</xcp:date>
+
+							<xcp:dateTime
+								id="txtCancelamento"
+								value="#{parfuncBacking.entity.dtcancelamento}"
+								label="#{bundle.lbl_cancelado}"
+								rendered="#{parfuncBacking.entity.dtcancelamento!=null and parfuncBacking.permitidoCancelarParfunc}"
+								readonly="true"
+								size="15" />
+
+							<xcp:check
+								id="chk_bloq_lib"
+								label="#{parfuncBacking.helper.canceladoParfunc ? bundle.lbl_lib : bundle.lbl_canc}"
+								rendered="#{parfuncBacking.permitidoCancelarParfunc and !parfuncBacking.entity.novo}"
+								value="#{parfuncBacking.helper.canceladoParfunc}">
+								<p:ajax
+									event="change"
+									update="@form"
+									listener="#{parfuncBacking.cancelaLiberaParfunc}" />
+							</xcp:check>
+
+						</h:panelGrid>
+					</h:panelGroup>
+
+					<xcp:lov
+						id="lovTipodocumento"
+						value="#{parfuncBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipodocumento}"
+						selectionListener="#{parfuncBacking.selectTipodocumento}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,lovProcessoRev,lovProcessoRev_l,panelRetificacao,pnlinfotipodoc,toolform,txtObs"
+						query="tipodocumento_par"
+						params="#{parfuncBacking.paramsTipoDoc}"
+						size="10"
+						readonly="#{parfuncBacking.readOnlyTipdoc}" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{parfuncBacking.entity.registroFk}"
+						params="#{parfuncBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						size="10"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento,toolform"
+						readonly="#{parfuncBacking.readOnlyDoc}"
+						selectionListener="#{parfuncBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{parfuncBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{parfuncBacking.readOnlyProc}"
+						required="#{parfuncBacking.requiredProc}"
+						size="25" />
+
+					<xcp:lov
+						id="lovProcessoRev"
+						value="#{parfuncBacking.entity.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{parfuncBacking.renderedProcessoRev}"
+						size="25" />
+
+					<xcp:text
+						id="txtProcjudic"
+						label="#{bundle.lbl_procjudic}"
+						value="#{parfuncBacking.entity.procjudic}"
+						size="25"
+						readonly="#{parfuncBacking.readOnlyFields}"
+						rendered="#{parfuncBacking.renderedProcJudic}" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid id="panelRetificacao">
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{parfuncBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(parfuncBacking.entity.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{parfuncBacking.model.actionOpenVisDialog(parfuncBacking.entity.registro)}"
+										process="@this" />
+								</p:splitButton>
+							</p:column>
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDoc"
+									model="#{parfuncBacking.model}" />
+							</p:column>
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty parfuncBacking.entity.tipodocFk.instrucoes}" />
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{parfuncBacking.entity.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{parfuncBacking.entity.retificacao}"
+										label="#{parfuncBacking.labelRetif}"
+										rendered="#{parfuncBacking.entity.retificacao!=null}"
+										readonly="true">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{parfuncBacking.actionRemoveRetificacao}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{parfuncBacking.labelRetif}"
+										rendered="#{parfuncBacking.renderedRetificacao}"
+										value="#{parfuncBacking.helper.retificacao}">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_txtPort}"
+						value="#{parfuncBacking.entity.obs}"
+						size="500"
+						readonly="#{parfuncBacking.readOnlyFields}"
+						style="width:500px;">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:memo>
+
+					<xcp:memo
+						id="txtObsLivre"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{parfuncBacking.entity.obsLivre}"
+						size="500"
+						style="width:500px;" />
+
+					<xcp:date
+						id="txtDtlancamento"
+						value="#{parfuncBacking.entity.dtlancamento}"
+						label="#{bundle.lbl_dtlancamento}"
+						readonly="true"
+						rendered="#{not parfuncBacking.entity.novo and parfuncBacking.entity.dtlancamento != null}" />
+					
+					
+
+				</xcp:panelForm>
+				
+				<script>
+				  function ajusta(){
+					  var el = document.getElementById('form');
+					  var divs = el.getElementsByTagName('div');
+			
+					  for(i = 0;i &lt;  divs.length; i++) {
+						 var currEl = divs[i];
+						 if(currEl.childNodes.length == 0 ){
+							 currEl.parentNode.style.paddingTop = '0px';
+					     }
+					  }
+				  }
+		
+				  ajusta();
+				</script>
+			</ui:define>
+			
+			<ui:define name="detalhes">
+				<p:outputPanel rendered="#{parfuncBacking.renderedTabelaPensoesIncid}">
+					<ui:include src="ParfuncForm/PensoesIncidForm.xhtml" />
+				</p:outputPanel>				
+			</ui:define>
+			
+		</xcp:panelFuncionario>
+			
+		
+		
+	</ui:define>
+
+	
+	<ui:define name="modalPanelArea">
+	
+		<ui:include src="ParfuncForm/ParfuncAnexosDialog.xhtml" />
+	    
+		<p:dialog
+			header="#{bundle.tit_historico}"
+			modal="true"
+			id="dlgHist"
+			widgetVar="dlgHist_w">
+			<xcp:form id="frmDlgHist">
+				<ui:include src="ParfuncForm/ParfuncDetalhesForm.xhtml" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlgHist_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>	
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{parfuncBacking.model}" />
+		</ui:include>
+
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{parfuncPortariaDiretaBacking}" />
+		</ui:include>
+
+	<p:dialog
+		id="dlgUploadAnexo"
+		header="#{bundle.tit_dlgUploadAnexo}"
+		widgetVar="dlgUploadAnexo_w"
+		modal="true">
+		<xcp:form
+			id="formUploadAnexos"
+			multipart="true">
+			<p:fileUpload
+				id="uploadFuncAnexos"
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				uploadLabel="#{bundle.btn_upload}"
+				invalidFileMessage="#{bundle.msg_upload_arquivo}"
+				converterMessage="#{bundle.msg_upload_conversao}"
+				fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				messageTemplate="#{bundle.msg_upload_mensagem}"
+				requiredMessage="#{bundle.msg_upload_requerido}"
+				validatorMessage="#{bundle.msg_upload_validacao}"
+				cancelLabel="#{bundle.btn_upload_cancel}"
+				dragDropSupport="false"
+				fileUploadListener="#{parfuncAnexosBacking.actionUploadAnexo}" />
+		</xcp:form>
+	</p:dialog>
+		
+
+	</ui:define>
+
+</ui:composition>

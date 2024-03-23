@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="XcpServerEmailProp"
+		backing="#{xcpServerEmailPropBacking}"
+		masterId="XcpServerEmail">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_desChave}"
+				value="#{row.desChave}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.desChave}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desProp}"
+				value="#{row.desProp}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.desProp}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:text
+					id="txtDesChave_XcpServerEmailProp"
+					label="#{bundle.lbl_desChave}"
+					required="true"
+					value="#{xcpServerEmailPropBacking.entity.desChave}"
+					maxlength="1000"
+					size="100" />
+
+				<xcp:text
+					id="txtDesProp_XcpServerEmailProp"
+					label="#{bundle.lbl_desProp}"
+					required="true"
+					value="#{xcpServerEmailPropBacking.entity.desProp}"
+					maxlength="1000"
+					size="100" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

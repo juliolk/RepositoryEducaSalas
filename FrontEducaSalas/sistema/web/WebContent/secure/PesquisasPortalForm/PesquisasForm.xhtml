@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<style type="text/css">
+		.sem-pesquisa .alert {
+			margin-bottom: 0;
+		}
+	
+		.list-header {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			height: auto;
+		}
+		
+		.list-header .list-header-content {
+			flex: 1 1 auto;
+		} 
+		
+		.option-question-container table {
+		    display: flex;
+		}
+		
+		.option-question-container tbody {
+		    display: flex;
+		    flex-wrap: wrap;
+		    flex: 1 1 auto;
+		}
+		
+		.option-question-container tr {
+		    padding-right: 15px;
+		    flex-grow: 0;
+		    flex-basis: 25%;
+		    display: flex;
+		    align-items: center;
+		    margin-bottom: 10px;
+		    min-width: 200px;
+		}
+		
+		.floating-label .option-question-container .ui-selectoneradio:not(no-label) tr:first-child td {
+		    padding-top: 5px;
+		}
+		
+		.complemento-inline {
+			display: flex;
+    		align-items: baseline;
+		}
+		
+		.complemento-inline .input-group {
+			margin: 0 10px;
+    		flex: 0 1 150px;
+		}
+		
+		.complemento-inline .ui-outputlabel {
+			display: none !important;
+		}
+	</style>
+	
+	<div class="content_bg-gray">
+	
+		<xcp:panelContent>
+			<h:panelGroup id="panelGeral">
+
+				<h:panelGroup
+					id="panelPesquisas"
+					layout="block"
+					rendered="#{pesquisasPortalBacking.statusTela == 1}">
+
+					<div class="container-fluid">
+						<div class="row flex-container flex-wrap">
+							<div class="col-md-12 flex-container flex-grow-1">
+								<div class="list-container flex-grow-1">
+									<div class="list-header secondary-bgcolor">
+										<div class="list-header-content">
+											<i class="fa fa-fw fa-question-circle-o list-header-icon"></i>
+											<h3 class="list-title">#{pesquisasPortalBacking.tipoQuestionario.descricao}</h3>
+											<p>#{bundle.msg_selecione_pesquisa}</p>
+										</div>
+										<div class="list-header-tipoquestionario">
+											<xcp:combo
+												id="cboTipoQuestionario"
+												value="#{pesquisasPortalBacking.tipoQuestionarioSelecionado}"
+												label="#{bundle.lbl_tipoQuestionario}"
+												itens="#{pesquisasPortalBacking.listaTipoQuestionario}">
+												<p:ajax
+													event="change"
+													update="@form"
+													listener="#{pesquisasPortalBacking.actionChangeTipoQuestionario}" />
+											</xcp:combo>										
+										</div>
+									</div>
+									
+									<h:panelGroup
+										id="panelSemPesquisa"
+										styleClass="sem-pesquisa"
+										rendered="#{pesquisasPortalBacking.listaPesquisas.size() == 0}">
+											<div class="alert alert-info" role="alert"> 
+												<h4>#{bundle.lbl_informacao}</h4>
+												#{bundle.msg_sem_pesquisa} 
+											</div>    
+									</h:panelGroup>
+									
+									<ui:fragment rendered="#{pesquisasPortalBacking.listaPesquisas.size() gt 0}">
+										<ul class="list-items">									
+											<ui:repeat var="pesquisa" value="#{pesquisasPortalBacking.listaPesquisas}">
+												<li>
+													<h:commandLink>
+														<p:ajax
+															event="click"
+															update="@form"
+															listener="#{pesquisasPortalBacking.actionResponderPesquisa(pesquisa)}" />
+														<div class="list-item list-item-large-icon list-item-notopcontrols">
+															<i class="list-item-icon fa fa-fw fa-list-ul secondary-color"></i>
+															<div class="container-fluid">
+																<div class="row">
+																	<div class="col-md-8  list-item-group">
+																		<span class="list-item-label">Pesquisa</span>
+																		<h2 class="list-item-data">#{pesquisa.descricao}</h2>
+																	</div>
+																	<div class="col-md-2 col-xs-6 list-item-group">
+																		<span class="list-item-label">Publicação</span>
+																		<span class="list-item-data">
+																			<xcp:outputSimpleDate
+																					value="#{pesquisa.publicacao}"/>
+																		</span>
+																	</div>
+																	<div class="col-md-2 col-xs-6 list-item-group">
+																		<span class="list-item-label">Término</span>
+																		<span class="list-item-data">
+																			<xcp:outputSimpleDate
+																					value="#{pesquisa.termino}"/>
+																		</span>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-md-12  list-item-group list-data-small-text">
+																		<span class="list-item-label">Objetivo</span>
+																		<span class="list-item-data">#{pesquisa.objetivo}</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</h:commandLink>
+												</li>
+											</ui:repeat>
+										</ul>
+									</ui:fragment>
+								</div>		
+							</div>		
+						</div>		
+					</div>		
+				
+								
+				</h:panelGroup>
+				
+				<h:panelGroup
+					id="panelPesquisa"
+	  				styleClass="floating-label"
+					rendered="#{pesquisasPortalBacking.statusTela == 2}">
+					
+					<p:outputPanel class="section-header secondary-bgcolor ui-content-no-space-top ui-content-no-space-bottom">
+	                    <div class="section-info">
+	                        <h1>#{pesquisasPortalBacking.pesquisa.pesquisa.descricao}</h1>
+	                         
+	                       	<ui:fragment rendered="#{pesquisasPortalBacking.pesquisa.pesquisa.objetivo!=null}">
+	                       		<p>#{bundle.lbl_objetivo}: #{pesquisasPortalBacking.pesquisa.pesquisa.objetivo}</p>
+	                       	</ui:fragment>
+		                </div>
+	                </p:outputPanel>
+
+					<p:outputPanel class="shadow-top-inset ui-content-full-width">
+					
+						<div class="datacard-container">
+							<div class="row">
+								<div class="col-xs-12">
+
+									<ui:repeat var="grupoQuestoes" value="#{pesquisasPortalBacking.pesquisa.listaGruposQuestoes}">
+
+										<p:outputPanel>
+											<h1 class="datacard-container-title">#{grupoQuestoes.descricao}</h1>
+										</p:outputPanel>
+	
+										<p:dataList
+											id="tabPesquisa"
+											value="#{grupoQuestoes.questoes}"
+											emptyMessage="#{bundle.msg_sem_resultado}"
+											var="itemPesquisa"
+											type="ordered"
+											rowIndexVar="listRowIndex"
+											itemType="decimal"
+											styleClass="datacard-listcontainer"
+											paginator="false">
+	
+											<div class="datacard datacard-icon-left">
+												<div class="datacard-icon secondary-bgcolor">
+												</div>
+											
+												<div class="datacard-title">
+													<span class="primary-color">
+														#{itemPesquisa.questao.descricao}
+													</span>
+													
+													<p:outputPanel
+														class="datacard-icon-required" 
+														rendered="#{itemPesquisa.questao.indItemObrigatorio}">
+														<i class="fa fa-asterisk fa-fw" title="Questão obrigatória"></i>
+													</p:outputPanel>
+													
+												</div>
+												<div class="datacard-content">
+													<div class="row">
+														<div class="col-sm-12 option-question-container">
+														
+															<xcp:radio
+																id="cboRespostas"
+																label="#{bundle.lbl_modelo}"
+																value="#{itemPesquisa.respostaRadio}"
+																required="#{itemPesquisa.questao.indItemObrigatorio}"
+																requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																simple="true"
+																rendered="#{itemPesquisa.tipoRespostaRadio}"
+																layout="pageDirection">
+																<f:selectItems
+																	value="#{itemPesquisa.opcoesRadio}"
+																	var="it"
+																	itemValue="#{it.sequencia}"
+																	itemLabel="#{it.descricao}" />
+																<p:ajax
+																	event="change"
+																	update="panelComplementoResposta" />
+															</xcp:radio>
+								
+															<xcp:manyCheck
+																id="chkRespostas"
+																label="#{bundle.lbl_modelo}"
+																value="#{itemPesquisa.respostasCheck}"
+																required="#{itemPesquisa.questao.indItemObrigatorio}"
+																requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																simple="true"
+																layout="pageDirection"
+																rendered="#{itemPesquisa.tipoRespostaCheck}">
+																<f:selectItems
+																	value="#{itemPesquisa.opcoesCheck}"
+																	var="it"
+																	itemValue="#{it.sequencia}"
+																	itemLabel="#{it.descricao}" />
+																<p:ajax
+																	event="change"
+																	update="panelComplementoResposta" />
+															</xcp:manyCheck>
+	
+														
+															<p:outputPanel id="panelComplementoResposta">
+																
+																<ui:fragment rendered="#{not itemPesquisa.complementoInlineResposta}">
+																	<xcp:memo
+																		id="txtComplementoResposta"
+																		floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+																		label="#{itemPesquisa.getDescricaoComplementoAlternativa(bundle.lbl_complemento_questao)}"
+																		rows="2"
+																		required="true"
+																		requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																		rendered="#{itemPesquisa.complementoResposta}"
+																		value="#{itemPesquisa.txtComplementoResposta}"/>
+																</ui:fragment>
+																
+																<ui:fragment rendered="#{itemPesquisa.complementoInlineResposta}">
+																	<div class="complemento-inline">
+																		<span class="complemento-inline-parte primeira">
+																			<xcp:outputSimple value="#{itemPesquisa.complementoInlineRespostaPrimeiraParte}"/>
+																		</span>
+																		<xcp:text 
+																			id="txtComplementoRespostaInline"
+																			noLabel="true"
+																			floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+																			required="true"
+																			requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																			value="#{itemPesquisa.txtComplementoResposta}"
+																		/>
+																		<span class="complemento-inline-parte segunda">
+																			<xcp:outputSimple value="#{itemPesquisa.complementoInlineRespostaSegundaParte}"/>
+																		</span>
+																		<p:outputPanel styleClass="complemento-inline-required">*</p:outputPanel>
+																	</div>
+																</ui:fragment>
+															</p:outputPanel>
+																
+														</div>
+														<div class="col-sm-12">														
+															<ui:fragment rendered="#{not itemPesquisa.complementoInlinePergunta}">
+																<xcp:memo
+																	id="txtComplementoQuestao"
+																	floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+																	label="#{itemPesquisa.getDescricaoComplementoPergunta(bundle.lbl_complemento_questao, bundle.lbl_resposta)}"
+																	rows="2"
+																	required="#{itemPesquisa.questao.questaoDescritiva ? itemPesquisa.questao.indItemObrigatorio : itemPesquisa.questao.indComplementoObrigatorio}"
+																	requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																	rendered="#{itemPesquisa.complemento}"
+																	value="#{itemPesquisa.txtComplemento}"/>
+															</ui:fragment>
+															<ui:fragment rendered="#{itemPesquisa.complementoInlinePergunta}">
+																<div class="complemento-inline">
+																	<span class="complemento-inline-parte primeira">
+																		<xcp:outputSimple value="#{itemPesquisa.complementoInlinePerguntaPrimeiraParte}"/>
+																	</span>
+																	<xcp:text 
+																		id="txtComplementoQuestaoInline"
+																		noLabel=""
+																		floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}"
+																		required="#{itemPesquisa.questao.questaoDescritiva ? itemPesquisa.questao.indItemObrigatorio : itemPesquisa.questao.indComplementoObrigatorio}"
+																		requiredMessage="#{bundle.msg_resposta_obrigatoria} (#{grupoQuestoes.descricao})"
+																		value="#{itemPesquisa.txtComplemento}"
+																	/>
+																	<span class="complemento-inline-parte segunda">
+																		<xcp:outputSimple value="#{itemPesquisa.complementoInlinePerguntaSegundaParte}"/>
+																	</span>
+																		<p:outputPanel 
+																			rendered="#{itemPesquisa.questao.questaoDescritiva ? itemPesquisa.questao.indItemObrigatorio : itemPesquisa.questao.indComplementoObrigatorio}"
+																			styleClass="complemento-inline-required">*</p:outputPanel>
+																</div>
+															</ui:fragment>
+														</div>
+													</div>											
+												</div>
+											</div>
+										</p:dataList>
+									</ui:repeat>										
+								</div>
+							</div>
+						</div>
+					
+					</p:outputPanel>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_GravarPesquisa"
+								value="#{pesquisasPortalBacking.modoPreview ? bundle.btn_testar : bundle.btn_gravar_pesquisa}"
+								process="@form"
+								oncomplete="#{xcpLoginBacking.tipoAcesso == 2 ? '$(this).eachHasValue();' : ''}"	
+								update="@form"
+								action="#{pesquisasPortalBacking.actionGravaPesquisa}"
+								icon="ui-icon-disk" />
+							<xcp:commandButton
+								id="btn_Voltar"
+								value="#{bundle.btn_voltar}"
+								update="@form"
+								immediate="true"
+								action="#{pesquisasPortalBacking.actionVoltar}"
+								icon="ui-icon-arrow" />
+						</f:facet>
+					</p:toolbar>
+				</h:panelGroup>
+			</h:panelGroup>
+		</xcp:panelContent>
+		
+		</div>
+
+</ui:composition>

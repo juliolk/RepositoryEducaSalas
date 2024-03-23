@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="PlanoConflitosAcoes"
+		backing="#{planoConflitosAcoesBacking}" masterId="PlanoConflitos">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}" type="String" width="15%">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_situacao}"
+				value="#{row.situacao}" type="String" width="10%" itens="#{planoConflitosAcoesBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{planoConflitosAcoesBacking.itensSituacao}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.lbl_responsavel}"
+				value="#{row.funcionarioResponsavelFk.nome}" type="String" width="10%">
+				<xcp:outputSimple value="#{row.funcionarioResponsavelFk.nome}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_dtini}" value="#{row.dtini}"
+				type="Date" width="5%">
+				<xcp:outputSimpleDate value="#{row.dtini}" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_dtfim}" value="#{row.dtfim}"
+				type="Date" width="5%">
+				<xcp:outputSimpleDate value="#{row.dtfim}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:memo id="txtDescricao_PlanoConflitosAcoes" required="true"
+					value="#{planoConflitosAcoesBacking.entity.descricao}"
+					label="#{bundle.lbl_descricao}" />
+
+				<xcp:lov id="lovMatriculaResponsavel_PlanoConflitosAcoes"
+					value="#{planoConflitosAcoesBacking.entity.funcionarioResponsavelFk}"
+					label="#{bundle.lbl_responsavel}" required="true"
+					query="funcionarios" size="10" />
+
+				<xcp:date id="txtDtini_PlanoConflitosAcoes" required="true"
+					value="#{planoConflitosAcoesBacking.entity.dtini}"
+					label="#{bundle.lbl_dataini}" />
+
+				<xcp:date id="txtDtfim_PlanoConflitosAcoes"
+					value="#{planoConflitosAcoesBacking.entity.dtfim}"
+					label="#{bundle.lbl_datafim}" />
+
+				<xcp:combo id="cboSituacao_PlanoConflitosAcoes"
+					value="#{planoConflitosAcoesBacking.entity.situacao}"
+					label="#{bundle.lbl_situacao}" required="true"
+					itens="#{planoConflitosAcoesBacking.itensSituacao}" />
+
+				<xcp:memo id="txtResultado_PlanoConflitosAcoes"
+					value="#{planoConflitosAcoesBacking.entity.resultado}"
+					label="#{bundle.lbl_resultado}" />
+
+			</xcp:panelForm>
+			
+			<p:outputPanel rendered="#{!planoConflitosAcoesBacking.entity.novo}">
+				<p:fieldset legend="#{bundle.tit_plano_conflitos_acoes_anexos}">
+					<ui:include src="PlanoConflitosAcoesAnexosForm.xhtml" />
+				</p:fieldset>
+			</p:outputPanel>
+
+			<p:outputPanel rendered="#{!planoConflitosAcoesBacking.entity.novo}">
+				<p:fieldset legend="#{bundle.tit_plano_conflitos_acoes_envolvidos}">
+						<ui:include src="PlanoConflitosAcoesEnvolvidosForm.xhtml" />
+				</p:fieldset>
+			</p:outputPanel>
+			
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

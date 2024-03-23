@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Gerencias"
+			backing="#{gerenciasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_gerencia}"
+					value="#{row.gerencia}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.gerencia}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_orgao}"
+					value="#{row.orgaoFk.descricao}"
+					type="String"
+					size="50"
+					rendered="#{gerenciasBacking.renderedOrgao}">
+					<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtGerencia"
+						label="#{bundle.lbl_gerencia}"
+						required="true"
+						value="#{gerenciasBacking.entity.gerencia}"
+						size="20"
+						maxlength="6"
+						precision="6"
+						scale="0"
+						maxValue="999999"
+						readonly="#{not gerenciasBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{gerenciasBacking.entity.descricao}"
+						size="78"
+						maxlength="80" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{gerenciasBacking.entity.orgaoFk}"
+						label="#{bundle.lbl_orgao}"
+						required="true"
+						query="orgaos"
+						size="13"
+						maxlength="8"
+						rendered="#{gerenciasBacking.renderedOrgao}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

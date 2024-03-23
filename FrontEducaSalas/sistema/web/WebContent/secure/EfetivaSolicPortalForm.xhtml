@@ -1,0 +1,1520 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<h:outputStylesheet
+			name="/font-awesome/css/font-awesome.min.css"
+			library="lib" />
+
+		<style type="text/css">
+li.titulo_vermelho>a {
+	color: red !important;
+}
+
+td.foto-alteracao {
+	vertical-align: top;
+	padding-left: 10px;
+}
+
+td.foto-alteracao>.ui-panel>.ui-panel-content {
+	padding-right: 0;
+}
+
+.ui-outputpanel.anexo-documento-alterado,.ui-outputpanel>div.anexo-documento-alterado
+	{
+	display: block;
+	position: relative;
+	background-color: rgba(217, 83, 79, 0.15);
+}
+
+.ui-outputpanel>div.anexo-documento-alterado:hover,.ui-outputpanel.anexo-documento-alterado:hover
+	{
+	background-color: rgba(217, 83, 79, 0.30);
+}
+
+.ui-outputpanel>div.anexo-documento-alterado:after,.ui-outputpanel.anexo-documento-alterado::after
+	{
+	content: '\f0c6';
+	color: #fff;
+	background-color: rgba(217, 83, 79, 1);
+	position: absolute;
+	top: -3px;
+	right: -25px;
+	font-size: 20px;
+	font-family: 'FontAwesome';
+	font-weight: normal;
+	padding: 5px 7px;
+	border-radius: 50%;
+}
+
+.ui-fieldset.anexo-documento-alterado {
+	position: relative;
+	background-color: rgba(217, 83, 79, 0.15);
+}
+
+.ui-fieldset.anexo-documento-alterado:hover {
+	background-color: rgba(217, 83, 79, 0.30);
+}
+
+.ui-fieldset.anexo-documento-alterado table.ui-panelgrid>tbody>tr.ui-widget-content
+	{
+	background-color: transparent;
+}
+
+.ui-fieldset.anexo-documento-alterado::after {
+	content: '\f0c6';
+	color: #fff;
+	background-color: rgba(217, 83, 79, 1);
+	position: absolute;
+	top: 20px;
+	right: 10px;
+	font-size: 20px;
+	font-family: 'FontAwesome';
+	font-weight: normal;
+	padding: 5px 7px;
+	border-radius: 50%;
+}
+
+.panel-complementos .item-complemento {
+	margin-right: 25px;
+}
+
+.panel-complementos .item-complemento .form_label {
+	min-width: 150px;
+}
+
+.ui-confirm-dialog {
+	width: 500px !important;
+}
+</style>
+
+
+		<xcp:panelManutLazy
+			id="EfetivaSolicPortal"
+			renderedRemover="false"
+			renderedGravar="false"
+			renderedNovo="false"
+			renderedAtualizar="false"
+			backing="#{efetivaSolicPortalBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					id="brdPesq"
+					legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="dtaSolicitacao"
+							valueStart="#{efetivaSolicPortalBacking.dtaIni}"
+							valueEnd="#{efetivaSolicPortalBacking.dtaFim}"
+							label="#{bundle.lbl_data}" />
+
+						<xcp:lov
+							id="lovFuncionario"
+							value="#{efetivaSolicPortalBacking.funcionarioLov}"
+							label="#{bundle.lbl_matricula}"
+							query="funcionariosLovAll"
+							size="15"
+							maxlength="8" />
+						
+						<xcp:lov
+							id="lovVinculo"
+							value="#{efetivaSolicPortalBacking.vinculo}"
+							label="#{bundle.lbl_vinculo}"
+							query="vinculos_all"
+							size="4" />
+
+					</xcp:panelForm>
+					<p:fieldset
+						id="brdSelecao"
+						legend="#{bundle.tit_situacao}"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtSitSolicitada"
+								label="#{bundle.opt_situacao_solicitacao_1}"
+								value="#{efetivaSolicPortalBacking.situacaoSolicitada}" />
+							<xcp:check
+								id="txtSitEfetivada"
+								label="#{bundle.opt_situacao_solicitacao_2}"
+								value="#{efetivaSolicPortalBacking.situacaoEfetivada}" />
+							<xcp:check
+								id="txtSitNaoAceita"
+								label="#{bundle.opt_situacao_solicitacao_3}"
+								value="#{efetivaSolicPortalBacking.situacaoNaoAceita}" />
+						</xcp:panelForm>
+					</p:fieldset>
+					<p:fieldset
+						id="brdPendencia"
+						legend="Filtros"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtFiltroSemPendencia"
+								label="Solicitações sem pendências"
+								value="#{efetivaSolicPortalBacking.filtroSemPendencia}" />
+							<xcp:check
+								id="txtFiltroComPendencia"
+								label="Solicitações com pendências"
+								value="#{efetivaSolicPortalBacking.filtroComPendencia}" />
+						</xcp:panelForm>
+					</p:fieldset>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_pesquisar"
+					icon="icon-pesquisar_azul"
+					value="#{bundle.btn_pesquisar}"
+					update="table_#{id}"
+					onclick="PF('table_#{id}_w').filter()" />
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_efetiva_solicitacao"
+					icon="ui-icon-arrowthickstop-1-s"
+					disabled="#{efetivaSolicPortalBacking.entity.situacao != 1}"
+					action="#{efetivaSolicPortalBacking.actionAceitaSolicitacao}"
+					value="#{bundle.btn_aceita_solicitacao}"
+					update=":dlgMsg"/>
+
+				<xcp:commandButton
+					id="btn_rejeita_solicitacao"
+					icon="ui-icon-cancelar"
+					actionListener="#{efetivaSolicPortalBacking.actionRejeitaSolicitacao}"
+					value="#{bundle.btn_rejeita_solicitacao}"
+					update=":dlgMsg"
+					disabled="#{efetivaSolicPortalBacking.entity.situacao != 1}" />
+
+				<xcp:commandButton
+					id="btn_registrapendencia_solicitacao"
+					icon="icon-navegar"
+					disabled="#{efetivaSolicPortalBacking.entity.situacao != 1}"
+					action="#{efetivaSolicPortalBacking.actionRegistraPendenciaSolicitacao}"
+					value="Informar Pendência"
+					update=":dlgMsg"
+					oncomplete="PF('dlgMsg_w').show();" />
+
+				<!-- 	<xcp:commandButton
+					id="btn_relatorio"
+					value="Imprimir Relatório de Alterações"
+					action="#{efetivaSolicPortalBacking.imprimirAlteracoes}"
+					icon="ui-icon-print">
+				</xcp:commandButton> -->
+
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					type="Date"
+					size="12"
+					sortBy="data">
+					<xcp:outputSimpleTimestamp value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					type="Number"
+					size="7"
+					sortBy="matricula">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="String"
+					size="50"
+					sortBy="nome">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fone}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.fone}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{efetivaSolicPortalBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="Pendência?"
+					type="Center"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.pendencia}"
+						itens="#{configPanelfuncionarioBacking.itensIndSimNao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelVinculoEval
+					value="#{efetivaSolicPortalBacking.registroOriginal.vinculo}">
+					<h:panelGrid
+						columns="2"
+						columnClasses="dados-alteracao,foto-alteracao">
+						<xcp:panelForm>
+
+							<xcp:text
+								id="txtNome"
+								label="#{bundle.lbl_nome}"
+								value="#{efetivaSolicPortalBacking.entity.nome}"
+								rendered="true"
+								size="70"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('nome')}" />
+
+							<xcp:cpf
+								id="txtCpfInc"
+								inputPanelClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(4) }"
+								label="#{bundle.lbl_cpf}"
+								required="true"
+								value="#{efetivaSolicPortalBacking.entity.cpf}"
+								size="26"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('cpf')}" />
+
+							<xcp:date
+								id="txtDtnascimento"
+								readonly="#{ not efetivaSolicPortalBacking.isPermitidoAlterarDataNascimento() }"
+								value="#{efetivaSolicPortalBacking.entity.dtnascimento}"
+								label="#{bundle.lbl_dtnascimento}"
+								size="10"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('dtnascimento')}" />
+
+							<xcp:combo
+								id="cboSexo"
+								value="#{efetivaSolicPortalBacking.entity.sexo}"
+								required="true"
+								label="#{bundle.lbl_sexo}"
+								itens="#{efetivaSolicPortalBacking.itensSexo}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('sexo')}" />
+
+							<xcp:pis
+								id="txtPis"
+								label="#{bundle.lbl_pis}"
+								value="#{efetivaSolicPortalBacking.entity.pis}"
+								size="26"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('pis')}" />
+
+
+							<xcp:combo
+								id="cboSetor"
+								inputPanelClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(13) }"
+								value="#{efetivaSolicPortalBacking.entity.setor}"
+								required="true"
+								label="#{bundle.lbl_setor}"
+								itens="#{efetivaSolicPortalBacking.itensSetor}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('setor')}"
+								rendered="#{efetivaSolicPortalBacking.canRenderSetor()}" />
+
+
+							<xcp:lov
+								id="lovGrauInst"
+								inputPanelClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(11) }"
+								required="true"
+								value="#{efetivaSolicPortalBacking.entity.grauFk}"
+								label="#{bundle.lbl_GrauInst}"
+								query="graus"
+								maxlength="4"
+								size="4"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('grauinst')}" />
+
+							<xcp:combo
+								id="cboEC"
+								inputPanelClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(7) }"
+								value="#{efetivaSolicPortalBacking.entity.ec}"
+								required="true"
+								label="#{bundle.lbl_ec}"
+								itens="#{efetivaSolicPortalBacking.itensEC}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('ec')}">
+								<p:ajax
+									listener="#{efetivaSolicPortalBacking.listenerEc}"
+									process="@this"
+									update="@this cboUniaoestavel cboUniaoestavel_l" />
+							</xcp:combo>
+
+							<xcp:combo
+								id="cboUniaoestavel"
+								value="#{efetivaSolicPortalBacking.entity.uniaoestavel}"
+								required="true"
+								label="#{bundle.lbl_uniaoestavel}"
+								itens="#{efetivaSolicPortalBacking.itensIndSimNaoNull}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('uniaoestavel')}"
+								rendered="#{efetivaSolicPortalBacking.renderedUniaoEstavel}">
+								<p:ajax
+									listener="#{efetivaSolicPortalBacking.listenerEc}"
+									process="@this"
+									update="@this" />
+							</xcp:combo>
+
+							<xcp:fone
+								id="txtFone"
+								label="#{bundle.lbl_fone}"
+								value="#{efetivaSolicPortalBacking.entity.fone}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('fone')}" />
+
+							<xcp:fone
+								id="txtCelular"
+								label="#{bundle.lbl_celular}"
+								value="#{efetivaSolicPortalBacking.entity.celular}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('celular')}" />
+
+							<xcp:email
+								id="txtEmail"
+								label="#{bundle.lbl_email}"
+								value="#{efetivaSolicPortalBacking.entity.email}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('email')}" />
+
+							<xcp:combo
+								id="cboCor"
+								value="#{efetivaSolicPortalBacking.entity.cor}"
+								required="true"
+								label="#{bundle.lbl_cor}"
+								itens="#{efetivaSolicPortalBacking.itensCor}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('cor')}" />
+
+							<xcp:combo
+								id="cboDeficiente"
+								inputPanelClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(14) }"
+								value="#{efetivaSolicPortalBacking.entity.deficiente}"
+								required="true"
+								label="#{bundle.lbl_deficiente}"
+								itens="#{efetivaSolicPortalBacking.itensDeficiencias}"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('deficiente')}" />
+
+							<xcp:lov
+								id="lovCidadeNatural"
+								required="true"
+								value="#{efetivaSolicPortalBacking.entity.naturalFk}"
+								label="#{bundle.lbl_natural}"
+								query="cidades"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('natural')}" />
+
+							<xcp:text
+								id="txtReservista"
+								inputPanelClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(16) }"
+								label="#{bundle.lbl_reservista}"
+								value="#{efetivaSolicPortalBacking.entity.reservista}"
+								rendered="#{efetivaSolicPortalBacking.canRenderReservista()}"
+								size="20"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('reservista')}" />
+
+							<xcp:text
+								id="txtReservistaCat"
+								label="#{bundle.lbl_reservistacat}"
+								value="#{efetivaSolicPortalBacking.entity.reservistacat}"
+								rendered="#{efetivaSolicPortalBacking.canRenderReservista()}"
+								size="20"
+								class="#{efetivaSolicPortalBacking.verificarMudancas('reservistacat')}" />
+
+							<xcp:combo
+								id="cboSituacao"
+								label="#{bundle.lbl_situacao}"
+								value="#{efetivaSolicPortalBacking.entity.situacao}"
+								itens="#{efetivaSolicPortalBacking.itensSituacao}"
+								readonly="true" />
+
+							<p:contextMenu for="lovGrauInst">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(11)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="cboEC">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(7)}"
+									target="_blank" />
+							</p:contextMenu>
+							
+							<p:contextMenu for="cboUniaoestavel">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(17)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu
+								for="cboSetor"
+								rendered="#{efetivaSolicPortalBacking.canRenderSetor()}">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(13)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="cboDeficiente">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(14)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu
+								for="txtReservista"
+								rendered="#{efetivaSolicPortalBacking.canRenderReservista()}">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(16)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="txtCpfInc">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(4)}"
+									target="_blank" />
+							</p:contextMenu>
+
+						</xcp:panelForm>
+						<p:panel
+							style="border:none;"
+							id="panelFoto">
+
+							<p:fieldset
+								class="fieldset-foto-alteracao-cadastral #{efetivaSolicPortalBacking.fotoAlterada ? 'fieldset-foto-alteracao-cadastral-destaque' : ''}">
+								<p:graphicImage
+									id="imgFoto"
+									value="#{efetivaSolicPortalBacking.getDesPathDoc(1)}"
+									cache="false"
+									style="max-width:85px; max-height:110px ;padding:0px; border:none; vertical-align: middle;" />
+							</p:fieldset>
+
+						</p:panel>
+					</h:panelGrid>
+
+					<p:tabView id="tabFuncionarios">
+						<p:tab
+							id="tabDadosPessoais"
+							title="#{bundle.tit_pessoais}">
+
+							<ui:fragment>
+
+								<ui:param
+									name="endId"
+									value="enderecoAlteracao" />
+
+								<ui:param
+									name="value"
+									value="#{efetivaSolicPortalBacking.entity.endereco}" />
+
+								<ui:param
+									name="endValue"
+									value="#{value}" />
+
+								<ui:param
+									name="readonly"
+									value="false" />
+
+								<p:outputLabel
+									value=" "
+									rendered="#{empty rendered or rendered}" />
+
+								<p:fieldset
+									id="field_#{endId}"
+									legend="#{bundle.tit_endereco}"
+									rendered="#{empty rendered or rendered}"
+									styleClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(2) }"
+									style="#{stylefieldset}">
+
+									<p:panelGrid columnClasses="form_label,form_content">
+										<p:row>
+											<p:column>
+												<xcp:panelForm
+													columns="2"
+													labelClass=""
+													contentClass="">
+													<xcp:cep
+														id="txtCep_#{endId}"
+														label="#{bundle.lbl_cep}"
+														readonly="#{readonly}"
+														value="#{value.cep}"
+														class="#{efetivaSolicPortalBacking.verificarMudancas('cep')}">
+														<f:param
+															name="xcpEndValue"
+															value="#{endValue}" />
+														<p:ajax
+															event="change"
+															listener="#{xcpEnderecoBacking.changeCep}"
+															update="lovCidade_#{endId},lovBairro_#{endId},lovLogradouro_#{endId},txtNumero_#{endId}" />
+													</xcp:cep>
+
+													<xcp:lov
+														id="lovCidade_#{endId}"
+														label="#{bundle.lbl_cidade}"
+														value="#{value.cidadeFk}"
+														selectionListener="#{xcpEnderecoBacking.selectCidade}"
+														readonly="#{readonly}"
+														required="#{empty required or required}"
+														query="cidades"
+														size="7"
+														maxlength="8"
+														update="txtCep_#{endId},lovCidade_#{endId},lovBairro_#{endId},lovLogradouro_#{endId},txtNumero_#{endId}"
+														xcpEndValue="#{endValue}"
+														class="#{efetivaSolicPortalBacking.verificarMudancas('cidade')}" />
+
+													<xcp:lov
+														id="lovBairro_#{endId}"
+														label="#{bundle.lbl_bairro}"
+														value="#{value.bairroFk}"
+														readonly="#{readonly}"
+														params="#{xcpEnderecoBacking.getParamsCidade(value)}"
+														selectionListener="#{xcpEnderecoBacking.selectBairro}"
+														required="#{empty required or required}"
+														query="bairro"
+														size="7"
+														maxlength="5"
+														update="txtCep_#{endId},lovCidade_#{endId},lovBairro_#{endId},lovLogradouro_#{endId},txtNumero_#{endId}"
+														xcpEndValue="#{endValue}"
+														class="#{efetivaSolicPortalBacking.verificarMudancas('bairro')}" />
+
+													<xcp:lov
+														id="lovLogradouro_#{endId}"
+														value="#{value.logradouroFk}"
+														params="#{xcpEnderecoBacking.getParamsCidade(value)}"
+														selectionListener="#{xcpEnderecoBacking.selectLogradouro}"
+														readonly="#{readonly}"
+														label="#{bundle.lbl_logradouro}"
+														required="#{empty required or required}"
+														query="logradouro"
+														size="7"
+														maxlength="6"
+														update="txtCep_#{endId},lovCidade_#{endId},lovBairro_#{endId},lovLogradouro_#{endId},txtNumero_#{endId}"
+														xcpEndValue="#{endValue}"
+														class="#{efetivaSolicPortalBacking.verificarMudancas('logradouro')}" />
+												</xcp:panelForm>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<h:panelGrid
+										columns="4"
+										styleClass="tabela_alinhamento"
+										style="margin-left:-5px; margin-top:2px;">
+										<xcp:number
+											id="txtNumero_#{endId}"
+											label="#{bundle.lbl_numero}"
+											value="#{value.numero}"
+											size="7"
+											maxlength="8"
+											maxValue="99999999"
+											style="margin-right:22px;"
+											class="#{efetivaSolicPortalBacking.verificarMudancas('numero')}">
+											<f:param
+												name="xcpEndValue"
+												value="#{endValue}" />
+											<p:ajax
+												event="change"
+												listener="#{xcpEnderecoBacking.changeNumero}"
+												update="txtCep_#{endId},lovCidade_#{endId},lovBairro_#{endId},lovLogradouro_#{endId},txtNumero_#{endId}" />
+										</xcp:number>
+										<xcp:text
+											id="txtComplemento_#{endId}"
+											label="#{bundle.lbl_complemento}"
+											value="#{value.complemento}"
+											style="width:284px !important;"
+											maxlength="50"
+											class="#{efetivaSolicPortalBacking.verificarMudancas('complemento')}" />
+									</h:panelGrid>
+								</p:fieldset>
+							</ui:fragment>
+
+
+							<p:contextMenu for="field_enderecoAlteracao">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(2)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="brd_identidade">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(5)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="brd_identidade_prof">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(8)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="brd_dados_titulo">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(9)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="brd_dados_carteira_prof">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(10)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<p:contextMenu for="brd_dados_cnh">
+								<p:menuitem
+									value="#{bundle.mnu_baixarComprovante}"
+									url="#{efetivaSolicPortalBacking.getDesPathDoc(15)}"
+									target="_blank" />
+							</p:contextMenu>
+
+							<xcp:border
+								id="brd_identidade"
+								classFieldset="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(5) }"
+								header="#{bundle.tit_dados_identidade}">
+								<xcp:text
+									id="txtIdentidade"
+									label="#{bundle.lbl_identidade}"
+									value="#{efetivaSolicPortalBacking.entity.identidade}"
+									size="13"
+									maxlength="15"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('identidade')}" />
+								<xcp:date
+									id="txtDtidentidade"
+									value="#{efetivaSolicPortalBacking.entity.dtidentidade}"
+									label="#{bundle.lbl_cpdtemissao}"
+									style="float:left;"
+									size="8"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('dtidentidade')}" />
+								<xcp:text
+									id="txtOrgaoexp"
+									label="#{bundle.lbl_orgaoexp}"
+									value="#{efetivaSolicPortalBacking.entity.orgaoexp}"
+									size="13"
+									maxlength="16"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('orgaoexp')}" />
+								<xcp:combo
+									id="cboIdentidadeuf"
+									value="#{efetivaSolicPortalBacking.entity.identidadeuf}"
+									label="#{bundle.lbl_identidadeuf}"
+									itens="#{efetivaSolicPortalBacking.itensUfNull}"
+									styleClass="combouf"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('identidadeuf')}" />
+							</xcp:border>
+
+							<xcp:border
+								id="brd_identidade_prof"
+								classFieldset="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(8) }"
+								header="#{bundle.tit_dados_ident_prof}">
+								<xcp:text
+									id="txtCredencial"
+									label="#{bundle.lbl_credencial}"
+									value="#{efetivaSolicPortalBacking.entity.credencial}"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('credencial')}"
+									maxlength="20"
+									size="13" />
+
+								<xcp:combo
+									id="cboCredenciador"
+									value="#{efetivaSolicPortalBacking.entity.credenciador}"
+									label="#{bundle.lbl_credenciador}"
+									itens="#{efetivaSolicPortalBacking.itensCredenciadoresNull}"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('credenciador')}"
+									size="13" />
+
+								<xcp:combo
+									id="cboCredencialsit"
+									value="#{efetivaSolicPortalBacking.entity.credencialsit}"
+									label="#{bundle.lbl_credencialsit}"
+									itens="#{efetivaSolicPortalBacking.itensCredencialSit}"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('credencialsit')}"
+									size="13" />
+
+								<xcp:combo
+									id="cboCredencialuf"
+									value="#{efetivaSolicPortalBacking.entity.credencialuf}"
+									label="#{bundle.lbl_credencialuf}"
+									itens="#{efetivaSolicPortalBacking.itensUfNull}"
+									class="#{efetivaSolicPortalBacking.verificarMudancas('credencialuf')}"
+									size="13" />
+							</xcp:border>
+
+							<p:fieldset
+								styleClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(10) }"
+								legend="#{bundle.tit_dados_carteira_prof}"
+								id="brd_dados_carteira_prof">
+								<p:panelGrid styleClass="tabela_alinhamento">
+									<p:row>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:number
+													id="txtCpnumero"
+													label="#{bundle.lbl_cpnumero}"
+													value="#{efetivaSolicPortalBacking.entity.cpnumero}"
+													maxlength="8"
+													maxValue="99999999"
+													size="10"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('cpnumero')}" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:text
+													id="txtCpserie"
+													label="#{bundle.lbl_cpserie}"
+													value="#{efetivaSolicPortalBacking.entity.cpserie}"
+													size="15"
+													maxlength="20"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('cpserie')}" />
+											</xcp:panelForm>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>
+											<h:panelGrid
+												columns="2"
+												style="margin-top:3px;">
+												<xcp:combo
+													id="cboCpuf"
+													value="#{efetivaSolicPortalBacking.entity.cpuf}"
+													label="#{bundle.lbl_cpuf}"
+													itens="#{efetivaSolicPortalBacking.itensUfNull}"
+													styleClass="combouf"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('cpuf')}" />
+											</h:panelGrid>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGrid
+												columns="2"
+												style="margin-top:1px; margin-left:7px;">
+												<xcp:date
+													id="txtCpdtemissao"
+													value="#{efetivaSolicPortalBacking.entity.cpdtemissao}"
+													label="#{bundle.lbl_cpdtemissao}"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('cpdtemissao')}" />
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset
+								id="brd_dados_titulo"
+								styleClass="alinha_label #{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(9) }"
+								legend="#{bundle.tit_dados_titulo}">
+								<p:panelGrid styleClass="tabela_alinhamento">
+									<p:row>
+										<p:column>
+											<xcp:number
+												id="txtTitulo"
+												label="#{bundle.lbl_titulo}"
+												value="#{efetivaSolicPortalBacking.entity.titulo}"
+												size="12"
+												maxValue="999999999999"
+												class="#{efetivaSolicPortalBacking.verificarMudancas('titulo')}" />
+										</p:column>
+										<p:column>
+											<xcp:number
+												id="txtZona"
+												label="#{bundle.lbl_zona}"
+												value="#{efetivaSolicPortalBacking.entity.zona}"
+												size="3"
+												maxValue="999"
+												class="#{efetivaSolicPortalBacking.verificarMudancas('zona')}" />
+										</p:column>
+										<p:column>
+											<xcp:text
+												id="txtSessao"
+												label="#{bundle.lbl_sessao}"
+												value="#{efetivaSolicPortalBacking.entity.sessao}"
+												size="5"
+												maxValue="99999"
+												class="#{efetivaSolicPortalBacking.verificarMudancas('sessao')}" />
+										</p:column>
+										<p:column>
+											<xcp:combo
+												id="cboTitulouf"
+												value="#{efetivaSolicPortalBacking.entity.titulouf}"
+												label="#{bundle.lbl_titulouf}"
+												itens="#{efetivaSolicPortalBacking.itensUfNull}"
+												styleClass="combouf"
+												class="#{efetivaSolicPortalBacking.verificarMudancas('titulouf')}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset
+								styleClass="#{ efetivaSolicPortalBacking.getClasseAnexoDocumentoAlterado(15) }"
+								legend="#{bundle.tit_cnh}"
+								id="brd_dados_cnh">
+
+								<p:panelGrid styleClass="tabela_alinhamento">
+									<p:row>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:number
+													id="txtCnh"
+													label="#{bundle.lbl_cnh}"
+													value="#{efetivaSolicPortalBacking.entity.cnh}"
+													size="11"
+													maxValue="99999999999"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('cnh')}" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:text
+													id="txtCategoriacnh"
+													label="#{bundle.lbl_categoriacnh}"
+													value="#{efetivaSolicPortalBacking.entity.categoriacnh}"
+													size="2"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('categoriacnh')}" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:date
+													id="txtDtvenccnh"
+													value="#{efetivaSolicPortalBacking.entity.dtvenccnh}"
+													label="#{bundle.lbl_dtvenccnh}"
+													size="8"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('dtvenccnh')}" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:combo
+													id="cboCnhuf"
+													value="#{efetivaSolicPortalBacking.entity.cnhuf}"
+													label="#{bundle.lbl_cnhuf}"
+													itens="#{efetivaSolicPortalBacking.itensUfNull}"
+													styleClass="combouf"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('cnhuf')}" />
+											</xcp:panelForm>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset
+								legend="#{bundle.tit_colunas_complementares}"
+								id="brd_complementos"
+								rendered="#{efetivaSolicPortalBacking.complementosVO.grupos.size() > 0}">
+								<p:outputPanel styleClass="panel-complementos">
+									<c:forEach
+										items="#{efetivaSolicPortalBacking.gruposOrdenados}"
+										var="grupo">
+										<c:forEach
+											items="#{efetivaSolicPortalBacking.complementosVO.getListaParametros(grupo)}"
+											var="row">
+											<c:if test="#{row.indMostrar}">
+												<p:outputPanel
+													id="panel_#{row.desParametroSql}"
+													styleClass="item-complemento #{ efetivaSolicPortalBacking.getClasseAnexoDocumentoComplementarAlterado(row.desParametroSql) }">
+													<xcp:panelForm>
+														<xcp:creator index="#{row.seqObjetoParametro}" />
+													</xcp:panelForm>
+												</p:outputPanel>
+												<p:contextMenu for="panel_#{row.desParametroSql}">
+													<p:menuitem
+														value="#{bundle.mnu_baixarComprovante}"
+														url="#{efetivaSolicPortalBacking.getAnexoCamposComplementares(row.desParametroSql)}"
+														target="_blank" />
+												</p:contextMenu>
+											</c:if>
+										</c:forEach>
+									</c:forEach>
+								</p:outputPanel>
+							</p:fieldset>
+
+							<p:fieldset legend="#{bundle.lbl_titulo_emails_adic}">
+
+								<p:dataTable
+									id="tabEmails"
+									value="#{efetivaSolicPortalBacking.listaEmail}"
+									var="email"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									rowKey="#{email.PK}">
+
+									<xcp:column
+										type="String"
+										width="15%"
+										headerText="#{bundle.lbl_email}">
+										<h:outputText value="#{email.email}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="15%"
+										headerText="#{bundle.lbl_tipo}">
+										<xcp:outputSimple
+											value="#{email.tipo}"
+											itens="#{efetivaSolicPortalBacking.itensEmails}" />
+									</xcp:column>
+								</p:dataTable>
+								
+							</p:fieldset>
+
+						</p:tab>
+
+						<p:tab
+							id="tabDadosProfissionais"
+							rendered="#{ efetivaSolicPortalBacking.isPermitidoAlterarDadosBancarios() }"
+							title="#{bundle.tit_dados_profissional}">
+
+							<p:fieldset legend="#{bundle.tit_banco_pgto}">
+								<xcp:panelForm>
+									<xcp:lov
+										id="lovBancopgto"
+										value="#{efetivaSolicPortalBacking.entity.bcopgtoFk}"
+										update="lovAgenciapgto"
+										selectionListener="#{efetivaSolicPortalBacking.selectBancoPgto}"
+										label="#{bundle.lbl_banco_pgto}"
+										query="bancos"
+										class="#{efetivaSolicPortalBacking.verificarMudancas('bcopgto')}"
+										size="4" />
+
+									<xcp:lov
+										id="lovAgenciapgto"
+										value="#{efetivaSolicPortalBacking.entity.agenciapgtoFk}"
+										params="#{efetivaSolicPortalBacking.paramsBanco}"
+										label="#{bundle.lbl_agencia_pgto}"
+										query="agencias"
+										class="#{efetivaSolicPortalBacking.verificarMudancas('agenciapgto')}"
+										size="4" />
+								</xcp:panelForm>
+								<p:panelGrid styleClass="tabela_alinhamento">
+									<p:row>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:text
+													id="txtContapgto"
+													label="#{bundle.lbl_contapgto}"
+													value="#{efetivaSolicPortalBacking.entity.contapgto}"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('contapgto')}"
+													style="width: 120px;" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:combo
+													id="cboTipocontapgto"
+													value="#{efetivaSolicPortalBacking.entity.tipocontapgto}"
+													label="#{bundle.lbl_tipocontapgto}"
+													itens="#{efetivaSolicPortalBacking.itensTipoContaPgto}"
+													styleClass="combotipopag2"
+													class="#{efetivaSolicPortalBacking.verificarMudancas('tipocontapgto')}"
+													width="140px" />
+											</xcp:panelForm>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:fieldset>
+						</p:tab>
+
+						<p:tab
+							id="tabDadosFilhacao"
+							title="#{bundle.tit_dados_dependentes}"
+							titleStyleClass="#{efetivaSolicPortalBacking.getStyleTab(3)}">
+
+							<p:dataTable
+								id="tabDependentes"
+								widgetVar="tabDependentes_w"
+								value="#{efetivaSolicPortalBacking.listaDependentes}"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								var="depend"
+								paginator="true"
+								paginatorPosition="bottom"
+								rowKey="#{depend.PK}"
+								selectionMode="single"
+								rows="#{viewUtil.tableRows}">
+
+								<xcp:column
+									type="String"
+									width="7%"
+									headerText="#{bundle.col_tipo_alt}">
+									<div style="font-weight: bold">
+										<xcp:output
+											id="txtTipo"
+											simple="true"
+											value="#{depend.tipo}"
+											itens="#{efetivaSolicPortalBacking.itensTipo}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="20%"
+									headerText="#{bundle.lbl_nome}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.nome, 'nome')}">
+										<xcp:output
+											id="depNome"
+											simple="true"
+											value="#{depend.nome}" />
+										<ui:fragment
+											id="depFamiliar#{depend.sequencia}"
+											rendered="#{depend.familiarServidor == 1}">
+											<br />
+											<span style="font-weight: bold">Matrícula: </span>
+											<h:outputText value="#{depend.matriculaFamiliar}" />
+											<br />
+											<span style="font-weight: bold">Cargo: </span>
+											<h:outputText
+												value="#{efetivaSolicPortalBacking.getFuncionarioFamiliarCargo(depend)}" />
+										</ui:fragment>
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="Date"
+									width="7%"
+									headerText="#{bundle.lbl_dtn}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.dtn, 'dtn')}">
+										<xcp:outputDate
+											id="depDtn"
+											simple="true"
+											value="#{depend.dtn}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="10%"
+									headerText="#{bundle.lbl_grau_depend}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.grau, 'grau')}">
+										<xcp:output
+											id="depGrau"
+											simple="true"
+											itens="#{efetivaSolicPortalBacking.itensParentesco}"
+											value="#{depend.grau}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="Number"
+									width="10%"
+									headerText="#{bundle.lbl_cpf}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.cpf, 'cpf')}">
+										<xcp:outputCpf
+											id="depCpf"
+											simple="true"
+											value="#{depend.cpf}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="5%"
+									headerText="#{bundle.lbl_sexo}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.sexo, 'sexo')}">
+										<xcp:output
+											id="depSexo"
+											simple="true"
+											value="#{depend.sexo}"
+											itens="#{efetivaSolicPortalBacking.itensSexo}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="10%"
+									headerText="#{bundle.lbl_ec}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.ec, 'ec')}">
+										<xcp:output
+											id="depEc"
+											simple="true"
+											value="#{depend.ec}"
+											itens="#{efetivaSolicPortalBacking.itensEC}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="7%"
+									headerText="#{bundle.lbl_deficiencia}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.deficiencia, 'deficiencia')}">
+										<xcp:output
+											id="depDeficiencia"
+											simple="true"
+											value="#{depend.deficiencia}"
+											itens="#{efetivaSolicPortalBacking.itensDeficiencias}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="5%"
+									headerText="#{bundle.lbl_dependenteir}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.dependenteir, 'dependenteir')}">
+										<xcp:output
+											id="depDependenteir"
+											simple="true"
+											value="#{depend.dependenteir}"
+											itens="#{efetivaSolicPortalBacking.itensDependentesIRRF}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="5%"
+									headerText="#{bundle.lbl_beneficiario}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.beneficiario, 'beneficiario')}">
+										<xcp:output
+											id="depBeneficiario"
+											simple="true"
+											value="#{depend.beneficiario}"
+											itens="#{efetivaSolicPortalBacking.itensDependentesIRRF}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="10%"
+									headerText="#{bundle.lbl_beneficiarioprev}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.beneficiarioprev, 'beneficiarioprev')}">
+										<xcp:output
+											id="depBeneficiarioPrev"
+											simple="true"
+											value="#{depend.beneficiarioprev}"
+											itens="#{efetivaSolicPortalBacking.itensDependentesIRRF}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="7%"
+									headerText="#{bundle.lbl_estudante}">
+									<div
+										class="#{efetivaSolicPortalBacking.verificarMudancasDependente(depend.sequencia, depend.tipo, depend.indEstudante, 'indEstudante')}">
+										<xcp:output
+											id="depEstudante"
+											simple="true"
+											value="#{depend.indEstudante}"
+											itens="#{efetivaSolicPortalBacking.itensIndSimNao}" />
+									</div>
+								</xcp:column>
+
+								<xcp:column
+									type="String"
+									width="5%">
+									<xcp:commandLink
+										id="btn_anexo_dep"
+										immediate="true"
+										action="#{efetivaSolicPortalBacking.actionOpenDepAnexo}"
+										update=":frmDepAnex"
+										rendered="#{depend.anexos}">
+										<f:setPropertyActionListener
+											target="#{efetivaSolicPortalBacking.dependenteSelecionado}"
+											value="#{depend}" />
+										<h:graphicImage
+											title="#{bundle.lbl_anexos}"
+											value="/resources/img/anexo32x32.png"
+											style="margin-top:3px;" />
+									</xcp:commandLink>
+
+								</xcp:column>
+
+
+							</p:dataTable>
+						</p:tab>
+
+						<p:tab
+							id="tabCompetencias"
+							title="#{bundle.tit_competencias}"
+							titleStyleClass="#{efetivaSolicPortalBacking.getStyleTab(4)}">
+
+							<p:fieldset legend="#{bundle.lbl_titulo_cursoscapacitacao}">
+								<p:dataTable
+									id="tabFormacao"
+									value="#{efetivaSolicPortalBacking.listaFormacao}"
+									var="formacao"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									rowKey="#{formacao.PK}">
+									<xcp:column
+										width="10%"
+										headerText="#{bundle.lbl_tipo_solicitacao}">
+										<div style="font-weight: bold">
+											<xcp:outputSimple
+												value="#{formacao.tipoSolicitacao}"
+												itens="#{efetivaSolicPortalBacking.itensTipoFormacao}" />
+										</div>
+									</xcp:column>
+
+									<xcp:column
+										width="10%"
+										headerText="#{bundle.lbl_tipo}">
+										<h:outputText value="#{formacao.cursoFk.descricao}" />
+									</xcp:column>
+
+									<xcp:column
+										width="35%"
+										headerText="#{bundle.col_info}"
+										type="String">
+										<p:panelGrid>
+											<p:row>
+												<p:column styleClass="xcp_column_String">
+													<p:outputPanel rendered="#{formacao.instituicaoFk != null}">
+														<h:outputText
+															style="font-weight: bold"
+															value="#{bundle.lbl_instituicao}" />
+														<br />
+														<h:outputText value="#{formacao.instituicaoFk.descricao}" />
+														<br />
+													</p:outputPanel>
+													<h:outputText
+														style="font-weight: bold"
+														value="#{bundle.col_areaCurso}" />
+													<br />
+													<h:outputText
+														value="#{formacao.cursoacadFk != null ? formacao.cursoacadFk.descricao : formacao.area}" />
+												</p:column>
+												<p:column styleClass="xcp_column_String">
+													<h:outputText
+														style="font-weight: bold"
+														value="#{bundle.lbl_inicio}: " />
+													<xcp:outputSimpleDate value="#{formacao.dtinicio}" />
+													<br />
+													<h:outputText
+														style="font-weight: bold"
+														value="#{bundle.lbl_fim}: " />
+													<xcp:outputSimpleDate value="#{formacao.dtfim}" />
+													<br />
+													<h:outputText
+														style="font-weight: bold"
+														value="#{bundle.lbl_carga}: " />
+													<h:outputText value="#{formacao.pontos}" />
+													<br />
+													<h:outputText
+														style="font-weight: bold"
+														value="#{bundle.lbl_situacao}: " />
+													<xcp:outputSimple value="#{formacao.situacaoFk.descricao}" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</xcp:column>
+									<xcp:column
+										width="20%"
+										headerText="#{bundle.lbl_obs}"
+										type="String">
+										<h:outputText value="#{formacao.obs}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="5%">
+										<xcp:commandLink
+											id="btn_anexo_formacao"
+											immediate="true"
+											action="#{efetivaSolicPortalBacking.actionOpenFormacaoAnexo}"
+											update=":frmForAnex"
+											rendered="#{formacao.anexos}">
+											<f:setPropertyActionListener
+												target="#{efetivaSolicPortalBacking.formacaoSelecionada}"
+												value="#{formacao}" />
+											<h:graphicImage
+												title="#{bundle.lbl_anexos}"
+												value="/resources/img/anexo32x32.png"
+												style="margin-top:3px;" />
+										</xcp:commandLink>
+
+									</xcp:column>
+
+								</p:dataTable>
+
+							</p:fieldset>
+							<p:fieldset legend="#{bundle.lbl_titulo_conhecimentos}">
+								<p:dataTable
+									id="tabConhecimentos"
+									value="#{efetivaSolicPortalBacking.listaConhecimento}"
+									var="conhecimento"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									rowKey="#{conhecimento.PK}">
+
+									<xcp:column
+										type="String"
+										width="30%"
+										headerText="#{bundle.lbl_conhecimento}">
+										<h:outputText value="#{conhecimento.conhecimentoFk.descricao}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="70%"
+										headerText="#{bundle.lbl_obs}">
+										<h:outputText value="#{conhecimento.obs}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:fieldset>
+
+							<p:fieldset legend="#{bundle.tit_idiomas}">
+
+								<p:dataTable
+									id="tabIdiomas"
+									value="#{efetivaSolicPortalBacking.listaIdioma}"
+									var="idioma"
+									emptyMessage="#{bundle.msg_sem_resultado}"
+									rowKey="#{idioma.PK}">
+
+									<xcp:column
+										type="String"
+										width="15%"
+										headerText="#{bundle.lbl_idioma}">
+										<h:outputText value="#{idioma.idiomaFk.descricao}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="20%"
+										headerText="#{bundle.lbl_instituicao}">
+										<h:outputText value="#{idioma.instituicaoFk.descricao}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="15%"
+										headerText="#{bundle.lbl_tipocurso}">
+										<xcp:outputSimple
+											value="#{idioma.tipocurso}"
+											itens="#{efetivaSolicPortalBacking.itensTipoCurso}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="10%"
+										headerText="#{bundle.lbl_conclusao}">
+										<xcp:outputSimpleDate value="#{idioma.conclusao}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="10%"
+										headerText="#{bundle.lbl_entende}">
+										<h:outputText
+											value="#{efetivaSolicPortalBacking.getFluenciaString(idioma.entende)}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="10%"
+										headerText="#{bundle.lbl_le}">
+										<h:outputText
+											value="#{efetivaSolicPortalBacking.getFluenciaString(idioma.leitura)}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="10%"
+										headerText="#{bundle.lbl_fala}">
+										<h:outputText
+											value="#{efetivaSolicPortalBacking.getFluenciaString(idioma.fala)}" />
+									</xcp:column>
+
+									<xcp:column
+										type="String"
+										width="10%"
+										headerText="#{bundle.lbl_escreve}">
+										<h:outputText
+											value="#{efetivaSolicPortalBacking.getFluenciaString(idioma.escreve)}" />
+									</xcp:column>
+								</p:dataTable>
+							</p:fieldset>
+
+						</p:tab>
+
+					</p:tabView>
+				</xcp:panelVinculoEval>
+			</ui:define>
+
+		</xcp:panelManutLazy>
+
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{efetivaSolicPortalBacking.msgDialogHeader}"
+			modal="true"
+			id="dlgMsg"
+			widgetVar="dlgMsg_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo
+							id="obsMsg"
+							label="#{bundle.lbl_mensagem}"
+							value="#{efetivaSolicPortalBacking.mensagem}"
+							size="2000" />
+
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_finalizar_aceite"
+								value="#{efetivaSolicPortalBacking.msgDialogHeader}"
+								process="@form"
+								action="#{efetivaSolicPortalBacking.actionFinalizar}"
+								icon="#{efetivaSolicPortalBacking.msgDialogButtonIcon}"
+								update=":#{p:component('panelManut_EfetivaSolicPortal')}"
+								oncomplete="PF('dlgMsg_w').hide();"
+								rendered="#{efetivaSolicPortalBacking.acao == 'ACEITAR' or efetivaSolicPortalBacking.acao == 'REGISTRAR_PENDENCIA'}" />
+
+							<xcp:commandButton
+								id="btn_finalizar_rejeicao"
+								value="#{efetivaSolicPortalBacking.msgDialogHeader}"
+								process="@form"
+								action="#{efetivaSolicPortalBacking.actionFinalizar}"
+								icon="#{efetivaSolicPortalBacking.msgDialogButtonIcon}"
+								update=":#{p:component('panelManut_EfetivaSolicPortal')}"
+								oncomplete="PF('dlgMsg_w').hide();"
+								rendered="#{efetivaSolicPortalBacking.acao == 'REJEITAR'}">
+								<p:confirm
+									header="#{bundle.lbl_remover}"
+									message="#{bundle.msg_remover_proc_novamente}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+
+
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+				<p:remoteCommand
+					name="closeDlgMsg"
+					oncomplete="PF('dlgMsg_w').hide();" />
+			</xcp:form>
+		</p:dialog>
+
+		<ui:include
+			src="EfetivaSolicPortalForm/EfetivaSolicPortalFormacaoAnexoDialog.xhtml" />
+		<ui:include
+			src="EfetivaSolicPortalForm/EfetivaSolicPortalDepAnexoDialog.xhtml" />
+	</ui:define>
+
+
+</ui:composition>

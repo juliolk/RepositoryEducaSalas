@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Valerefeicao"
+			backing="#{valerefeicaoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nrentregue}"
+					value="#{row.nrentregue}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.nrentregue}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdsolicitada}"
+					value="#{row.qtdsolicitada}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdsolicitada}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtinicio"
+						required="true"
+						value="#{valerefeicaoBacking.entity.dtinicio}"
+						label="#{bundle.lbl_dtinicial}"
+						readonly="#{not valerefeicaoBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDtfim"
+						value="#{valerefeicaoBacking.entity.dtfim}"
+						label="#{bundle.lbl_data_final}" />
+
+					<xcp:text
+						id="txtNrcartao"
+						label="#{bundle.lbl_nrcartao}"
+						value="#{valerefeicaoBacking.entity.nrcartao}"
+						size="15" />
+
+					<xcp:number
+						id="txtNrentregue"
+						label="#{bundle.lbl_nrentregue}"
+						value="#{valerefeicaoBacking.entity.nrentregue}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtQtdsolicitada"
+						label="#{bundle.lbl_qtdsolicitada}"
+						value="#{valerefeicaoBacking.entity.qtdsolicitada}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{valerefeicaoBacking.entity.tipoFk}"
+						label="#{bundle.lbl_tipo}"
+						query="tpvalerefeicao"
+						size="6" />
+
+					<xcp:number
+						id="txtCodExterno"
+						label="#{bundle.lbl_codexterno}"
+						value="#{valerefeicaoBacking.entity.codexterno}"
+						size="18"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999" />
+
+
+					<xcp:memo
+						id="txtLogErro"
+						label="#{bundle.lbl_logErro}"
+						readonly="true"
+						rendered="#{valerefeicaoBacking.entity.logErro!=null}"
+						value="#{valerefeicaoBacking.entity.logErro}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{valerefeicaoBacking.entity.obs}"
+						size="1000" />
+
+					<xcp:date
+						id="txtDtlancamento"
+						value="#{valerefeicaoBacking.entity.dtlancamento}"
+						label="#{bundle.lbl_dtlancamento}"
+						readonly="true"
+						rendered="#{not valerefeicaoBacking.entity.novo and valerefeicaoBacking.entity.dtlancamento != null}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

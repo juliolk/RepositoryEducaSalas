@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:dialog
+		header="#{bundle.tit_informacoes_documento}"
+		modal="true"
+		id="#{backing.dialogId}"
+		widgetVar="#{backing.widgetVar}">
+		<xcp:form id="#{backing.formId}">
+			<xcp:panelForm>
+
+				<xcp:dateRange
+					id="txtDataPonto"
+					valueStart="#{backing.helper.documento.dtini}"
+					valueEnd="#{backing.helper.documento.dtfim}"
+					required="true"
+					readonly="true"
+					label="#{bundle.lbl_data_periodo}" />
+
+				<xcp:date
+					id="txtDtpublicacao"
+					value="#{backing.helper.documento.dtpublicacao}"
+					label="#{bundle.lbl_dtpublicacao}"
+					readonly="#{backing.readonlyDtPublicacao}" />
+
+				<xcp:lov
+					id="lovProcesso"
+					value="#{backing.helper.processoDialogFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					size="25"
+					rendered="#{backing.renderedProcDialog}" />
+
+				<xcp:text
+					id="txtDescricao"
+					label="#{bundle.lbl_descricao}"
+					value="#{backing.helper.documento.descricao}"
+					maxlength="100"
+					size="75" />
+
+				<xcp:number
+					id="txtNumDocInformado"
+					value="#{backing.helper.numDocInformado}"
+					label="#{bundle.lbl_nrdoc}"
+					size="20"
+					rendered="#{backing.portariaInformada}"
+					required="true" />
+
+				<xcp:lov
+					id="lovDocumentoExc"
+					value="#{backing.helper.documentosExc}"
+					label="#{bundle.lbl_documentoExc}"
+					update="btnDownloadDocumentoExcluido,txtDtpublicacao"
+					query="documentos_exc"
+					size="20"
+					selectionListener="#{backing.selectDocExc}"
+					rendered="#{not backing.portariaInformada}" />
+
+				<p:spacer
+					height="1"
+					width="1"
+					rendered="#{not backing.portariaInformada}" />
+
+				<xcp:commandButton
+					id="btnDownloadDocumentoExcluido"
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					disabled="#{backing.helper.documentosExc == null}"
+					rendered="#{not backing.portariaInformada}">
+					<p:fileDownload
+						value="#{documentosBacking.getDownloadDocumento(backing.helper.documentosExc.registro)}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gerar_documento"
+						icon="ui-icon-disk"
+						action="#{backing.actionGerarPortaria}"
+						value="#{bundle.btn_gerar_documento}" />
+
+					<xcp:commandButton
+						id="btn_sair"
+						immediate="true"
+						oncomplete="PF('#{backing.widgetVar}').hide();"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_sair}" />
+				</f:facet>
+			</p:toolbar>
+			<p:remoteCommand
+				name="rcOpen"
+				oncomplete="PF('#{backing.widgetVar}').show();" />
+
+			<p:remoteCommand
+				name="rcClose"
+				oncomplete="PF('#{backing.widgetVar}').hide();"
+				update=":form" />
+
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		header="#{bundle.tit_informacoes_documento}"
+		modal="true"
+		id="#{backing.dialogIdTipodoc}"
+		widgetVar="#{backing.widgetVarTipodoc}">
+		<xcp:form id="#{backing.formIdTipodoc}">
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{backing.helper.tipodocCheckbox}"
+					size="8"
+					label="#{bundle.lbl_doc_port}"
+					query="#{backing.queryCheckbox}"
+					required="true" />
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gerar_documento"
+						icon="ui-icon-disk"
+						action="#{backing.actionGerarPortariaDireta(true)}"
+						value="#{bundle.btn_gerar_documento}" />
+
+					<xcp:commandButton
+						id="btn_sair"
+						immediate="true"
+						oncomplete="PF('#{backing.widgetVarTipodoc}').hide();"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_sair}" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="EsocCert"
+			backing="#{esocCertBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_empresa}"
+					value="#{row.empresa}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.empresa}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_empresas_nome}"
+					value="#{row.empresaFk.nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.empresaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicioval}"
+					value="#{row.dtinival}"
+					type="Date"
+					size="10">
+					<xcp:outputSimpleDate value="#{row.dtinival}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fimval}"
+					value="#{row.dtfimval}"
+					type="Date"
+					size="10">
+					<xcp:outputSimpleDate value="#{row.dtfimval}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovEmpresas"
+						value="#{esocCertBacking.entity.empresaFk}"
+						label="#{bundle.lbl_empresa}"
+						required="true"
+						query="empresas"
+						size="3"
+						readonly="#{not esocCertBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{esocCertBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{esocCertBacking.itensTipo}"
+						readonly="#{not esocCertBacking.entity.novo}">
+						<p:ajax update="@form" />
+					</xcp:combo>
+
+					<xcp:dateRange
+						id="txtDtaVal"
+						label="#{bundle.lbl_validade}"
+						valueStart="#{esocCertBacking.entity.dtinival}"
+						rendered="#{not esocCertBacking.entity.novo}"
+						valueEnd="#{esocCertBacking.entity.dtfimval}"
+						readonly="true" />
+
+					<p:outputLabel
+						id="lblCert"
+						value="#{bundle.lbl_certificado}:"
+						rendered="#{esocCertBacking.entity.tipo == 1}" />
+
+					<p:commandLink
+						id="lnkCert"
+						oncomplete="PF('dlgCert_w').show()"
+						value="#{esocCertBacking.nomeArquivo}"
+						process="@this"
+						rendered="#{esocCertBacking.entity.tipo == 1}" />
+
+					<xcp:text
+						id="txtCaminho"
+						label="#{bundle.lbl_desLibPath}"
+						rendered="#{esocCertBacking.entity.tipo == 2}"
+						value="#{esocCertBacking.desLibPath}" />
+
+					<h:outputLabel value="#{bundle.lbl_senha}:" />
+
+					<p:password
+						autocomplete="new-password"
+						id="txtNovaSen"
+						value="#{esocCertBacking.desSenha}"
+						size="50" />
+
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgCert"
+			modal="true"
+			widgetVar="dlgCert_w"
+			header="#{bundle.title_importar_cert}">
+			<xcp:form
+				id="formcert"
+				multipart="true">
+				<xcp:panelForm>
+					<xcp:inputFile
+						label="#{bundle.lbl_cert}"
+						id="inpFile"
+						value="#{esocCertBacking.upload}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_upload"
+							value="#{bundle.btn_upload}"
+							ajax="false"
+							action="#{esocCertBacking.actionUploadCert}"
+							icon="ui-icon-gear" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

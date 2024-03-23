@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AvalExpSindicancia"
+		backing="#{avalExpSindicanciaBacking}"
+		masterId="AvalExp"
+		renderedRemover="true"
+		renderedGravar="true">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_sindicancia}"
+				value="#{row.sindicancia}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.sindicancia}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="20">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtinicio}"
+				value="#{row.dtinicio}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtinicio}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dttermino}"
+				value="#{row.dttermino}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dttermino}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_penalidade}"
+				value="#{row.penalidade}"
+				type="String"
+				size="5"
+				itens="#{avalExpSindicanciaBacking.itensPenalidade}">
+				<xcp:outputSimple
+					value="#{row.penalidade}"
+					itens="#{avalExpSindicanciaBacking.itensPenalidade}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtSindicancia_AvalExp"
+					label="#{bundle.lbl_sindicancia}"
+					required="true"
+					value="#{avalExpSindicanciaBacking.entity.sindicancia}"
+					size="8"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					readonly="#{not avalExpSindicanciaBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_AvalExp"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{avalExpSindicanciaBacking.entity.descricao}"
+					size="75" />
+
+				<xcp:dateRange
+					id="txtDtinicio_AvalExp"
+					required="true"
+					valueStart="#{avalExpSindicanciaBacking.entity.dtinicio}"
+					valueEnd="#{avalExpSindicanciaBacking.entity.dttermino}"
+					label="#{bundle.lbl_dtinicio}"
+					margin="5px;"
+					size="8" />
+
+				<xcp:combo
+					id="cboPenalidade_AvalExp"
+					value="#{avalExpSindicanciaBacking.entity.penalidade}"
+					label="#{bundle.lbl_penalidade}"
+					itens="#{avalExpSindicanciaBacking.itensPenalidade}"
+					width="92px !important;" />
+
+				<xcp:memo
+					id="txtObs_AvalExp"
+					label="#{bundle.lbl_obs}"
+					value="#{avalExpSindicanciaBacking.entity.obs}"
+					size="4000"
+					cols="77" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

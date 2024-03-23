@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ProcessosesocSusp"
+		backing="#{processosesocSuspBacking}"
+		masterId="Processosesoc">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codSusp}"
+				value="#{row.codSusp}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.codSusp}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_codTipoSusp}"
+				value="#{row.codTipoSusp}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.codTipoSusp}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+
+			<xcp:column
+				headerText="#{bundle.col_desTipoSusp}"
+				value="#{row.codTipoSusp}"
+				type="String"
+				size="10">
+				<xcp:outputSimple value="#{row.codTipoSuspFk.desTipoSusp}" />
+			</xcp:column>
+
+
+			<xcp:column
+				headerText="#{bundle.col_dtdecisao}"
+				value="#{row.dtdecisao}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dtdecisao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtCodSusp_ProcessosesocSusp"
+					label="#{bundle.lbl_codSusp}"
+					required="true"
+					value="#{processosesocSuspBacking.entity.codSusp}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					readonly="#{not processosesocSuspBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovCodTipoSusp_ProcessosesocSusp"
+					value="#{processosesocSuspBacking.entity.codTipoSuspFk}"
+					label="#{bundle.lbl_codTipoSusp}"
+					required="true"
+					query="tiposuspensaoelig"
+					size="10" />
+
+				<xcp:date
+					id="txtDtdecisao_ProcessosesocSusp"
+					required="true"
+					value="#{processosesocSuspBacking.entity.dtdecisao}"
+					label="#{bundle.lbl_dtdecisao}" />
+					
+					
+				<xcp:combo
+						id="cboTeto"
+						required="true"
+						value="#{processosesocSuspBacking.entity.deposito}"
+						label="#{bundle.lbl_depositointegral}"
+						itens="#{processosesocSuspBacking.itensIndSimNaoNull}" />		
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+
+			<p:fieldset legend="#{bundle.title_atencao}">
+				<h:outputText value="#{bundle.msg_troca_versao_esoc}" />
+			</p:fieldset>
+
+			<xcp:panelForm>
+				<xcp:combo
+					id="cmbAmbiente"
+					readonly="true"
+					value="#{esocTrocaVersaoBacking.tipAmb}"
+					itens="#{esocTrocaVersaoBacking.itensTipAmb}"
+					label="#{bundle.lbl_tipAmb}" />
+
+				<xcp:combo
+					id="cmbVersao"
+					value="#{esocTrocaVersaoBacking.tipVersao}"
+					itens="#{esocTrocaVersaoBacking.itensVersao}"
+					label="#{bundle.lbl_versao}" />
+			</xcp:panelForm>
+
+			<center>
+				<p:dataTable
+					id="tblVersao"
+					widgetVar="table_Concurso_w"
+					var="row"
+					value="#{esocTrocaVersaoBacking.listVersao}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					selectionMode="single"
+					rowKey="#{row.PK}"
+					style="max-width: 700px">
+
+					<xcp:column
+						headerText="#{bundle.col_desEvento}"
+						type="String"
+						size="6">
+						<xcp:outputSimple value="#{row.desEvento}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desVersao}"
+						type="String"
+						size="6">
+						<xcp:outputSimple value="#{row.desVersao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						type="String"
+						size="6">
+						<xcp:outputSimpleDate value="#{row.data}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_acoes}"
+						type="String"
+						size="6">
+
+						<xcp:commandButton
+							icon="icon-editar"
+							id="btn_editar"
+							action="#{esocTrocaVersaoBacking.actionEditVersao(row)}"
+							update=":frm" />
+
+						<xcp:commandButton
+							immediate="true"
+							id="btn_remover"
+							update="tblVersao"
+							icon="ui-icon-trash"
+							action="#{esocTrocaVersaoBacking.actionExcluirVersao(row)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center; margin-bottom: 5px">
+					<xcp:commandButton
+						id="btn_novo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frm"
+						action="#{esocTrocaVersaoBacking.actionNovaVersao}"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}" />
+				</div>
+
+			</center>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						value="#{bundle.btn_salvar}"
+						icon="ui-icon-disk"
+						action="#{esocTrocaVersaoBacking.actionSalvar}" />
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:panelContent>
+
+	</ui:define>
+
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_versao}"
+			modal="true"
+			id="dlgVersao"
+			widgetVar="dlgVersao_w">
+			<xcp:form id="frm">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovDesEvento"
+						value="#{esocTrocaVersaoBacking.versao.desEventoFk}"
+						label="#{bundle.lbl_evento}"
+						required="true"
+						query="esoc_tipo_evento" />
+
+					<xcp:combo
+						id="cmbVersao"
+						value="#{esocTrocaVersaoBacking.tipVersaoDialog}"
+						itens="#{esocTrocaVersaoBacking.itensVersao}"
+						label="#{bundle.lbl_versao}"
+						required="true" />
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{esocTrocaVersaoBacking.versao.data}"
+						label="#{bundle.lbl_data}"
+						readonly="true"
+						rendered="#{not esocTrocaVersaoBacking.versao.novo}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{esocTrocaVersaoBacking.versao.obs}"
+						size="1000" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							icon="ui-icon-document"
+							value="#{bundle.btn_gravar}"
+							action="#{esocTrocaVersaoBacking.actionGravarVersao}"
+							update=":form:tblVersao" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgVersao_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

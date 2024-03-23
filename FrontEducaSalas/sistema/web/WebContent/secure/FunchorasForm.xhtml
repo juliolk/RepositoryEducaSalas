@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(7)}"
+			escape="false" />
+
+		<xcp:panelFuncionario
+			id="Funchoras"
+			backing="#{funchorasBacking}"
+			rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc)}">
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_emitir_portaria"
+					value="#{bundle.btn_emitir_portaria}"
+					action="#{funchorasPortariaDiretaBacking.actionOpenOrExecute}"
+					update="#{funchorasPortariaDiretaBacking.btnEmitirUpdate}"
+					rendered="#{funchorasPortariaDiretaBacking.renderedEmissao}" />
+
+				<xcp:commandButton
+					id="btn_excluir_portaria"
+					value="#{bundle.btn_excluir_portaria}"
+					action="#{funchorasPortariaDiretaBacking.actionExcluirPortariaDireta}"
+					update="@form"
+					rendered="#{funchorasPortariaDiretaBacking.renderedExcluir}">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<p:column style="width:16px">
+					<p:rowToggler rendered="#{row.detalhes}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_acordo}"
+					value="#{row.acordo}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.acordo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.acordoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.acordoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setorFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.setorFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desJornada}"
+					value="#{row.jornadaFk.desJornada}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.jornadaFk.desJornada}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}"/>
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdtrab}"
+					value="#{row.qtdtrab}"
+					size="11">
+
+					<xcp:outputSimpleNumber
+						value="#{row.qtdtrab}"
+						rendered="#{row.acordoFk.tipoLancamento == 3}"
+						precision="8"
+						scale="0" />
+
+					<xcp:outputSimpleTimeNumber
+						value="#{row.qtdtrab}"
+						rendered="#{row.acordoFk.tipoLancamento != 3}" />
+
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabDoc"
+						var="rowDoc"
+						value="#{row.listaFunchorasDoc}"
+						rowKey="#{rowDoc.PK}"
+						paginator="true"
+						selectionMode="single"
+						paginatorPosition="bottom"
+						rowIndexVar="idx"
+						selection="#{funchorasBacking.helper.funcDocSelecionada}"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-bottom:0;">
+
+						<p:ajax
+							event="rowSelect"
+							update=":frmDlgHist"
+							oncomplete="PF('dlgHist_w').show();" />
+
+						<ui:include src="DocManual/DocUnificadoDetalhesDoc.xhtml">
+							<ui:param
+								name="rowDoc"
+								value="#{rowDoc}" />
+
+							<ui:param
+								name="rowPrincipal"
+								value="#{row}" />
+
+							<ui:param
+								name="actionExclusao"
+								value="#{funchorasBacking.model}" />
+						</ui:include>
+
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovAcordo"
+						value="#{funchorasBacking.entity.acordoFk}"
+						label="#{bundle.lbl_acordo}"
+						required="true"
+						query="bancohoras"
+						size="5"
+						update="valPercentual,valPercentual_l,txtQtdtrab,txtQtdtrab_l,lovJornada,lovJornada_l,lovSetor,lovSetor_l,lovOrgao,lovOrgao_l,txtDias,txtDias_l"
+						readonly="#{not funchorasBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDtinicio"
+						required="true"
+						value="#{funchorasBacking.entity.dtinicio}"
+						label="#{bundle.lbl_dtinicio}"
+						readonly="#{funchorasBacking.readOnlyDtaInicio}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="@none" />
+					</xcp:date>
+
+					<xcp:date
+						id="txtDtfim"
+						value="#{funchorasBacking.entity.dtfim}"
+						label="#{bundle.lbl_dtfim}"
+						readonly="#{funchorasBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="@none" />
+					</xcp:date>
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{funchorasBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						rendered="#{funchorasBacking.entity.acordoFk.tipoLancamento == 2 or funchorasBacking.entity.acordoFk.indOrgao == 1}"
+						query="setores"
+						size="10" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{funchorasBacking.entity.orgaoFk}"
+						label="#{bundle.lbl_orgao}"
+						rendered="#{funchorasBacking.entity.acordoFk.indOrgao == 1}"
+						query="orgaos"
+						size="10" />
+
+					<xcp:timeNumber
+						id="txtQtdtrab"
+						label="#{bundle.lbl_qtdtrab}"
+						required="true"
+						size="10"
+						rendered="#{funchorasBacking.renderedQtdTrab}"
+						value="#{funchorasBacking.entity.qtdtrab}"
+						readonly="#{funchorasBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:timeNumber>
+
+					<xcp:lov
+						id="lovJornada"
+						value="#{funchorasBacking.entity.jornadaFk}"
+						label="#{bundle.lbl_jornada}"
+						required="true"
+						rendered="#{funchorasBacking.entity.acordoFk.tipoLancamento == 2}"
+						query="jornadas"
+						size="4"
+						readonly="#{funchorasBacking.readOnlyFields}" />
+					
+					<xcp:number
+						id="txtDias"
+						label="#{bundle.lbl_qtd}"
+						value="#{funchorasBacking.entity.qtdtrab}"
+						size="4"
+						rendered="#{funchorasBacking.entity.acordoFk.tipoLancamento == 3}"
+						maxValue="999"
+						required="true" />
+					
+					
+					<xcp:number
+						id="valPercentual"
+						label="#{bundle.lbl_percentual}"
+						rendered="#{funchorasBacking.entity.acordoFk.tipoLancamento == 4}"
+						value="#{funchorasBacking.entity.percentual}"						
+						required="true"
+						maxValue="999"
+						size="4" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{funchorasBacking.entity.tipodocFk}"
+						selectionListener="#{funchorasBacking.selectTipodocumento}"
+						size="5"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,lovProcessoRev,lovProcessoRev_l,pnlinfotipodoc,toolform,txtObs,txtObs_l,btnAddDoc"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_func"
+						params="#{funchorasBacking.paramsTipoDoc}"
+						readonly="#{funchorasBacking.readOnlyTipdoc}" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{funchorasBacking.entity.registroFk}"
+						params="#{funchorasBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento,toolform"
+						query="documentosman"
+						size="5"
+						readonly="#{funchorasBacking.readOnlyDoc}"
+						selectionListener="#{funchorasBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{funchorasBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{funchorasBacking.readOnlyProc}"
+						required="#{funchorasBacking.requiredProc}"
+						sizeDesc="35"
+						size="25" />
+
+					<xcp:lov
+						id="lovProcessoRev"
+						value="#{funchorasBacking.entity.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{funchorasBacking.renderedProcessoRev}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{funchorasBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(funchorasBacking.entity.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{funchorasBacking.model.actionOpenVisDialog(funchorasBacking.entity.registro)}"
+										process="@this" />
+								</p:splitButton>
+							</p:column>
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDoc"
+									model="#{funchorasBacking.model}" />
+							</p:column>
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty funchorasBacking.entity.tipodocFk.instrucoes}" />
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{funchorasBacking.entity.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{funchorasBacking.entity.retificacao}"
+										label="#{funchorasBacking.labelRetif}"
+										rendered="#{funchorasBacking.entity.retificacao!=null}"
+										readonly="true">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{funchorasBacking.actionRemoveRetificacao}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{funchorasBacking.labelRetif}"
+										rendered="#{funchorasBacking.renderedRetificacao}"
+										value="#{funchorasBacking.helper.retificacao}">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:memo
+						id="txtObs"
+						cols="78"
+						label="#{bundle.lbl_txtPort}"
+						readonly="#{funchorasBacking.readOnlyFields}"
+						value="#{funchorasBacking.entity.obs}"
+						size="4000">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:memo>
+
+					<xcp:memo
+						id="txtObsLivre"
+						cols="78"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{funchorasBacking.entity.obsLivre}"
+						size="4000" />
+
+					<xcp:date
+						id="txtDtlancamento"
+						value="#{funchorasBacking.entity.dtlancamento}"
+						label="#{bundle.lbl_dtlancamento}"
+						readonly="true"
+						rendered="#{not funchorasBacking.entity.novo and funchorasBacking.entity.dtlancamento != null}" />
+
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.tit_historico}"
+			modal="true"
+			id="dlgHist"
+			widgetVar="dlgHist_w">
+			<xcp:form id="frmDlgHist">
+				<ui:include src="FunchorasForm/FunchorasDetalhesForm.xhtml" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlgHist_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{funchorasBacking.model}" />
+		</ui:include>
+
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{funchorasPortariaDiretaBacking}" />
+		</ui:include>
+
+	</ui:define>
+
+</ui:composition>

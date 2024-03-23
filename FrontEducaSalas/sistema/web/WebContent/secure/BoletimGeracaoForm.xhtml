@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+
+						<p:fieldset
+							legend="#{bundle.tit_filtros_geracao}"
+							style="width:610px;height:400px;">
+							<xcp:panelForm>
+								<xcp:dateRange
+									id="txtDta"
+									required="true"
+									valueStart="#{boletimGeracaoBacking.dtaIni}"
+									valueEnd="#{boletimGeracaoBacking.dtaFim}"
+									label="#{bundle.lbl_data_inicial}" 
+									margin="5px"
+									size="8"/>
+
+								<xcp:lov
+									id="lovDocumento"
+									value="#{boletimGeracaoBacking.documento}"
+									label="#{bundle.lbl_documento}"
+									required="true"
+									query="documentoslov"
+									params="#{boletimGeracaoBacking.paramsDoc}"
+									size="8"
+									sizeDesc="60" />
+
+							</xcp:panelForm>
+
+							<p:spacer width="4" />
+							<p:dataTable
+								id="funcBoletim"
+								var="rowMult"
+								value="#{boletimGeracaoBacking.listaFuncionarios}"
+								selection="#{boletimGeracaoBacking.listaFuncionariosSel}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="270"
+								scrollWidth="700"
+								scrollable="true"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+
+								<p:ajax
+									event="toggleSelect"
+									update=":#{p:component('btn_gerar_boletim')}" />
+								<p:ajax
+									event="rowSelectCheckbox"
+									update=":#{p:component('btn_gerar_boletim')}" />
+								<p:ajax
+									event="rowUnselectCheckbox"
+									update=":#{p:component('btn_gerar_boletim')}" />
+								<p:column
+									selectionMode="multiple"
+									style="width:20px;text-align:center" />
+
+								<xcp:column
+									headerText="#{bundle.col_numMatricula}"
+									type="Number"
+									size="6">
+									<xcp:outputSimpleNumber
+										value="#{rowMult.numMatricula}"
+										precision="8"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desNomeFunc}"
+									type="String"
+									size="60">
+									<xcp:outputSimple value="#{rowMult.desNome}" />
+								</xcp:column>
+
+							</p:dataTable>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_busca_boletim"
+						update="funcBoletim"
+						value="#{bundle.btn_busca_boletim}"
+						action="#{boletimGeracaoBacking.actionBuscar}"
+						onstart="PF('w_dlgXcpExecStatus').show();"
+						oncomplete="PF('w_dlgXcpExecStatus').hide();"
+						icon="ui-icon-gear" />
+
+					<xcp:commandButton
+						id="btn_gerar_boletim"
+						update="funcBoletim"
+						value="#{bundle.btn_gerar_boletim}"
+						action="#{boletimGeracaoBacking.actionGerar}"
+						disabled="#{boletimGeracaoBacking.listaFuncionariosSel.size()==0}"
+						onstart="PF('w_dlgXcpExecStatus').show();"
+						oncomplete="PF('w_dlgXcpExecStatus').hide();"
+						icon="ui-icon-gear" />
+
+				</f:facet>
+			</p:toolbar>
+
+			<script type="text/javascript">
+				function downloadFileStart() {
+					PF('w_dlgXcpExecStatus').show();
+				}
+		
+				function downloadFileStop() {
+					PF('w_dlgXcpExecStatus').hide();
+				}
+			</script>
+
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:dataTable
+		id="tabListaFormacao"
+		value="#{funcionariosBacking.listaFormacao}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="formacao"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		styleClass="tabelaFormacao">
+
+		<xcp:column
+			headerText="#{bundle.col_tipo}"
+			type="String"
+			size="15">
+			<xcp:outputSimple value="#{formacao.cursoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_instituicao}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{formacao.instituicaoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_areaCurso}"
+			type="String"
+			size="30">
+			<xcp:outputSimple
+				value="#{formacao.area}"
+				rendered="#{formacao.area !=null}" />
+			<xcp:outputSimple
+				value="#{formacao.cursoacadFk.descricao}"
+				rendered="#{formacao.cursoacadFk !=null}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtinicio}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{formacao.dtinicio}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtfim}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{formacao.dtfim}" />
+		</xcp:column>
+
+		<p:column
+			headerText="#{bundle.col_qtdDias}"
+			width="20">
+			<xcp:outputSimpleNumber
+				scale="0"
+				precision="5"
+				value="#{formacao.diffDays}" />
+		</p:column>
+
+		<xcp:column
+			headerText="#{bundle.col_situacao}"
+			type="String"
+			size="10">
+			<xcp:outputSimple value="#{formacao.situacaoFk.descricao}" />
+		</xcp:column>
+		
+		<p:column
+			headerText="#{bundle.col_pontos}"
+			width="26">
+			<xcp:outputSimpleNumber
+				scale="2"
+				precision="7"
+				value="#{formacao.pontos}" />
+		</p:column>
+
+		<!-- 
+		<xcp:column
+			headerText="#{bundle.col_obs}"
+			value="#{formacao.obs}"
+			type="String"
+			size="3000">
+			<xcp:outputSimple value="#{formacao.obs}" />
+		</xcp:column>
+
+
+		<xcp:column
+			headerText="#{bundle.col_tpcurso}"
+			value="#{formacao.tpcurso}"
+			type="Number"
+			size="2">
+			<xcp:outputSimpleNumber
+				value="#{formacao.tpcurso}"
+				precision="2"
+				scale="0" />
+		</xcp:column>
+		 -->
+
+		<xcp:column
+			size="18"
+			type="String">
+			<h:panelGroup layout="block">
+
+				<xcp:commandButton
+					value="#{bundle.btn_anexo}"
+					immediate="true"
+					style="width: 80px"
+					rendered="#{not formacao.anexos}"
+					action="#{funcionariosBacking.actionOpenFormacaoAnexo}"
+					update=":frmForAnex">
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.formacaoSel}"
+						value="#{formacao}" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					value="#{bundle.btn_anexo}"
+					immediate="true"
+					style="width: 80px"
+					icon="icon-folder-full"
+					rendered="#{formacao.anexos}"
+					action="#{funcionariosBacking.actionOpenFormacaoAnexo}"
+					update=":frmForAnex">
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.formacaoSel}"
+						value="#{formacao}" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_editarSel"
+					icon="icon-editar"
+					immediate="true"
+					action="#{funcionariosBacking.actionEditFormacao}">
+					<f:setPropertyActionListener
+						target="#{funcionariosBacking.formacaoSel}"
+						value="#{formacao}" />
+				</xcp:commandButton>
+
+				<xcp:commandButton
+					id="btn_removerSel_formacao"
+					immediate="true"
+					disabled="#{funcionariosBacking.disabledExcluir}"
+					action="#{funcionariosBacking.actionRemoverFormacao(formacao)}"
+					update="tabListaFormacao"
+					process="@this"
+					icon="ui-icon-trash">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+			</h:panelGroup>
+
+		</xcp:column>
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adic_formacao"
+		immediate="true"
+		action="#{funcionariosBacking.actionOpenFormacao}"
+		value="#{bundle.btn_adicionar}"
+		icon="ui-icon-plusthick"
+		disabled="#{funcionariosBacking.disabledNovo}" />
+
+</ui:composition>

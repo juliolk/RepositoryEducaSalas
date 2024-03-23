@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Treinamentomsg"
+			backing="#{treinamentomsgBacking}"
+			renderedNovo="false">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seqmsg}"
+					value="#{row.seqmsg}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.seqmsg}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_treinamento}"
+					value="#{row.treinamentoFk.treinamento}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.treinamentoFk.treinamento}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.treinamentoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.treinamentoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_turma}"
+					value="#{row.turmaFk.turma}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.turmaFk.turma}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.turmaFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.turmaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dthinclusao}"
+					value="#{row.dthinclusao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dthinclusao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSeqmsg"
+						label="#{bundle.lbl_seqmsg}"
+						required="true"
+						value="#{treinamentomsgBacking.entity.seqmsg}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovTurma"
+						value="#{treinamentomsgBacking.entity.turmaFk}"
+						size="10"
+						readonly="true"
+						label="#{bundle.lbl_turma}"
+						required="true"
+						query="turmas" />
+
+					<xcp:lov
+						id="lovSeqTexto"
+						value="#{treinamentomsgBacking.entity.seqTextoFk}"
+						label="#{bundle.lbl_texto}"
+						readonly="true"
+						query="xcp_texto"
+						size="10" />
+
+					<xcp:text
+						id="txtAssunto"
+						label="#{bundle.lbl_assunto}"
+						readonly="true"
+						value="#{treinamentomsgBacking.entity.assunto}"
+						size="50"
+						rendered="#{treinamentomsgBacking.entity.seqTexto == null}" />
+
+					<xcp:memo
+						id="txtMensagem"
+						label="#{bundle.lbl_mensagem}"
+						readonly="true"
+						value="#{treinamentomsgBacking.entity.mensagem}"
+						rendered="#{treinamentomsgBacking.entity.seqTexto == null}" />
+
+					<xcp:date
+						id="txtDthinclusao"
+						required="true"
+						readonly="true"
+						value="#{treinamentomsgBacking.entity.dthinclusao}"
+						label="#{bundle.lbl_dthinclusao}" />
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nomeArquivo}"
+						readonly="true"
+						value="#{treinamentomsgBacking.entity.nome}"
+						size="50"
+						rendered="#{treinamentomsgBacking.entity.nome != null}" />
+
+					<p:outputLabel
+						value="#{bundle.lbl_anexo}#{viewUtil.labelSufix}"
+						rendered="#{treinamentomsgBacking.entity.anexo != null}" />
+
+					<xcp:commandButton
+						id="btnDownloadDocumento"
+						value="#{bundle.btn_visualizar}"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						rendered="#{treinamentomsgBacking.entity.anexo != null}">
+						<p:fileDownload
+							value="#{treinamentomsgBacking.downloadDocumento}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="TreinamentomsgForm/TreinamentomsgfuncForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

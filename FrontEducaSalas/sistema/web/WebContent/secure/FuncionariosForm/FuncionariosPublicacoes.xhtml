@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:outputText
+		value="#{tipodocCoresBacking.getCores(10)}"
+		escape="false" />
+
+	<p:dataTable
+		id="tabListaPublicacoes"
+		var="publicacoes"
+		rowKey="#{publicacoes.PK}"
+		paginator="true"
+		selectionMode="single"
+		paginatorPosition="bottom"
+		rows="14"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		value="#{funcionariosBacking.listaPublicacoes}"
+		selection="#{funcionariosBacking.publicacoesSel}"
+		rowStyleClass="#{tipodocCoresBacking.getStyelclass(publicacoes.tipodoc)}">
+
+		<p:ajax
+			event="rowSelect"
+			listener="#{funcionariosBacking.actionEditPublicacao}" />
+
+		<p:column width="8">
+			<p:rowToggler rendered="#{publicacoes.detalhes}" />
+		</p:column>
+
+		<xcp:column
+			headerText="#{bundle.col_portaria_public}"
+			type="String"
+			width="100">
+			<xcp:outputSimple value="#{publicacoes.registroFk.nrdoc}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_tipodoc}"
+			type="String"
+			width="120">
+			<xcp:outputSimple value="#{publicacoes.tipodocFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataIni}"
+			type="Date"
+			width="60">
+			<xcp:outputSimpleDate value="#{publicacoes.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataFim}"
+			type="Date"
+			width="60">
+			<xcp:outputSimpleDate value="#{publicacoes.dataFim}" />
+		</xcp:column>
+
+		<p:column
+			headerText="#{bundle.col_qtdDias}"
+			width="20">
+			<xcp:outputSimpleNumber
+				scale="0"
+				precision="5"
+				value="#{publicacoes.diffDays}" />
+		</p:column>
+		
+		<p:column
+			headerText="#{bundle.col_portaria}"
+			type="Number"
+			width="100"
+			value="#{publicacoes.registroFk.nrdoc}"
+			rendered="#{funcionariosBacking.paramPubli == 2}"
+			>
+			<xcp:outputSimpleNumber
+				value="#{publicacoes.registroFk.nrdoc}"
+				scale="0" />
+		</p:column>
+		
+		<p:column
+			headerText="#{bundle.col_processo}"
+			type="Number"
+			width="100"
+			value="#{publicacoes.processo}"
+			rendered="#{funcionariosBacking.paramPubli == 1}"
+			>
+			<xcp:outputSimpleNumber
+				value="#{historicos.processo}"
+				scale="0" />
+		</p:column>
+
+		<xcp:column
+			style="background-color:inherit;"
+			headerText="#{bundle.col_observ}"
+			type="String">
+			<p:outputPanel styleClass="funcionario-col-memo">#{publicacoes.obsLivre}</p:outputPanel>
+		</xcp:column>
+		
+		<xcp:column
+			headerText="#{bundle.col_motivo}"
+			type="String"
+			width="100"
+			rendered="#{funcionariosBacking.exibirMotivoTabelaPub}"
+			value="#{publicacoes.motivoFk.desMotivo}">
+			<xcp:outputSimple value="#{publicacoes.motivoFk.desMotivo}" />
+		</xcp:column>
+
+		<xcp:column width="25">
+			<h:panelGroup layout="block">
+				<xcp:commandButton
+					id="btn_removerSel_pub"
+					immediate="true"
+					action="#{funcionariosBacking.actionRemoverPublicacao(publicacoes)}"
+					process="@this"
+					update="tabListaPublicacoes"
+					disabled="#{funcionariosBacking.disabledExcluir}"
+					icon="ui-icon-trash">
+
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+
+				</xcp:commandButton>
+			</h:panelGroup>
+		</xcp:column>
+
+		<p:rowExpansion>
+			<p:dataTable
+				id="tabDoc"
+				var="rowDoc"
+				value="#{publicacoes.listaPublicacoesDoc}"
+				rowKey="#{rowDoc.PK}"
+				paginator="true"
+				selectionMode="single"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				style="margin-bottom:0;"
+				selection="#{funcionariosBacking.publicacoesDocSel}"
+				rowIndexVar="idx">
+
+				<p:ajax
+					event="rowSelect"
+					update=":dlgDocPub"
+					oncomplete="PF('dlgDocPub_w').show();" />
+
+				<ui:include src="../DocManual/DocUnificadoDetalhesDoc.xhtml">
+
+					<ui:param
+						name="rowDoc"
+						value="#{rowDoc}" />
+					<ui:param
+						name="rowPrincipal"
+						value="#{publicacoes}" />
+					<ui:param
+						name="actionExclusao"
+						value="#{funcionariosBacking.modelPub}" />
+
+				</ui:include>
+
+			</p:dataTable>
+		</p:rowExpansion>
+
+	</p:dataTable>
+
+
+	<xcp:commandButton
+		id="btn_adic_pub"
+		immediate="true"
+		action="#{funcionariosBacking.actionOpenPublicacao}"
+		value="#{bundle.btn_adicionar}"
+		icon="ui-icon-plusthick"
+		disabled="#{funcionariosBacking.disabledNovo}" />
+
+</ui:composition>

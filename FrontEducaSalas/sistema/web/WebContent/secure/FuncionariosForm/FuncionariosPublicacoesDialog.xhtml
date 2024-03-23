@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_publicacoes}"
+		modal="true"
+		id="dlgPub"
+		widgetVar="dlgPub_w"
+		dynamic="true"
+		onShow="XCUtil.selecttab('tabFuncionarios_w','tabPublicacoes')">
+		<xcp:form id="frmPub">
+			<p:outputPanel style="max-height: 600px; overflow-y: scroll;">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtData"
+						required="true"
+						value="#{funcionariosBacking.publicacoesSel.data}"
+						label="#{bundle.lbl_dataIni}"
+						readonly="#{funcionariosBacking.readOnlyDtaInicioPub}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+						<p:ajax
+							update="@none"
+							event="dateSelect"
+							process="@this" />
+					</xcp:date>
+
+					<h:outputLabel value="#{bundle.lbl_dataFim}:" />
+
+					<h:panelGrid
+						id="pnlativ"
+						columns="5"
+						style="float:left">
+
+						<xcp:date
+							id="txtDataFim"
+							value="#{funcionariosBacking.publicacoesSel.dataFim}"
+							label="#{bundle.lbl_dataFim}"
+							readonly="#{funcionariosBacking.readOnlyFieldsPub}"
+							simple="true">
+							<p:ajax
+								process="@this"
+								update="@none"
+								event="change" />
+							<p:ajax
+								update="@none"
+								event="dateSelect"
+								process="@this" />
+						</xcp:date>
+
+						<xcp:dateTime
+							id="txtCancelamento"
+							value="#{funcionariosBacking.publicacoesSel.dtcancelamento}"
+							label="#{bundle.lbl_cancelado}"
+							rendered="#{funcionariosBacking.renderedDtCancelamentoPublicacoes}"
+							readonly="true" />
+
+						<xcp:check
+							id="chk_bloq_lib"
+							label="#{funcionariosBacking.helper.canceladoPublicacoes ? bundle.lbl_lib : bundle.lbl_canc}"
+							rendered="#{funcionariosBacking.renderedChkAtivoPublicacoes}"
+							value="#{funcionariosBacking.helper.canceladoPublicacoes}">
+							<p:ajax
+								event="change"
+								update="@form"
+								listener="#{funcionariosBacking.cancelaLiberaPublicacoes}" />
+						</xcp:check>
+
+					</h:panelGrid>
+
+					<xcp:lov
+						id="lovMotivo"
+						value="#{funcionariosBacking.publicacoesSel.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						query="motivo_pub_rest"
+						size="5"
+						params="#{funcionariosBacking.paramsMotPub}"
+						readonly="#{funcionariosBacking.readOnlyFieldsPub}" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{funcionariosBacking.publicacoesSel.tipodocFk}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodoc_provapo"
+						params="#{funcionariosBacking.paramsTipoDoc}"
+						selectionListener="#{funcionariosBacking.selectTipodocumentoPub}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,lovProcessoRev,lovProcessoRev_l,btnAddDocPub,pnlinfotipodoc,pnlativ,toolform,txtObs,txtProcjudic,txtProcjudic_l,txtDtingcarreira,txtDtingcarreira_l,txtDtingcargo,txtDtingcargo_l,lovComarcaproc,lovComarcaproc_l"
+						readonly="#{funcionariosBacking.readOnlyTipdocPub}"
+						size="15" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{funcionariosBacking.publicacoesSel.registroFk}"
+						params="#{funcionariosBacking.paramsTipodocumentoPub}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						readonly="#{funcionariosBacking.readOnlyDocPub}"
+						size="15"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento,btnAddDocPub,toolform"
+						selectionListener="#{funcionariosBacking.selectDocumentoPub}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{funcionariosBacking.publicacoesSel.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{funcionariosBacking.readOnlyProcPub}"
+						required="#{funcionariosBacking.requiredProcPub}"
+						size="25" />
+
+					<xcp:lov
+						id="lovProcessoRev"
+						value="#{funcionariosBacking.publicacoesSel.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{funcionariosBacking.renderedProcessoRevPub}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{funcionariosBacking.publicacoesSel.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(funcionariosBacking.publicacoesSel.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{funcionariosBacking.modelPub.actionOpenVisDialog(funcionariosBacking.publicacoesSel.registro)}"
+										process="@this" />
+
+								</p:splitButton>
+							</p:column>
+
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDocPub"
+									model="#{funcionariosBacking.modelPub}" />
+							</p:column>
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty funcionariosBacking.publicacoesSel.tipodocFk.instrucoes}" />
+
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{funcionariosBacking.publicacoesSel.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{funcionariosBacking.publicacoesSel.retificacao}"
+										label="#{funcionariosBacking.labelRetifPub}"
+										rendered="#{funcionariosBacking.publicacoesSel.retificacao !=null}"
+										readonly="true">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{funcionariosBacking.actionRemoveRetificacaoHistoricos(funcionariosBacking.publicacoesSel, 2)}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{funcionariosBacking.labelRetifPub}"
+										rendered="#{funcionariosBacking.renderedRetificacaoPub}"
+										value="#{funcionariosBacking.helper.retificacaoPub}">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:text
+						id="txtProcjudic"
+						label="#{bundle.lbl_procjudic}"
+						value="#{funcionariosBacking.publicacoesSel.procjudic}"
+						size="25"
+						rendered="#{funcionariosBacking.publicacoesSel.tipodocFk.indprocjudicial == 1}" />
+
+					<xcp:date
+						id="txtDatadoc"
+						value="#{funcionariosBacking.publicacoesSel.datadoc}"
+						label="#{bundle.lbl_datadoc}"
+						readonly="#{funcionariosBacking.readOnlyFieldsPub}" />
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{funcionariosBacking.publicacoesSel.cargoFk}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="15"
+						readonly="#{funcionariosBacking.readOnlyFieldsPub}" />
+
+					<xcp:lov
+						id="lovAvaliacao"
+						value="#{funcionariosBacking.publicacoesSel.avaliacaoFk}"
+						label="#{bundle.lbl_areaCargo}"
+						query="avaliacoes"
+						update="lovConhecimento,lovConhecimento_l"
+						rendered="#{funcionariosBacking.tribunal}"
+						selectionListener="#{funcionariosBacking.selectPubAvaliacao}"
+						size="15"
+						params="#{funcionariosBacking.avalPubMap}" />
+
+					<xcp:lov
+						id="lovConhecimento"
+						value="#{funcionariosBacking.publicacoesSel.conhecimentoFk}"
+						label="#{bundle.lbl_especialidade}"
+						query="conhecimentos"
+						rendered="#{funcionariosBacking.tribunal}"
+						params="#{funcionariosBacking.paramsPubAvaliacao}"
+						size="15" />
+
+					<xcp:date
+						id="txtDtingcarreira"
+						value="#{funcionariosBacking.publicacoesSel.dtingcarreira}"
+						label="#{bundle.lbl_dtingcarreira}"
+						required="true"
+						rendered="#{funcionariosBacking.renderedFieldsApos}" />
+
+					<xcp:date
+						id="txtDtingcargo"
+						value="#{funcionariosBacking.publicacoesSel.dtingcargo}"
+						label="#{bundle.lbl_dtingcargo}"
+						required="true"
+						rendered="#{funcionariosBacking.renderedFieldsApos}" />
+
+					<xcp:lov
+						id="lovComarcaproc"
+						value="#{funcionariosBacking.publicacoesSel.comarcaprocFk}"
+						label="#{bundle.lbl_comarcaproc}"
+						query="orgaos"
+						size="8"
+						rendered="#{funcionariosBacking.renderedFieldsApos}" />
+
+					<xcp:memo
+						id="txtObs"
+						styleClass="funcionario-form-memo"
+						label="#{bundle.lbl_txtPort}"
+						value="#{funcionariosBacking.publicacoesSel.obs}"
+						cols="86"
+						size="4000"
+						readonly="#{funcionariosBacking.readOnlyFieldsPub}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:memo>
+
+					<xcp:memo
+						id="txtObsLivre"
+						styleClass="funcionario-form-memo"
+						label="#{bundle.lbl_obsLivre}"
+						required="true"
+						value="#{funcionariosBacking.publicacoesSel.obsLivre}"
+						cols="86"
+						size="4000" />
+
+					<p:spacer width="1" />
+
+					<xcp:complemento vo="#{funcionariosBacking.xcpTabelaColunaPubVO}" />
+
+				</xcp:panelForm>
+
+				<p:toolbar id="toolform">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok_pub"
+							icon="ui-icon-disk"
+							disabled="#{funcionariosBacking.disabledGravar}"
+							action="#{funcionariosBacking.actionGravarPublicacao}"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_emitir_portaria_pub"
+							value="#{bundle.btn_emitir_portaria}"
+							action="#{provimentoPortariaDiretaBacking.actionOpenOrExecute}"
+							update="#{provimentoPortariaDiretaBacking.btnEmitirUpdate}"
+							rendered="#{provimentoPortariaDiretaBacking.renderedEmissao}" />
+
+						<xcp:commandButton
+							id="btn_excluir_portaria_pub"
+							value="#{bundle.btn_excluir_portaria}"
+							action="#{provimentoPortariaDiretaBacking.actionExcluirPortariaDireta}"
+							rendered="#{provimentoPortariaDiretaBacking.renderedExcluir}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</f:facet>
+				</p:toolbar>
+			</p:outputPanel>
+		</xcp:form>
+
+
+	</p:dialog>
+
+</ui:composition>

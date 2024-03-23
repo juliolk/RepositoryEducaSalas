@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent backing="#{calculosLoteBacking}">
+			<p:outputPanel id="panelGeral">
+				<xcp:panelForm>
+					<p:blockUI
+						widgetVar="wBlock_panelGeral"
+						block="panelGeral"
+						trigger="btn_excluir_banco,btn_gerar_banco,btn_buscar,btn_limpar">
+						<!-- <p:graphicImage value="/resources/img/ajaxloadingbar.gif" /> -->
+					</p:blockUI>
+
+					<h:panelGroup
+						id="panelTransf"
+						layout="block">
+						<xcp:border
+							id="brd_dados_geracao"
+							header="#{bundle.tit_dados_geracao}">
+
+							<xcp:combo
+								id="cboTiposFolhas"
+								label="#{bundle.lbl_tipo_folha}"
+								value="#{calculosLoteBacking.helper.dadosGeracao.tipofolha}"
+								itens="#{calculosLoteBacking.helper.itensTipoFolha}"
+								required="true">
+								<p:ajax
+									event="change"
+									update="dtaReferencia"
+									listener="#{calculosLoteBacking.actionChangeTipoFolha}" />
+							</xcp:combo>
+
+							<xcp:date
+								id="dtaReferencia"
+								value="#{calculosLoteBacking.helper.dadosGeracao.referencia}"
+								label="#{bundle.lbl_dtaReferencia}"
+								readonly="true"
+								required="true" />
+
+							<xcp:lov
+								id="lovConta"
+								value="#{calculosLoteBacking.helper.dadosGeracao.contaFk}"
+								label="#{bundle.lbl_conta}"
+								required="true"
+								query="contas"
+								size="4" />
+
+							<xcp:number
+								id="txtIncidencia"
+								label="#{bundle.lbl_incidencia}"
+								required="true"
+								value="#{calculosLoteBacking.helper.dadosGeracao.incidencia}"
+								size="4"
+								precision="4"
+								scale="0"
+								maxValue="9999" />
+
+							<xcp:number
+								id="txtQtd"
+								label="#{bundle.lbl_qtd}"
+								required="true"
+								size="19"
+								value="#{calculosLoteBacking.helper.dadosGeracao.qtd}"
+								precision="16"
+								scale="2" />
+
+
+						</xcp:border>
+
+						<p:fieldset legend="#{bundle.tit_dados_filtro}">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovOrgao"
+									value="#{calculosLoteBacking.helper.orgao}"
+									label="#{bundle.lbl_orgao}"
+									query="orgaos"
+									size="10" />
+
+								<xcp:lov
+									id="lovDivisao"
+									value="#{calculosLoteBacking.helper.divisao}"
+									params="#{calculosLoteBacking.paramsDivisao}"
+									label="#{bundle.lbl_divisao}"
+									query="divisoes_orgao"
+									size="10" />
+
+								<xcp:lov
+									id="lovSetor"
+									value="#{calculosLoteBacking.helper.setor}"
+									label="#{bundle.lbl_setor}"
+									params="#{calculosLoteBacking.paramsSetor}"
+									query="set_div_validade"
+									size="10" />
+
+								<xcp:lov
+									id="lovFuncoes"
+									value="#{calculosLoteBacking.helper.funcoes}"
+									label="#{bundle.lbl_funcoes}"
+									query="funcoes"
+									size="10" />
+
+							</xcp:panelForm>
+
+							<xcp:commandButton
+								id="btn_buscar"
+								value="#{bundle.btn_buscar}"
+								style="margin-top:10px;margin-bottom:10px"
+								icon="ui-icon-search"
+								action="#{calculosLoteBacking.actionBuscar}"
+								update="tblFuncionarios" />
+
+
+						</p:fieldset>
+
+						<p:spacer width="5" />
+
+						<p:fieldset legend="#{bundle.tit_individual}">
+							<xcp:panelForm>
+								<xcp:lov
+									id="lovMatricula"
+									value="#{calculosLoteBacking.helper.funcionariosTipMov}"
+									label="#{bundle.lbl_funcionario}"
+									query="funcionariosLovAtiv"
+									params="#{calculosLoteBacking.paramsFunc}"
+									size="6" />
+							</xcp:panelForm>
+
+							<xcp:commandButton
+								id="btn_adicionar"
+								style="margin-top:10px;margin-bottom:10px"
+								value="#{bundle.btn_buscar}"
+								icon="ui-icon-search"
+								action="#{calculosLoteBacking.actionAdicionaFuncionario}"
+								update="lovMatricula tblFuncionarios" />
+						</p:fieldset>
+
+						<p:spacer width="5" />
+
+						<p:fieldset>
+
+							<xcp:commandButton
+								id="btn_limpar"
+								value="#{bundle.btn_limparSelecao}"
+								style="margin-top:10px;margin-bottom:10px"
+								icon="ui-icon-search"
+								action="#{calculosLoteBacking.actionLimparSelecao}"
+								update="tblFuncionarios" />
+
+							<p:dataTable
+								id="tblFuncionarios"
+								var="row"
+								rowKey="#{row}"
+								value="#{calculosLoteBacking.helper.listaFuncionarios}"
+								selection="#{calculosLoteBacking.helper.listaFuncionariosSel}"
+								sortMode="multiple"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								scrollable="true"
+								filteredValue="#{calculosLoteBacking.helper.listaFiltrados}"
+								widgetVar="tblFunc_w">
+
+								<p:column
+									selectionMode="multiple"
+									style="width:1%;text-align:center" />
+
+								<p:ajax
+									event="filter"
+									oncomplete="refresh();" />
+
+								<xcp:column
+									headerText="#{bundle.col_matricula}"
+									value="#{row.matricula}"
+									type="Number"
+									size="6">
+									<xcp:outputSimpleNumber
+										value="#{row.matricula}"
+										precision="10"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_nome}"
+									value="#{row.nome}"
+									type="String"
+									size="20">
+									<xcp:outputSimple value="#{row.nome}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_qtd}"
+									value="#{row.qtd}"
+									type="Number"
+									size="10">
+									<xcp:number
+										id="txtQtdLin"
+										value="#{row.qtd}"
+										simple="true"
+										precision="16"
+										scale="2" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_valor}"
+									value="#{row.valor}"
+									type="Number"
+									size="8">
+									<xcp:number
+										id="txtValorLin"
+										value="#{row.valor}"
+										simple="true"
+										precision="16"
+										scale="2" />
+								</xcp:column>
+
+							</p:dataTable>
+						</p:fieldset>
+					</h:panelGroup>
+
+					<p:spacer width="5" />
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_gerar_banco"
+								value="#{bundle.btn_gerar_banco}"
+								update="tblFuncionarios"
+								action="#{calculosLoteBacking.actionGerar}"
+								icon="ui-icon-gear" />
+
+							<xcp:commandButton
+								id="btn_excluir_banco"
+								update="tblFuncionarios"
+								value="#{bundle.btn_excluir_banco}"
+								action="#{calculosLoteBacking.actionExcluirBanco}"
+								icon="ui-icon-gear" />
+
+						</f:facet>
+					</p:toolbar>
+
+
+				</xcp:panelForm>
+			</p:outputPanel>
+		</xcp:panelContent>
+
+		<script type="text/javascript">
+			function refresh() {
+				var value = document.getElementById("hiddenField").value;
+				if(value == '0') {
+					document.getElementById("hiddenField").value = '1';
+					PF('tblFunc_w').filter();
+                }else{
+                	document.getElementById("hiddenField").value = '0';
+                }
+			}
+			</script>
+
+
+		<h:inputHidden
+			id="hiddenField"
+			value="0" />
+	</ui:define>
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			id="dlgErros"
+			header="#{bundle.tit_dlgErrosMat}"
+			widgetVar="wDlgErros"
+			width="700"
+			resizable="true"
+			modal="true">
+
+			<h:panelGroup
+				id="mypanel"
+				layout="block"
+				style="padding-bottom: 10px;font-weight: bold;">
+				<h:outputText value="#{bundle.tit_alguns_erros}" />
+			</h:panelGroup>
+
+			<xcp:form id="formErros">
+				<p:inputTextarea
+					value="#{calculosLoteBacking.listErrosStr}"
+					cols="90"
+					autoResize="false"
+					rows="20" />
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

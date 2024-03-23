@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+
+						<p:fieldset legend="#{bundle.tit_filtros_geracao}"
+							style="width:310px;height:300px;">
+							<xcp:panelForm>
+								<xcp:date id="txtDataInicial"
+									value="#{atualizaOcorrenciasBacking.dataInicial}"
+									label="#{bundle.lbl_data_inicial}" />
+
+								<xcp:date id="txtDataFinal"
+									value="#{atualizaOcorrenciasBacking.dataFinal}"
+									label="#{bundle.lbl_data_final}" />
+
+								
+							</xcp:panelForm>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton id="btn_atualiza_mes_ant"
+						value="#{bundle.btn_atualiza_mes_ant}"
+						action="#{atualizaOcorrenciasBacking.actionAtualizaMesAnt}"
+						icon="ui-icon-gear" />
+
+					<xcp:commandButton id="btn_gerar_grrf"
+						value="#{bundle.btn_atualiza_mes_atu}"
+						action="#{valeTransporteAtualizacaoBacking.actionAtualizaMesAtu}"
+						icon="ui-icon-gear" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

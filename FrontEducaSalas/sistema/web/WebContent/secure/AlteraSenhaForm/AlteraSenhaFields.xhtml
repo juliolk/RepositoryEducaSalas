@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<div class="#{xcpLoginBacking.tipoAcesso == 2 ? 'container-fluid' : ''}">
+		<div class="#{xcpLoginBacking.tipoAcesso == 2 ? 'row' : ''}">
+			<div class="#{xcpLoginBacking.tipoAcesso == 2 ? 'col-lg-4 col-md-6' : ''}">
+			
+				<xcp:panelForm
+						controlsSizeClass="big-controls"
+						floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+			
+			
+					<xcp:secret
+						id="txtPassAnt"
+						label="#{bundle.lbl_desSenhaAnt}"
+						size="30"
+						value="#{alteraSenhaBacking.desSenhaAnt}"
+						required="true"
+						rendered="#{alteraSenhaBacking.renderSenhaAnt}" />
+			
+					<xcp:secret
+						id="txtPass"
+						size="30"
+						label="#{bundle.lbl_desSenha}"
+						value="#{alteraSenhaBacking.desSenha}"
+						required="true" />
+			
+					<xcp:secret
+						id="txtPass1"
+						size="30"
+						label="#{bundle.lbl_desSenha2}"
+						value="#{alteraSenhaBacking.desSenha2}"
+						required="true" />
+																		
+				</xcp:panelForm>
+	
+			</div>
+		</div>
+	</div>
+	
+	<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_atualizar"
+				icon="ui-icon-disk"
+				value="#{bundle.btn_atualizar}"
+				ajax="false"
+				action="#{alteraSenhaBacking.atualizaSenha}" 
+				styleClass="btn-main-action"/>
+		</f:facet>
+	</p:toolbar>
+	
+</ui:composition>

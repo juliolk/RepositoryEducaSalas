@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.top_align {
+	vertical-align: top;
+}
+</style>
+		<xcp:panelContent>
+			<p:panelGrid>
+				<p:row>
+					<p:column
+						styleClass="alinhatopo"
+						style="width:500px">
+
+
+						<p:dataTable
+							id="tblComp"
+							var="row"
+							value="#{efdFechamentoPeriodicoBacking.listComp}"
+							selection="#{efdFechamentoPeriodicoBacking.selComp}"
+							rowKey="#{row}"
+							selectionMode="single"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							paginator="true"
+							rows="10">
+
+							<f:facet name="header">#{bundle.title_competencias}</f:facet>
+
+							<p:ajax
+								event="rowSelect"
+								update=":form:pnlAcao :form:pnlRet"
+								listener="#{efdFechamentoPeriodicoBacking.actionSelectComp(true)}" />
+
+							<xcp:column
+								headerText="#{bundle.col_competencia}"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.desCompetencia}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_desSituacaoFolha}"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.desSituacaoFolha}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_desSituacao2000}"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.desSituacao2000}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_desSituacao4000}"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.desSituacao4000}" />
+							</xcp:column>
+
+
+						</p:dataTable>
+					</p:column>
+					<p:column>
+						<p:outputPanel
+							id="pnlRet"
+							style="text-align: right">
+							<p:dataTable
+								id="tblRetornos"
+								var="row"
+								value="#{efdFechamentoPeriodicoBacking.listRetorno}"
+								filteredValue="#{efdFechamentoPeriodicoBacking.listRetornoFiltrado}"
+								rowKey="#{row}"
+								paginator="true"
+								emptyMessage="#{bundle.msg_sem_resultado}"
+								rows="10"
+								widgetVar="tblRetornos_w">
+
+								<f:facet name="header">#{bundle.title_retornosefd}</f:facet>
+
+								<xcp:column
+									headerText="#{bundle.col_cpf}"
+									value="#{row.desCpf}"
+									type="Number"
+									size="2">
+									<xcp:outputSimpleNumber value="#{row.desCpf}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_cnpj}"
+									value="#{row.desCnpj}"
+									type="Number"
+									size="2">
+									<xcp:outputSimpleNumber value="#{row.desCnpj}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_evento}"
+									value="#{row.codEvento}"
+									type="String"
+									size="2">
+									<xcp:outputSimple value="#{row.codEvento}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desEvento}"
+									value="#{row.desEvento}"
+									type="String"
+									size="7">
+									<xcp:outputSimple value="#{row.desEvento}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_acoes}"
+									type="String"
+									size="1">
+									<xcp:commandButton
+										label="#{bundle.btn_evento}"
+										value="#{bundle.btn_evento}"
+										action="#{efdFechamentoPeriodicoBacking.actionOpenEvento(row.seqEvento)}" />
+								</xcp:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputPanel
+							id="pnlAcao"
+							style="text-align: right">
+							<xcp:commandButton
+								value="#{bundle.btn_enviar}"
+								action="#{efdFechamentoPeriodicoBacking.actionEnviar}"
+								rendered="#{efdFechamentoPeriodicoBacking.selComp.renderedEnviar}"
+								icon="ui-icon-gear">
+								<p:confirm
+									header="#{bundle.tit_confirma_envio}"
+									message="#{bundle.msg_confirma_envio_efd}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								value="#{bundle.btn_reabrir2000}"
+								action="#{efdFechamentoPeriodicoBacking.actionReabrir('R2099')}"
+								rendered="#{efdFechamentoPeriodicoBacking.selComp.renderedReabrir2000}"
+								icon="ui-icon-gear"
+								update="@form">
+								<p:confirm
+									header="#{bundle.tit_confirma_reabertura}"
+									message="#{bundle.msg_confirma_reabertura}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>							
+							
+							<xcp:commandButton
+								value="#{bundle.btn_reabrir4000}"
+								action="#{efdFechamentoPeriodicoBacking.actionReabrir('R4099')}"
+								rendered="#{efdFechamentoPeriodicoBacking.selComp.renderedReabrir4000}"
+								icon="ui-icon-gear"
+								update="@form">
+								<p:confirm
+									header="#{bundle.tit_confirma_reabertura}"
+									message="#{bundle.msg_confirma_reabertura}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+							
+							
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:spacer width="1" />
+					</p:column>
+					
+				</p:row>
+			</p:panelGrid>
+
+		</xcp:panelContent>
+
+	</ui:define>
+
+</ui:composition>

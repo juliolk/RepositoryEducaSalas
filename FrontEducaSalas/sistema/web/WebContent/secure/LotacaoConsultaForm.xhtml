@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtaini"
+						value="#{lotacaoConsultaBacking.data}"
+						label="#{bundle.lbl_data}"
+						required="true" />
+
+					<xcp:lov
+						id="lovDoc"
+						value="#{lotacaoConsultaBacking.doc}"
+						label="#{bundle.lbl_documento}"
+						query="documentoslov"
+						params="#{lotacaoConsultaBacking.paramsDoc}"
+						size="10" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnPesq"
+							icon="ui-icon-refresh"
+							value="#{bundle.btn_pesquisar}"
+							action="#{lotacaoConsultaBacking.actionBuscar}"
+							update="pnltbl" />
+					</f:facet>
+				</p:toolbar>
+
+			</p:fieldset>
+
+			<p:outputPanel id="pnltbl">
+
+				<p:dataTable
+					id="tbl"
+					var="row"
+					value="#{lotacaoConsultaBacking.lista}"
+					filteredValue="#{lotacaoConsultaBacking.listaFiltro}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}"
+					rendered="#{not empty lotacaoConsultaBacking.lista}">
+
+					<xcp:column
+						headerText="#{bundle.col_codigo}"
+						value="#{row.cargo}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleNumber
+							value="#{row.cargo}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descargo}"
+						value="#{row.cargoFk.descricao}"
+						type="String"
+						size="8">
+						<xcp:outputSimple value="#{row.cargoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_codigo}"
+						value="#{row.orgao}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleNumber
+							value="#{row.orgao}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_orgao}"
+						value="#{row.orgaoFk.descricao}"
+						type="String"
+						size="8">
+						<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_codigo}"
+						value="#{row.divisao}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleNumber
+							value="#{row.divisao}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_divisao}"
+						value="#{row.divisaoFk.descricao}"
+						type="String"
+						size="8">
+						<xcp:outputSimple value="#{row.divisaoFk.descricao}" />
+					</xcp:column>
+
+
+					<xcp:column
+						headerText="#{bundle.col_codigo}"
+						value="#{row.setor}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleNumber
+							value="#{row.setor}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_setor}"
+						value="#{row.setorFk.descricao}"
+						type="String"
+						size="8">
+						<xcp:outputSimple value="#{row.setorFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_codigo}"
+						value="#{row.registroFk.nrdoc}"
+						type="Number"
+						size="1"
+						rendered="#{lotacaoConsultaBacking.doc == null}">
+						<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_documento}"
+						value="#{row.registroFk.descricao}"
+						type="String"
+						size="8"
+						rendered="#{lotacaoConsultaBacking.doc == null}">
+						<xcp:outputSimple value="#{row.registroFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nrofunc}"
+						value="#{row.nrofunc}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleNumber
+							value="#{row.nrofunc}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+				</p:dataTable>
+			</p:outputPanel>
+		</xcp:panelContent>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Sindicatos"
+			backing="#{sindicatosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_sindicato}"
+					value="#{row.sindicato}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.sindicato}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cnpj}"
+					value="#{row.cnpj}"
+					type="Number"
+					size="14">
+					<xcp:outputSimple value="#{row.cnpj}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSindicato"
+						label="#{bundle.lbl_sindicato}"
+						required="true"
+						value="#{sindicatosBacking.entity.sindicato}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not sindicatosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{sindicatosBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:cnpj
+						id="txtCnpj"
+						label="#{bundle.lbl_cnpj}"
+						value="#{sindicatosBacking.entity.cnpj}" />
+				</xcp:panelForm>
+
+
+				<h:panelGrid columns="2">
+					<!-- 					
+					<p:fieldset legend="#{bundle.title_adicNot}" style="width:190px;">
+					
+						<xcp:panelForm>
+							<xcp:number
+								id="txtInicioadn"
+								label="#{bundle.lbl_inicioadn}"
+								size="7"
+								value="#{sindicatosBacking.entity.inicioadn}"
+								precision="4"
+								scale="2" />
+
+							<xcp:number
+								id="txtFimadn"
+								label="#{bundle.lbl_fimadn}"
+								size="7"
+								value="#{sindicatosBacking.entity.fimadn}"
+								precision="4"
+								scale="2" />
+
+
+							<xcp:number
+								id="txtPercadn"
+								label="#{bundle.lbl_percadn}"
+								size="7"
+								value="#{sindicatosBacking.entity.percadn}"
+								precision="4"
+								scale="2" />
+						</xcp:panelForm>
+						
+					</p:fieldset>
+ -->
+
+					<p:fieldset legend="#{bundle.title_hraExtra}">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtHextra1"
+								label="#{bundle.lbl_hextra1}"
+								size="7"
+								value="#{sindicatosBacking.entity.hextra1}"
+								precision="4"
+								scale="2" />
+
+							<xcp:number
+								id="txtHextrap1"
+								label="#{bundle.lbl_hextrap1}"
+								value="#{sindicatosBacking.entity.hextrap1}"
+								size="7"
+								precision="3"
+								scale="0"
+								maxValue="999" />
+
+							<xcp:number
+								id="txtHextrap2"
+								label="#{bundle.lbl_hextrap2}"
+								value="#{sindicatosBacking.entity.hextrap2}"
+								size="7"
+								precision="3"
+								scale="0"
+								maxValue="999" />
+						</xcp:panelForm>
+					</p:fieldset>
+
+					<p:fieldset legend="#{bundle.title_dissidio}">
+						<h:panelGrid columns="2">
+							<xcp:panelForm>
+								<xcp:number
+									id="mescontrib"
+									value="#{sindicatosBacking.entity.mescontrib}"
+									label="#{bundle.lbl_mescontrib}"
+									required="true"
+									maxValue="12"
+									size="7" />
+
+								<xcp:number
+									id="cboMesdissidio"
+									value="#{sindicatosBacking.entity.mesdissidio}"
+									label="#{bundle.lbl_mesdissidio}"
+									required="true"
+									maxValue="12"
+									size="7" />
+
+								<xcp:number
+									id="txtSalcategoria"
+									label="#{bundle.lbl_salcategoria}"
+									required="true"
+									size="7"
+									value="#{sindicatosBacking.entity.salcategoria}"
+									precision="16"
+									scale="2" />
+
+							</xcp:panelForm>
+							<p:fieldset legend="#{bundle.title_mensalidade}">
+
+								<xcp:panelForm>
+									<xcp:number
+										id="txtMensalidade"
+										label="#{bundle.lbl_mensalidade}"
+										size="11"
+										value="#{sindicatosBacking.entity.mensalidade}"
+										precision="16"
+										scale="2" />
+
+									<xcp:combo
+										id="cboTipomens"
+										value="#{sindicatosBacking.entity.tipomensal}"
+										label="#{bundle.lbl_tipomensal}"
+										itens="#{sindicatosBacking.itensTipomensal}" />
+
+								</xcp:panelForm>
+
+							</p:fieldset>
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset legend="#{bundle.title_adicTempServ}">
+						<xcp:panelForm>
+							<xcp:combo
+								id="cboAdictemposerv"
+								value="#{sindicatosBacking.entity.adictemposerv}"
+								label="#{bundle.lbl_adictemposerv}"
+								itens="#{sindicatosBacking.itensAdicTempoServ}" />
+
+							<xcp:number
+								id="vlrPerctemposerv"
+								value="#{sindicatosBacking.entity.perctemposerv}"
+								label="#{bundle.lbl_perctemposerv}"
+								size="14"
+								precision="2"
+								scale="0"
+								maxValue="99" />
+						</xcp:panelForm>
+					</p:fieldset>
+
+					<p:fieldset legend="#{bundle.title_contrExp}">
+
+						<xcp:panelForm>
+							<xcp:number
+								id="cboDiasexpe"
+								value="#{sindicatosBacking.entity.diasexpe}"
+								label="#{bundle.lbl_diasexpe}"
+								maxValue="99"
+								size="2"
+								precision="2"
+								scale="0" />
+
+							<xcp:number
+								id="cboDiasprorexpe"
+								value="#{sindicatosBacking.entity.diasprorexpe}"
+								label="#{bundle.lbl_diasprorexpe}"
+								maxValue="99"
+								size="2"
+								precision="2"
+								scale="0" />
+						</xcp:panelForm>
+					</p:fieldset>
+
+				</h:panelGrid>
+				<p:fieldset legend="#{bundle.title_respObs}">
+					<xcp:panelForm>
+						<xcp:text
+							id="txtResponsavel"
+							label="#{bundle.lbl_responsavel}"
+							value="#{sindicatosBacking.entity.responsavel}"
+							size="73" />
+						<xcp:memo
+							id="txtObs"
+							label="#{bundle.lbl_obs}"
+							value="#{sindicatosBacking.entity.obs}"
+							size="1000" />
+					</xcp:panelForm>
+				</p:fieldset>
+
+
+				<!-- <xcp:number
+							id="txtBancohoras"
+							label="#{bundle.lbl_bancohoras}"
+							size="11"
+							value="#{sindicatosBacking.entity.bancohoras}"
+							precision="8"
+							scale="2" /> -->
+
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="SindicatosForm/SindicatosVincForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

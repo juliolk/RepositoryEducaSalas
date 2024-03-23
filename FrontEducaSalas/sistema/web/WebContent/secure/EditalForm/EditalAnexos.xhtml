@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:outputPanel id="pnlUpdAnexos">
+
+		<p:dataTable
+			id="tabAnex"
+			value="#{editalBacking.entity.listAnexos}"
+			var="rowAnex"
+			filteredValue="#{editalBacking.entity.listAnexosFilter}"
+			draggableRows="true"
+			emptyMessage="#{bundle.msg_sem_resultado}"
+			rowKey="#{rowAnex}">
+
+			<f:facet name="header">#{bundle.title_arrastar}</f:facet>
+
+			<p:ajax
+				event="rowReorder"
+				listener="#{editalBacking.actionReorder}" />
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{rowAnex.nome}"
+				type="String"
+				size="50">
+				<xcp:outputSimple
+					id="outNome"
+					value="#{rowAnex.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{rowAnex.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple
+					id="outDesc"
+					value="#{rowAnex.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="1">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_download_anex"
+					update="tabAnex"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					ajax="false">
+					<h:graphicImage
+						value="/resources/img/download.png"
+						style="margin-top:3px;" />
+					<p:fileDownload
+						value="#{editalBacking.getAnexo(rowAnex)}"
+						contentDisposition="attachment" />
+				</xcp:commandLink>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="2">
+				<xcp:commandButton
+					id="btn_editarSel"
+					oncomplete="PF('w_anexo').show();"
+					icon="icon-navegar"
+					update=":frmAnexo"
+					action="#{editalBacking.actionEditarAnexo(rowAnex)}">
+
+					<!-- <h:graphicImage
+						value="/resources/img/navegar.png"
+						title="#{bundle.hint_editar}"
+						style="margin-top:3px; margin-left: -3px; width: 17px;"  />-->
+
+				</xcp:commandButton>
+			</xcp:column>
+
+			<xcp:column
+				type="String"
+				size="2">
+				<xcp:commandButton
+					immediate="true"
+					id="btn_removerSel"
+					update="tabAnex"
+					icon="ui-icon-trash"
+					action="#{editalBacking.actionRemoveFile(rowAnex)}">
+					<!-- <h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover_icon.png"
+						style="margin-top:3px;" /> -->
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+			</xcp:column>
+
+		</p:dataTable>
+
+		<xcp:commandButton
+			id="btn_novo_anexo"
+			style="margin-top:5px"
+			process="@this"
+			update=":frmAnexo"
+			icon="ui-icon-plusthick"
+			value="Novo"
+			oncomplete="PF('w_anexo').show()">
+
+			<f:setPropertyActionListener
+				target="#{editalBacking.editalAnexo}"
+				value="#{null}" />
+
+		</xcp:commandButton>
+
+	</p:outputPanel>
+
+</ui:composition>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="EfetivaSolicFunchoras"
+			renderedRemover="false"
+			renderedGravar="false"
+			renderedNovo="false"
+			renderedAtualizar="false"
+			backing="#{efetivaSolicFunchorasBacking}">
+
+			<ui:define name="filtro">
+				<p:fieldset
+					id="brdPesq"
+					legend="#{bundle.tit_pesq_solicitacoes}">
+
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="dtaSolicitacao"
+							valueStart="#{efetivaSolicFunchorasBacking.dtaIni}"
+							valueEnd="#{efetivaSolicFunchorasBacking.dtaFim}"
+							label="#{bundle.lbl_data}" />
+					</xcp:panelForm>
+					<p:fieldset
+						id="brdSelecao"
+						legend="#{bundle.tit_situacao}"
+						style="width: 100px">
+						<xcp:panelForm>
+							<xcp:check
+								id="txtSitSolicitada"
+								label="#{bundle.opt_situacaoCracha_1}"
+								value="#{efetivaSolicFunchorasBacking.situacaoSolicitada}" />
+							<xcp:check
+								id="txtSitEfetivada"
+								label="#{bundle.opt_situacaoCracha_2}"
+								value="#{efetivaSolicFunchorasBacking.situacaoEfetivada}" />
+							<xcp:check
+								id="txtSitNaoAceita"
+								label="#{bundle.opt_situacaoCracha_3}"
+								value="#{efetivaSolicFunchorasBacking.situacaoNaoAceita}" />
+						</xcp:panelForm>
+					</p:fieldset>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_efetiva_solicitacao"
+					icon="ui-icon-arrowthickstop-1-s"
+					actionListener="#{efetivaSolicFunchorasBacking.actionConfirmaAceiteSolicitacao}"
+					update=":dlgMsg"
+					rendered="#{efetivaSolicFunchorasBacking.entity.situacao == 1}"
+					value="#{bundle.btn_aceita_solicitacao}" />
+				<xcp:commandButton
+					id="btn_rejeita_solicitacao"
+					icon="ui-icon-cancelar"
+					actionListener="#{efetivaSolicFunchorasBacking.actionRejeitaAceiteSolicitacao}"
+					update=":dlgMsg"
+					rendered="#{efetivaSolicFunchorasBacking.entity.situacao == 1}"
+					value="#{bundle.btn_rejeita_solicitacao}" />
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="20"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.funcionario.numMatricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="Number"
+					size="10">
+					<xcp:outputSimple value="#{row.funcionario.desNome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datasol}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate value="#{row.datasol}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="5"
+					itens="#{efetivaSolicFunchorasBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{efetivaSolicFunchorasBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataconclusao}"
+					type="Date"
+					size="6">
+					<xcp:outputSimpleDate value="#{row.dataconclusao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<p:fieldset>
+					<h:panelGrid
+						columns="2"
+						columnClasses="form_label,form_content">
+
+						<p:outputLabel
+							value="#{bundle.lbl_NomeFuncionario}:"
+							style="font-weight: bold;" />
+
+						<h:panelGroup layout="block">
+							<h:outputText
+								value="#{efetivaSolicFunchorasBacking.entity.funcionario.desNome}" />
+
+							<p:outputLabel
+								value="#{bundle.lbl_numMatFunc}:"
+								style="padding-left: 10px;font-weight: bold;" />
+
+							<h:outputText
+								value="#{efetivaSolicFunchorasBacking.entity.funcionario.numMatricula}"
+								style="padding-left: 2px;" />
+
+							<!-- -Vinculo: -->
+							<p:outputLabel
+								value="#{bundle.lbl_numVincFunc}:"
+								style="padding-left: 10px;font-weight: bold;" />
+
+							<h:outputText
+								value="#{efetivaSolicFunchorasBacking.entity.funcionario.desVinculo}"
+								style="padding-left: 2px;" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+				</p:fieldset>
+
+				<p:spacer height="5" />
+
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDatasol"
+						required="true"
+						value="#{efetivaSolicFunchorasBacking.entity.datasol}"
+						readonly="true"
+						label="#{bundle.lbl_datasol}" />
+
+					<xcp:lov
+						id="lovAcordo"
+						value="#{efetivaSolicFunchorasBacking.entity.acordoFk}"
+						label="#{bundle.lbl_acordo}"
+						required="true"
+						query="bancohorasjor"
+						size="5"
+						readonly="true" />
+
+					<xcp:date
+						id="txtDtinicio"
+						required="true"
+						value="#{efetivaSolicFunchorasBacking.entity.dtinicio}"
+						label="#{bundle.lbl_dtinicio}"
+						readonly="true" />
+
+					<xcp:date
+						id="txtDtfim"
+						value="#{efetivaSolicFunchorasBacking.entity.dtfim}"
+						label="#{bundle.lbl_fimadn}"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{efetivaSolicFunchorasBacking.entity.setorFk}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="10"
+						readonly="true" />
+
+					<xcp:timeNumber
+						id="txtQtdtrab"
+						label="#{bundle.lbl_qtdtrab}"
+						required="true"
+						size="10"
+						rendered="#{efetivaSolicFunchorasBacking.renderedQtdTrab}"
+						value="#{efetivaSolicFunchorasBacking.entity.qtdtrab}"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovJornada"
+						value="#{efetivaSolicFunchorasBacking.entity.jornadaFk}"
+						label="#{bundle.lbl_jornada}"
+						required="true"
+						rendered="#{!efetivaSolicFunchorasBacking.renderedQtdTrab}"
+						query="jornadas"
+						size="4"
+						readonly="true" />
+
+					<xcp:timeNumber
+						id="txtQtdfolga"
+						label="#{bundle.lbl_qtdfolga}"
+						size="10"
+						rendered="#{efetivaSolicFunchorasBacking.renderedQtdTrab}"
+						value="#{efetivaSolicFunchorasBacking.entity.qtdfolga}"
+						readonly="true" />
+
+					<xcp:memo
+						id="txtObsLivre"
+						cols="78"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{efetivaSolicFunchorasBacking.entity.obsLivre}"
+						size="4000"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{efetivaSolicFunchorasBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						readonly="true"
+						itens="#{efetivaSolicFunchorasBacking.itensSituacao}" />
+
+					<xcp:date
+						id="txtDataconclusao"
+						value="#{efetivaSolicFunchorasBacking.entity.dataconclusao}"
+						label="#{bundle.lbl_dataconclusao}"
+						readonly="true"
+						rendered="#{efetivaSolicFunchorasBacking.entity.dataconclusao != null}" />
+
+				</xcp:panelForm>
+
+				<p:fieldset legend="#{bundle.title_anexos}">
+					<p:dataTable
+						id="tblAnx"
+						value="#{efetivaSolicFunchorasBacking.listaAnx}"
+						var="row"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+						<p:column headerText="#{bundle.col_nome}">
+							<xcp:outputSimple value="#{row.nome}" />
+						</p:column>
+						<p:column>
+							<xcp:commandButton
+								label="#{bundle.btn_download}"
+								value="#{bundle.btn_download}"
+								ajax="false"
+								onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+								<p:fileDownload
+									value="#{efetivaSolicFunchorasBacking.getDownload(row)}"
+									contentDisposition="attachment" />
+							</xcp:commandButton>
+
+							<p:spacer width="5" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{efetivaSolicFunchorasBacking.msgDialogHeader}"
+			modal="true"
+			id="dlgMsg"
+			widgetVar="dlgMsg_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo
+							id="obsMsg"
+							label="#{bundle.lbl_mensagem}"
+							value="#{efetivaSolicFunchorasBacking.mensagem}"
+							size="2000" />
+
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_finalizar"
+								value="#{efetivaSolicFunchorasBacking.msgDialogHeader}"
+								process="@form"
+								action="#{efetivaSolicFunchorasBacking.actionFinalizar}"
+								icon="#{efetivaSolicFunchorasBacking.msgDialogButtonIcon}"
+								update=":form"
+								oncomplete="PF('dlgMsg_w').hide();">
+								<p:confirm
+									header="#{efetivaSolicFunchorasBacking.msgDialogConfirmHeader}"
+									message="#{efetivaSolicFunchorasBacking.msgDialogConfirmMessage}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

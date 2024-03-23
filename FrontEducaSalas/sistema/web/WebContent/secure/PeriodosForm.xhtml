@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Periodos"
+			backing="#{periodosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipofolha}"
+					value="#{row.tipofolhaFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.tipofolhaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_referencia}"
+					value="#{row.referencia}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtpgto}"
+					value="#{row.dtpgto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtpgto}" />
+				</xcp:column>
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_mensagem1}"
+					value="#{row.mensagem1}"
+					type="String"
+					size="80">
+					<xcp:outputSimple value="#{row.mensagem1}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_mensagem2}"
+					value="#{row.mensagem2}"
+					type="String"
+					size="80">
+					<xcp:outputSimple value="#{row.mensagem2}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_mensagem3}"
+					value="#{row.mensagem3}"
+					type="String"
+					size="80">
+					<xcp:outputSimple value="#{row.mensagem3}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_pontoini}"
+					value="#{row.pontoini}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.pontoini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_pontofim}"
+					value="#{row.pontofim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.pontofim}" />
+				</xcp:column>
+ -->
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipofolha"
+						value="#{periodosBacking.entity.tipofolhaFk}"
+						label="#{bundle.lbl_tipofolha}"
+						required="true"
+						query="tipofolha"
+						size="4"
+						update=":form"
+						readonly="#{not periodosBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtReferencia"
+						required="true"
+						value="#{periodosBacking.entity.referencia}"
+						label="#{bundle.lbl_referencia}"
+						readonly="#{not periodosBacking.entity.novo}" />
+
+					<xcp:border
+						id="brd_periodo"
+						header="#{bundle.lbl_periodo}"
+						stylefieldset="margin-left:0px !important">
+						<xcp:date
+							id="txtDtinicio"
+							required="true"
+							value="#{periodosBacking.entity.dtinicio}"
+							label="#{bundle.lbl_dtinicio}" />
+
+						<xcp:date
+							id="txtDtfim"
+							required="true"
+							value="#{periodosBacking.entity.dtfim}"
+							label="#{bundle.lbl_dtfim}" />
+
+						<xcp:date
+							id="txtDtpgto"
+							required="true"
+							rendered="#{periodosBacking.renderedPaineis and periodosBacking.entity.tipofolha != 503 and periodosBacking.entity.tipofolha != 99}"
+							value="#{periodosBacking.entity.dtpgto}"
+							label="#{bundle.lbl_dtpgto}" />
+
+						<xcp:check
+							id="chkEmiteContracheque"
+							label="#{bundle.lbl_dispPortal}"
+							value="#{periodosBacking.entity.emitecontracheque}"
+							rendered="#{not periodosBacking.entity.novo}">
+						</xcp:check>
+
+					</xcp:border>
+					<xcp:border
+						id="brd_periodo_ponto"
+						rendered="#{periodosBacking.renderedPainelPonto}"
+						header="#{periodosBacking.fieldsetLabel}">
+						<xcp:date
+							id="txtPontoini"
+							required="#{periodosBacking.entity.tipofolha == 503 or periodosBacking.entity.tipofolha == 99}"
+							value="#{periodosBacking.entity.pontoini}"
+							label="#{periodosBacking.entity.tipofolha == 503 ? bundle.lbl_periodoauto : bundle.lbl_pontoini}" />
+
+						<xcp:date
+							id="txtPontofim"
+							required="#{periodosBacking.entity.tipofolha == 503 or periodosBacking.entity.tipofolha == 99}"
+							value="#{periodosBacking.entity.pontofim}"
+							label="#{periodosBacking.entity.tipofolha == 503 ? bundle.lbl_periodoaval : bundle.lbl_pontofim}" />
+
+						<xcp:date
+							id="txtDtfimpares"
+							required="true"
+							rendered="#{periodosBacking.entity.tipofolha == 503 and periodosBacking.temAvaliacaoPares}"
+							value="#{periodosBacking.entity.dtfimpares}"
+							label="#{bundle.lbl_dtfimpares}" />
+
+						<xcp:date
+							id="txtRecursofim"
+							required="true"
+							rendered="#{periodosBacking.entity.tipofolha == 503}"
+							value="#{periodosBacking.entity.dtfimrecurso}"
+							label="#{bundle.lbl_dtfimrecurso}" />
+
+						<xcp:date
+							id="txtDefesafim"
+							required="true"
+							rendered="#{periodosBacking.entity.tipofolha == 503}"
+							value="#{periodosBacking.entity.dtfimdefesa}"
+							label="#{bundle.lbl_dtfimdefesa}" />
+
+						<xcp:date
+							id="txtRevisaofim"
+							required="true"
+							rendered="#{periodosBacking.entity.tipofolha == 503}"
+							value="#{periodosBacking.entity.dtfimrevisao}"
+							label="#{bundle.lbl_dtfimrevisao}" />
+
+					</xcp:border>
+					<xcp:border
+						id="brd_mensagem"
+						rendered="#{periodosBacking.renderedPaineis and periodosBacking.entity.tipofolha != 503}"
+						header="#{bundle.lbl_mensagens}">
+
+						<xcp:memo
+							id="txtMensagem1"
+							label="#{bundle.lbl_mensagem1}"
+							value="#{periodosBacking.entity.mensagem1}"
+							size="500" />
+
+						<xcp:memo
+							id="txtMensagem2"
+							label="#{bundle.lbl_mensagem2}"
+							value="#{periodosBacking.entity.mensagem2}"
+							size="500" />
+
+						<xcp:memo
+							id="txtMensagem3"
+							label="#{bundle.lbl_mensagem3}"
+							value="#{periodosBacking.entity.mensagem3}"
+							size="500" />
+					</xcp:border>
+
+					<xcp:border
+						id="brd_indComp"
+						rendered="#{periodosBacking.entity.novo and periodosBacking.renderedComp}"
+						header="#{bundle.tit_competencias}">
+
+						<xcp:check
+							id="chkFechaOutrasComp"
+							label="#{bundle.lbl_fechaOutrasComp}"
+							value="#{periodosBacking.entity.indComp}"
+							rendered="#{periodosBacking.entity.novo and periodosBacking.renderedComp}">
+						</xcp:check>
+
+					</xcp:border>
+
+					<xcp:column
+						headerText="#{bundle.col_percercons}"
+						value="#{row.percercons}"
+						type="Number"
+						size="11">
+						<xcp:outputSimpleNumber
+							value="#{row.percercons}"
+							precision="8"
+							scale="2" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_percdesconto}"
+						value="#{row.percdesconto}"
+						type="Number"
+						size="11">
+						<xcp:outputSimpleNumber
+							value="#{row.percdesconto}"
+							precision="8"
+							scale="2" />
+					</xcp:column>
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_preempenho"
+					value="#{bundle.btn_preempenho}"
+					rendered="#{periodosBacking.renderedPreEmpenho}"
+					action="#{periodosBacking.actionPreEmpenho}" />
+				<xcp:commandButton
+					id="btn_integracaoFesaude"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_integracaoFesaude}"
+					rendered="#{periodosBacking.renderedIntegracaoFesaude}"
+					action="#{periodosBacking.actionIntegrarFesaude}" validateClient="false"/>
+				<xcp:commandButton
+					id="btn_consultaIntegFesaude"
+					icon="ui-icon-gear"
+					value="#{bundle.btn_consultaIntegFesaude}"
+					rendered="#{periodosBacking.renderedIntegracaoFesaude}"
+					action="#{periodosBacking.actionConsultaIntegFesaude}"
+					update=":dlgConsInteg" />
+			</ui:define>
+							
+			<ui:define name="detalhes">
+				<p:outputPanel
+					rendered="#{periodosBacking.entity.tipofolhaFk.tipo == 1 and periodosBacking.entity.tipofolha != 503 and periodosBacking.entity.tipofolha != 99}">
+					<ui:include src="PeriodosForm/PeriodosPagamentoForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_ConsultaIntegracao}"
+			modal="true" width="700"
+			id="dlgConsInteg"
+			widgetVar="dlgConsInteg_w">
+			<h:form id="frmDlgConsInteg">
+				<p:inputTextarea
+			        value="#{periodosBacking.listaEnviosInteg}"
+			        cols="100"
+			        rows="40"
+			        autoResize="false" />
+				
+			</h:form>
+			<p:toolbar>
+		        <f:facet name="left">		            
+		            <xcp:commandButton id="btn_dlg_ConsInteg_voltar" immediate="true"
+		                process="@this" value="#{bundle.btn_fechar}"
+		                oncomplete="PF('dlgConsInteg_w').hide();" />
+		        </f:facet>
+		    </p:toolbar>
+		</p:dialog>	
+	</ui:define>
+</ui:composition>

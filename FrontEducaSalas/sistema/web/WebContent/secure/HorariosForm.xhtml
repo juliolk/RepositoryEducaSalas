@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Horarios"
+			backing="#{horariosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_horario}"
+					value="#{row.horario}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.horario}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="35">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					itens="#{horariosBacking.itensHorario}"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{horariosBacking.itensHorario}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datainicio}"
+					value="#{row.datainicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datainicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_horastrab}"
+					value="#{row.horastrab}"
+					
+					type="Number"
+					size="13">
+					<xcp:outputSimpleNumber
+						value="#{row.horastrab}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tolent}"
+					value="#{row.tolent}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.tolent}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tolsai}"
+					value="#{row.tolsai}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.tolsai}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_repeticao}"
+					value="#{row.repeticao}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.repeticao}"
+						precision="5"
+						scale="2" />
+				</xcp:column>
+
+				<!-- 
+				<xcp:column
+					headerText="#{bundle.col_compensacao}"
+					value="#{row.compensacao}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.compensacao}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_horariocomp}"
+					value="#{row.horariocomp}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.horariocomp}"
+						precision="1"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.situacao}"
+						precision="1"
+						scale="0" />
+				</xcp:column>
+ -->
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+					<xcp:number
+						id="txtHorario"
+						label="#{bundle.lbl_horario}"
+						required="true"
+						value="#{horariosBacking.entity.horario}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not horariosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{horariosBacking.entity.descricao}"
+						size="80" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{horariosBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="#{not horariosBacking.entity.novo}"
+						itens="#{horariosBacking.itensHorario}" />
+
+					<xcp:date
+						id="txtDatainicio"
+						required="true"
+						value="#{horariosBacking.entity.datainicio}"
+						label="#{bundle.lbl_datainiciorep}" />
+
+					<xcp:number
+						id="txtRepeticao"
+						label="#{bundle.lbl_repeticao}"
+						required="true"
+						size="8"
+						maxlength="3"
+						value="#{horariosBacking.entity.repeticao}"
+						precision="5"
+						scale="0" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{horariosBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{horariosBacking.itensSituacao}" />
+
+					<xcp:combo
+						id="cboIndFeriado"
+						value="#{horariosBacking.entity.indFeriado}"
+						label="#{bundle.lbl_indFeriado}"
+						required="true"
+						itens="#{horariosBacking.itensIndSimNaoNull}" />
+
+					<xcp:combo
+						id="cboHorarioAlmoco"
+						value="#{horariosBacking.entity.horarioalmoco}"
+						label="#{bundle.lbl_horarioalmoco}"
+						required="true"
+						itens="#{horariosBacking.itensIndSimNaoNull}" />
+						
+					<xcp:combo
+						id="cboTipoEsocial"
+						value="#{horariosBacking.entity.tipoEsocial}"
+						label="#{bundle.lbl_tipoEsocial}"
+						required="true"
+						itens="#{horariosBacking.itensEsocial}" />
+
+				</xcp:panelForm>
+
+				<h:panelGrid columns="4">
+
+					<p:fieldset
+						id="brdVigencia"
+						legend="#{bundle.tit_vigencia}"
+						style="height:110px">
+						<xcp:panelForm>
+							<xcp:date
+								id="txtDtIniVig"
+								label="#{bundle.lbl_dtainicio}"
+								required="true"
+								value="#{horariosBacking.entity.dtaIniVig}" />
+
+							<xcp:date
+								id="txtDtFimVig"
+								label="#{bundle.lbl_dtafim}"
+								value="#{horariosBacking.entity.dtaFimVig}" />
+
+						</xcp:panelForm>
+					</p:fieldset>
+
+					<p:fieldset
+						id="brd_traba"
+						legend="#{bundle.tit_hr_trabalhadas}"
+						style="height:110px">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtHorastrab"
+								label="#{bundle.lbl_horastrab}"
+								size="13"
+								value="#{horariosBacking.entity.horastrab}"
+								precision="10"
+								required="true"
+								scale="2">
+							</xcp:number>
+
+
+						</xcp:panelForm>
+					</p:fieldset>
+					<p:fieldset
+						id="brd_tolerancia"
+						legend="#{bundle.tit_tolerancia}"
+						style="height:110px">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtTolent"
+								label="#{bundle.lbl_tolent}"
+								size="9"
+								value="#{horariosBacking.entity.tolent}"
+								precision="6"
+								scale="0" />
+
+							<xcp:number
+								id="txtTolsai"
+								label="#{bundle.lbl_tolsai}"
+								size="9"
+								value="#{horariosBacking.entity.tolsai}"
+								precision="6"
+								scale="0" />
+
+						</xcp:panelForm>
+					</p:fieldset>
+					<p:fieldset
+						id="brdCompensacao"
+						legend="#{bundle.tit_compensacao}"
+						style="height:110px">
+						<xcp:panelForm>
+							<xcp:number
+								id="txtCompensacao"
+								label="#{bundle.lbl_compensacao}"
+								size="9"
+								value="#{horariosBacking.entity.compensacao}"
+								precision="6"
+								scale="2" />
+
+							<xcp:combo
+								id="cboHorariocomp"
+								value="#{horariosBacking.entity.horariocomp}"
+								label="#{bundle.lbl_horariocomp}"
+								itens="#{horariosBacking.itensHorariocomp}" />
+						</xcp:panelForm>
+					</p:fieldset>
+
+				</h:panelGrid>
+				
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="HorariosForm/HorariosrepForm.xhtml" />
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{horariosBacking.cabecalho}"
+			modal="true"
+			id="dlgAtualiza"
+			widgetVar="dlgAtualiza_w">
+			<xcp:form id="frm">
+				<xcp:panelForm>
+					<xcp:date
+						id="txtDatainicioAtualizacao"
+						required="true"
+						value="#{horariosBacking.dtaIniAtualizacao}"
+						label="#{bundle.lbl_datainicio_atualizacao}" />
+
+					<xcp:date
+						id="txtDatafimAtualizacao"
+						required="true"
+						value="#{horariosBacking.dtaFimAtualizacao}"
+						label="#{bundle.lbl_datafim_atualizacao}" />
+
+					<xcp:lov
+						id="lovHorariosAtualizacao"
+						value="#{horariosBacking.horarioAtualizacao}"
+						label="#{bundle.lbl_horario_atualizacao}"
+						query="horarios"
+						size="4" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok"
+							icon="ui-icon-disk"
+							action="#{horariosBacking.actionExecutar}"
+							value="#{bundle.btn_ok}" />
+
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlgAtualiza_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+				<p:remoteCommand
+					name="closeDlg"
+					update=":#{p:component('table_Horariosrep')}"
+					oncomplete="PF('dlgAtualiza_w').hide();" />
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_novo_em_lote}"
+			modal="true"
+			id="dlgNovoLote"
+			widgetVar="dlgNovoLote_w">
+			<xcp:form id="frmNovoLote">
+				<p:fieldset legend="#{bundle.tit_parametros_lote}">
+					<xcp:panelForm>
+						<xcp:date
+							id="txtDatainicioNovoLote"
+							required="true"
+							value="#{horariosrepBacking.dtaIniNovoLote}"
+							label="#{bundle.lbl_datainicio_atualizacao}" />
+	
+						<xcp:date
+							id="txtDatafimNovoLote"
+							required="true"
+							value="#{horariosrepBacking.dtaFimNovoLote}"
+							label="#{bundle.lbl_datafim_atualizacao}" />
+							
+						<xcp:lov
+							id="lovJornada_Lote"
+							value="#{horariosrepBacking.jornadaLote}"
+							label="#{bundle.lbl_jornada}"
+							required="false"
+							query="jornadas"
+							size="4" />
+		
+						<xcp:combo
+							id="cboTipo_Lote"
+							value="#{horariosrepBacking.tipoLote}"
+							label="#{bundle.lbl_situacao}"
+							required="false"
+							itens="#{horariosrepBacking.itensTipo}" />
+							
+
+					</xcp:panelForm>
+					<xcp:commandButton
+						id="btn_gerarlinhas_novolote"
+						icon="ui-icon-gear"
+						action="#{horariosrepBacking.actionGerarLinhasLote}"
+						value="#{bundle.btn_gerar_linhas_preenchimento}"
+						update="tabLote" />
+				</p:fieldset>
+					
+					
+				<p:fieldset legend="#{bundle.tit_linhas_lote}">
+					<p:dataTable
+						id="tabLote"
+						var="row"
+						value="#{horariosrepBacking.listaLote}"	
+						widgetVar="table_novoLote_w"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="false"
+						editable="true"
+						resizableColumns="true"
+						rowKey="#{row.PK}"
+						scrollable="true" 
+						scrollHeight="200"
+						style="width: 700px;"
+						rowIndexVar="idx">
+						
+						<xcp:column
+							headerText="#{bundle.col_data}"
+							type="Date"
+							width="15%">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</xcp:column>
+			
+						<xcp:column
+							headerText="#{bundle.col_des_jornada}"
+							type="String"
+							width="45%">
+							
+				 			<p:cellEditor>
+				               <f:facet name="output">
+	         						<xcp:outputSimple value="#{row.jornadaFk.desJornada}" />
+				               </f:facet>
+				               <f:facet name="input">
+									<xcp:lov
+										id="lovJornada_lote_#{idx}"
+										value="#{row.jornadaFk}"
+										label="#{bundle.lbl_jornada}"
+										required="true"
+										query="jornadas"
+										size="3"
+										sizeDesc="25" />
+				               
+				               </f:facet>
+							</p:cellEditor>			
+							
+						</xcp:column>
+			
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							width="25%">
+							
+				 			<p:cellEditor>
+				               <f:facet name="output">
+									<xcp:outputSimple
+										value="#{row.tipo}"
+										itens="#{horariosrepBacking.itensTipo}" />
+				               </f:facet>
+				               <f:facet name="input">
+								   <p:selectOneMenu value="#{row.tipo}" style="margin-left: 10px; width:75%;">
+				                       <f:selectItems value="#{horariosrepBacking.itensTipo}"/>
+				                   </p:selectOneMenu>
+				               </f:facet>
+							</p:cellEditor>			
+							
+						</xcp:column>
+						
+						<p:column style="width:7%">
+							<p:rowEditor />
+						</p:column>
+						
+					</p:dataTable>
+					
+				</p:fieldset>
+				
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok_novolote"
+							icon="ui-icon-disk"
+							action="#{horariosrepBacking.actionGravarNovoLote}"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_sair_novolote"
+							immediate="true"
+							oncomplete="PF('dlgNovoLote_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+				
+				<p:remoteCommand
+					name="closeDlgLote"
+					update=":#{p:component('table_Horariosrep')}"
+					oncomplete="PF('dlgNovoLote_w').hide();" />
+
+			</xcp:form>
+		</p:dialog>		
+
+		<p:dialog
+			header="#{bundle.tit_remover_em_lote}"
+			modal="true"
+			id="dlgRemoveLote"
+			widgetVar="dlgRemoveLote_w">
+			<xcp:form id="frmRemoveLote">
+				<p:fieldset legend="#{bundle.tit_periodo}">
+					<xcp:panelForm>
+						<xcp:date
+							id="txtDatainicioRemoveLote"
+							required="true"
+							value="#{horariosrepBacking.dtaIniRemoveLote}"
+							label="#{bundle.lbl_datainicio_atualizacao}" />
+	
+						<xcp:date
+							id="txtDatafimRemoveLote"
+							required="true"
+							value="#{horariosrepBacking.dtaFimRemoveLote}"
+							label="#{bundle.lbl_datafim_atualizacao}" />
+							
+					</xcp:panelForm>
+					<xcp:commandButton
+						id="btn_gerarlinhas_removelote"
+						icon="ui-icon-search"
+						action="#{horariosrepBacking.actionGerarLinhasRemoveLote}"
+						value="#{bundle.btn_pesquisar}"
+						update="tabRemoveLote" />
+				</p:fieldset>
+					
+					
+				<p:fieldset legend="#{bundle.tit_linhas_lote}">
+					<p:dataTable
+						id="tabRemoveLote"
+						var="row"
+						value="#{horariosrepBacking.listaLote}"	
+						widgetVar="table_RemoveLote_w"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="false"
+						resizableColumns="true"
+						rowKey="#{row.PK}"
+						scrollable="true" 
+						scrollHeight="200"
+						style="width: 600px;">
+						<xcp:column
+							headerText="#{bundle.col_data}"
+							type="Date"
+							width="15%">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</xcp:column>
+			
+						<xcp:column
+							headerText="#{bundle.col_des_jornada}"
+							type="String"
+							width="40%">
+							
+       						<xcp:outputSimple value="#{row.jornadaFk.desJornada}" />
+							
+						</xcp:column>
+			
+						<xcp:column
+							headerText="#{bundle.col_tipo}"
+							type="String"
+							width="25%">
+							
+							<xcp:outputSimple
+								value="#{row.tipo}"
+								itens="#{horariosrepBacking.itensTipo}" />
+							
+						</xcp:column>
+						
+					</p:dataTable>
+					
+				</p:fieldset>
+				
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok_removelote"
+							icon="ui-icon-disk"
+							action="#{horariosrepBacking.actionRemoverLote}"
+							value="#{bundle.btn_remover_selecionados}">
+							<p:confirm
+								header="#{bundle.title_confirmacao}"
+								message="#{bundle.msg_confirma_exclusao_selecionados}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btn_sair_removelote"
+							immediate="true"
+							oncomplete="PF('dlgRemoveLote_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}"/>
+					</f:facet>
+				</p:toolbar>
+				
+				<p:remoteCommand
+					name="closeDlgRemoveLote"
+					update=":#{p:component('table_Horariosrep')}"
+					oncomplete="PF('dlgRemoveLote_w').hide();" />
+
+			</xcp:form>
+		</p:dialog>		
+		
+	</ui:define>
+</ui:composition>

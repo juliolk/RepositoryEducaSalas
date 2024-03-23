@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Processos"
+			backing="#{processosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					value="#{row.processo}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtcriacao}"
+					value="#{row.dtcriacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtcriacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.tipo}"
+						precision="1"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.situacao}"
+						precision="1"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_registro}"
+					value="#{row.registro}"
+					type="Number"
+					size="18">
+					<xcp:outputSimpleNumber
+						value="#{row.registro}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtProcesso"
+						label="#{bundle.lbl_processo}"
+						required="true"
+						value="#{processosBacking.entity.processo}"
+						size="25"
+						readonly="#{not processosBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDtcriacao"
+						required="true"
+						value="#{processosBacking.entity.dtcriacao}"
+						readonly="#{not processosBacking.entity.novo}"
+						label="#{bundle.lbl_dtcriacao}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{processosBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						rendered="#{not processosBacking.entity.novo}"
+						readonly="true"
+						itens="#{processosBacking.itensTipo}" />
+
+					<xcp:lov
+						id="lovTipoProcesso"
+						value="#{processosBacking.entity.tipoprocessoFk}"
+						label="#{bundle.lbl_tipoproc}"
+						query="tipoprocesso" 
+						readonly="#{not processosBacking.entity.novo}"
+						size="6" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{processosBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						readonly="true"
+						rendered="#{not processosBacking.entity.novo}"
+						itens="#{processosBacking.itensSituacao}" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{processosBacking.entity.registroFk}"
+						label="#{bundle.lbl_documento}"
+						readonly="true"
+						rendered="#{not processosBacking.entity.novo}"
+						query="documentos"
+						size="6" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

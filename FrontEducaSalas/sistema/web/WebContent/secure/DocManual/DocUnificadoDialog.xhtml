@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.tit_adddoc}"
+		modal="true"
+		id="#{model.dlgUniId}"
+		widgetVar="#{model.dlgUniWidget}">
+		<xcp:form id="#{model.dlgUniFormId}">
+
+			<p:tabView id="tabview">
+				<p:tab
+					title="#{bundle.title_existente}"
+					id="tabexistente">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovTipodocUni"
+							value="#{model.docvo.tipoDocFk}"
+							selectionListener="#{model.selectTipodocumento}"
+							size="5"
+							update="lovDocumentoUni,lovDocumentoUni_l,lovProcessoUni,lovProcessoUni_l"
+							label="#{bundle.lbl_tipodocdlg}"
+							params="#{model.paramsTipoDoc}"
+							query="#{model.queryTipoDoc}"
+							required="true" />
+
+						<xcp:lov
+							id="lovDocumentoUni"
+							value="#{model.docvo.registroFk}"
+							params="#{model.paramsDocumento}"
+							label="#{bundle.lbl_documento}"
+							update="lovProcessoUni,lovProcessoUni_l"
+							query="documentosman"
+							size="5"
+							required="true"
+							selectionListener="#{model.selectDocumento}" />
+
+						<xcp:lov
+							id="lovProcessoUni"
+							value="#{model.docvo.processoFk}"
+							label="#{bundle.lbl_processo}"
+							query="processos"
+							required="#{model.requiredProc}"
+							size="25" />
+
+					</xcp:panelForm>
+
+					<p:outputPanel
+						style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+						<xcp:commandButton
+							id="btn_add_exi"
+							action="#{model.actionAdicionar(0)}"
+							value="#{bundle.btn_add}"
+							update="@form"
+							process="@this tabexistente"
+							icon="ui-icon-plusthick"
+							resetValues="true" />
+					</p:outputPanel>
+				</p:tab>
+				<p:tab
+					title="#{bundle.title_novo}"
+					id="tabnovo">
+					<xcp:panelForm>
+						<xcp:text
+							id="txtDescricao"
+							label="#{bundle.lbl_descricao}"
+							value="#{model.newdocvo.descricao}"
+							maxlength="100"
+							size="75"
+							required="true" />
+
+						<xcp:lov
+							id="lovTipodoc"
+							value="#{model.newdocvo.tipoDocFk}"
+							label="#{bundle.lbl_tipodocdlg}"
+							required="true"
+							query="#{model.queryTipoDoc}"
+							size="6"
+							params="#{model.paramsTipoDoc}"
+							update="lovProcesso lovProcesso_l" />
+
+						<xcp:lov
+							id="lovProcesso"
+							value="#{model.newdocvo.processoFk}"
+							label="#{bundle.lbl_processo}"
+							query="processos"
+							required="#{model.requiredProcNovo}"
+							size="25" />
+
+						<xcp:text
+							id="txtNrdoc"
+							label="#{bundle.lbl_nrdoc}"
+							required="true"
+							value="#{model.newdocvo.nrdoc}"
+							size="20"
+							maxlength="18" />
+
+						<xcp:date
+							id="txtDtpublicacao"
+							value="#{model.newdocvo.dtpublicacao}"
+							label="#{bundle.lbl_dtpublicacao_doc}"
+							size="13" />
+
+						<xcp:date
+							id="txtDtassinatura"
+							value="#{model.newdocvo.dtassinatura}"
+							label="#{bundle.lbl_dtassinatura}"
+							rendered="#{diarioBacking.renderedDiario}" />
+
+						<xcp:date
+							id="txtDtini"
+							value="#{model.newdocvo.dtini}"
+							label="#{bundle.lbl_dtini_doc}"
+							size="13"
+							rendered="#{diarioBacking.renderedDiario}" />
+
+						<xcp:combo
+							id="cboTiporgaopub"
+							value="#{model.newdocvo.tiporgaopub}"
+							label="#{bundle.lbl_tiporgaopub}"
+							itens="#{documentosBacking.itensTiporgaopub}"
+							rendered="#{diarioBacking.renderedDiario}" />
+
+						<xcp:number
+							id="txtNumpublicacao"
+							label="#{bundle.lbl_numpublicacao}"
+							value="#{model.newdocvo.numpublicacao}"
+							size="10"
+							precision="10"
+							scale="0"
+							maxValue="9999999999"
+							rendered="#{diarioBacking.renderedDiario}" />
+
+						<xcp:text
+							id="txtNropaginadiario"
+							label="#{bundle.lbl_nropaginadiario}"
+							value="#{model.newdocvo.nropaginadiario}"
+							size="20"
+							rendered="#{diarioBacking.renderedDiario}" />
+
+						<xcp:number
+							id="txtNropagina"
+							label="#{bundle.lbl_nropagina}"
+							value="#{model.newdocvo.nropagina}"
+							size="13"
+							precision="11"
+							scale="0"
+							maxValue="9999999999"
+							rendered="#{not diarioBacking.renderedDiario}" />
+
+						<xcp:date
+							id="txtDtdispub"
+							value="#{model.newdocvo.dtdispub}"
+							label="#{bundle.lbl_dtdispub}"
+							rendered="#{diarioBacking.renderedDiario}" />
+
+						<xcp:memo
+							id="txtObservacoes"
+							value="#{model.newdocvo.observacoes}"
+							label="#{bundle.lbl_observacoes}"
+							rendered="#{diarioBacking.renderedDiario}" />
+
+
+						<p:outputLabel
+							value="#{bundle.lbl_documento}#{viewUtil.labelSufix}" />
+
+						<p:toolbar id="toolBarDocumento">
+							<f:facet name="left">
+								<xcp:commandButton
+									onclick="PF('#{model.dlgUplId}_w').show();"
+									type="button"
+									value="#{bundle.btn_upload}" />
+
+								<xcp:commandButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{model.newdocvo.documento == null}">
+									<p:fileDownload
+										value="#{model.downloadDocumento}"
+										contentDisposition="attachment" />
+								</xcp:commandButton>
+							</f:facet>
+						</p:toolbar>
+
+					</xcp:panelForm>
+
+					<p:outputPanel
+						style="text-align: center;margin-top: 5px;margin-bottom: 5px;">
+						<xcp:commandButton
+							id="btn_add_novo"
+							action="#{model.actionAdicionar(1)}"
+							value="#{bundle.btn_add}"
+							update="@form"
+							process="@this tabnovo"
+							icon="ui-icon-plusthick"
+							resetValues="true" />
+					</p:outputPanel>
+				</p:tab>
+			</p:tabView>
+
+			<p:spacer height="2" />
+
+			<p:dataTable
+				id="tbl#{model.id}"
+				value="#{model.listDocVo}"
+				var="row"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				resizableColumns="true"
+				style="max-width:950px;font-size: 12px;">
+
+				<xcp:column
+					type="Number"
+					size="1"
+					headerText="#{bundle.col_registroprinc}">
+					<p:selectBooleanCheckbox
+						value="#{row.checked}"
+						rowid="#{row.uuid}"
+						disabled="#{row.tipoDocFk.utilizacao == 21}">
+						<p:ajax
+							listener="#{model.actionCheck}"
+							update="tbl#{model.id}" />
+					</p:selectBooleanCheckbox>
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.tipoDocFk.tipo}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_tipodocumentofk}"
+					type="String"
+					size="12">
+					<xcp:outputSimple value="#{row.tipoDocFk.descricao}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_nrdoc}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.registroFk.nrdoc}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_documento}"
+					type="String"
+					size="6">
+					<xcp:outputSimple value="#{row.registroFk.descricao}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="10">
+					<xcp:outputSimpleNumber value="#{row.processoFk.processo}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_dtcriacao}"
+					type="Date"
+					size="5">
+					<xcp:outputSimpleDate value="#{row.processoFk.dtcriacao}" />
+				</xcp:column>
+
+				<xcp:column size="2">
+					<xcp:commandButton
+						action="#{model.actionRemoverDoc(row)}"
+						icon="ui-icon-trash"
+						immediate="true"
+						update="@form"
+						process="@this" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:spacer height="2px" />
+
+			<p:toolbar id="pnlacoes">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_add_gravar"
+						action="#{model.actionGravar}"
+						value="#{bundle.btn_gravar}"
+						icon="ui-icon-disk"
+						process="@this tbl#{model.id}"
+						immediate="true"
+						disabled="#{model.disabledGravar}" />
+					<xcp:commandButton
+						id="btn_sair_add"
+						immediate="true"
+						action="#{model.actionCloseDlgUni}"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_sair}" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+
+	<p:dialog
+		header="#{bundle.tit_docvis}"
+		modal="true"
+		id="#{model.dlgVisId}"
+		widgetVar="#{model.dlgVisId}_w"
+		dynamic="true">
+		<xcp:form id="#{model.formVisId}">
+			<xcp:panelForm>
+
+				<xcp:dateTime
+					id="txtDthregistro"
+					value="#{model.docvis.dthregistro}"
+					label="#{bundle.lbl_dthregistro}"
+					readonly="true" />
+
+				<xcp:text
+					id="txtDescricao"
+					label="#{bundle.lbl_descricao}"
+					value="#{model.docvis.descricao}"
+					size="75"
+					readonly="true" />
+
+				<xcp:lov
+					id="lovTipodoc"
+					value="#{model.docvis.tipodocFk}"
+					label="#{bundle.lbl_tipodocdlg}"
+					required="true"
+					query="tipodocumento"
+					size="6"
+					readonly="true" />
+
+				<xcp:lov
+					id="lovGrupo"
+					value="#{model.docvis.grupoFk}"
+					label="#{bundle.lbl_grupo}"
+					query="grupocontrole"
+					size="6"
+					readonly="true" />
+
+				<xcp:text
+					id="txtNrdoc"
+					label="#{bundle.lbl_nrdoc}"
+					value="#{model.docvis.nrdoc}"
+					size="13"
+					maxlength="10"
+					readonly="true" />
+
+				<xcp:combo
+					id="cboTipCriacao"
+					value="#{model.docvis.tipCriacao}"
+					label="#{bundle.lbl_tip_criacao}"
+					readonly="true"
+					itens="#{documentosBacking.itensTipCriacao}"
+					width="123px !important" />
+
+				<xcp:combo
+					id="cboOrigem"
+					value="#{model.docvis.origem}"
+					label="#{bundle.lbl_origem}"
+					required="true"
+					itens="#{documentosBacking.itensOrigem}"
+					width="123px !important"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDtpublicacao"
+					required="true"
+					value="#{model.docvis.dtpublicacao}"
+					label="#{bundle.lbl_dtpublicacao_doc}"
+					size="13"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDtini"
+					required="true"
+					value="#{model.docvis.dtini}"
+					label="#{bundle.lbl_dtini_doc}"
+					size="13"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDtfim"
+					value="#{model.docvis.dtfim}"
+					label="#{bundle.lbl_dtfim_doc}"
+					size="13"
+					readonly="true" />
+
+				<xcp:text
+					id="txtProcesso"
+					label="#{bundle.lbl_processo}"
+					value="#{model.docvis.processo}"
+					readonly="true"
+					maxlength="20"
+					size="13" />
+
+				<xcp:number
+					id="txtLivro"
+					label="#{bundle.lbl_livro}"
+					value="#{model.docvis.livro}"
+					size="13"
+					readonly="true"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtNropagina"
+					label="#{bundle.lbl_nropagina}"
+					value="#{model.docvis.nropagina}"
+					size="13"
+					readonly="true"
+					precision="11"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtNumdiario"
+					label="#{bundle.lbl_numdiariodoc}"
+					value="#{model.docvis.numdiario}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999"
+					rendered="#{diarioBacking.renderedDiario}"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDatadiario"
+					value="#{model.docvis.datadiario}"
+					label="#{bundle.lbl_datadiariodoc}"
+					rendered="#{diarioBacking.renderedDiario}"
+					readonly="true" />
+
+				<xcp:text
+					id="txtNropaginadiario"
+					label="#{bundle.lbl_nropaginadiario}"
+					value="#{model.docvis.nropaginadiario}"
+					size="20"
+					rendered="#{diarioBacking.renderedDiario}"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDtassinatura"
+					value="#{model.docvis.dtassinatura}"
+					label="#{bundle.lbl_dtassinatura}"
+					rendered="#{diarioBacking.renderedDiario}"
+					readonly="true" />
+
+				<xcp:combo
+					id="cboTiporgaopub"
+					value="#{model.docvis.tiporgaopub}"
+					label="#{bundle.lbl_tiporgaopub}"
+					itens="#{documentosBacking.itensTiporgaopub}"
+					rendered="#{diarioBacking.renderedDiario}"
+					readonly="true" />
+
+				<xcp:number
+					id="txtNumpublicacao"
+					label="#{bundle.lbl_numpublicacao}"
+					value="#{model.docvis.numpublicacao}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999"
+					rendered="#{diarioBacking.renderedDiario}" />
+
+				<xcp:date
+					id="txtDtdispub"
+					value="#{model.docvis.dtdispub}"
+					label="#{bundle.lbl_dtdispub}"
+					rendered="#{diarioBacking.renderedDiario}" />
+
+				<xcp:memo
+					id="txtObservacoes"
+					value="#{model.docvis.observacoes}"
+					label="#{bundle.lbl_observacoes}"
+					rendered="#{diarioBacking.renderedDiario}" />
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_sair"
+						immediate="true"
+						oncomplete="PF('#{model.dlgVisId}_w').hide();"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_sair}" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		id="#{model.dlgUplId}"
+		header="#{bundle.tit_dlgUploadDocumento}"
+		widgetVar="#{model.dlgUplId}_w"
+		modal="true">
+		<xcp:form
+			id="#{model.formUplId}"
+			multipart="true">
+			<p:fileUpload
+				id="uploadDocumento"
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				uploadLabel="#{bundle.btn_upload}"
+				invalidFileMessage="#{bundle.msg_upload_arquivo}"
+				converterMessage="#{bundle.msg_upload_conversao}"
+				fileLimitMessage="#{bundle.msg_upload_tamanho_maximo}"
+				invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+				messageTemplate="#{bundle.msg_upload_mensagem}"
+				requiredMessage="#{bundle.msg_upload_requerido}"
+				validatorMessage="#{bundle.msg_upload_validacao}"
+				cancelLabel="#{bundle.btn_upload_cancel}"
+				dragDropSupport="false"
+				fileUploadListener="#{model.actionUploadDocumento}"
+				update=":#{model.dlgUniFormId}:tabview:btnDownloadDocumento" />
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>
+

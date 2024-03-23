@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:outputPanel rendered="#{assinSolicBacking.modo == 1}">
+
+				<p:fieldset legend="#{bundle.lbl_filtros}">
+
+					<xcp:panelForm>
+
+						<xcp:dateRange
+							id="txtDtInicio"
+							label="#{bundle.lbl_dtaPesqIni}"
+							valueStart="#{assinSolicBacking.dtaIniPesqIni}"
+							valueEnd="#{assinSolicBacking.dtaIniPesqFim}" />
+
+						<xcp:dateRange
+							id="txtDtFim"
+							label="#{bundle.lbl_dtaPesqFim}"
+							valueStart="#{assinSolicBacking.dtaFimPesqIni}"
+							valueEnd="#{assinSolicBacking.dtaFimPesqFim}" />
+
+					</xcp:panelForm>
+
+				</p:fieldset>
+
+				<p:spacer height="5" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							icon="ui-icon-search"
+							update="tblF"
+							value="#{bundle.btn_pesquisar}"
+							action="#{assinSolicBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:dataTable
+					id="tblF"
+					var="row"
+					value="#{assinSolicBacking.lista}"
+					rowKey="#{row}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					selectionMode="single"
+					selection="#{assinSolicBacking.row}">
+
+					<p:ajax
+						event="rowSelect"
+						update="@form"
+						listener="#{assinSolicBacking.actionSelectRow}" />
+
+					<xcp:column
+						headerText="#{bundle.col_seqProc}"
+						sortBy="#{row.seqproc}"
+						type="Number">
+						<xcp:outputSimpleNumber
+							value="#{row.seqproc}"
+							precision="18"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desEtapa}"
+						type="Date">
+						<xcp:outputSimple value="#{row.qtdConcluida}/#{row.qtdTotal}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtgeracao}"
+						sortBy="#{row.dtgeracao}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.dtgeracao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtfim}"
+						sortBy="#{row.dtfim}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.dtfim}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtcancelamento}"
+						sortBy="#{row.dtcancelamento}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.dtcancelamento}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desObjeto}"
+						sortBy="#{row.desObjeto}"
+						type="String">
+						<xcp:outputSimple value="#{row.desObjeto}" />
+					</xcp:column>
+
+					<xcp:column headerText="#{bundle.col_acoes}">
+
+						<xcp:commandButton
+							label="#{bundle.btn_download}"
+							value="#{bundle.btn_download}"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							rendered="#{row.dtfim != null}">
+							<p:fileDownload
+								value="#{assinSolicBacking.getDownloadDocFinal(row)}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+			</p:outputPanel>
+
+			<p:outputPanel rendered="#{assinSolicBacking.modo == 2}">
+
+				<p:fieldset legend="#{bundle.title_info}">
+					<xcp:panelForm>
+
+						<xcp:output
+							id="outProc"
+							value="#{assinSolicBacking.row.seqproc}"
+							label="#{bundle.lbl_seqproc}" />
+
+						<xcp:output
+							id="outObj"
+							value="#{assinSolicBacking.row.desObjeto}"
+							label="#{bundle.lbl_desObjeto}" />
+
+						<xcp:outputDate
+							id="dtGer"
+							value="#{assinSolicBacking.row.dtgeracao}"
+							label="#{bundle.lbl_dtgeracao}" />
+
+					</xcp:panelForm>
+				</p:fieldset>
+
+				<p:spacer height="1px" />
+
+				<p:dataTable
+					id="tblEtapa"
+					var="row"
+					value="#{assinSolicBacking.listEtapa}"
+					rowKey="#{row}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rendered="#{not empty assinSolicBacking.listEtapa}">
+
+					<f:facet name="header">
+        				#{bundle.title_assinados}
+    				</f:facet>
+
+					<xcp:column
+						headerText="#{bundle.col_ordem}"
+						type="Number">
+						<xcp:outputSimple value="#{row.ordem}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataenvio}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.dataenvio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataassin}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.dataassin}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						type="String">
+						<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+				<p:spacer height="5" />
+
+				<p:dataTable
+					id="tblEtapaNA"
+					var="row"
+					value="#{assinSolicBacking.listEtapaNA}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					draggableRows="true"
+					rendered="#{not empty assinSolicBacking.listEtapaNA}">
+
+					<f:facet name="header">
+        				#{bundle.title_aassinar}
+    				</f:facet>
+
+					<xcp:column
+						headerText="#{bundle.col_ordem}"
+						type="Number">
+						<xcp:outputSimple value="#{row.ordem}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataenvio}"
+						type="Date">
+						<xcp:outputSimpleDate value="#{row.dataenvio}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						sortBy="#{row.matriculaFk.nome}"
+						type="String">
+						<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+					</xcp:column>
+
+					<xcp:column headerText="#{bundle.col_opcoes}">
+
+						<xcp:commandButton
+							label="#{bundle.btn_remover}"
+							value="#{bundle.btn_remover}"
+							action="#{assinSolicBacking.actionRemover(row)}"
+							rendered="#{assinSolicBacking.renderedCancelar}"
+							update="tblEtapaNA" />
+
+					</xcp:column>
+
+				</p:dataTable>
+
+				<p:spacer height="5" />
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							update="@form"
+							value="#{bundle.btn_gravar}"
+							action="#{assinSolicBacking.actionGravar}"
+							rendered="#{assinSolicBacking.renderedGravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							action="#{assinSolicBacking.actionVoltar}"
+							update="@form" />
+
+						<span class="ui-separator"> <span
+							class="ui-icon pi pi-ellipsis-v" />
+						</span>
+
+						<xcp:commandButton
+							id="btn_concluir"
+							icon="ui-icon-gear"
+							value="#{bundle.btn_concluir}"
+							action="#{assinSolicBacking.actionConcluir}"
+							rendered="#{assinSolicBacking.renderedConcluir}"
+							update="@form">
+							<p:confirm
+								header="#{bundle.tit_confirma_conclusao}"
+								message="#{bundle.msg_confirma_conclusao}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btn_cancelar"
+							image="true"
+							icon="ui-icon-gear"
+							value="#{bundle.btn_cancelar}"
+							action="#{assinSolicBacking.actionCancelar}"
+							rendered="#{assinSolicBacking.renderedCancelar}"
+							update="@form">
+
+							<p:confirm
+								header="#{bundle.tit_confirma_cancelamento}"
+								message="#{bundle.msg_confirma_cancelamento}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+					</f:facet>
+				</p:toolbar>
+
+			</p:outputPanel>
+
+		</xcp:panelContent>
+
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 60px;
+}
+
+.comboclasse select {
+	width: 94px !important;
+}
+
+.comboclasse label {
+	width: 90px !important;
+}
+</style>
+
+		<xcp:panelManut
+			id="Autonomos"
+			backing="#{autonomosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_pessoa}"
+					value="#{row.pessoa}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.pessoa}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="40">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_telefone}"
+					value="#{row.telefone}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.telefone}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_celular}"
+					value="#{row.celular}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.celular}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_servico}"
+					value="#{row.servico}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.servico}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desServico}"
+					value="#{row.servicoFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.servicoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cgccpf}"
+					value="#{row.cgccpf}"
+					type="Number"
+					size="14">
+
+					<xcp:outputCpf
+						id="outCpf"
+						simple="true"
+						value="#{row.cgccpf}"
+						rendered="#{row.tipPessoa == 1}" />
+
+					<xcp:outputCnpj
+						id="outCnpj"
+						simple="true"
+						value="#{row.cgccpf}"
+						rendered="#{row.tipPessoa == 2}" />
+
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<h:panelGrid
+					columns="6"
+					columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+
+					<xcp:number
+						id="txtPessoa"
+						label="#{bundle.lbl_pessoa}"
+						required="true"
+						value="#{autonomosBacking.entity.pessoa}"
+						size="14"
+						maxlength="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not autonomosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						required="true"
+						value="#{autonomosBacking.entity.nome}"
+						size="50"
+						maxlength="70" />
+				</h:panelGrid>
+
+				<p:panelGrid id="grdTipPessoa">
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:combo
+									id="cboTipPessoa"
+									value="#{autonomosBacking.entity.tipPessoa}"
+									label="#{bundle.lbl_tipPessoa}"
+									required="true"
+									styleClass="comboclasse"
+									itens="#{autonomosBacking.itensTipPessoa}"
+									width="104px">
+									<p:ajax
+										action="change"
+										update="txtCnpj,txtCpf,txtCnpj_l,txtCpf_l,colCpf,colCnpj,grdTipPessoa,txtInscinss_l,txtInscinss,txtDtNascimento_l,txtDtNascimento,lovServico,lovServico_l" />
+								</xcp:combo>
+							</xcp:panelForm>
+						</p:column>
+
+
+						<p:column
+							rendered="#{autonomosBacking.entity.tipPessoa == 1}"
+							id="colCpf">
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:cpf
+									id="txtCpf"
+									label="#{bundle.lbl_cpf}"
+									required="true"
+									value="#{autonomosBacking.entity.cgccpf}" />
+							</xcp:panelForm>
+						</p:column>
+
+						<p:column
+							rendered="#{autonomosBacking.entity.tipPessoa == 2}"
+							id="colCnpj">
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:cnpj
+									id="txtCnpj"
+									label="#{bundle.lbl_cnpj}"
+									required="true"
+									value="#{autonomosBacking.entity.cgccpf}" />
+							</xcp:panelForm>
+						</p:column>
+
+					</p:row>
+				</p:panelGrid>
+				<h:panelGrid
+					columns="6"
+					columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+					<xcp:fone
+						id="txtTelefone"
+						label="#{bundle.lbl_telefone}"
+						value="#{autonomosBacking.entity.telefone}"
+						size="14" />
+
+					<xcp:fone
+						id="txtCelular"
+						label="#{bundle.lbl_celular}"
+						value="#{autonomosBacking.entity.celular}"
+						size="14" />
+
+					<xcp:date
+						id="txtDtNascimento"
+						required="true"
+						value="#{autonomosBacking.entity.dtnascimento}"
+						rendered="#{autonomosBacking.entity.tipPessoa == 1}"
+						label="#{bundle.lbl_dtnascimento}" />
+
+
+				</h:panelGrid>
+
+
+				<xcp:endereco
+					id="autonomos"
+					required="false"
+					value="#{autonomosBacking.entity.endereco}" />
+
+				<xcp:border
+					id="brdBancos"
+					header="#{bundle.tit_banco}">
+					<xcp:lov
+						id="lovBanco"
+						value="#{autonomosBacking.entity.bancoFk}"
+						label="#{bundle.lbl_banco}"
+						selectionListener="#{autonomosBacking.selectBancoPgto}"
+						update="lovAgencia"
+						query="bancos"
+						size="5" />
+
+					<xcp:lov
+						id="lovAgencia"
+						value="#{autonomosBacking.entity.agenciaFk}"
+						params="#{autonomosBacking.paramsBanco}"
+						label="#{bundle.lbl_agencia}"
+						query="agencias"
+						size="5" />
+
+					<xcp:text
+						id="txtConta"
+						label="#{bundle.lbl_conta}"
+						value="#{autonomosBacking.entity.conta}"
+						params="#{consignacoesBacking.paramsBanco}"
+						size="10" />
+				</xcp:border>
+
+				<p:fieldset
+					id="brdServico"
+					legend="#{bundle.tit_servico}">
+					<xcp:panelForm labelClass="labelWidth">
+						<xcp:lov
+							id="lovServico"
+							value="#{autonomosBacking.entity.servicoFk}"
+							label="#{bundle.lbl_servico}"
+							required="#{autonomosBacking.entity.tipPessoa == 1}"
+							query="servicos"
+							size="5" />
+
+						<xcp:lov
+							id="lovFpas"
+							value="#{autonomosBacking.entity.fpasFk}"
+							label="#{bundle.lbl_fpas}"
+							query="fpas"
+							size="5" />
+					</xcp:panelForm>
+
+					<h:panelGrid
+						columns="6"
+						columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+						<xcp:number
+							id="txtInscinss"
+							label="#{bundle.lbl_inscinss}"
+							value="#{autonomosBacking.entity.inscinss}"
+							size="11"
+							precision="11"
+							scale="0"
+							maxValue="99999999999" />
+
+						<xcp:combo
+							id="cboClasse"
+							value="#{autonomosBacking.entity.classe}"
+							label="#{bundle.lbl_classe}"
+							itens="#{autonomosBacking.itensClasse}" />
+
+						<xcp:combo
+							id="cboDepir"
+							value="#{autonomosBacking.entity.depir}"
+							label="#{bundle.lbl_depir}"
+							itens="#{autonomosBacking.itensDepir}" />
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset
+					id="brd_identidade_prof"
+					legend="#{bundle.tit_dados_ident_prof_cons}">
+					<xcp:panelForm labelClass="labelWidth">
+						<xcp:text
+							id="txtCredencial"
+							label="#{bundle.lbl_credencial_cons}"
+							value="#{autonomosBacking.entity.credencial}"
+							maxlength="20"
+							size="12" />
+
+						<xcp:combo
+							id="cboCredenciador"
+							value="#{autonomosBacking.entity.credenciador}"
+							label="#{bundle.lbl_credenciador_cons}"
+							itens="#{autonomosBacking.itensCredenciadores}"
+							styleClass="combosituacao"
+							class="combo_entidadeclasse" />
+
+						<xcp:combo
+							id="cboCredencialuf"
+							value="#{autonomosBacking.entity.credencialuf}"
+							label="#{bundle.lbl_credencialuf_cons}"
+							itens="#{autonomosBacking.itensUf}"
+							styleClass="combouf"
+							class="combo_entidadeclasse" />
+					</xcp:panelForm>
+				</p:fieldset>
+
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="AutonomosForm/AutonomoscontForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

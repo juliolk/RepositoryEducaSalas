@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tabNotas"
+		value="#{conhecimentosBacking.helper.listaNotas}"
+		var="row"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		selection="#{conhecimentosBacking.helper.listaSelNotas}"
+		rowKey="#{row}">
+
+		<f:facet name="header">
+			<h:outputLabel value="#{bundle.title_notas}" />
+		</f:facet>
+
+		<xcp:column
+			headerText="#{bundle.col_nota}"
+			value="#{row.nota}"
+			type="Number"
+			size="5">
+			<xcp:outputSimpleNumber
+				value="#{row.nota}"
+				precision="5"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_descricao}"
+			value="#{row.descricao}"
+			type="String"
+			size="50">
+			<xcp:outputSimple value="#{row.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_pontos}"
+			value="#{row.pontos}"
+			type="Number"
+			size="10">
+			<xcp:outputSimpleNumber
+				value="#{row.pontos}"
+				precision="12"
+				scale="2" />
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="1">
+			<xcp:commandButton
+				id="btn_edita_nota"
+				icon="icon-editar"
+				update="tabNotas :dlgNotas"
+				oncomplete="PF('dlgNotas_w').show();">
+				<f:setPropertyActionListener
+					target="#{conhecimentosBacking.helper.notas}"
+					value="#{row}" />
+			</xcp:commandButton>
+		</xcp:column>
+
+		<xcp:column
+			type="String"
+			size="1">
+			<xcp:commandLink
+				immediate="true"
+				id="btn_remove_nota"
+				update="tabNotas"
+				action="#{conhecimentosBacking.actionExcluirNota(row)}">
+				<h:graphicImage
+					title="#{bundle.hint_remover}"
+					value="/resources/img/remover.png"
+					style="margin-top:3px;" />
+				<p:confirm
+					header="#{bundle.tit_confirma_remover}"
+					message="#{bundle.msg_confirma_remover}"
+					icon="ui-icon-alert" />
+			</xcp:commandLink>
+		</xcp:column>
+
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adicionar"
+		value="#{bundle.btn_adicionar}"
+		update="tabNotas :dlgNotas"
+		oncomplete="PF('dlgNotas_w').show();"
+		icon="ui-icon-plusthick">
+		<f:setPropertyActionListener
+			target="#{conhecimentosBacking.helper.notas}"
+			value="#{null}" />
+	</xcp:commandButton>
+
+
+	<p:remoteCommand
+		name="rcTabNotas"
+		update="tabNotas" />
+
+</ui:composition>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:dataTable
+				id="tblConcursos"
+				var="row"
+				value="#{candidatosRemPortalBacking.helper.listConcursos}"
+				filteredValue="#{candidatosRemPortalBacking.helper.listConcursosFilter}"
+				rows="#{viewUtil.tableRows}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				paginatorPosition="bottom"
+				selectionMode="single"
+				resizableColumns="true"
+				selection="#{candidatosRemPortalBacking.helper.concursoSel}"
+				rowKey="#{row.PK}">
+
+				<p:ajax
+					event="rowSelect"
+					update=":#{p:component('pnlInscricao')}"
+					listener="#{candidatosRemPortalBacking.onRowSelect}" />
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{row.editalFk.numero}"
+					type="Number"
+					size="8">
+					<xcp:outputSimple value="#{row.editalFk.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desEdital}"
+					value="#{row.editalFk.descricao}"
+					type="String"
+					size="25">
+					<xcp:outputSimple value="#{row.editalFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vagas}"
+					value="#{row.vagas}"
+					type="Number"
+					size="6"
+					rendered="#{not candidatosRemPortalBacking.vagaIndividual}">
+					<xcp:outputSimpleNumber
+						value="#{row.vagas}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desVaga}"
+					value="#{row.numSeqVagaFk.descricao}"
+					type="String"
+					size="20"
+					rendered="#{candidatosRemPortalBacking.vagaIndividual}">
+					<xcp:outputSimple value="#{row.numSeqVagaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.numSeqVagaFk.setorAtuFk.descricao}"
+					type="String"
+					size="20"
+					rendered="#{candidatosRemPortalBacking.vagaIndividual}">
+					<xcp:outputSimple value="#{row.numSeqVagaFk.setorAtuFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_divisao}"
+					value="#{row.orgaoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.orgaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_dtinscini}"
+					value="#{row.editalFk.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.editalFk.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.lbl_dtinscfim}"
+					value="#{row.editalFk.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.editalFk.dtfim}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:outputPanel id="pnlInscricao">
+
+				<p:fieldset legend="#{bundle.title_informacoes}">
+
+					<xcp:outputSimple
+						id="txtObs"
+						value="#{candidatosRemPortalBacking.helper.concursoSel.editalFk.obs}" />
+
+					<p:separator
+						rendered="#{not empty candidatosRemPortalBacking.helper.concursoSel.editalFk.obs}" />
+
+					<p:outputPanel
+						rendered="#{candidatosRemPortalBacking.helper.concursoSel == null}">
+						<xcp:outputSimple value="#{bundle.txt_selecione_um_concurso}" />
+					</p:outputPanel>
+
+					<p:outputPanel
+						rendered="#{candidatosRemPortalBacking.helper.concursoSel != null}">
+
+						<xcp:outputSimple
+							value="#{candidatosRemPortalBacking.labelInscricao}" />
+
+						<p:spacer width="5" />
+
+						<xcp:commandButton
+							id="btn_inscrever"
+							value="#{bundle.btn_inscrever}"
+							action="#{candidatosRemPortalBacking.actionInscrever}"
+							process="@this"
+							update="@form"
+							rendered="#{candidatosRemPortalBacking.helper.renderedBtnIncricao}" />
+
+						<xcp:commandButton
+							id="btn_desinscrever"
+							value="#{bundle.btn_desinscrever}"
+							action="#{candidatosRemPortalBacking.actionDesinscrever}"
+							process="@this"
+							update="@form"
+							rendered="#{candidatosRemPortalBacking.helper.renderedBtnDesinscricao}" />
+					</p:outputPanel>
+				</p:fieldset>
+			</p:outputPanel>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+#lnkVoltar_Soldiarias {
+	display: none;
+}
+</style>
+		<xcp:panelManut
+			id="Soldiarias"
+			backing="#{soldiariasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtsaida}"
+					value="#{row.dtsaida}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtsaida}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtchegada}"
+					value="#{row.dtchegada}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtchegada}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.status}"
+					type="String"
+					size="7"
+					itens="#{soldiariasBacking.itensStatus}">
+					<xcp:outputSimple
+						value="#{row.status}"
+						itens="#{soldiariasBacking.itensStatus}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qp1}"
+					value="#{row.qp1}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.qp1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_p1}"
+					value="#{row.p1}"
+					type="Number"
+					size="11"
+					rendered="#{soldiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.p1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qr1}"
+					value="#{row.qr1}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.qr1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_r1}"
+					value="#{row.r1}"
+					type="Number"
+					size="11"
+					rendered="#{soldiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.r1}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_nivel}"
+					value="#{row.nivel}"
+					type="String"
+					itens="#{soldiariasBacking.itensDiariasNiveisNull}"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.nivel}"
+						itens="#{soldiariasBacking.itensDiariasNiveis}"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codlocal}"
+					value="#{row.codlocal}"
+					itens="#{soldiariasBacking.itensCodLocalNull}"
+					type="String"
+					size="15">
+					<xcp:outputSimple
+						value="#{row.codlocal}"
+						itens="#{soldiariasBacking.itensCodLocal}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_total}"
+					value="#{row.total}"
+					type="Number"
+					size="11"
+					rendered="#{soldiariasBacking.exibeTotais}">
+					<xcp:outputSimpleNumber
+						value="#{row.total}"
+						precision="8"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_origem}"
+					value="#{row.origemFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.origemFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_destino}"
+					value="#{row.destinoFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.destinoFk.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_pa}"
+					value="#{row.pa}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.pa}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtsaida"
+						required="true"
+						value="#{soldiariasBacking.entity.dtsaida}"
+						label="#{bundle.lbl_dtsaida}"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}">
+						<p:ajax
+							event="change"
+							process="@this"
+							listener="#{soldiariasBacking.actionChangeData}"
+							update="txtQp1,txtQr1" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							listener="#{soldiariasBacking.actionChangeData}"
+							update="txtQp1,txtQr1" />
+					</xcp:date>
+
+					<xcp:date
+						id="txtDtchegada"
+						required="true"
+						value="#{soldiariasBacking.entity.dtchegada}"
+						label="#{bundle.lbl_dtchegada}"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}">
+						<p:ajax
+							event="change"
+							process="@this"
+							listener="#{soldiariasBacking.actionChangeDataChegada}"
+							update="txtQp1,txtQr1,txtNivel,txtNivel_l" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							listener="#{soldiariasBacking.actionChangeDataChegada}"
+							update="txtQp1,txtQr1,txtNivel,txtNivel_l" />
+					</xcp:date>
+
+					<xcp:combo
+						id="txtCodlocal"
+						value="#{soldiariasBacking.entity.codlocal}"
+						label="#{bundle.lbl_codlocal}"
+						required="true"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}"
+						itens="#{soldiariasBacking.itensCodLocal}"
+						width="120px">
+						<p:ajax
+							update="txtVlrdolar,txtVlrdolar_l,txtDtPrazo,txtDtPrazo_l,txtNivel,txtNivel_l"
+							process="@this"
+							listener="#{soldiariasBacking.actionCalculaPrazo}" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="txtNivel"
+						value="#{soldiariasBacking.entity.nivel}"
+						label="#{bundle.lbl_nivel}"
+						required="true"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}"
+						itens="#{soldiariasBacking.itensDiariasNiveis}"
+						width="120px">
+						<p:ajax
+							process="@this"
+							update="txtDtPrazo,txtDtPrazo_l"
+							listener="#{soldiariasBacking.actionCalculaPrazo}" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtQp1"
+						label="#{bundle.lbl_qtd_diarias_dia_semana}"
+						value="#{soldiariasBacking.entity.qp1}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}"
+						required="true"
+						rendered="#{soldiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQr1"
+						label="#{bundle.lbl_qtd_diarias_final_semana}"
+						value="#{soldiariasBacking.entity.qr1}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}"
+						required="true"
+						rendered="#{soldiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQp1s"
+						label="#{bundle.lbl_qtd_diarias_dia_semana_s}"
+						value="#{soldiariasBacking.entity.qp1s}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}"
+						rendered="#{soldiariasBacking.isInformarQtdDiarias}" />
+
+					<xcp:number
+						id="txtQr1s"
+						label="#{bundle.lbl_qtd_diarias_final_semana_s}"
+						value="#{soldiariasBacking.entity.qr1s}"
+						precision="8"
+						scale="2"
+						maxValue="9999"
+						readonly="#{not soldiariasBacking.entity.novo or soldiariasBacking.readOnly}"
+						rendered="#{soldiariasBacking.isInformarQtdDiarias}" />
+
+
+
+					<xcp:number
+						id="txtQtdAjuda"
+						label="#{bundle.lbl_qtdajuda}"
+						size="11"
+						value="#{soldiariasBacking.entity.qtdajuda}"
+						precision="8"
+						scale="2"
+						readonly="#{soldiariasBacking.readOnly}" />
+
+					<xcp:combo
+						id="cboIndUrgencia"
+						value="#{soldiariasBacking.entity.indUrgencia}"
+						label="#{bundle.lbl_indUrgencia}"
+						itens="#{soldiariasBacking.itensIndSimNao}"
+						readonly="#{soldiariasBacking.readOnly}"
+						required="true" />
+
+					<xcp:number
+						id="txtVlrdolar"
+						label="#{bundle.lbl_vlrdolar}"
+						size="11"
+						value="#{soldiariasBacking.entity.vlrdolar}"
+						precision="8"
+						scale="2"
+						required="true"
+						rendered="#{soldiariasBacking.entity.codlocal == 3}"
+						readonly="#{soldiariasBacking.readOnly}" />
+
+					<xcp:combo
+						id="txtTransporte"
+						value="#{soldiariasBacking.entity.transporte}"
+						label="#{bundle.lbl_transporte}"
+						required="true"
+						itens="#{soldiariasBacking.itensTransporte}"
+						width="120px"
+						readonly="#{soldiariasBacking.readOnly}" />
+
+					<xcp:lov
+						id="lovOrigem"
+						value="#{soldiariasBacking.entity.origemFk}"
+						label="#{bundle.lbl_origem}"
+						required="true"
+						query="cidades"
+						size="8"
+						readonly="#{soldiariasBacking.readOnly}"
+						selectionListener="#{soldiariasBacking.selectCidadeOrig}"
+						update="txtQtdKm" />
+
+					<xcp:lov
+						id="lovDestino"
+						value="#{soldiariasBacking.entity.destinoFk}"
+						label="#{bundle.lbl_destino}"
+						required="true"
+						query="cidades"
+						size="8"
+						readonly="#{soldiariasBacking.readOnly}"
+						selectionListener="#{soldiariasBacking.selectCidadeDest}"
+						update="txtQtdKm" />
+
+					<xcp:number
+						id="txtQtdKm"
+						label="#{bundle.lbl_qtdKm}"
+						size="11"
+						value="#{soldiariasBacking.entity.qtdkm}"
+						precision="8"
+						scale="2"
+						readonly="#{soldiariasBacking.readOnly}" />
+
+					<xcp:text
+						id="txtLocal"
+						label="#{bundle.lbl_local}"
+						value="#{soldiariasBacking.entity.local}"
+						size="100"
+						readonly="#{soldiariasBacking.readOnly}" />
+
+					<xcp:date
+						id="txtDtlcto"
+						value="#{soldiariasBacking.entity.dtlcto}"
+						label="#{bundle.lbl_dtlcto}"
+						readonly="#{soldiariasBacking.readOnly}">
+
+						<p:ajax
+							event="change"
+							process="@this"
+							listener="#{soldiariasBacking.actionCalculaPrazo}"
+							update="txtDtPrazo,txtDtPrazo_l" />
+
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							listener="#{soldiariasBacking.actionCalculaPrazo}"
+							update="txtDtPrazo,txtDtPrazo_l" />
+
+					</xcp:date>
+
+					<xcp:date
+						id="txtDtPrazo"
+						value="#{soldiariasBacking.entity.dtaPrazo}"
+						label="#{bundle.lbl_dtaprazo}"
+						readonly="true" />
+
+					<xcp:memo
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						value="#{soldiariasBacking.entity.motivo}"
+						size="500"
+						readonly="#{soldiariasBacking.readOnly}" />
+
+					<xcp:lov
+						id="lovPa"
+						value="#{soldiariasBacking.entity.paFk}"
+						label="#{bundle.lbl_pa}"
+						query="processos"
+						size="25"
+						readonly="#{soldiariasBacking.readOnly}" />
+
+					<xcp:combo
+						id="cboStatus"
+						value="#{soldiariasBacking.entity.status}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{soldiariasBacking.itensStatus}"
+						readonly="true" />
+
+				</xcp:panelForm>
+
+				<p:outputPanel rendered="#{soldiariasBacking.renderedDesloc}">
+					<p:dataTable
+						id="tabDeslocm"
+						value="#{soldiariasBacking.listkm}"
+						var="row"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						rowKey="#{row}"
+						selectionMode="single"
+						selection="#{soldiariasBacking.row}"
+						style="width:800px">
+
+						<f:facet name="header">#{bundle.tit_desclocmultiplos}</f:facet>
+
+						<p:column
+							headerText="#{bundle.col_origem}"
+							value="#{row.origemFk.descricao}"
+							width="200">
+							<xcp:outputSimple value="#{row.origemFk.descricao}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_destino}"
+							value="#{row.destinoFk.descricao}"
+							width="200">
+							<xcp:outputSimple value="#{row.destinoFk.descricao}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_qtdkm}"
+							value="#{row.qtdkm}"
+							width="50">
+							<xcp:outputSimpleNumber
+								value="#{row.qtdkm}"
+								precision="8"
+								scale="3" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_acoes}"
+							width="80">
+							<xcp:commandButton
+								id="btn_editarSel"
+								icon="icon-navegar"
+								update=":frmDeslocamento"
+								action="#{soldiariasBacking.actionEditarDesloc(row)}" />
+
+							<xcp:commandButton
+								id="btn_removerSel"
+								action="#{soldiariasBacking.actionRemoverDesloc(row)}"
+								update="tabDeslocm :form:txtQtdKm_c"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
+					<div style="text-align: center">
+						<xcp:commandButton
+							id="btn_novo"
+							style="margin-top:5px"
+							process="@this"
+							update=":frmDeslocamento"
+							action="#{soldiariasBacking.actionNovoDesloc}"
+							icon="ui-icon-plusthick"
+							value="#{bundle.btn_novo}" />
+					</div>
+				</p:outputPanel>
+
+
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_anexos"
+					icon="#{soldiariasBacking.anexoIcon}"
+					update=":frmAnexos"
+					value="#{bundle.btn_anexos}"
+					disabled="#{soldiariasBacking.entity.novo}"
+					oncomplete="PF('w_anexos').show()" />
+
+				<!--  	<xcp:commandButton
+					id="btnPendencia"
+					value="#{bundle.btn_pendencia}"
+					update=":frmPendencia"
+					oncomplete="PF('dlgPendencia_w').show()"
+					rendered="#{soldiariasBacking.entity.status == 4}" />-->
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgAnexos"
+			widgetVar="w_anexos"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+
+			<xcp:form id="frmAnexos">
+				<p:dataTable
+					id="tblAnex"
+					value="#{soldiariasBacking.listAnexos}"
+					var="rowAnex"
+					filteredValue="#{soldiariasBacking.listAnexosFilter}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{rowAnex}"
+					style="width:1050px">
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{rowAnex.nome}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outNome"
+							value="#{rowAnex.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{rowAnex.descricao}"
+						type="String"
+						size="50">
+						<xcp:outputSimple
+							id="outDesc"
+							value="#{rowAnex.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="1">
+						<xcp:commandLink
+							immediate="true"
+							id="btn_download_anex"
+							update="tblAnex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false">
+							<h:graphicImage
+								value="/resources/img/download.png"
+								style="margin-top:3px;" />
+							<p:fileDownload
+								value="#{soldiariasBacking.getArquivoAnexo(rowAnex)}"
+								contentDisposition="attachment" />
+						</xcp:commandLink>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							id="btn_editarSel"
+							oncomplete="PF('w_anexo').show();"
+							icon="icon-navegar"
+							update=":frmAnexo"
+							action="#{soldiariasBacking.actionEditarAnexo(rowAnex)}"
+							disabled="#{soldiariasBacking.readOnly}">
+
+						</xcp:commandButton>
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="2">
+						<xcp:commandButton
+							immediate="true"
+							id="btn_removerSel"
+							update="tblAnex :form:btn_anexos"
+							icon="ui-icon-trash"
+							action="#{soldiariasBacking.actionRemoveFile(rowAnex)}"
+							disabled="#{soldiariasBacking.readOnly}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<div style="text-align: center">
+					<xcp:commandButton
+						id="btn_novo_anexo"
+						style="margin-top:5px"
+						process="@this"
+						update=":frmAnexo"
+						icon="ui-icon-plusthick"
+						value="#{bundle.btn_novo}"
+						oncomplete="PF('w_anexo').show()">
+						<f:setPropertyActionListener
+							target="#{soldiariasBacking.anexo}"
+							value="#{null}" />
+					</xcp:commandButton>
+				</div>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgAnexo"
+			widgetVar="w_anexo"
+			header="#{bundle.tit_dlgAnexo}"
+			modal="true">
+			<xcp:form id="frmAnexo">
+				<xcp:panelForm>
+					<xcp:text
+						id="txtDescricao"
+						required="true"
+						label="#{bundle.lbl_descricao}"
+						size="80"
+						value="#{soldiariasBacking.anexo.descricao}" />
+				</xcp:panelForm>
+
+				<p:spacer height="1" />
+
+				<p:fileUpload
+					mode="advanced"
+					auto="true"
+					label="#{bundle.btn_upload}"
+					fileUploadListener="#{soldiariasBacking.actionFileUpload}" />
+
+				<p:spacer height="1" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this txtDescricao"
+							update=":frmAnexos:tblAnex :form:btn_anexos"
+							action="#{soldiariasBacking.actionGravarAnexo}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}" />
+
+						<xcp:commandButton
+							id="btn_voltar_anexo"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('w_anexo').hide();" />
+
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgPendencia"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgPendencia_w">
+			<xcp:form id="frmPendencia">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtPendencia"
+						value="#{soldiariasBacking.entity.txtPendencia}"
+						required="true"
+						readonly="true"
+						label="#{bundle.lbl_motivo}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgPendencia_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgDeslocamento"
+			header="#{bundle.title_deslocamento}"
+			widgetVar="dlgDeslocamento_w">
+			<xcp:form id="frmDeslocamento">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovOrigem"
+						value="#{soldiariasBacking.row.origemFk}"
+						label="#{bundle.lbl_origem}"
+						required="true"
+						query="cidades"
+						size="8"
+						selectionListener="#{soldiariasBacking.selectCidadeOrigDesloc}"
+						update="txtQtdkm :form:txtQtdKm_c" />
+
+					<xcp:lov
+						id="lovDestino"
+						value="#{soldiariasBacking.row.destinoFk}"
+						label="#{bundle.lbl_destino}"
+						required="true"
+						query="cidades"
+						size="8"
+						selectionListener="#{soldiariasBacking.selectCidadeDestDesloc}"
+						update="txtQtdkm :form:txtQtdKm_c" />
+
+					<xcp:number
+						id="txtQtdkm"
+						label="#{bundle.lbl_qtdKm}"
+						required="true"
+						size="13"
+						value="#{soldiariasBacking.row.qtdkm}"
+						precision="9"
+						scale="3" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							process="@this :frmDeslocamento"
+							action="#{soldiariasBacking.actionGravarDesloc}"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}"
+							update=":form:tabDeslocm :form:txtQtdKm_c" />
+
+						<xcp:commandButton
+							id="btn_voltar_desl"
+							immediate="true"
+							process="@this"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							oncomplete="PF('dlgDeslocamento_w').hide();" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

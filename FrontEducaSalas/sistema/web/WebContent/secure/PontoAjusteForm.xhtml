@@ -1,0 +1,937 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<style>
+.vertical-align {
+	vertical-align: top;
+}
+</style>
+			<p:fieldset
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+
+				<h:panelGrid
+					columns="3"
+					columnClasses=",,vertical-align">
+					<xcp:panelForm>
+						<xcp:dateRange
+							id="txtDt_AssinaturasDoc"
+							label="#{bundle.lbl_periodo}"
+							valueStart="#{pontoAjusteBacking.helper.dtaIni}"
+							valueEnd="#{pontoAjusteBacking.helper.dtaFim}"
+							required="true" />
+
+						<xcp:lov
+							id="lovFuncionario"
+							value="#{pontoAjusteBacking.funcionarioLov}"
+							label="#{bundle.lbl_matricula}"
+							query="funcionariosLovAll"
+							size="15"
+							maxlength="8" />
+						
+						<xcp:lov
+							id="lovOrgao"
+							value="#{pontoAjusteBacking.orgao}"
+							label="#{bundle.lbl_orgao}"
+							query="orgaos"
+							selectionListener="#{pontoAjusteBacking.selectOrgao}"
+							update="lovDivisao, lovSetor"
+							size="8" />
+							
+						<xcp:lov
+							id="lovDivisao"
+							value="#{pontoAjusteBacking.divisao}"
+							label="#{bundle.lbl_divisao}"
+							query="divisoes_orgao"
+							selectionListener="#{pontoAjusteBacking.selectDivisao}"
+							params="#{pontoAjusteBacking.paramsDivisao}"
+							update="lovOrgao, lovSetor"
+							readonly="#{pontoAjusteBacking.orgao == null}"
+							size="8" />
+							
+						<xcp:lov
+							id="lovSetor"
+							value="#{pontoAjusteBacking.setor}"
+							label="#{bundle.lbl_setor}"
+							query="set_div_validade"
+							params="#{pontoAjusteBacking.paramsSetor}"
+							update="lovOrgao, lovDivisao"							
+							readonly="#{pontoAjusteBacking.divisao == null}"
+							size="8" />
+						
+						<xcp:lov
+							id="lovAfdtMotivo"
+							value="#{pontoAjusteBacking.afdtmotivo}"
+							label="#{bundle.lbl_motivo}"
+							query="afdtmotivo"
+							size="8" />
+						
+
+						<p:outputPanel>
+							<p:fieldset
+								id="brdSelecao"
+								legend="#{bundle.tit_situacao}"
+								style="width: 100px">
+								<xcp:panelForm>
+									<xcp:check
+										id="txtSitSolicitada"
+										label="#{bundle.opt_situacao_solicitacao_1}"
+										value="#{pontoAjusteBacking.situacaoSolicitada}" />
+									<xcp:check
+										id="txtSitEfetivada"
+										label="#{bundle.opt_situacao_solicitacao_2}"
+										value="#{pontoAjusteBacking.situacaoEfetivada}" />
+									<xcp:check
+										id="txtSitNaoAceita"
+										label="#{bundle.opt_situacao_solicitacao_3}"
+										value="#{pontoAjusteBacking.situacaoNaoAceita}" />
+								</xcp:panelForm>
+							</p:fieldset>
+
+							<p:fieldset
+								id="brdPend"
+								legend="#{bundle.tit_filtros}"
+								style="width: 150px">
+								<xcp:panelForm>
+									<xcp:check
+										id="txtSitSemPend"
+										label="#{bundle.opt_situacao_sempend}"
+										value="#{pontoAjusteBacking.situacaoSemPend}" />
+
+									<xcp:check
+										id="txtSitComPend"
+										label="#{bundle.opt_situacao_compend}"
+										value="#{pontoAjusteBacking.situacaoComPend}" />
+								</xcp:panelForm>
+							</p:fieldset>
+
+						</p:outputPanel>
+
+					</xcp:panelForm>
+
+				</h:panelGrid>
+				<p:spacer height="5" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							value="#{bundle.btn_pesquisar}"
+							update="tblPonto tblAfdt"
+							icon="ui-icon-gear"
+							action="#{pontoAjusteBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+
+			</p:fieldset>
+
+			<p:fieldset legend="#{bundle.title_ocorsponto}">
+
+				<p:dataTable
+					id="tblPonto"
+					var="row"
+					value="#{pontoAjusteBacking.helper.listPonto}"
+					rows="#{viewUtil.tableRows}"
+					rowKey="#{row}"
+					paginator="true"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginatorPosition="bottom"
+					selection="#{pontoAjusteBacking.listaSelPonto}">
+
+					<p:column
+						selectionMode="multiple"
+						style="width:3%;text-align:center" />
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.matricula}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_funcionario}"
+						type="String"
+						size="30">
+						<xcp:outputSimpleNumber value="#{row.matriculaFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						type="Date"
+						size="5">
+						<xcp:outputSimpleDate value="#{row.data}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipoponto}"
+						type="Number"
+						size="4">
+						<xcp:outputSimpleNumber
+							value="#{row.tipoponto}"
+							precision="4"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipoponto_descricao}"
+						type="String"
+						size="20">
+						<xcp:outputSimple value="#{row.tipopontoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_qtd_horas}"
+						type="Number"
+						size="8">
+						<xcp:outputSimpleTimeNumber
+							value="#{row.horas}"
+							rendered="#{row.tipopontoFk.tipoqtd == 1 or row.tipopontoFk.tipoqtd == 3}"
+							precision="7"
+							scale="2" />
+						<xcp:outputSimpleNumber
+							value="#{row.horas}"
+							rendered="#{row.tipopontoFk.tipoqtd == 2}"
+							precision="7"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tip_qtd}"
+						type="String"
+						size="5">
+						<xcp:outputSimpleTimeNumber
+							value="#{bundle.lbl_horas}"
+							rendered="#{row.tipopontoFk.tipoqtd == 1}" />
+						<xcp:outputSimple
+							value="#{bundle.lbl_dias}"
+							rendered="#{row.tipopontoFk.tipoqtd == 2}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_situacao}"
+						itens="#{pontoAjusteBacking.itensSituacaoAvaliacaoPonto}"
+						type="String"
+						size="5">
+						<xcp:outputSimple
+							value="#{row.situacao}"
+							itens="#{pontoAjusteBacking.itensSituacaoAvaliacaoPonto}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtavaliacao}"
+						type="Date"
+						size="5">
+						<xcp:outputSimpleDate value="#{row.dtavaliacao}" />
+					</xcp:column>
+
+
+					<xcp:column size="11">
+						<h:panelGroup layout="block">
+
+							<xcp:commandButton
+								id="iconBusca"
+								icon="ui-icon-search"
+								immediate="true"
+								update=":frmPonto"
+								rendered="#{row.situacao == 0}"
+								action="#{pontoAjusteBacking.actionOpenPonto(row)}">
+								<f:setPropertyActionListener
+									target="#{pontoAjusteBacking.helper.pontoSel}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="iconRejeita"
+								icon="ui-icon-cancel"
+								immediate="true"
+								update=":frmPontoRej"
+								action="#{pontoAjusteBacking.actionOpenRejeitarPonto}"
+								rendered="#{row.situacao == 0}">
+								<f:setPropertyActionListener
+									target="#{pontoAjusteBacking.helper.pontoSel}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_add_anx"
+								immediate="true"
+								rendered="#{row.situacao == 0}"
+								action="#{pontoAjusteBacking.actionOpenDialogListaAnexos(row)}"
+								disabled="#{pontoAjusteBacking.isDisabledBtnAnexo(row)}"
+								icon="ui-icon-document"
+								update=":frmListaAnx">
+								<f:setPropertyActionListener
+									target="#{pontoAjusteBacking.helper.pontoSel}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="iconPendencia"
+								icon="ui-icon-alert"
+								immediate="true"
+								update=":frmPendenciaPonto"
+								oncomplete="PF('dlgPendenciaPonto_w').show()">
+								<f:setPropertyActionListener
+									target="#{pontoAjusteBacking.helper.pontoSel}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+						</h:panelGroup>
+					</xcp:column>
+				</p:dataTable>
+				<center style="padding-top: 5px">
+					<xcp:commandButton
+						id="btn_aprovar_ponto"
+						icon="ui-icon-check"
+						update="tblPonto"
+						value="#{bundle.btn_aprovar}"
+						action="#{pontoAjusteBacking.actionConfirmarPonto}">
+						<p:confirm
+							header="#{bundle.tit_confirmacao}"
+							message="#{bundle.msg_confirma_sol}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</center>
+			</p:fieldset>
+
+			<p:spacer height="4px" />
+
+			<p:fieldset legend="#{bundle.title_afdt}">
+
+				<p:dataTable
+					id="tblAfdt"
+					var="row"
+					value="#{pontoAjusteBacking.helper.listAfdt}"
+					rows="#{viewUtil.tableRows}"
+					rowKey="#{row}"
+					paginator="true"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginatorPosition="bottom"
+					selection="#{pontoAjusteBacking.listaSelAfdt}">
+
+					<p:column
+						selectionMode="multiple"
+						style="width:3%;text-align:center" />
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.matricula}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_funcionario}"
+						type="String"
+						size="30">
+						<xcp:outputSimpleNumber value="#{row.matriculaFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						type="Date"
+						size="5">
+						<xcp:outputSimpleDate value="#{row.data}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_hora}"
+						type="Number"
+						size="7">
+						<xcp:outputSimpleTimeNumber value="#{row.hora}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipo}"
+						itens="#{pontoAjusteBacking.itensTipoIncluido}"
+						type="String"
+						size="15">
+						<xcp:outputSimple
+							value="#{row.tipo}"
+							itens="#{pontoAjusteBacking.itensTipoIncluido}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_motivo}"
+						type="String"
+						size="20">
+						<xcp:outputSimple value="#{row.motivoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_situacao}"
+						itens="#{pontoAjusteBacking.itensSituacaoAvaliacaoAfdt}"
+						type="String"
+						size="5">
+						<xcp:outputSimple
+							value="#{row.situacao}"
+							itens="#{pontoAjusteBacking.itensSituacaoAvaliacaoAfdt}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtavaliacao}"
+						type="Date"
+						size="5">
+						<xcp:outputSimpleDate value="#{row.dtavaliacao}" />
+					</xcp:column>
+
+					<xcp:column size="7">
+						<h:panelGroup layout="block">
+
+							<xcp:commandButton
+								id="iconBuscaAfdt"
+								icon="ui-icon-search"
+								immediate="true"
+								update=":frmAfdt"
+								rendered="#{row.situacao == 0}"
+								oncomplete="PF('dlgAfdt_w').show();">
+								<f:setPropertyActionListener
+									target="#{pontoAjusteBacking.helper.afdtSel}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="iconRejeitaAfdt"
+								icon="ui-icon-cancel"
+								immediate="true"
+								update=":frmAfdtRej"
+								action="#{pontoAjusteBacking.actionOpenRejeitarAfdt}"
+								rendered="#{row.situacao == 0}">
+								<f:setPropertyActionListener
+									target="#{pontoAjusteBacking.helper.afdtSel}"
+									value="#{row}" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="iconPendenciaAfdt"
+								icon="ui-icon-alert"
+								immediate="true"
+								update=":frmPendenciaAfdt"
+								oncomplete="PF('dlgPendenciaAfdt_w').show()">
+								<f:setPropertyActionListener
+									target="#{pontoAjusteBacking.helper.afdtSel}"
+									value="#{row}" />
+							</xcp:commandButton>
+							
+							
+							<p:button 
+								rendered="#{pontoAjusteBacking.renderAfdtAvaliacaoAnexo(row)}"
+								href="#{pontoAjusteBacking.getDesPathAnexo(row.seq)}"
+								target="_blank"
+								icon="ui-icon-document">
+							</p:button>
+							
+							
+						</h:panelGroup>
+					</xcp:column>
+
+				</p:dataTable>
+
+				<center style="padding-top: 5px">
+					<xcp:commandButton
+						id="btn_aprovar_afdt"
+						icon="ui-icon-check"
+						update="tblAfdt"
+						value="#{bundle.btn_aprovar}"
+						action="#{pontoAjusteBacking.actionConfirmarAfdt}">
+						<p:confirm
+							header="#{bundle.tit_confirmacao}"
+							message="#{bundle.msg_confirma_sol}"
+							icon="ui-icon-alert" />
+
+					</xcp:commandButton>
+				</center>
+
+			</p:fieldset>
+		</xcp:panelContent>
+	</ui:define>
+
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.title_ocorponto}"
+			modal="true"
+			id="dlgPonto"
+			widgetVar="dlgPonto_w"
+			width="800">
+			<xcp:form id="frmPonto">
+				<xcp:panelDisable disabled="true">
+
+					<p:fieldset
+						legend="#{bundle.title_jornadas}"
+						rendered="#{pontoAjusteBacking.renderedTipoPontoOrig}">
+						<p:dataTable
+							id="tblJornadas"
+							var="row"
+							value="#{pontoAjusteBacking.listJornadas}"
+							rowKey="#{row}">
+							<xcp:column
+								headerText="#{bundle.col_hrinicio}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrinicio}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hrfim}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrfim}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hrinicio2}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrinicio2}" />
+							</xcp:column>
+							<xcp:column
+								headerText="#{bundle.col_hrfim2}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrfim2}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hrinicio3}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrinicio3}" />
+							</xcp:column>
+							<xcp:column
+								headerText="#{bundle.col_hrfim3}"
+								type="Date"
+								size="8">
+								<xcp:outputSimpleTimeNumber value="#{row.hrfim3}" />
+							</xcp:column>
+						</p:dataTable>
+					</p:fieldset>
+
+					<p:fieldset
+						legend="#{bundle.title_horastrab}"
+						rendered="#{pontoAjusteBacking.renderedTipoPontoOrig}"
+						style="margin-bottom:10px">
+
+						<p:dataTable
+							id="tblHorasTrab"
+							var="row"
+							value="#{pontoAjusteBacking.listHorastrabs}"
+							rowKey="#{row}">
+
+							<xcp:column
+								headerText="#{bundle.col_datah}"
+								type="Date"
+								size="7">
+								<xcp:outputSimpleDate value="#{row.datah}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hinicio}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hinicio}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hfim}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hfim}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hinicio2}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hinicio2}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hfim2}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hfim2}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hinicio3}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hinicio3}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_hfim3}"
+								type="Date"
+								size="5">
+								<xcp:outputSimpleTimeNumber value="#{row.hfim3}" />
+							</xcp:column>
+						</p:dataTable>
+					</p:fieldset>
+
+
+					<xcp:panelForm>
+
+						<xcp:lov
+							id="lovTipoponto"
+							value="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk}"
+							label="#{bundle.lbl_tipoponto}"
+							required="true"
+							query="tipoponto_portal"
+							size="4"
+							update="txtNomefamiliar,txtNomefamiliar_l,lovGrau,lovGrau_l" />
+
+						<xcp:text
+							id="txtNomefamiliar"
+							label="#{bundle.lbl_nomefamiliar}"
+							value="#{pontoAjusteBacking.helper.pontoSel.nomefamiliar}"
+							size="50"
+							required="true"
+							rendered="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk.indFamiliar == 1}" />
+
+						<xcp:lov
+							id="lovGrau"
+							value="#{pontoAjusteBacking.helper.pontoSel.grauFk}"
+							label="#{bundle.lbl_grau}"
+							query="parentesco_abono"
+							size="3"
+							required="true"
+							rendered="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk.indFamiliar == 1}" />
+
+						<xcp:timeNumber
+							id="txtHoraini"
+							label="#{bundle.lbl_txtHoraini}"
+							required="true"
+							rendered="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk.tipoqtd==3}"
+							size="10"
+							value="#{pontoAjusteBacking.helper.pontoSel.horaini}"
+							precision="7"
+							scale="2" />
+
+						<xcp:timeNumber
+							id="txtHorafim"
+							label="#{bundle.lbl_txtHorafim}"
+							required="true"
+							rendered="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk.tipoqtd==3}"
+							size="10"
+							value="#{pontoAjusteBacking.helper.pontoSel.horafim}"
+							precision="7"
+							scale="2" />
+
+						<xcp:timeNumber
+							id="txtHoras"
+							label="#{bundle.lbl_horas}"
+							required="true"
+							rendered="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk.tipoqtd==1 or pontoAjusteBacking.helper.pontoSel.tipopontoFk.tipoqtd==3}"
+							size="10"
+							value="#{pontoAjusteBacking.helper.pontoSel.horas}"
+							precision="7"
+							scale="2" />
+
+						<xcp:number
+							id="txtQtd"
+							label="#{bundle.lbl_qtde}"
+							required="true"
+							rendered="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk.tipoqtd==2}"
+							size="10"
+							value="#{pontoAjusteBacking.helper.pontoSel.horas}"
+							precision="7"
+							scale="0" />
+
+						<xcp:memo
+							id="txtObs"
+							label="#{bundle.lbl_obs}"
+							required="#{pontoAjusteBacking.helper.pontoSel.tipopontoFk.indObs==1}"
+							value="#{pontoAjusteBacking.helper.pontoSel.obs}"
+							size="300" />
+
+					</xcp:panelForm>
+				</xcp:panelDisable>
+
+				<p:spacer height="2" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgPonto_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_afdt}"
+			modal="true"
+			id="dlgAfdt"
+			widgetVar="dlgAfdt_w">
+			<xcp:form id="frmAfdt">
+				<xcp:panelDisable disabled="true">
+					<xcp:panelForm>
+
+						<xcp:timeNumber
+							id="txtHora"
+							label="#{bundle.lbl_hora}"
+							required="true"
+							size="10"
+							value="#{pontoAjusteBacking.helper.afdtSel.hora}"
+							precision="6"
+							scale="2"
+							validate="true" />
+
+						<xcp:combo
+							id="txtTipoIncluido"
+							label="#{bundle.lbl_tipo}"
+							required="true"
+							value="#{pontoAjusteBacking.helper.afdtSel.tipo}"
+							itens="#{pontoAjusteBacking.itensTipoIncluido}"
+							size="1" />
+
+						<xcp:lov
+							id="lovMotivo"
+							required="true"
+							value="#{pontoAjusteBacking.helper.afdtSel.motivoFk}"
+							label="#{bundle.lbl_motivo}"
+							query="afdtmotivo"
+							size="3" />
+						
+						<xcp:memo
+							id="txtPendenciaAfdt"
+							label="#{bundle.lbl_obs}"
+							value="#{pontoAjusteBacking.helper.afdtSel.obs}"
+							 />
+
+					</xcp:panelForm>
+				</xcp:panelDisable>
+
+				<p:spacer height="2" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgAfdt_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			header="#{bundle.title_motivo}"
+			modal="true"
+			id="dlgPontoRej"
+			widgetVar="dlgPontoRej_w">
+			<xcp:form id="frmPontoRej">
+				<xcp:panelForm>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						readonly="#{pontoAjusteBacking.helper.pontoSel.situacao != 0}"
+						value="#{pontoAjusteBacking.helper.pontoSel.motivoRecusa}"
+						size="300" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="2" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnSalvar"
+							image="true"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}"
+							disabled="#{pontoAjusteBacking.helper.pontoSel.situacao != 0}"
+							action="#{pontoAjusteBacking.actionRejeitarPonto}"
+							update=":form" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_motivo}"
+			modal="true"
+			id="dlgAfdtRej"
+			widgetVar="dlgAfdtRej_w">
+			<xcp:form id="frmAfdtRej">
+				<xcp:panelForm>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						readonly="#{pontoAjusteBacking.helper.afdtSel.situacao != 0}"
+						value="#{pontoAjusteBacking.helper.afdtSel.motivoRecusa}"
+						size="300" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="2" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnSalvar"
+							image="true"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}"
+							disabled="#{pontoAjusteBacking.helper.afdtSel.situacao != 0}"
+							action="#{pontoAjusteBacking.actionRejeitarAfdt}"
+							update=":form" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgPendenciaAfdt"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgPendenciaAfdt_w">
+			<xcp:form id="frmPendenciaAfdt">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtPendencia"
+						value="#{pontoAjusteBacking.helper.afdtSel.txtPendencia}"
+						required="true"
+						label="#{bundle.lbl_motivo}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-check"
+							action="#{pontoAjusteBacking.actionGravarPendenciaAfdt}"
+							update=":form" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgPendenciaAfdt_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgPendenciaPonto"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgPendenciaPonto_w">
+			<xcp:form id="frmPendenciaPonto">
+				<xcp:panelForm>
+					<xcp:memo
+						id="txtPendencia"
+						value="#{pontoAjusteBacking.helper.pontoSel.txtPendencia}"
+						required="true"
+						label="#{bundle.lbl_motivo}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-check"
+							action="#{pontoAjusteBacking.actionGravarPendenciaPonto}"
+							update=":form" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgPendenciaPonto_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_listaanexo}"
+			modal="true"
+			id="dlgListaAnxPonto"
+			widgetVar="dlgListaAnxPonto_w"
+			width="800px">
+			<xcp:form id="frmListaAnx">
+				<p:dataTable
+					id="tblComp"
+					var="row"
+					value="#{pontoAjusteBacking.helper.listAnexos}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					rows="10">
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						type="String"
+						size="10">
+						<xcp:outputSimpleDate value="#{row.nome}" />
+					</xcp:column>
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+					<xcp:column
+						headerText="#{bundle.col_data}"
+						type="Date"
+						size="3">
+						<xcp:outputSimpleDate value="#{row.data}" />
+					</xcp:column>
+					<xcp:column size="1">
+						<p:commandButton
+							immediate="true"
+							id="btn_download_anex"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							ajax="false"
+							icon="ui-icon-download">
+							<p:fileDownload
+								value="#{pontoAjusteBacking.getAnexo(row)}"
+								contentDisposition="attachment" />
+						</p:commandButton>
+					</xcp:column>
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

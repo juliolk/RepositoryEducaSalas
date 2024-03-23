@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Setores"
+			backing="#{setoresBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_setor}"
+					value="#{row.setor}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.setor}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_divisao}"
+					value="#{row.divisaoFk.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.divisaoFk.descricao}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_abreviatura}"
+					value="#{row.abreviatura}"
+					type="String"
+					size="12">
+					<xcp:outputSimple value="#{row.abreviatura}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fone}"
+					value="#{row.fone}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.fone}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{setoresBacking.itensSituacao}">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{setoresBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSetor"
+						label="#{bundle.lbl_setor}"
+						required="true"
+						value="#{setoresBacking.entity.setor}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not setoresBacking.entity.novo}"
+						rendered="#{setoresBacking.renderedCodigo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{setoresBacking.entity.descricao}"
+						maxlength="190"
+						size="90" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{setoresBacking.entity.situacao}"
+						label="#{bundle.lbl_situacao}"
+						required="true"
+						itens="#{setoresBacking.itensSituacao}">
+						<p:ajax
+							event="change"
+							update="txtDtfim"
+							listener="#{setoresBacking.actionChangeSituacao}" />
+					</xcp:combo>
+
+					<p:outputLabel
+						value="#{bundle.lbl_dtvalidade}:"
+						for="txtDtinicio_c" />
+
+					<h:panelGrid columns="3">
+
+						<xcp:date
+							id="txtDtinicio"
+							simple="true"
+							required="true"
+							value="#{setoresBacking.entity.dtinicio}"
+							label="#{bundle.lbl_dtvalidade}" />
+
+						<xcp:date
+							id="txtDtfim"
+							value="#{setoresBacking.entity.dtfim}"
+							label="#{bundle.ate}">
+							<p:ajax
+								event="change"
+								process="@this"
+								update="cboSituacao"
+								listener="#{setoresBacking.actionChangeDataValidade}" />
+							<p:ajax
+								event="dateSelect"
+								process="@this"
+								update="cboSituacao"
+								listener="#{setoresBacking.actionChangeDataValidade}" />
+						</xcp:date>
+					</h:panelGrid>
+
+					<xcp:lov
+						id="lovDivisao"
+						value="#{setoresBacking.entity.divisaoFk}"
+						label="#{bundle.lbl_divisao}"
+						required="true"
+						query="divisoes"
+						size="3" />
+
+					<xcp:lov
+						id="lovJurisdicao"
+						value="#{setoresBacking.entity.jurisdicaoFk}"
+						label="#{bundle.lbl_jurisdicao}"
+						query="jurisdicoes"
+						size="5" />
+
+					<xcp:combo
+						id="cboPonto"
+						value="#{setoresBacking.entity.ponto}"
+						label="#{bundle.lbl_ponto}"
+						required="true"
+						itens="#{setoresBacking.itensPonto}" />
+
+					<xcp:lov
+						id="lovTipodocumento"
+						value="#{setoresBacking.entity.tipodocFk}"
+						label="#{bundle.lbl_tipodocumento}"
+						selectionListener="#{setoresBacking.selectTipodocumento}"
+						update="lovDocumento,btnDownloadDocumento"
+						query="tipodocumento_set"
+						params="#{setoresBacking.paramsTipoDoc}"
+						size="10"
+						readonly="#{setoresBacking.readOnlyTipdoc}" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{setoresBacking.entity.registroFk}"
+						params="#{setoresBacking.paramsTipodocumento}"
+						label="#{bundle.lbl_documento}"
+						query="documentosman"
+						size="10"
+						update="btnDownloadDocumento"
+						readonly="#{setoresBacking.readOnlyDoc}" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:commandButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{setoresBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(setoresBacking.entity.registro)}"
+										contentDisposition="attachment" />
+								</p:commandButton>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:memo
+						id="txtObservacao"
+						label="#{bundle.lbl_observacao}"
+						value="#{setoresBacking.entity.observacao}"
+						size="500" />
+
+					<xcp:text
+						id="txtAbreviatura"
+						label="#{bundle.lbl_abreviatura}"
+						value="#{setoresBacking.entity.abreviatura}"
+						size="30" />
+
+					<xcp:lov
+						id="lovSupestagio"
+						value="#{setoresBacking.entity.supestagioFk}"
+						label="#{bundle.lbl_supestagio}"
+						query="funcionariosLov"
+						size="3" />
+
+					<xcp:lov
+						id="lovMatavalest"
+						value="#{setoresBacking.entity.matavalestFk}"
+						label="#{bundle.lbl_matavalest}"
+						query="funcionariosLov"
+						size="3" />
+
+					<xcp:fone
+						id="txtFone"
+						label="#{bundle.lbl_fone}"
+						value="#{setoresBacking.entity.fone}" />
+
+					<xcp:endereco
+						id="empresa"
+						value="#{setoresBacking.entity.endereco}"
+						stylefieldset="margin-left: 0px !important;" 
+						maxlengthcompl="60" />
+
+					<xcp:lov
+						id="lovCcusto"
+						value="#{setoresBacking.entity.ccustoFk}"
+						label="#{bundle.lbl_ccustoTransf}"
+						query="ccusto"
+						size="8" />
+
+					<xcp:number
+						id="txtFuncmin"
+						label="#{bundle.lbl_funcmin}"
+						value="#{setoresBacking.entity.funcmin}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999" />
+
+					<xcp:date
+						id="txtDtppci"
+						value="#{setoresBacking.entity.dtppci}"
+						label="#{bundle.lbl_dtppci}" />
+
+					<xcp:memo
+						id="txtAtivLocal"
+						label="#{bundle.lbl_ativlocal}"
+						value="#{setoresBacking.entity.ativlocal}"
+						size="4000" />
+
+					<xcp:number
+						id="txtINEP"
+						label="#{bundle.lbl_inep}"
+						value="#{setoresBacking.entity.inep}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999" />
+
+					<xcp:lov
+						id="lovInstpred"
+						value="#{setoresBacking.entity.instpredFk}"
+						label="#{bundle.lbl_instpred}"
+						query="instprediais"
+						size="10" />
+
+					<xcp:combo
+						id="cboTipApoio"
+						value="#{setoresBacking.entity.tipApoio}"
+						label="#{bundle.lbl_tipApoio}"
+						itens="#{setoresBacking.itensTipApoio}"
+						rendered="#{setoresBacking.tribunal}"
+						required="true" />
+					
+					<xcp:number
+						id="codCNJ"
+						label="#{bundle.lbl_codCNJ}"
+						value="#{setoresBacking.entity.codCNJ}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"						
+						rendered="#{setoresBacking.tribunal}" />
+
+					<xcp:combo
+						id="cboTipClassseplag"
+						value="#{setoresBacking.entity.tipClassseplag}"
+						label="#{bundle.lbl_tipClassseplag}"
+						itens="#{setoresBacking.itensTipClassseplag}"
+						rendered="#{setoresBacking.tribunal}"
+						required="true" />
+
+					<xcp:combo
+						id="cboTipClassfolha"
+						value="#{setoresBacking.entity.tipClassfolha}"
+						label="#{bundle.lbl_tipClassfolha}"
+						itens="#{setoresBacking.itensTipClassfolha}"
+						rendered="#{setoresBacking.tribunal}"
+						required="true" />
+
+					<xcp:combo
+						id="cboIndFormal"
+						value="#{setoresBacking.entity.indFormal}"
+						label="#{bundle.lbl_indFormal}"
+						itens="#{setoresBacking.itensIndSimNao}"
+						rendered="#{setoresBacking.tribunal}"
+						required="true" />
+
+					<xcp:combo
+						id="cboIndProcadm"
+						value="#{setoresBacking.entity.indProcadm}"
+						label="#{bundle.lbl_indProcadm}"
+						itens="#{setoresBacking.itensIndSimNao}"
+						rendered="#{setoresBacking.tribunal}"
+						required="true" />
+
+					<xcp:combo
+						id="cboIndLotpessoal"
+						value="#{setoresBacking.entity.indLotpessoal}"
+						label="#{bundle.lbl_indLotpessoal}"
+						itens="#{setoresBacking.itensIndSimNaoNull}"
+						rendered="#{setoresBacking.tribunal}"
+						required="true">
+						<p:ajax
+							event="change"
+							update="cboIndSomenteEfetivos cboIndSomenteEfetivos_l"
+							listener="#{setoresBacking.actionChangeIndLotpessoal}" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboIndSomenteEfetivos"
+						value="#{setoresBacking.entity.indSomenteEfetivos}"
+						label="#{bundle.lbl_somente_servidores_efetivos}"
+						itens="#{setoresBacking.itensIndSimNao}"
+						rendered="#{setoresBacking.entity.indLotpessoal == 1}"
+						required="true" />
+
+				</xcp:panelForm>
+
+				<xcp:panelEsoc backing="#{setoresBacking}" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="detalhes">
+		<ui:include src="SetoresForm/SetoresResponsaveisForm.xhtml" />
+		<ui:include src="SetoresForm/SubstitutosForm.xhtml">
+			<ui:param
+				name="id"
+				value="auto" />
+			<ui:param
+				name="backing"
+				value="#{setoresSubstitutosAutoBacking}" />
+		</ui:include>
+		<ui:include src="SetoresForm/SubstitutosForm.xhtml">
+			<ui:param
+				name="id"
+				value="event" />
+			<ui:param
+				name="backing"
+				value="#{setoresSubstitutosEventBacking}" />
+		</ui:include>
+		<p:outputPanel rendered="#{setoresBacking.tribunal}">
+			<ui:include src="SetoresForm/SubstitutosForm.xhtml">
+				<ui:param
+					name="id"
+					value="assist" />
+				<ui:param
+					name="backing"
+					value="#{setoresSubstitutosAssistBacking}" />
+			</ui:include>
+			<ui:include src="SetoresForm/OcorrenciasSetForm.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel
+			rendered="#{setoresIntegracaoBacking.renderedMatIntegracao}">
+			<ui:include src="SetoresForm/SetoresIntegracaoForm.xhtml" />
+		</p:outputPanel>
+		<ui:include src="SetoresForm/SetoresLotacaoParForm.xhtml" />
+		<ui:include src="SetoresForm/SetoresTelefonesForm.xhtml" />
+		<ui:include src="SetoresForm/SetoresTransformacaoForm.xhtml" />
+		<ui:include src="SetoresForm/SetoresGratificacaoForm.xhtml" />
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgRest"
+			header="#{bundle.title_pendencia}"
+			widgetVar="dlgRest_w">
+			<xcp:form id="frmRest">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{setoresGratificacaoBacking.restricao.cargoFk}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="6" />
+
+					<xcp:lov
+						id="lovVinculo"
+						value="#{setoresGratificacaoBacking.restricao.vinculoFk}"
+						label="#{bundle.lbl_vinculo}"
+						query="vinculos"
+						size="6" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+
+						<xcp:commandButton
+							id="btnGravar"
+							icon="ui-icon-disk"
+							value="#{bundle.btn_gravar}"
+							update=":form:tabRest"
+							action="#{setoresGratificacaoBacking.actionGravarRestricao}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgRest_w').hide();return false;" />
+
+					</p:toolbarGroup>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{setoresSubstitutosAutoBacking.model}" />
+		</ui:include>
+
+		<p:dialog
+			header="#{bundle.tit_historico}"
+			modal="true"
+			id="dlg"
+			widgetVar="dlg_w">
+			<xcp:form id="frmDlg">
+				<ui:include src="SetoresForm/SetSubsAutoDetalhesForm.xhtml">
+					<ui:param
+						name="backing"
+						value="#{setoresSubstitutosAutoBacking}" />
+				</ui:include>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlg_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

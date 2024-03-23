@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:fieldset
+				id="fldpesq"
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+				<xcp:panelForm>
+
+					<xcp:dateRange
+						id="txtDataPesq"
+						valueStart="#{esocDownloadBacking.dtCriacaoIni}"
+						valueEnd="#{esocDownloadBacking.dtCriacaoFim}"
+						label="#{bundle.lbl_data}"
+						size="8"
+						required="true" />
+
+					<xcp:radio
+						id="cboTipo"
+						value="#{esocDownloadBacking.tipo}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{esocDownloadBacking.itensTipo}" />
+
+					<xcp:lov
+						id="lovEvento"
+						value="#{esocDownloadBacking.tipoEvento}"
+						label="#{bundle.lbl_evento}"
+						query="esoc_tipo_evento" />
+
+					<xcp:text
+						id="cdrespPesq"
+						value="#{esocDownloadBacking.cdresposta}"
+						label="#{bundle.lbl_codresposta}" />
+
+					<xcp:text
+						id="txtNomeArq"
+						label="#{bundle.lbl_nomearq}"
+						value="#{esocDownloadBacking.desFiltro}"
+						size="120"
+						maxlength="200">
+						<p:ajax
+							event="blur"
+							process="@this"
+							update="@none" />
+					</xcp:text>
+
+				</xcp:panelForm>
+
+			</p:fieldset>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btnPesq_#{id}"
+						icon="icon-pesquisar_azul"
+						value="#{bundle.btn_pesquisar}"
+						action="#{esocDownloadBacking.actionBuscar}"
+						update=":form:tblDown :form:btnDownload"
+						process="fldpesq @this" />
+				</f:facet>
+			</p:toolbar>
+
+
+			<p:dataTable
+				id="tblDown"
+				var="row"
+				value="#{esocDownloadBacking.list}"
+				rows="10"
+				paginator="true">
+
+				<p:column width="1">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox value="#{esocDownloadBacking.checked}">
+							<p:ajax
+								listener="#{esocDownloadBacking.actionCheckAll}"
+								update="tblDown" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{row.checked}">
+						<p:ajax process="@this" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					value="#{row.seq}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtcriacao}"
+					value="#{row.dtcriacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleTimestamp value="#{row.dtcriacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.evento}"
+					type="String"
+					size="4">
+					<xcp:outputSimple value="#{row.evento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.desEvento}"
+					type="String"
+					size="12">
+					<xcp:outputSimple value="#{row.desEvento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_lote}"
+					value="#{row.lote}"
+					type="Number"
+					size="4"
+					rendered="#{esocDownloadBacking.tipo == 1}">
+					<xcp:outputSimpleNumber
+						value="#{row.lote}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_id}"
+					value="#{row.id}"
+					type="String"
+					size="30"
+					rendered="#{esocDownloadBacking.tipo == 1}">
+					<xcp:outputSimple value="#{row.id}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cdresposta}"
+					value="#{row.cdresposta}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.cdresposta}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descresposta}"
+					value="#{row.desResposta}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.desResposta}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btnDownload"
+						value="#{bundle.btn_download}"
+						ajax="false"
+						immediate="true"
+						process=":form:txtNomeArq @this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						disabled="#{empty esocDownloadBacking.list}">
+						<p:fileDownload
+							value="#{esocDownloadBacking.download}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

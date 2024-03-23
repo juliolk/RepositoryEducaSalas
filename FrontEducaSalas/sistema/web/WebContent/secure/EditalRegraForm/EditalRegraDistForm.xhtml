@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="EditalRegraDist"
+		backing="#{editalRegraDistBacking}"
+		masterId="EditalRegra">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_ordem}"
+				value="#{row.ordem}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.ordem}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="String"
+				size="20"
+				itens="#{editalRegraDistBacking.itensTipo}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{editalRegraDistBacking.itensTipo}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtOrdem_EditalRegraDist"
+					label="#{bundle.lbl_ordem}"
+					required="true"
+					value="#{editalRegraDistBacking.entity.ordem}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					readonly="#{not editalRegraDistBacking.entity.novo}" />
+
+				<xcp:combo
+					id="cboTipo_EditalRegraDist"
+					value="#{editalRegraDistBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{editalRegraDistBacking.itensTipo}" />
+
+				<xcp:memo
+					id="txtObs_EditalRegraDist"
+					label="#{bundle.lbl_obs}"
+					value="#{editalRegraDistBacking.entity.obs}"
+					size="100" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

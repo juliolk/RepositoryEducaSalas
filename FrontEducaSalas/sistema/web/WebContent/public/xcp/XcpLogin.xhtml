@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:p="http://primefaces.org/ui"
+	template="#{xcp:getLayout('login')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelForm
+			controlsSizeClass="big-controls"
+			floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+			<xcp:text
+				id="txtDesUsuario"
+				label="#{xcpLayoutAppBacking.tipoAcesso == 1 ? bundle.lbl_usuario : bundle.lbl_matricula_login}"
+				value="#{xcpLoginBacking.desUsuario}"
+				size="35"
+				maxlength="80"
+				onkeyup="enter()" />
+
+			<xcp:secret
+				id="txtDesSenha"
+				label="#{bundle.lbl_senha}"
+				value="#{xcpLoginBacking.desSenha}"
+				size="35"
+				maxlength="80"
+				autocomplete="off" 
+				onkeyup="enter()" />
+
+			<p:outputPanel
+				styleClass="input-group"
+				rendered="#{xcpLoginBacking.renderedCaptcha and xcpLoginBacking.tipoAcesso == 2 and xcpCaptchaBacking.tipoCaptcha == 0}">
+
+				<p:inputText
+					id="txtCaptcha"
+					label="#{bundle.lbl_verificacao}"
+					value="#{xcpLoginBacking.desCaptcha}"
+					rendered="#{xcpLoginBacking.tipoAcesso == 2}"
+					autocomplete="off" 
+					onkeyup="enter()"/>
+				<p:outputLabel
+					value="#{bundle.lbl_verificacao}#{viewUtil.labelSufix}"
+					for="txtCaptcha">
+				</p:outputLabel>
+
+				<hr />
+
+			</p:outputPanel>
+
+			<p:outputPanel
+				styleClass="input-group"
+				rendered="#{xcpLoginBacking.renderedCaptcha and xcpLoginBacking.tipoAcesso == 2 and xcpCaptchaBacking.tipoCaptcha == 0}">
+				<p:graphicImage
+					id="imgDownloadCaptcha"
+					value="#{xcpCaptchaBacking.imgCaptcha.login}"
+					cache="false" />
+				<xcp:commandButton
+					id="btnRefreshCaptcha"
+					icon="ui-icon-refresh"
+					process="@this"
+					immediate="true"
+					update="imgDownloadCaptcha"
+					action="#{xcpCaptchaBacking.actionTrocarCaptcha('login')}" />
+			</p:outputPanel>
+			
+			<p:outputPanel
+				styleClass="input-group"
+				rendered="#{xcpLoginBacking.renderedCaptcha and xcpLoginBacking.tipoAcesso == 2 and xcpCaptchaBacking.tipoCaptcha == 1}">
+				<p:captcha id="reCaptcha"  language="pt"   requiredMessage="#{bundle.msg_recaptcha_requerido}"/>
+				<br/><br/><br/>
+			</p:outputPanel>
+
+			<p:spacer rendered="#{xcpLoginBacking.tipoAcesso == 1}" />
+
+			<p:outputPanel>
+				<xcp:commandButton
+					id="btn_login"
+					value="#{bundle.btn_login}"
+					ajax="false"
+					icon="ui-icon-locked"
+					action="#{xcpLoginBacking.logar}"
+					styleClass="botao_login btn-main-action" />
+
+				<xcp:commandButton
+					id="btn_loginCert"
+					value="#{bundle.btn_loginCert}"
+					ajax="false"
+					icon="ui-icon-arrowthick-1-e"
+					rendered="#{xcpLoginBacking.renderedLoginCert and xcpLoginBacking.tipoAcesso != 2}"
+					action="#{xcpLoginBacking.logarCert}"
+					immediate="true"
+					styleClass="botao_login2" />
+			</p:outputPanel>
+
+			<p:commandLink
+				id="lnkEsqueciSenha"
+				value="#{bundle.lnk_equeciSenha}"
+				action="#{xcpLoginBacking.actionEsqueciSenha}"
+				immediate="true"
+				ajax="false"
+				rendered="#{xcpLoginBacking.tipoAcesso == 2 and xcpLoginBacking.renderedEsqueciSenha}" />
+
+		</xcp:panelForm>
+
+
+		<script>
+		function enter() {
+		  if (event.keyCode === 13) {
+		    event.preventDefault();
+		    document.getElementById("form:btn_login").click();
+		  }
+		}
+	</script>
+
+
+	</ui:define>
+</ui:composition>

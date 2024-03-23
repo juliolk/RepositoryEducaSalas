@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<center>
+		<xcp:panelForm>
+
+			<xcp:number
+				id="txtOperador"
+				label="#{bundle.lbl_operador}"
+				rendered="#{!operadoresPortalBacking.entity.novo}"
+				value="#{operadoresPortalBacking.entity.operador}"
+				size="15"
+				readonly="true"
+				maxValue="999999999999999" />
+
+			<xcp:combo
+				id="cboConsignatario"
+				value="#{operadoresPortalBacking.entity.consignatario}"
+				label="#{bundle.lbl_consignatario}"
+				itens="#{operadoresPortalBacking.itensIndSimNaoNull}">
+				<p:ajax
+					update="lovCodconsig lovCodconsig_l lovFuncionario lovFuncionario_l"
+					process="@this" />
+			</xcp:combo>
+
+			<xcp:lov
+				id="lovCodconsig"
+				value="#{operadoresPortalBacking.entity.codconsigFk}"
+				label="#{bundle.lbl_codconsig}"
+				query="consignacoes_oper"
+				size="10"
+				required="true"
+				rendered="#{operadoresPortalBacking.entity.consignatario == 1}" />
+
+			<xcp:lov
+				id="lovFuncionario"
+				value="#{operadoresPortalBacking.entity.funcionarioFk}"
+				readonly="#{!operadoresPortalBacking.entity.novo}"
+				label="#{bundle.lbl_matricula}"
+				required="#{operadoresPortalBacking.entity.consignatario == null or operadoresPortalBacking.entity.consignatario == 0}"
+				query="operadores_novos"
+				size="15"
+				maxlength="8"
+				selectionListener="#{operadoresPortalBacking.selectMatricula}"
+				update="txtNome" />
+
+			<xcp:text
+				id="txtNome"
+				label="#{bundle.lbl_nome}"
+				required="true"
+				value="#{operadoresPortalBacking.entity.nome}"
+				maxlength="60"
+				size="50" />
+
+			<xcp:date
+				id="txtDtvalidade"
+				value="#{operadoresPortalBacking.entity.dtvalidade}"
+				label="#{bundle.lbl_dtvalidade}"
+				size="15" />
+			<xcp:number
+				id="txtLinhas"
+				label="#{bundle.lbl_linhas}"
+				value="#{operadoresPortalBacking.entity.linhas}"
+				size="15"
+				maxlength="5"
+				maxValue="99999" />
+			<xcp:combo
+				id="cboJanela"
+				value="#{operadoresPortalBacking.entity.janela}"
+				label="#{bundle.lbl_janela}"
+				itens="#{operadoresPortalBacking.itensJanela}" />
+			<xcp:secret
+				id="txtPass"
+				label="#{bundle.lbl_desSenha}"
+				rendered="#{not operadoresPortalBacking.entity.novo}"
+				value="#{operadoresPortalBacking.novaSenha}" />
+			<xcp:combo
+				id="cboSituacao"
+				label="#{bundle.lbl_situacao}"
+				styleClass="combooperadores"
+				itens="#{operadoresPortalBacking.itensIndSimNao}"
+				value="#{operadoresPortalBacking.entity.situacao}" />
+
+			<xcp:border
+				id="brd_ldapo"
+				header="#{bundle.lbl_acesso_ldap}">
+
+				<xcp:combo
+					id="cboLdap"
+					label="#{bundle.lbl_ldap}"
+					itens="#{operadoresPortalBacking.itensIndSimNao}"
+					styleClass="combooperadores"
+					value="#{operadoresPortalBacking.entity.ldap}">
+					<p:ajax
+						event="change"
+						update="lovLdap,lovLdap_l"
+						process="@this" />
+				</xcp:combo>
+
+				<xcp:lov
+					id="lovLdap"
+					value="#{operadoresPortalBacking.entity.codldapFk}"
+					label="#{bundle.lbl_lovldap}"
+					required="#{operadoresPortalBacking.entity.indLdap}"
+					rendered="#{operadoresPortalBacking.entity.indLdap}"
+					query="ldap"
+					size="8" />
+
+			</xcp:border>
+
+		</xcp:panelForm>
+
+	</center>
+</ui:composition>

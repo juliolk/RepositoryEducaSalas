@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	
+	<style type="text/css">
+		.help-text {
+			color: #777;
+			background-color: #efefef;
+		    padding: 5px 10px;
+		    border-radius: 3px;
+		}
+	</style>
+	
+	<xcp:panelManutDetalhes
+		id="ClimaAlternativas"
+		rendered="#{climaAlternativasBacking.mestreBacking.entity.tipo != 3}"
+		backing="#{climaAlternativasBacking}"
+		masterId="ClimaGruporesposta">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_sequencia}"
+				value="#{row.sequencia}"
+				type="Number"
+				size="4">
+				<xcp:outputSimpleNumber
+					value="#{row.sequencia}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_complemento}"
+				value="#{row.complemento}"
+				rendered="#{climaAlternativasBacking.mestreBacking.entity.tipo == 1}"
+				type="String"
+				itens="#{climaAlternativasBacking.itensComplemento}"
+				size="10">
+				<xcp:outputSimple
+					value="#{row.complemento}"
+					itens="#{climaAlternativasBacking.itensComplemento}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao_complemento}"
+				value="#{row.descricaoComplemento}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.descricaoComplemento}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_pontos}"
+				value="#{row.pontos}"
+				type="Number"
+				size="13">
+				<xcp:outputSimpleNumber
+					value="#{row.pontos}"
+					precision="10"
+					scale="2" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtSequencia_ClimaAlternativas"
+					label="#{bundle.lbl_sequencia}"
+					required="true"
+					value="#{climaAlternativasBacking.entity.sequencia}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					readonly="#{not climaAlternativasBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_ClimaAlternativas"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{climaAlternativasBacking.entity.descricao}"
+					maxlength="300"
+					size="50" />
+
+				<xcp:combo
+					id="cboComplemento_ClimaAlternativas"
+					value="#{climaAlternativasBacking.entity.complemento}"
+					label="#{bundle.lbl_complemento}"
+					required="true"
+					rendered="#{climaAlternativasBacking.mestreBacking.entity.tipo != 3}"
+					itens="#{climaAlternativasBacking.itensComplemento}">
+					<p:ajax
+						event="change"
+						update="txtDescricaoComplemento txtDescricaoComplemento_l" />
+				</xcp:combo>
+
+				<xcp:text
+					id="txtDescricaoComplemento"
+					label="#{bundle.lbl_descricao_complemento}"
+					required="true"
+					value="#{climaAlternativasBacking.entity.descricaoComplemento}"
+					maxlength="300"
+					rendered="#{climaAlternativasBacking.entity.alternativaComComplemento}"					
+					size="78" />
+					
+				<p:outputLabel value=""/>
+				<p:outputPanel styleClass="help-text">
+					<h4>Observação:</h4>
+					<p>
+						Caso desejar uma resposta no meio do texto da pergunta informe na descrição do complemento os caracteres <strong>#RESPOSTA#</strong> 
+					</p>
+					<p>
+						Por exemplo, a descrição do complemento com o texto:<br/>
+						<strong>Experiência de #RESPOSTA# anos comprovada.</strong>
+					</p>
+					<p>
+						Gerará a seguinte pergunta:<br/>
+						<strong>Experiência de ___________ anos comprovada.</strong>
+					</p>
+				</p:outputPanel>
+
+				<xcp:number
+					id="txtPontos_ClimaAlternativas"
+					label="#{bundle.lbl_pontos}"
+					size="13"
+					value="#{climaAlternativasBacking.entity.pontos}"
+					precision="10"
+					scale="2" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

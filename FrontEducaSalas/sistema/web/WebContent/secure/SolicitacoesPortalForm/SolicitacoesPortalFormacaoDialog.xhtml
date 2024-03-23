@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.lbl_titulo_cursoscapacitacao}"
+		modal="true"
+		id="dlgFor"
+		widgetVar="dlgFor_w"
+		closeOnEscape="true"
+		styleClass="full-page-dialog rightside-dialog"
+		dynamic="false"
+		resizable="false"
+		draggable="false"
+		closable="false"
+		onShow="$(this).eachHasValue();">
+		<xcp:form id="frmFor">
+
+			<xcp:panelForm
+				id="pnl_form_dados_formacao"
+				floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+				<!-- trocar por lov
+				<xcp:combo
+					id="cboCurso"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.curso}"
+					label="#{bundle.lbl_tipo}"
+					readonly="#{not solicitacoesPortalBacking.formacaoSelecionada.novo}"
+					required="true"
+					noFloat="true"
+					itens="#{solicitacoesPortalBacking.itensTipoFormacao}">
+					<p:ajax
+						event="change"
+						update="pnl_form_cursoarea" />
+				</xcp:combo> -->
+
+				<xcp:lov
+					id="lovCurso"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.cursoFk}"
+					label="#{bundle.lbl_tipo}"
+					query="tipoformacaoPortal"
+					required="true"
+					update="pnl_form_cursoarea,lovAvaliacao,lovAvaliacao_l,lovConhecimento,lovConhecimento_l"
+					size="6"
+					selectionListener="#{solicitacoesPortalBacking.selectCurso}" />
+
+				<xcp:lov
+					id="lovAvaliacao"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.avaliacaoFk}"
+					label="#{bundle.lbl_avalForm}"
+					query="avaliacoesConhec"
+					update="lovConhecimento,lovConhecimento_l"
+					rendered="#{solicitacoesPortalBacking.formacaoSelecionada.cursoFk.indConhecimento == 1}"
+					selectionListener="#{solicitacoesPortalBacking.selectAvaliacao}"
+					size="6" />
+
+				<xcp:lov
+					id="lovConhecimento"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.conhecimentoFk}"
+					label="#{bundle.lbl_conhecForm}"
+					query="conhecimentos"
+					rendered="#{solicitacoesPortalBacking.formacaoSelecionada.cursoFk.indConhecimento == 1}"
+					params="#{solicitacoesPortalBacking.paramsAvaliacao}"
+					size="6" />
+
+				<xcp:lov
+					id="lovInstituicao"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.instituicaoFk}"
+					label="#{bundle.lbl_instituicao}"
+					query="instituicoes"
+					size="6" />
+
+				<xcp:panelForm id="pnl_form_cursoarea">
+					<xcp:lov
+						id="lovCursoAcad"
+						value="#{solicitacoesPortalBacking.formacaoSelecionada.cursoacadFk}"
+						label="#{bundle.lbl_curso}"
+						query="cursoacad"
+						size="6"
+						rendered="#{solicitacoesPortalBacking.canRenderCursoAcad()}" />
+
+					<xcp:combo
+						id="cboIndRelacaoativ"
+						value="#{solicitacoesPortalBacking.formacaoSelecionada.indRelacaoativ}"
+						label="#{bundle.lbl_indRelacaoativ}"
+						itens="#{solicitacoesPortalBacking.itensIndSimNao}"
+						rendered="#{solicitacoesPortalBacking.renderedIndRelAtiv}"
+						noFloat="true" />
+
+					<xcp:combo
+						id="cboIndTrabalhoFinal"
+						value="#{solicitacoesPortalBacking.formacaoSelecionada.indTrabalhoFinal}"
+						label="#{bundle.lbl_indTrabalhoFinal}"
+						itens="#{solicitacoesPortalBacking.itensIndSimNao}"
+						rendered="#{solicitacoesPortalBacking.renderedIndTrabFinal}"
+						noFloat="true" />
+
+					<xcp:text
+						id="txtArea"
+						label="#{bundle.col_areaCurso}"
+						value="#{solicitacoesPortalBacking.formacaoSelecionada.area}"
+						size="60"
+						rendered="#{solicitacoesPortalBacking.canRenderAreaFormacao()}" />
+				</xcp:panelForm>
+
+				<xcp:date
+					id="txtDtinicio"
+					required="true"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.dtinicio}"
+					label="#{bundle.lbl_inicio}" />
+
+				<xcp:date
+					id="txtDtfim"
+					required="true"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.dtfim}"
+					label="#{bundle.lbl_fim}" />
+
+				<xcp:number
+					id="txtQtdhoras"
+					label="#{bundle.lbl_cargahoraria}"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.qtdhoras}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					rendered="#{solicitacoesPortalBacking.pontosCalculados}" />
+
+				<xcp:number
+					id="txtPontos"
+					label="#{bundle.lbl_pontos}"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.pontos}"
+					size="5"
+					precision="7"
+					scale="2"
+					maxValue="9999999"
+					rendered="#{solicitacoesPortalBacking.renderedPontos}"
+					readonly="#{solicitacoesPortalBacking.pontosCalculados}" />
+
+				<xcp:lov
+					id="lovSituacao"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.situacaoFk}"
+					label="#{bundle.lbl_situacaoForma}"
+					required="true"
+					query="formacao_situacao"
+					size="5" />
+
+				<xcp:combo
+					id="cboIndPromovalidado"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.indPromovalidado}"
+					label="#{bundle.lbl_indPromovalidado}"
+					itens="#{solicitacoesPortalBacking.itensIndSimNao}"
+					readonly="true" />
+
+				<xcp:combo
+					id="cboIndPromoutilizado"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.indPromoutilizado}"
+					label="#{bundle.lbl_indPromoutilizado}"
+					itens="#{solicitacoesPortalBacking.itensIndSimNao}"
+					readonly="true" />
+
+				<xcp:date
+					id="txtDtregistro"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.dtregistro}"
+					label="#{bundle.lbl_dtregistroo}"
+					readonly="true"
+					rendered="#{not solicitacoesPortalBacking.formacaoSelecionada.novo}" />
+
+				<xcp:memo
+					id="txtObs"
+					label="#{bundle.lbl_obs}"
+					value="#{solicitacoesPortalBacking.formacaoSelecionada.obs}"
+					size="3000" />
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_ok"
+						action="#{solicitacoesPortalBacking.actionGravarFormacao}"
+						value="#{bundle.btn_gravar}"
+						oncomplete="$(this).eachHasValue()"
+						update=":#{p:component('pnl_dados_formacao')}" />
+
+					<xcp:commandButton
+						id="btnVoltar_Formacao"
+						immediate="true"
+						value="#{bundle.btn_cancelar}"
+						oncomplete="$(this).eachHasValue()"
+						onclick="PF('dlgFor_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

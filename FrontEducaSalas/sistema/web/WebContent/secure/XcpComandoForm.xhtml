@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="XcpComando"
+			backing="#{xcpComandoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_seqComando}"
+					value="#{row.seqComando}"
+					type="Number"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.seqComando}"
+						precision="18"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desComando}"
+					value="#{row.desComando}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.desComando}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipTempo}"
+					value="#{row.tipTempo}"
+					type="Number"
+					size="5"
+					itens="#{xcpComandoBacking.itensTipTempo}">
+					<xcp:outputSimple
+						value="#{row.tipTempo}"
+						precision="1"
+						scale="0"
+						itens="#{xcpComandoBacking.itensTipTempo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipAviso}"
+					value="#{row.tipAviso}"
+					type="String"
+					size="5"
+					itens="#{xcpComandoBacking.itensTipAviso}">
+					<xcp:outputSimple
+						value="#{row.tipAviso}"
+						precision="1"
+						scale="0"
+						itens="#{xcpComandoBacking.itensTipAviso}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipDestino}"
+					value="#{row.tipDestino}"
+					type="String"
+					size="5"
+					itens="#{xcpComandoBacking.itensTipDestino}">
+					<xcp:outputSimple
+						value="#{row.tipDestino}"
+						precision="1"
+						scale="0"
+						itens="#{xcpComandoBacking.itensTipDestino}" />
+				</xcp:column>
+
+			</ui:define>
+			
+			<ui:define name="barraForm">
+  				<xcp:commandButton
+					id="btn_gravar_enviar"
+					icon="ui-icon-disk"
+					action="#{xcpComandoBacking.actionGravarEnviar}"
+					value="#{bundle.btn_gravar_enviar}"
+					process="@this #{grpFormId}"
+					update="#{pManutId} #{update} :focusDefault" />
+			</ui:define>
+			
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtSeqComando"
+						label="#{bundle.lbl_seqComando}"
+						required="true"
+						value="#{xcpComandoBacking.entity.seqComando}"
+						size="18"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999"
+						readonly="true"
+						rendered="#{not xcpComandoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDesComando"
+						label="#{bundle.lbl_desComando}"
+						required="true"
+						value="#{xcpComandoBacking.entity.desComando}"
+						size="50"
+						maxlength="100" />
+
+					<xcp:combo
+						id="cboTipDestino"
+						value="#{xcpComandoBacking.entity.tipDestino}"
+						label="#{bundle.lbl_tipDestino}"
+						required="true"
+						itens="#{xcpComandoBacking.itensTipDestino}"
+						readonly="#{not xcpComandoBacking.entity.novo}">
+						<p:ajax
+							update="@none"
+							process="@this" />
+					</xcp:combo>
+
+					<xcp:combo
+						id="cboTipAviso"
+						value="#{xcpComandoBacking.entity.tipAviso}"
+						label="#{bundle.lbl_tipAviso}"
+						required="true"
+						itens="#{xcpComandoBacking.itensTipAviso}">
+						<p:ajax update="lovCodServerEmail,lovCodServerEmail_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovCodServerEmail"
+						value="#{xcpComandoBacking.entity.codServerEmailFk}"
+						label="#{bundle.lbl_codServerEmail}"
+						query="xcp_server_email"
+						size="10"
+						required="true"
+						rendered="#{xcpComandoBacking.entity.tipAviso == 2}" />
+
+					<xcp:combo
+						id="cboTipTempo"
+						value="#{xcpComandoBacking.entity.tipTempo}"
+						label="#{bundle.lbl_tipTempo}"
+						required="true"
+						itens="#{xcpComandoBacking.itensTipTempo}">
+						<p:ajax
+							update="cboTipMes,cboTipMes_l,cboTipTempo,cboTipTempo_l,txtDia,txtDia_l,txtHora,txtHora_l,txtMinutos,txtMinutos_l" />
+					</xcp:combo>
+
+					<xcp:number
+						id="txtDia"
+						label="#{bundle.lbl_dia}"
+						value="#{xcpComandoBacking.entity.dia}"
+						size="2"
+						required="true"
+						precision="2"
+						scale="0"
+						maxValue="31"
+						rendered="#{xcpComandoBacking.entity.tipTempo == 3 or xcpComandoBacking.entity.tipTempo == 4}" />
+					
+					<xcp:combo
+						id="cboTipMes"
+						value="#{xcpComandoBacking.entity.mes}"
+						label="#{bundle.lbl_mes}"
+						required="true"
+						itens="#{xcpComandoBacking.itensTipMes}"
+						rendered="#{xcpComandoBacking.entity.tipTempo == 4}">
+					</xcp:combo>
+
+					<xcp:time
+						id="txtHora"
+						value="#{xcpComandoBacking.entity.hora}"
+						label="#{bundle.lbl_hora}"
+						required="true"
+						rendered="#{xcpComandoBacking.entity.tipTempo == 1 or xcpComandoBacking.entity.tipTempo == 3 or xcpComandoBacking.entity.tipTempo == 4}" />
+
+					<xcp:number
+						id="txtMinutos"
+						label="#{bundle.lbl_minutos}"
+						value="#{xcpComandoBacking.entity.minutos}"
+						size="4"
+						precision="4"
+						required="true"
+						scale="0"
+						minValue="1"
+						maxValue="9999"
+						rendered="#{xcpComandoBacking.entity.tipTempo == 2}" />
+
+					<xcp:text
+						id="txtDesProcedure"
+						label="#{bundle.lbl_desProcedure}"
+						value="#{xcpComandoBacking.entity.desProcedure}"
+						size="50"
+						maxlength="200" />
+
+					<xcp:memo
+						id="txtDesSql"
+						required="true"
+						value="#{xcpComandoBacking.entity.desSql}"
+						label="#{bundle.lbl_desSql}"
+						size="32000"/>
+
+					<xcp:text
+						id="txtDesAssunto"
+						label="#{bundle.lbl_desAssunto}"
+						value="#{xcpComandoBacking.entity.desAssunto}"
+						size="50"
+						required="true"
+						maxlength="100" />
+
+					<xcp:lov
+						id="lovSeqTextoCab"
+						value="#{xcpComandoBacking.entity.seqTextoCabFk}"
+						label="#{bundle.lbl_seqTextoCab}"
+						query="xcp_texto"
+						size="20" />
+
+					<xcp:combo
+						id="cboTipCorpo"
+						value="#{xcpComandoBacking.entity.tipCorpo}"
+						label="#{bundle.lbl_tipCorpo}"
+						required="true"
+						itens="#{xcpComandoBacking.itensTipCorpo}">
+						<p:ajax
+							update="lovSeqTextoCorpo,lovSeqTextoCorpo_l,txtDesCorpo,txtDesCorpo_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovSeqTextoCorpo"
+						value="#{xcpComandoBacking.entity.seqTextoCorpoFk}"
+						label="#{bundle.lbl_seqTextoCorpo}"
+						query="xcp_texto"
+						size="20"
+						required="true"
+						rendered="#{xcpComandoBacking.entity.tipCorpo == 2}" />
+
+					<xcp:memo
+						id="txtDesCorpo"
+						value="#{xcpComandoBacking.entity.desCorpo}"
+						label="#{bundle.lbl_desCorpo}"
+						required="true"
+						rendered="#{xcpComandoBacking.entity.tipCorpo == 1}" />
+
+					<xcp:lov
+						id="lovSeqTextoRod"
+						value="#{xcpComandoBacking.entity.seqTextoRodFk}"
+						label="#{bundle.lbl_seqTextoRod}"
+						query="xcp_texto"
+						size="20" />
+
+					<xcp:combo
+						id="cboIndMarcaLin"
+						value="#{xcpComandoBacking.entity.indMarcaLin}"
+						label="#{bundle.lbl_indMarcaLin}"
+						required="true"
+						itens="#{xcpComandoBacking.itensIndSimNao}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{xcpComandoBacking.entity.obs}"
+						size="1000" />
+
+					<xcp:dateTime
+						id="txtDthInativacao"
+						value="#{xcpComandoBacking.entity.dthInativacao}"
+						label="#{bundle.lbl_dthInativacao}" />
+
+					<xcp:dateTime
+						id="txtDthProxExecucao"
+						pattern="dd/MM/yyyy HH:mm:ss"
+						value="#{xcpComandoBacking.entity.dthProxExecucao}"
+						label="#{bundle.lbl_dthProxExecucao}"
+						readonly="true"
+						rendered="#{xcpComandoBacking.entity.dthProxExecucao != null and xcpComandoBacking.entity.dthInativacao == null}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<p:outputPanel
+					rendered="#{xcpComandoBacking.entity.tipDestino == 1}">
+					<ui:include src="XcpComandoForm/XcpComandoGruposForm.xhtml" />
+				</p:outputPanel>
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

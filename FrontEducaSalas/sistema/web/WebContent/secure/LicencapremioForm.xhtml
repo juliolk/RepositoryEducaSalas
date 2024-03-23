@@ -1,0 +1,1107 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 100px;
+}
+</style>
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(4)}"
+			escape="false" />
+
+		<xcp:panelFuncionario
+			id="Licencapremio"
+			backing="#{licencapremioBacking}"
+			rowStyleClass="#{licencapremioBacking.getStyelclass(row.tipodoc,row.dtcancelamento,row.situacaoFk.tipo)}">
+
+			<ui:define name="barraForm">
+
+				<xcp:commandButton
+					id="btn_emitir_portaria"
+					value="#{bundle.btn_emitir_portaria}"
+					action="#{licencaPremioPortariaDiretaBacking.actionOpenOrExecute}"
+					update="#{licencaPremioPortariaDiretaBacking.btnEmitirUpdate}"
+					rendered="#{licencaPremioPortariaDiretaBacking.renderedEmissao}" />
+
+				<xcp:commandButton
+					id="btn_excluir_portaria"
+					value="#{bundle.btn_excluir_portaria}"
+					action="#{licencaPremioPortariaDiretaBacking.actionExcluirPortariaDireta}"
+					update="@form"
+					rendered="#{licencaPremioPortariaDiretaBacking.renderedExcluir}">
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandButton>
+
+			</ui:define>
+
+
+			<ui:define name="barraLista">
+
+				<p:column>
+					<xcp:commandButton
+						id="btn_atualiza_protelacoes"
+						value="#{bundle.btn_atualiza_protelacoes}"
+						action="#{licencapremioBacking.actionAtualizaProtelacoes}"
+						update="@form">
+					</xcp:commandButton>
+				</p:column>
+
+				<p:column>
+					<xcp:commandButton
+						id="btn_inserir_periodos"
+						value="#{bundle.btn_inserir_periodos}"
+						action="#{licencapremioBacking.actionInserirPeriodos}"
+						update="@form">
+					</xcp:commandButton>
+				</p:column>
+			</ui:define>
+			
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<h:panelGrid
+						columns="6"
+						columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+						<xcp:number
+							id="txtDiasTotais"
+							value="#{licencapremioBacking.helper.qtdTotalDias}"
+							label="#{bundle.lbl_qtd_total_dias}"
+							size="5"
+							readonly="true"
+							scale="0" />
+
+						<xcp:number
+							id="txtDiasGozados"
+							value="#{licencapremioBacking.helper.qtdDiasGozados}"
+							label="#{bundle.lbl_qtd_dias_gozados}"
+							size="5"
+							readonly="true"
+							scale="0" />
+
+						<xcp:number
+							id="txtDiasPendentes"
+							value="#{licencapremioBacking.helper.qtdDiasPendentes}"
+							label="#{bundle.lbl_qtd_dias_pendentes}"
+							size="3"
+							readonly="true"
+							scale="0" />
+					</h:panelGrid>
+				</p:column>
+			</ui:define>
+			
+
+			<ui:define name="colunas">
+
+				<p:column style="width:12px">
+					<p:rowToggler rendered="#{row.detalhes}" />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvctoIni}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleDate value="#{row.dtvctoIni}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvcto}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleDate value="#{row.dtvcto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+				<!--  
+				<xcp:column
+					headerText="#{bundle.col_diasdireito}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.diasdireito}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+-->
+				<xcp:column
+					headerText="#{bundle.col_dtgozo}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleDate value="#{row.dtgozo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtretorno}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleDate value="#{row.dtretorno}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diaslicenca}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.diaslicenca}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_saldo}"
+					type="Number"
+					size="2"
+					rendered="#{licencapremioBacking.renderedSaldo}">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdDiasSaldo}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diaspagos}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.diaspagos}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtpgto}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleDate value="#{row.dtpgto}" />
+				</xcp:column>
+				<!-- 				
+				<xcp:column
+					headerText="#{bundle.col_diasfalta}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasfalta}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+ 
+				<xcp:column
+					headerText="#{bundle.col_diaslicsaude}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.diaslicsaude}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_diasafastamento}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						precision="4"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_diaspenalidade}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.diaspenalidade}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+ -->
+ 				<xcp:column
+					headerText="#{bundle.col_dataprevista}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtGozoPrev}" />
+				</xcp:column>
+ 
+ 				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.situacaoFk.descricao}" />
+				</xcp:column>
+ 
+ 
+				<xcp:column
+					headerText="#{bundle.col_diasServico}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.diasServico}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasAvancoGratif}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.diasAvancoGratif}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasprorrog}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.diasprorrog}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasperdidos}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasperdidos}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipodoc}"
+					type="String"
+					size="24">
+					<xcp:outputSimple value="#{row.tipodocFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_portaria}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.registroFk.nrdoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datadoc}"
+					type="Date"
+					size="8">
+					<xcp:outputSimpleDate value="#{row.datadoc}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="String"
+					size="12">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inf}"
+					type="String"
+					size="5">
+					<xcp:commandButton
+						update=":dlgMvto"
+						icon="ui-icon-search"
+						action="#{licencapremioBacking.actionBuscarMovimentacoes}"
+						rendered="#{row.prorrogacao != null}">
+						<f:setPropertyActionListener
+							target="#{licencapremioBacking.helper.licSel}"
+							value="#{row}" />
+					</xcp:commandButton>
+				</xcp:column>
+
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabDoc"
+						var="rowDoc"
+						value="#{row.listaLicencapremioDoc}"
+						rowKey="#{rowDoc.PK}"
+						paginator="true"
+						selectionMode="single"
+						paginatorPosition="bottom"
+						rowIndexVar="idx"
+						selection="#{licencapremioBacking.helper.licencapremioDocSelecionada}"
+						rows="#{viewUtil.tableRows}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						rowStyleClass="#{tipodocCoresBacking.getStyelclass(rowDoc.tipodoc)}"
+						style="margin-bottom:0;">
+						<!-- 						<f:facet name="header">#{bundle.tit_doc_ajustes}</f:facet> -->
+						<p:ajax
+							event="rowSelect"
+							update=":frmDlg"
+							oncomplete="PF('dlg_w').show();" />
+
+						<ui:include src="DocManual/DocUnificadoDetalhesDoc.xhtml">
+							<ui:param
+								name="rowDoc"
+								value="#{rowDoc}" />
+
+							<ui:param
+								name="rowPrincipal"
+								value="#{row}" />
+
+							<ui:param
+								name="actionExclusao"
+								value="#{licencapremioBacking.model}" />
+						</ui:include>
+					</p:dataTable>
+
+				</p:rowExpansion>
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelGrid>
+					<p:row>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:date
+									id="txtDtvctoIni"
+									required="true"
+									value="#{licencapremioBacking.entity.dtvctoIni}"
+									label="#{bundle.lbl_dtvctoIni}"
+									readonly="#{licencapremioBacking.readOnlyDtaVcto}">
+									<p:ajax
+										event="change"
+										process="@this"
+										update="@none" />
+									<p:ajax
+										event="dateSelect"
+										process="@this"
+										update="@none" />
+								</xcp:date>
+							</xcp:panelForm>
+						</p:column>
+
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:date
+									id="txtDtvcto"
+									required="true"
+									value="#{licencapremioBacking.entity.dtvcto}"
+									label="#{bundle.lbl_dtvcto}"
+									readonly="#{licencapremioBacking.readOnlyDtaVcto}">
+									<p:ajax
+										event="change"
+										process="@this"
+										update="@none" />
+									<p:ajax
+										event="dateSelect"
+										process="@this"
+										update="@none" />
+								</xcp:date>
+
+							</xcp:panelForm>
+						</p:column>
+						<p:column>
+							<xcp:panelForm labelClass="labelWidth">
+								<xcp:number
+									id="cboSeq"
+									value="#{licencapremioBacking.entity.seq}"
+									label="#{bundle.lbl_seq}"
+									required="true"
+									size="2"
+									precision="2"
+									scale="0"
+									maxValue="9999"
+									readonly="#{licencapremioBacking.readOnlyFields}" />
+							</xcp:panelForm>
+						</p:column>
+					</p:row>
+				</xcp:panelGrid>
+
+
+				<xcp:panelForm>
+					<p:outputLabel value=" " />
+					<xcp:panelGrid style="margin-left:-10px;">
+						<p:row>
+							<p:column>
+
+								<xcp:border
+									id="brd_licenca"
+									header="#{bundle.tit_licenca}">
+									<xcp:date
+										id="txtDtminima"
+										value="#{licencapremioBacking.entity.dtminima}"
+										rendered="#{licencapremioBacking.entity.dtminima!=null}"
+										readonly="true"
+										label="#{bundle.lbl_dtminima}">
+									</xcp:date>
+
+									<xcp:date
+										id="txtDtgozo"
+										value="#{licencapremioBacking.entity.dtgozo}"
+										label="#{bundle.lbl_dtgozo}"
+										readonly="#{licencapremioBacking.readOnlyFields}">
+										<p:ajax
+											event="change"
+											listener="#{licencapremioBacking.calculaDias}"
+											update="txtDiaslicenca" />
+										<p:ajax
+											event="dateSelect"
+											listener="#{licencapremioBacking.calculaDias}"
+											update="txtDiaslicenca" />
+									</xcp:date>
+
+									<xcp:date
+										id="txtDtretorno"
+										value="#{licencapremioBacking.entity.dtretorno}"
+										label="#{bundle.lbl_dtretorno}"
+										readonly="#{licencapremioBacking.readOnlyFields}">
+										<p:ajax
+											event="change"
+											listener="#{licencapremioBacking.calculaDias}"
+											update="txtDiaslicenca" />
+										<p:ajax
+											event="dateSelect"
+											listener="#{licencapremioBacking.calculaDias}"
+											update="txtDiaslicenca" />
+									</xcp:date>
+
+									<xcp:number
+										id="txtDiaslicenca"
+										label="#{bundle.lbl_diaslicenca}"
+										value="#{licencapremioBacking.entity.diaslicenca}"
+										size="3"
+										precision="3"
+										scale="0"
+										maxValue="999"
+										readonly="#{licencapremioBacking.readOnlyFields}">
+										<p:ajax
+											event="change"
+											listener="#{licencapremioBacking.calculaDataGozo}"
+											update="txtDtretorno,@this" />
+									</xcp:number>
+
+									<xcp:number
+										id="txtDiaspagos"
+										label="#{bundle.lbl_diaspagos}"
+										value="#{licencapremioBacking.entity.diaspagos}"
+										size="4"
+										precision="3"
+										scale="0"
+										maxValue="999"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+
+									<xcp:date
+										id="txtDtpgto"
+										value="#{licencapremioBacking.entity.dtpgto}"
+										label="#{bundle.lbl_dtpgto}"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+
+									<xcp:number
+										id="txtDiasServico"
+										label="#{bundle.lbl_diasServico}"
+										value="#{licencapremioBacking.entity.diasServico}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+
+									<xcp:number
+										id="txtDiasAvancoGratif"
+										label="#{bundle.lbl_diasAvancoGratif}"
+										value="#{licencapremioBacking.entity.diasAvancoGratif}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+								</xcp:border>
+								<xcp:border
+									id="brdPrevisao"
+									header="#{bundle.lbl_previsao_licenca_premio}"
+									stylefieldset="margin-left: 0px !important; margin-bottom: 5px !important">
+									<xcp:date
+										id="txtDataprevista"
+										readonly="#{licencapremioBacking.readOnlyFields}"
+										value="#{licencapremioBacking.entity.dtGozoPrev}"
+										label="#{bundle.lbl_dataprevista}"
+										tabindex="90">
+										
+									</xcp:date>
+									<xcp:number
+										id="txtDiaslicencaprev"
+										readonly="#{licencapremioBacking.readOnlyFields}"
+										label="#{bundle.lbl_diaslicenca}"
+										value="#{licencapremioBacking.entity.diasLicencaPrev}"
+										size="15"
+										precision="3"
+										scale="0"
+										maxValue="#{licencapremioBacking.qtdDiasLicenca}"
+										tabindex="100" />
+									
+									<xcp:number
+										id="txtDiasPagosPrev"
+										readonly="#{licencapremioBacking.readOnlyFields}"
+										label="#{bundle.lbl_diaspagos}"
+										value="#{licencapremioBacking.entity.diasPagosPrev}"
+										size="15"
+										precision="3"
+										scale="0"
+										maxValue="#{licencapremioBacking.qtdDiasLicenca}"
+										tabindex="100" />
+									
+									<xcp:date
+										id="txtDataaceite"
+										value="#{licencapremioBacking.entity.dtAceite}"
+										label="#{bundle.lbl_aceite}"
+										readonly="true"
+										rendered="#{licencapremioBacking.entity.dtAceite != null}"
+										tabindex="120" />
+
+								</xcp:border>
+							</p:column>
+							<p:column>
+								<xcp:border
+									id="brd_dia_licenca"
+									header="#{bundle.tit_dia_licenca}">
+									<!-- 
+									<xcp:number
+										id="txtDiasdireito"
+										label="#{bundle.lbl_diasdireito}"
+										value="#{licencapremioBacking.entity.diasdireito}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999" />
+-->
+
+									<xcp:number
+										id="txtDiasfalta"
+										label="#{bundle.lbl_diasfalta}"
+										value="#{licencapremioBacking.entity.diasfalta}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+
+									<xcp:number
+										id="txtDiaslicsaude"
+										label="#{bundle.lbl_diaslicsaude}"
+										value="#{licencapremioBacking.entity.diaslicsaude}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+
+									<xcp:number
+										id="txtDiasafastamento"
+										label="#{bundle.lbl_diasafastamento}"
+										value="#{licencapremioBacking.entity.diasafastamento}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+
+									<xcp:number
+										id="txtDiaspenalidade"
+										label="#{bundle.lbl_diaspenalidade}"
+										value="#{licencapremioBacking.entity.diaspenalidade}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999"
+										readonly="#{licencapremioBacking.readOnlyFields}" />
+
+									<xcp:number
+										id="txtDiasperdidos"
+										label="#{bundle.lbl_diasperdidos}"
+										value="#{licencapremioBacking.entity.diasperdidos}"
+										size="4"
+										precision="3"
+										scale="0"
+										maxValue="9999" />
+
+									<xcp:number
+										id="txtDiasprorrog"
+										label="#{bundle.lbl_diasprorrog}"
+										value="#{licencapremioBacking.entity.diasprorrog}"
+										size="4"
+										precision="4"
+										scale="0"
+										maxValue="9999"
+										readonly="true" />
+								</xcp:border>
+							</p:column>
+						</p:row>
+					</xcp:panelGrid>
+
+					<xcp:lov
+						id="lovSituacao"
+						value="#{licencapremioBacking.helper.situacaoFk}"
+						label="#{bundle.lbl_situacao_licenca}"
+						query="tipolicpremiorest"
+						size="3"
+						update="lovProcessointerrup lovProcessointerrup_l txtDtcancelamento txtDtcancelamento_l txtDtretorno txtDtretorno_l txtDtinterrupcao txtDtinterrupcao_l"
+						selectionListener="#{licencapremioBacking.selectSituacao}"
+						readonly="#{licencapremioBacking.readOnlyFields}" />
+
+					<xcp:lov
+						id="lovProcessointerrup"
+						value="#{licencapremioBacking.entity.processointerrupFk}"
+						label="#{licencapremioBacking.labelProcessointerrup}"
+						query="processos"
+						rendered="#{licencapremioBacking.cancelamentoOrInterrup}"
+						size="25"
+						readonly="#{licencapremioBacking.readOnlyFields}" />
+
+					<xcp:lov
+						id="lovProcquinquenio"
+						value="#{licencapremioBacking.entity.procquinquenioFk}"
+						label="#{bundle.lbl_procquinquenio}"
+						query="processos"
+						size="20"
+						readonly="#{licencapremioBacking.readOnlyFields}" />
+
+					<xcp:dateTime
+						id="txtDtcancelamento"
+						value="#{licencapremioBacking.helper.dtcanc}"
+						label="#{licencapremioBacking.labelDtCanc}"
+						required="true"
+						rendered="#{licencapremioBacking.cancelamento}"
+						readonly="#{licencapremioBacking.readOnlyFields}">
+
+						<p:ajax
+							event="change"
+							listener="#{licencapremioBacking.calculaDtRet}"
+							update="txtDtretorno txtDiaslicenca" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{licencapremioBacking.calculaDtRet}"
+							update="txtDtretorno txtDiaslicenca" />
+
+					</xcp:dateTime>
+
+					<xcp:date
+						id="txtDtinterrupcao"
+						value="#{licencapremioBacking.helper.dtcanc}"
+						label="#{licencapremioBacking.labelDtCanc}"
+						required="true"
+						rendered="#{licencapremioBacking.interrupcao}"
+						readonly="#{licencapremioBacking.readOnlyFields}">
+
+						<p:ajax
+							event="change"
+							listener="#{licencapremioBacking.calculaDtRet}"
+							update="txtDtretorno txtDiaslicenca" />
+						<p:ajax
+							event="dateSelect"
+							listener="#{licencapremioBacking.calculaDtRet}"
+							update="txtDtretorno txtDiaslicenca" />
+
+					</xcp:date>
+
+
+					<xcp:date
+						id="txtDatadoc"
+						value="#{licencapremioBacking.entity.datadoc}"
+						label="#{bundle.lbl_datadoc}"
+						readonly="#{licencapremioBacking.readOnlyFields}" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{licencapremioBacking.entity.tipodocFk}"
+						selectionListener="#{licencapremioBacking.selectTipodocumento}"
+						update="lovDocumento,lovProcesso,lovProcesso_l,btnDownloadDocumento,lovProcessoRev,lovProcessoRev_l,pnlinfotipodoc,toolform,txtObs, btnAddDoc"
+						size="5"
+						readonly="#{licencapremioBacking.readOnlyTipdoc}"
+						params="#{licencapremioBacking.paramsTipoDoc}"
+						label="#{bundle.lbl_tipodoc}"
+						query="tipodocumento_lic" />
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{licencapremioBacking.entity.registroFk}"
+						params="#{licencapremioBacking.paramsTipodocumento}"
+						readonly="#{licencapremioBacking.readOnlyDoc}"
+						label="#{bundle.lbl_documento}"
+						update="lovProcesso,lovProcesso_l,btnDownloadDocumento,toolform"
+						query="documentosman"
+						size="5"
+						selectionListener="#{licencapremioBacking.selectDocumento}" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{licencapremioBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						readonly="#{licencapremioBacking.readOnlyProc}"
+						required="#{licencapremioBacking.requiredProc}"
+						size="25" />
+
+					<xcp:lov
+						id="lovProcessoRev"
+						value="#{licencapremioBacking.entity.processoRevFk}"
+						label="#{bundle.lbl_processoRev}"
+						query="processos"
+						rendered="#{licencapremioBacking.renderedProcessoRev}"
+						size="25" />
+
+					<p:spacer
+						height="1"
+						width="1" />
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:splitButton
+									id="btnDownloadDocumento"
+									value="#{bundle.btn_visualizar}"
+									ajax="false"
+									immediate="true"
+									process="@this"
+									onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+									disabled="#{licencapremioBacking.entity.registroFk == null}">
+									<p:fileDownload
+										value="#{documentosBacking.getDownloadDocumento(licencapremioBacking.entity.registro)}"
+										contentDisposition="attachment" />
+									<p:menuitem
+										value="#{bundle.btn_detalhes_doc}"
+										action="#{licencapremioBacking.model.actionOpenVisDialog(licencapremioBacking.entity.registro)}"
+										process="@this" />
+								</p:splitButton>
+							</p:column>
+							<p:column>
+								<xcp:btnAddDocUni
+									id="btnAddDoc"
+									model="#{licencapremioBacking.model}" />
+							</p:column>
+							<p:column>
+								<p:outputPanel id="pnlinfotipodoc">
+									<p:commandButton
+										id="btninst"
+										value="#{bundle.btn_info_tipodoc}"
+										type="button"
+										rendered="#{not empty licencapremioBacking.entity.tipodocFk.instrucoes}" />
+
+									<p:overlayPanel
+										for="btninst"
+										style="max-width:600px;text-align: left;">
+										<h:outputText
+											value="#{licencapremioBacking.entity.tipodocFk.instrucoes}"
+											escape="false" />
+									</p:overlayPanel>
+								</p:outputPanel>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:dateTime
+										id="txtRetificacao"
+										value="#{licencapremioBacking.entity.retificacao}"
+										label="#{licencapremioBacking.labelRetif}"
+										rendered="#{licencapremioBacking.entity.retificacao!=null}"
+										readonly="true">
+										<ui:define name="right">
+											<xcp:commandLink
+												id="btn_remove_retificacao"
+												update="@form"
+												action="#{licencapremioBacking.actionRemoveRetificacao}">
+												<h:graphicImage
+													title="#{bundle.hint_remover_retificacao}"
+													value="/resources/img/remover.png"
+													style="margin-top:3px;" />
+												<p:confirm
+													header="#{bundle.tit_confirma_remover}"
+													message="#{bundle.msg_confirma_remover}"
+													icon="ui-icon-alert" />
+											</xcp:commandLink>
+										</ui:define>
+									</xcp:dateTime>
+								</xcp:panelForm>
+								<xcp:panelForm>
+									<xcp:check
+										id="chk_retificacao"
+										label="#{licencapremioBacking.labelRetif}"
+										rendered="#{licencapremioBacking.renderedRetificacao}"
+										value="#{licencapremioBacking.helper.retificacao}">
+										<p:ajax update="@form" />
+									</xcp:check>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_txtPort}"
+						value="#{licencapremioBacking.entity.obs}"
+						size="400"
+						readonly="#{licencapremioBacking.readOnlyFields}">
+						<p:ajax
+							process="@this"
+							update="@none"
+							event="change" />
+					</xcp:memo>
+
+					<xcp:memo
+						id="txtObsLivre"
+						label="#{bundle.lbl_obsLivre}"
+						value="#{licencapremioBacking.entity.obsLivre}"
+						size="400" />
+				</xcp:panelForm>
+
+				<p:fieldset legend="#{bundle.tit_averbacoes}">
+					<p:dataTable
+						id="tabListaEmpregos"
+						value="#{licencapremioBacking.helper.listLicencapremEmp}"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="14"
+						var="empregos"
+						rowKey="#{empregos}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						selectionMode="single"
+						selection="#{licencapremioBacking.helper.licencapremEmpSel}">
+
+						<p:ajax
+							event="rowSelect"
+							listener="#{licencapremioBacking.onSelLicencapremEmp}" />
+
+						<xcp:column
+							headerText="#{bundle.col_nomeempresa}"
+							type="String"
+							size="20">
+							<xcp:outputSimple value="#{empregos.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtadm}"
+							type="Date"
+							size="5">
+							<xcp:outputSimpleDate value="#{empregos.empregoFk.dtadm}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtdem}"
+							type="Date"
+							size="5">
+							<xcp:outputSimpleDate value="#{empregos.empregoFk.dtdem}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_totdias}"
+							type="Number"
+							size="3">
+							<xcp:outputSimpleNumber
+								value="#{empregos.totdias}"
+								precision="5"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							size="1"
+							type="String">
+							<xcp:commandButton
+								id="btn_removerSel_emp"
+								immediate="true"
+								action="#{licencapremioBacking.actionRemoverLicencapremEmp(empregos)}"
+								update="tabListaEmpregos"
+								process="@this"
+								icon="ui-icon-trash">
+
+								<p:confirm
+									header="#{bundle.tit_confirma_remover}"
+									message="#{bundle.msg_confirma_remover}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+						</xcp:column>
+					</p:dataTable>
+
+					<xcp:commandButton
+						id="btn_adic_emp"
+						immediate="true"
+						action="#{licencapremioBacking.actionAdicionarLicencapremEmp}"
+						value="#{bundle.btn_adicionar}"
+						icon="ui-icon-plusthick"
+						update=":frmEmp"
+						process="@this" />
+
+				</p:fieldset>
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_informacoes_portaria}"
+			modal="true"
+			id="dlg"
+			widgetVar="dlg_w">
+			<xcp:form id="frmDlg">
+				<ui:include src="LicencapremioForm/LicencapremioDetalhesForm.xhtml" />
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_sair"
+							immediate="true"
+							oncomplete="PF('dlg_w').hide();"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_sair}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.title_mvtosprot}"
+			modal="true"
+			id="dlgMvto"
+			widgetVar="dlgMvto_w"
+			width="800"
+			height="500">
+			<xcp:form id="frmMvto">
+
+				<p:dataTable
+					id="tblMvtos"
+					var="row"
+					value="#{licencapremioBacking.helper.listMovimentacoes}"
+					rowKey="#{row.rowid}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					filteredValue="#{licencapremioBacking.helper.listMovimentacoesFiltradas}"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_tipmov}"
+						value="#{row.descricao}"
+						type="String"
+						size="15">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtinicio}"
+						value="#{row.dataIni}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dataIni}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dttermino}"
+						value="#{row.dataFim}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dataFim}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dias}"
+						value="#{row.qtdDiasDif}"
+						type="Number"
+						size="10">
+						<xcp:outputSimple value="#{row.qtdDiasDif}" />
+					</xcp:column>
+
+				</p:dataTable>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgMvto_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{licencapremioBacking.model}" />
+		</ui:include>
+
+		<ui:include src="PortariaForm/PortariaDlgForm.xhtml">
+			<ui:param
+				name="backing"
+				value="#{licencaPremioPortariaDiretaBacking}" />
+		</ui:include>
+
+
+		<p:dialog
+			header="#{bundle.title_empregos}"
+			modal="true"
+			id="dlgEmp"
+			widgetVar="dlgEmp_w"
+			dynamic="true">
+			<xcp:form id="frmEmp">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovEmp"
+						value="#{licencapremioBacking.helper.licencapremEmpEdit.empregoFk}"
+						label="#{bundle.lbl_emprego}"
+						query="emp_licenca"
+						required="true"
+						size="6"
+						update="dtaIntevalo,txtTotdias"
+						selectionListener="#{licencapremioBacking.selectEmprego}"
+						readonly="#{licencapremioBacking.helper.licencapremEmpEdit.manual != 1}"
+						params="#{licencapremioBacking.paramsAverb}" />
+
+					<xcp:dateRange
+						id="dtaIntevalo"
+						readonly="true"
+						label="#{bundle.lbl_periodo}"
+						valueStart="#{licencapremioBacking.helper.licencapremEmpEdit.empregoFk.dtadm}"
+						valueEnd="#{licencapremioBacking.helper.licencapremEmpEdit.empregoFk.dtdem}" />
+
+					<xcp:number
+						id="txtTotdias"
+						label="#{bundle.lbl_totdias}"
+						value="#{licencapremioBacking.helper.licencapremEmpEdit.totdias}"
+						readonly="#{licencapremioBacking.helper.licencapremEmpEdit.manual != 1}"
+						size="8"
+						precision="5"
+						scale="0"
+						minValue="1"
+						maxValue="99999"
+						required="true" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_ok_emp"
+							icon="ui-icon-check"
+							action="#{licencapremioBacking.actionAplicarLicencapremEmp()}"
+							value="#{bundle.btn_aplicar}"
+							update=":form:tabListaEmpregos"
+							disabled="#{licencapremioBacking.helper.licencapremEmpEdit.manual != 1}" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

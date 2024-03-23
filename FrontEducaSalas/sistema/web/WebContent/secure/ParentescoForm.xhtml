@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Parentesco"
+			backing="#{parentescoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_grau}"
+					value="#{row.grau}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.grau}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{parentescoBacking.entity.grau}"
+						size="2"
+						maxValue="99"
+						readonly="#{not parentescoBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{parentescoBacking.entity.descricao}"
+						size="50" />
+
+					<xcp:combo
+						id="cboTipPessoa"
+						value="#{parentescoBacking.entity.codgrau}"
+						label="#{bundle.lbl_codgrau}"
+						required="true"
+						itens="#{parentescoBacking.itensCodGrau}" />
+
+					<xcp:combo
+						id="cboIndAbono"
+						value="#{parentescoBacking.entity.indAbono}"
+						label="#{bundle.lbl_indAbono}"
+						required="true"
+						itens="#{parentescoBacking.itensIndSimNao}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

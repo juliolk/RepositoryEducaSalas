@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 100px;
+}
+</style>
+		<xcp:panelFuncionarioLazy 
+			id="FuncionariosListaView"
+			backing="#{feriasPrevBacking}"
+			renderedNovo="false">
+
+			<ui:define name="barraLista">
+
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtvctoIni}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtvctoIni}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvcto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtvcto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diassaldo}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.qtdDiasSaldo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasprorrogvcto}"
+					type="Number"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{row.diasprorrog}"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasprorroggozo}"
+					type="Number"
+					size="7">
+					<xcp:outputSimpleNumber
+						value="#{row.diasMinimo}"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtminima}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtminima}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataprevista}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dataprevista}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasprev}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.diasferprev}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diasperdidos}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.diasperdidos}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtvcto"
+						required="true"
+						value="#{feriasPrevBacking.entity.dtvcto}"
+						label="#{bundle.lbl_dtvcto}"
+						readonly="#{not feriasPrevBacking.entity.novo}" />
+
+					<xcp:number
+						id="cboSeq"
+						value="#{feriasPrevBacking.entity.seq}"
+						label="#{bundle.lbl_seq}"
+						required="true"
+						maxValue="99"
+						size="2"
+						readonly="#{not feriasPrevBacking.entity.novo}" />
+					<p:outputLabel value=" " />
+					<xcp:panelGrid>
+						<p:row>
+							<p:column>
+								<xcp:border
+									id="brdPrevisao"
+									header="#{bundle.lbl_previsao}"
+									stylefieldset="margin-left:0px !important">
+									<xcp:date
+										id="txtDataprevista"
+										value="#{feriasPrevBacking.entity.dataprevista}"
+										label="#{bundle.lbl_dataprevista}" />
+									<xcp:number
+										id="txtDiasferprev"
+										label="#{bundle.lbl_diasferprev}"
+										value="#{feriasPrevBacking.entity.diasferprev}"
+										size="15"
+										precision="3"
+										scale="0"
+										maxValue="#{feriasPrevBacking.qtdDiasFerias}" />
+								</xcp:border>
+
+							</p:column>
+						</p:row>
+					</xcp:panelGrid>
+
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+</ui:composition>

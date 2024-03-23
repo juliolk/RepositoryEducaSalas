@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Horariosrep"
+		backing="#{horariosrepBacking}"
+		masterId="Horarios">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_data}"
+				value="#{row.data}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.data}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diaSem}"
+				value="#{horariosrepBacking.getDiaSemana(row.data)}"
+				type="Date"
+				size="4">
+				<xcp:outputSimpleDate
+					value="#{horariosrepBacking.getDiaSemana(row.data)}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_jornada}"
+				value="#{row.jornada}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.jornada}"
+					precision="6"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_des_jornada}"
+				value="#{row.jornadaFk.desJornada}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.jornadaFk.desJornada}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				itens="#{horariosrepBacking.itensTipo}"
+				type="String"
+				size="20">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{horariosrepBacking.itensTipo}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtData_Horariosrep"
+					required="true"
+					value="#{horariosrepBacking.entity.data}"
+					label="#{bundle.lbl_data}"
+					readonly="#{not horariosrepBacking.entity.novo}" />
+
+				<xcp:lov
+					id="lovJornada_Horariosrep"
+					value="#{horariosrepBacking.entity.jornadaFk}"
+					label="#{bundle.lbl_jornada}"
+					required="true"
+					query="jornadas"
+					size="6" />
+
+				<xcp:combo
+					id="cboTipo_Horariosrep"
+					value="#{horariosrepBacking.entity.tipo}"
+					label="#{bundle.lbl_situacao}"
+					required="true"
+					itens="#{horariosrepBacking.itensTipo}" />
+
+			</xcp:panelForm>
+
+		</ui:define>
+
+		<ui:define name="barraListaDet">
+			<xcp:commandButton
+				style="margin-top:5px;"
+				id="btn_atualizar_escala"
+				oncomplete="PF('dlgAtualiza_w').show();"
+				update=":#{p:component('dlgAtualiza')}"
+				actionListener="#{horariosBacking.setTipMovimento(1)}"
+				value="#{bundle.btn_atualizar_escala}"
+				icon="ui-icon-gear" />
+
+			<xcp:commandButton
+				update=":#{p:component('dlgAtualiza')}"
+				style="margin-top:5px;"
+				actionListener="#{horariosBacking.setTipMovimento(2)}"
+				id="btn_remover_escala"
+				oncomplete="PF('dlgAtualiza_w').show();"
+				value="#{bundle.btn_remover_escala}"
+				icon="ui-icon-trash" />
+
+			<xcp:commandButton
+				style="margin-top:5px;"
+				id="btn_novo_lote"
+				immediate="true"
+				actionListener="#{horariosrepBacking.actionLimpaLote()}"
+				oncomplete="PF('dlgNovoLote_w').show();"
+				update=":#{p:component('dlgNovoLote')}"
+				value="#{bundle.btn_novo_em_lote}"
+				icon="ui-icon-document" />
+
+			<xcp:commandButton
+				style="margin-top:5px;"
+				id="btn_remover_lote"
+				immediate="true"
+				actionListener="#{horariosrepBacking.actionLimpaLote()}"
+				oncomplete="PF('dlgRemoveLote_w').show();"
+				update=":#{p:component('dlgRemoveLote')}"
+				value="#{bundle.btn_remover_em_lote}"
+				icon="ui-icon-trash" />
+
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

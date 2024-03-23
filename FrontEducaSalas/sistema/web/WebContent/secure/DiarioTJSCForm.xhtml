@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				id="brd_opcoes"
+				legend="#{bundle.title_dados}">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtCodigoSistema"
+						label="#{bundle.lbl_codigoSistema}"
+						value="#{diarioTJSCBacking.helper.req.codigoSistema}"
+						precision="18"
+						scale="0" />
+
+					<xcp:number
+						id="txtCodigoSecao"
+						label="#{bundle.lbl_codigoSessao}"
+						value="#{diarioTJSCBacking.helper.req.codigoSecao}"
+						precision="18"
+						scale="0" />
+
+					<xcp:number
+						id="txtCodigoOrigem"
+						label="#{bundle.lbl_codigoOrigem}"
+						value="#{diarioTJSCBacking.helper.req.codigoOrigem}"
+						precision="18"
+						scale="0" />
+
+					<xcp:text
+						id="txtCodigoOrigemCompl"
+						label="#{bundle.lbl_codigoOrigemComplemento}"
+						value="#{diarioTJSCBacking.helper.req.codigoOrigemComplemento}"
+						size="20"
+						maxlength="80" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="2" />
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							icon="ui-icon-refresh"
+							update="tbl"
+							value="#{bundle.btn_pesquisar}"
+							action="#{diarioTJSCBacking.actionConsultar}" />
+					</f:facet>
+				</p:toolbar>
+
+				<p:dataTable
+					id="tbl"
+					var="row"
+					value="#{diarioTJSCBacking.helper.list}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}">
+
+					<xcp:column
+						headerText="#{bundle.col_codigoMateria}"
+						type="Number"
+						size="4"
+						value="#{row.codigoMateria}">
+						<xcp:outputSimpleNumber
+							value="#{row.codigoMateria}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_codigoOrigem}"
+						type="Number"
+						size="6"
+						value="#{row.codigoOrigem}">
+						<xcp:outputSimpleNumber
+							value="#{row.codigoOrigem}"
+							precision="8"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataDeCadastro}"
+						type="Date"
+						size="7"
+						value="#{row.dataDeCadastro}">
+						<xcp:outputSimpleDate value="#{row.dataDeCadastro}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataDeRecebimento}"
+						type="Date"
+						size="7"
+						value="#{row.dataDeRecebimento}">
+						<xcp:outputSimpleDate value="#{row.dataDeRecebimento}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataUltPublicacao}"
+						type="Date"
+						size="7"
+						value="#{row.dataDaUltimaPublicacao}">
+						<xcp:outputSimpleDate value="#{row.dataDaUltimaPublicacao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_situacao}"
+						type="String"
+						size="7"
+						value="#{row.situacao}">
+						<xcp:outputSimple value="#{row.situacao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desTexto}"
+						type="String"
+						size="20"
+						value="#{diarioTJSCBacking.getTxtTexto(row.texto)}">
+						<h:outputText
+							value="#{diarioTJSCBacking.getTxtTexto(row.texto)}"
+							escape="false" />
+					</xcp:column>
+
+
+				</p:dataTable>
+
+			</p:fieldset>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

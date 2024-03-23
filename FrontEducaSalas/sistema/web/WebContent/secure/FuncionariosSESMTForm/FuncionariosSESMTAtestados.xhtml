@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tblAtestados"
+		var="row"
+		value="#{funcionariosSESMTBacking.helper.listaAtestados}"
+		filteredValue="#{funcionariosSESMTBacking.helper.listaAtestadosFiltro}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="#{viewUtil.tableRows}"
+		emptyMessage="#{bundle.msg_sem_resultado}">
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{row.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_crm}"
+			type="Number"
+			size="10">
+			<xcp:outputSimpleNumber
+				value="#{row.crm}"
+				precision="12"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_duracao}"
+			type="Number"
+			size="9">
+			<xcp:outputSimpleNumber
+				value="#{row.duracao}"
+				precision="6"
+				scale="2" />
+		</xcp:column>
+
+
+		<xcp:column
+			headerText="#{bundle.col_diagnostico}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{row.diagnostico}" />
+		</xcp:column>
+
+	</p:dataTable>
+
+</ui:composition>

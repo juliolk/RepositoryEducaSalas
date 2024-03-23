@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags" template="#{xcp:getLayout('manut')}">
+	
+		
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+		
+		<p:toolbar id="toolbar">
+				<f:facet name="left">
+					
+					<xcp:dateRange
+						id="txtDataPesq"
+						valueStart="#{esfingeEnvioBacking.dtEnvioInicio}"
+						valueEnd="#{esfingeEnvioBacking.dtEnvioFim}"
+						label="#{bundle.lbl_intervalo}"
+						size="8" />
+	
+					<xcp:commandButton
+						id="btn_atualizar"
+						value="#{bundle.btn_atualizar}"
+						action="#{esfingeEnvioBacking.actionPesquisar}"
+						update="tbl toolbar :formComfirmar"
+						icon="ui-icon-gear" />
+					
+					<xcp:commandButton 
+						id="btn_cancelar"
+						value="#{bundle.btn_cancelar}"
+						update="tbl toolbar :formComfirmar"
+						icon="ui-icon-gear"
+						action="#{esfingeEnvioBacking.actionConfirmaCancelar()}">
+					</xcp:commandButton>
+						
+				</f:facet>
+	
+			</p:toolbar>
+		
+			<p:dataTable 
+				selectionMode="single" 
+				id="tbl"
+				var="row"
+				value="#{esfingeEnvioBacking.list}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{row.envio}"
+				selection="#{esfingeEnvioBacking.envio}"
+				paginator="true"
+				rows="25"
+				>				
+								
+				<p:column
+					filterBy="#{row.envio}" 
+					filterFunction="#{esfingeEnvioBacking.filterBy}" 
+					headerText="#{bundle.col_envio}"
+					width="3">
+					<xcp:outputSimple value="#{row.envio}" />
+				</p:column>
+		
+				<p:column 
+					filterBy="#{row.pendenciaenvio}" 
+					filterFunction="#{esfingeEnvioBacking.filterBy}" 
+					headerText="#{bundle.col_pendenciaenvio}"
+					width="3">
+					<xcp:outputSimple value="#{row.pendenciaenvio}" />
+				</p:column>
+	
+				<p:column
+				    filterBy="#{row.dataenvio}" 
+					filterFunction="#{esfingeEnvioBacking.filterBy}"
+					headerText="#{bundle.col_dataenvio}"
+					width="6">
+					<xcp:outputSimpleTimestamp value="#{row.dataenvio}" />
+				</p:column>
+				
+				<p:column 
+					filterBy="#{row.pendenciaenvioFk.tipoenvioFk.nmTipoenvio}" 
+					filterFunction="#{esfingeEnvioBacking.filterBy}" 
+					headerText="#{bundle.col_tipoenvio}"
+					width="3">
+					<xcp:outputSimple value="#{row.pendenciaenvioFk.tipoenvioFk.nmTipoenvio}" />
+				</p:column>
+				
+				<p:column  
+					headerText="#{bundle.col_envioparcial}"
+					width="3">
+					<xcp:outputSimple value="#{row.envioparcial}" itens="#{esfingeEnvioBacking.itensEnvioparcial}"/>
+				</p:column>
+				
+				<p:column 
+					headerText="#{bundle.col_jsonenvio}"
+					width="10">
+					
+					<xcp:commandLink
+					  action='#{esfingeEnvioBacking.actionGetMsg(row,"jsonenvio")}'
+					  rendered="#{row.temjsonenvio == 1}" 
+					  update=":frmFor">
+					  <xcp:outputSimple
+					    value="Dados Enviados" />
+					</xcp:commandLink>					
+					
+				</p:column>	
+					
+				<p:column
+					filterBy="#{row.chavepacote}" 
+					filterFunction="#{esfingeEnvioBacking.filterBy}" 
+					headerText="#{bundle.col_chavepacote}"
+					width="10">
+					<xcp:outputSimple value="#{row.chavepacote}" />
+				</p:column>
+					
+				<p:column
+					filterBy="#{row.codigoregistroinformacao}" 
+					filterFunction="#{esfingeEnvioBacking.filterBy}" 
+					headerText="#{bundle.col_codigoregistroinformacao}"
+					width="20">
+					<xcp:outputSimple value="#{row.codigoregistroinformacao}" />
+				</p:column>
+				
+				<p:column 
+					filterBy="#{row.codigoresposta}" 
+					filterFunction="#{esfingeEnvioBacking.filterBy}"
+					headerText="#{bundle.col_codigoresposta}"
+					width="3">
+					<xcp:outputSimple value="#{row.codigoresposta}" />
+				</p:column>
+				
+				<p:column 
+					headerText="#{bundle.col_jsonresposta}"
+					width="10">
+					
+					<xcp:commandLink
+					  action='#{esfingeEnvioBacking.actionGetMsg(row, "jsonresposta")}'
+					  rendered="#{row.temjsonresposta == 1}" 
+					  update=":frmFor">
+					  <xcp:outputSimple
+					    value="Resposta" />
+					</xcp:commandLink>					
+					
+				</p:column>	
+				
+				<p:column
+					headerText="#{bundle.col_erro}"
+					width="10">
+					
+					<xcp:commandLink
+					  action='#{esfingeEnvioBacking.actionGetMsg(row, "erro")}'
+					  rendered="#{row.temerro == 1}"
+					  update=":frmFor">
+					  <xcp:outputSimple
+					    value="Erro" />
+					</xcp:commandLink>					
+					
+				</p:column>
+				
+			</p:dataTable>
+		</xcp:panelContent>		
+	</ui:define>
+	
+	<ui:define name="modalPanelArea">
+	  <p:dialog
+	    header="#{bundle.title_msg}"
+	    modal="true"
+	    id="dlgFor"
+	    widgetVar="wMsg">
+	    <xcp:form id="frmFor">
+	      <p:inputTextarea
+	        value="#{esfingeEnvioBacking.msg}"
+	        cols="120"
+	        rows="50"
+	        autoResize="false" />
+	    </xcp:form>
+	  </p:dialog>
+	  
+	  <p:confirmDialog
+			widgetVar="dlgConf"
+			message="#{bundle.msg_confirma_cancelar_envio}"
+			header="#{bundle.tit_confirma_cancelar_envio}">
+			<h:form id="formComfirmar">
+			
+				<xcp:text 
+			        value="#{esfingeEnvioBacking.justificativa}"
+			        id="txtJus"
+			        label="Justificativa"
+			        size="150"
+			        required="true"
+		        />
+
+				<p:commandButton
+					value="#{bundle.btn_sim}"
+					styleClass="ui-confirmdialog-yes"
+					action="#{esfingeEnvioBacking.actionCancelar()}"
+					icon="ui-icon-check" 
+					update=":formComfirmar"/>
+
+				<p:commandButton
+					value="#{bundle.btn_nao}"
+					type="button"
+					onclick="PF('dlgConf').hide()"
+					styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close"
+					update=":formComfirmar" />
+				
+
+			</h:form>
+		</p:confirmDialog>
+	  
+	</ui:define>	
+	
+</ui:composition>

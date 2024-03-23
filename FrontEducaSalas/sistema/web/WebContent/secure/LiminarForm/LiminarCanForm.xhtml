@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="LiminarCan"
+		backing="#{liminarCanBacking}"
+		masterId="Liminar">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codigo}"
+				value="#{row.candidatoFk.codigo}"
+				type="Number"
+				size="6">
+				<xcp:outputSimpleNumber
+					value="#{row.candidatoFk.codigo}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.candidatoFk.nome}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.candidatoFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_edital}"
+				value="#{row.editalFk.edital}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.editalFk.edital}"
+					precision="8"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.editalFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.editalFk.descricao}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovEdital"
+					value="#{liminarCanBacking.edital}"
+					label="#{bundle.lbl_edital}"
+					query="edital"
+					size="8"
+					required="true"
+					update="lovConcurso lovCandidato"
+					selectionListener="#{liminarCanBacking.selectEdital}" />
+
+				<xcp:lov
+					id="lovConcurso"
+					value="#{liminarCanBacking.concurso}"
+					params="#{liminarCanBacking.paramsConcurso}"
+					selectionListener="#{liminarCanBacking.selectEdital}"
+					label="#{bundle.lbl_funcao}"
+					query="funcoes_concurso"
+					size="8"
+					required="true"
+					update="lovCandidato" />
+
+				<xcp:lov
+					id="lovCandidato"
+					value="#{liminarCanBacking.entity.candidatoFk}"
+					label="#{bundle.lbl_candidato}"
+					required="true"
+					params="#{liminarCanBacking.paramsCandidato}"
+					query="candidatos_edital"
+					size="8" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

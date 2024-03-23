@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dataTable
+		id="tabExames"
+		var="rowExame"
+		value="#{fichamedicaBacking.listaFuncexames}"
+		rowKey="#{rowExame.PK}"
+		filteredValue="#{fichamedicaBacking.listaFiltrados1}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="#{viewUtil.tableRows}"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		style="margin-bottom:0;">
+		<f:facet name="header">#{bundle.tit_exames_ficha}</f:facet>
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{rowExame.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_exame}"
+			type="String"
+			size="20">
+			<xcp:outputSimple value="#{rowExame.exameFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_data}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{rowExame.data}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_laudo}"
+			type="String"
+			size="30">
+			<xcp:outputSimple value="#{rowExame.laudo}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataprox}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{rowExame.dataprox}" />
+		</xcp:column>
+
+	</p:dataTable>
+
+</ui:composition>

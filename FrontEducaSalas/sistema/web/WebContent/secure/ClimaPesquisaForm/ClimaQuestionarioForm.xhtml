@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ClimaQuestionario"
+		backing="#{climaQuestionarioBacking}"
+		masterId="ClimaPesquisa">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_item}"
+				value="#{row.item}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.item}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desItem}"
+				value="#{row.itemFk.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.itemFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_sequencia}"
+				value="#{row.sequencia}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.sequencia}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm
+				rendered="#{not climaQuestionarioBacking.isModoCopia}">
+
+				<xcp:lov
+					id="lovItem_ClimaQuestionario"
+					value="#{climaQuestionarioBacking.entity.itemFk}"
+					label="#{bundle.lbl_item}"
+					required="true"
+					query="clima_itens"
+					size="5"
+					readonly="#{not climaQuestionarioBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtSequencia_ClimaQuestionario"
+					label="#{bundle.lbl_sequencia}"
+					required="true"
+					value="#{climaQuestionarioBacking.entity.sequencia}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+			</xcp:panelForm>
+			
+			<p:fieldset
+				id="pnlSelPesquisaOrigem"
+				legend="#{bundle.msg_sel_pesquisa_origem}"
+				rendered="#{climaQuestionarioBacking.isModoCopia}">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovClimaPesquisa"
+						value="#{climaQuestionarioBacking.pesquisaCopia}"
+						label="#{bundle.lbl_pesquisa}"
+						required="true"
+						query="clima_pesquisa"
+						size="5" />
+				</xcp:panelForm>
+			</p:fieldset>
+		</ui:define>
+
+		<ui:define name="barraListaDet">
+			<xcp:commandButton
+				id="btn_copiar_perguntas"
+				icon="icon_copiar"
+				value="#{bundle.btn_copiar_perguntas}"
+				update="panelManut_ClimaPesquisa"
+				action="#{climaQuestionarioBacking.actionCopiarPerguntas}" >
+				<p:resetInput target="pnlSelPesquisaOrigem" />
+			</xcp:commandButton>
+		</ui:define>
+
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

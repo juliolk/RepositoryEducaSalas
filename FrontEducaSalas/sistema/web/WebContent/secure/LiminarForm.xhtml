@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Liminar"
+			backing="#{liminarBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_liminar}"
+					value="#{row.liminar}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.liminar}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					value="#{row.processo}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_intimacao}"
+					value="#{row.intimacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.intimacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cassacao}"
+					value="#{row.cassacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.cassacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					value="#{row.tipo}"
+					type="String"
+					size="5"
+					itens="#{liminarBacking.itensTipo}">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{liminarBacking.itensTipo}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtLiminar"
+						label="#{bundle.lbl_liminar}"
+						required="true"
+						value="#{liminarBacking.entity.liminar}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="true"
+						rendered="#{not liminarBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtProcesso"
+						label="#{bundle.lbl_processo}"
+						required="true"
+						value="#{liminarBacking.entity.processo}"
+						size="20" />
+
+					<xcp:date
+						id="txtIntimacao"
+						required="true"
+						value="#{liminarBacking.entity.intimacao}"
+						label="#{bundle.lbl_intimacao}" />
+
+					<xcp:date
+						id="txtCassacao"
+						value="#{liminarBacking.entity.cassacao}"
+						label="#{bundle.lbl_cassacao}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{liminarBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						readonly="#{not liminarBacking.entity.novo}"
+						itens="#{liminarBacking.itensTipo}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{liminarBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+
+			<ui:define name="detalhes">
+				<p:outputPanel
+					id="pnlCar"
+					rendered="#{liminarBacking.entity.tipo == 1}">
+					<ui:include src="LiminarForm/LiminarCanForm.xhtml" />
+				</p:outputPanel>
+
+				<p:outputPanel
+					id="pnlCan"
+					rendered="#{liminarBacking.entity.tipo == 2}">
+					<ui:include src="LiminarForm/LiminarCarForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

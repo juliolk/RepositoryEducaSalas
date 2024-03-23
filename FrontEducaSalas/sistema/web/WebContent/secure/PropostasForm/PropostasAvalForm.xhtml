@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="PropostasAval"
+		backing="#{propostasAvalBacking}"
+		masterId="Propostas">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_avaliacao}"
+				value="#{row.avaliacao}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.avaliacao}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dtavaliacao}"
+				value="#{row.dtavaliacao}"
+				type="Date"
+				size="10">
+				<xcp:outputSimpleDate value="#{row.dtavaliacao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtAvaliacao_PropostasAval"
+					label="#{bundle.lbl_avaliacao}"
+					required="true"
+					value="#{propostasAvalBacking.entity.avaliacao}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999"
+					readonly="#{not propostasAvalBacking.entity.novo}" />
+
+				<xcp:date
+					id="txtDtavaliacao_PropostasAval"
+					required="true"
+					value="#{propostasAvalBacking.entity.dtavaliacao}"
+					label="#{bundle.lbl_dtavaliacao}" />
+
+				<xcp:text
+					id="txtDescricao_PropostasAval"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{propostasAvalBacking.entity.descricao}"
+					size="70" />
+
+				<xcp:memo
+					id="txtConceito_PropostasAval"
+					label="#{bundle.lbl_conceito}"
+					value="#{propostasAvalBacking.entity.conceito}"
+					size="500" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

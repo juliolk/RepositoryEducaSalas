@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.lbl_filtros}"
+				style="width: 40%; margin-top: 15px;">
+
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovTipo"
+						value="#{vagasPorCargoBacking.tipocargo}"
+						label="#{bundle.lbl_tipo}"
+						query="tipocargos"
+						size="6"
+						update="lovCargo"
+						selectionListener="#{vagasPorCargoBacking.selectTipoCargo}" />
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{vagasPorCargoBacking.cargo}"
+						label="#{bundle.lbl_cargo}"
+						query="cargostipo"
+						params="#{vagasPorCargoBacking.paramsCargo}"
+						size="6" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							icon="ui-icon-search"
+							update="tree"
+							value="#{bundle.btn_pesquisar}"
+							action="#{vagasPorCargoBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:treeTable
+				id="tree"
+				value="#{vagasPorCargoBacking.root}"
+				var="node"
+				style="width: 90%; margin-left: 10px; margin-top: 20px">
+				<p:column
+					id="columnDescricao"
+					headerText="#{bundle.col_descricao}"
+					sortBy="#{node.descricao}">
+					<h:outputText value="#{node.descricao}" />
+				</p:column>
+				<p:column
+					sortBy="#{node.qtdVagas}"
+					styleClass="xcp_column_Number">
+					<f:facet name="header">
+						<h:outputText value="Vagas" />
+					</f:facet>
+					<h:outputText
+						value="#{node.qtdVagas}"
+						rendered="#{node.qtdVagas >= 0}" />
+				</p:column>
+				<p:column
+					sortBy="#{node.qtdOcup}"
+					styleClass="xcp_column_Number">
+					<f:facet name="header">
+						<h:outputText value="Lotados" />
+					</f:facet>
+					<h:outputText
+						value="#{node.qtdOcup}"
+						rendered="#{node.qtdOcup >= 0}" />
+				</p:column>
+			</p:treeTable>
+		</xcp:panelContent>
+	</ui:define>
+
+
+</ui:composition>

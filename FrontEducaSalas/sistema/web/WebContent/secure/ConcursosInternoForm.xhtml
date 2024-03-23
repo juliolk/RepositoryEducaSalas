@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.tit_filtros}"
+				style="margin-bottom: 5px">
+				<xcp:panelForm>
+
+					<p:outputLabel
+						value="#{bundle.lbl_zona}"
+						for="optZona"
+						rendered="#{concursosInternoBacking.selecaoZona}" />
+
+					<p:selectOneMenu
+						id="optZona"
+						value="#{concursosInternoBacking.helper.zonaSel}"
+						var="row"
+						filter="true"
+						widgetVar="optZona_w"
+						filterMatchMode="contains"
+						converter="#{concursosInternoBacking.zonaConverter}"
+						rendered="#{concursosInternoBacking.selecaoZona}">
+
+						<p:ajax
+							event="change"
+							update="tblCand optOrgao"
+							listener="#{concursosInternoBacking.actionChangeZona}" />
+
+						<f:selectItems
+							value="#{concursosInternoBacking.helper.listZona}"
+							var="it"
+							itemLabel="#{it.descricao}"
+							itemValue="#{it}" />
+						<p:column>
+							<h:outputText value="#{row.descricao}" />
+						</p:column>
+					</p:selectOneMenu>
+
+					<p:outputLabel
+						value="#{bundle.lbl_orgao}"
+						for="optOrgao"
+						rendered="#{concursosInternoBacking.selecaoComarca}" />
+
+					<p:selectOneMenu
+						id="optOrgao"
+						value="#{concursosInternoBacking.helper.orgaoSel}"
+						var="row"
+						filter="true"
+						widgetVar="optOrgao_w"
+						filterMatchMode="contains"
+						converter="#{concursosInternoBacking.orgaosConverter}"
+						rendered="#{concursosInternoBacking.selecaoComarca}">
+
+						<p:ajax
+							event="change"
+							update="tblCand optZona"
+							listener="#{concursosInternoBacking.actionChangeOrgao}" />
+
+						<f:selectItems
+							value="#{concursosInternoBacking.helper.listOrgaos}"
+							var="it"
+							itemLabel="#{it.descricao}"
+							itemValue="#{it}" />
+						<p:column>
+							<h:outputText value="#{row.descricao}" />
+						</p:column>
+					</p:selectOneMenu>
+
+					<p:outputLabel
+						value="#{bundle.lbl_funcao}"
+						for="optFuncao" />
+
+					<p:selectOneMenu
+						id="optFuncao"
+						value="#{concursosInternoBacking.helper.funcaoSel}"
+						var="row"
+						filter="true"
+						widgetVar="optFuncao_w"
+						filterMatchMode="contains"
+						converter="#{concursosInternoBacking.funcaoEditalConverter}">
+
+						<p:ajax
+							event="change"
+							update="tblCand optTipo"
+							listener="#{concursosInternoBacking.actionChangeFuncao}" />
+
+						<f:selectItems
+							value="#{concursosInternoBacking.helper.listFuncoes}"
+							var="it"
+							itemLabel="#{it.desFuncao}"
+							itemValue="#{it}" />
+						<p:column>
+							<h:outputText value="#{row.desFuncao}" />
+						</p:column>
+					</p:selectOneMenu>
+
+					<xcp:radio
+						id="optTipo"
+						value="#{concursosInternoBacking.helper.tipo}"
+						itens="#{concursosInternoBacking.itensTipo}"
+						label="#{bundle.lbl_tipo}">
+						<p:ajax
+							event="change"
+							update="tblCand"
+							listener="#{concursosInternoBacking.actionChangeTipo}" />
+					</xcp:radio>
+
+					<xcp:date
+						id="txtDataVigencia"
+						value="#{concursosInternoBacking.helper.funcaoSel.dtaVigencia}"
+						readonly="true"
+						label="#{bundle.lbl_dtvigencia}" />
+
+				</xcp:panelForm>
+
+				<p:spacer height="5" />
+			</p:fieldset>
+
+			<p:dataTable
+				id="tblCand"
+				var="row"
+				value="#{concursosInternoBacking.helper.listCandidatos}"
+				rows="#{viewUtil.tableRows}"
+				rowKey="#{row}"
+				paginator="true"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginatorPosition="bottom">
+
+				<p:column style="width:16px">
+					<p:rowToggler />
+				</p:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classific}"
+					value="#{row.classfinal}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						precision="5"
+						scale="0"
+						value="#{row.classfinal}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_situacao}"
+					value="#{row.situacao}"
+					type="String"
+					size="12">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{concursosInternoBacking.itensSituacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desempresa}"
+					value="#{row.desEmpresa}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.desEmpresa}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtapublicacao}"
+					value="#{row.dtaPublicacao}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{row.dtaPublicacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desprocessoadiamento}"
+					value="#{row.desProcesso}"
+					type="String"
+					size="3">
+					<xcp:outputSimple value="#{row.desProcesso}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtaexercicio}"
+					value="#{row.dtaExercicio}"
+					type="String"
+					size="2">
+					<xcp:outputSimple value="#{row.dtaExercicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classafro}"
+					value="#{row.classAfro}"
+					type="Number"
+					size="2"
+					rendered="#{concursosInternoBacking.helper.tipo == 1}">
+					<xcp:outputSimple value="#{row.classAfro}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classdef}"
+					value="#{row.classDef}"
+					type="Number"
+					size="2"
+					rendered="#{concursosInternoBacking.helper.tipo == 1}">
+					<xcp:outputSimple value="#{row.classDef}" />
+				</xcp:column>
+
+				<p:rowExpansion>
+					<p:dataTable
+						id="tabEditaisNom"
+						var="rowNom"
+						value="#{row.listEditalNom}"
+						rowKey="#{rowNom}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						style="margin-bottom:0;">
+						<xcp:column
+							headerText="#{bundle.col_edital}"
+							type="String"
+							size="20">
+							<xcp:outputSimple value="#{rowNom.descricao}" />
+						</xcp:column>
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</p:dataTable>
+
+			<p:blockUI
+				block="@form"
+				trigger="optFuncao optTipo_c">
+				<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+			</p:blockUI>
+
+
+			<script type="text/javascript">
+	$(function(){
+
+		var clearOptFuncao = function() {
+			PrimeFaces.widgets.optFuncao_w.filterInput.val('');
+			PrimeFaces.widgets.optFuncao_w.filter();
+		}
+		
+		$('#form\\:optFuncao').click(clearOptFuncao);
+
+		$('#form\\:optFuncao').keyup(function(e) {
+			if(e.keyCode==13){
+				clearoptFuncao();
+			}
+		});
+		
+	});
+	</script>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

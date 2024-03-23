@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				legend="#{bundle.lbl_filtros}"
+				style="width: 40%; margin-top: 15px;">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipo"
+						value="#{vagasPorLotacaoBacking.tipocargo}"
+						label="#{bundle.lbl_tipo}"
+						query="tipocargos"
+						size="6" />
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{vagasPorLotacaoBacking.cargo}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="6" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{vagasPorLotacaoBacking.orgao}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos"
+						size="6" />
+
+					<xcp:lov
+						id="lovDivisao"
+						value="#{vagasPorLotacaoBacking.divisao}"
+						label="#{bundle.lbl_divisao}"
+						query="divisoes"
+						size="6" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{vagasPorLotacaoBacking.setor}"
+						label="#{bundle.lbl_setor}"
+						query="setores"
+						size="6" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							icon="ui-icon-search"
+							update="tree"
+							value="#{bundle.btn_pesquisar}"
+							action="#{vagasPorLotacaoBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:treeTable
+				id="tree"
+				value="#{vagasPorLotacaoBacking.root}"
+				var="node"
+				style="width: 90%; margin-left: 10px; margin-top: 20px">
+				<p:column
+					id="columnDescricao"
+					headerText="#{bundle.col_descricao}"
+					sortBy="#{node.descricao}">
+					<h:outputText value="#{node.codigo} - #{node.descricao}" />
+				</p:column>
+				<p:column
+					sortBy="#{node.qtdVagas}"
+					styleClass="xcp_column_Number">
+					<f:facet name="header">
+						<h:outputText value="Vagas" />
+					</f:facet>
+					<h:outputText
+						value="#{node.qtdVagas}"
+						rendered="#{node.qtdVagas >= 0}" />
+				</p:column>
+				<p:column
+					sortBy="#{node.qtdOcup}"
+					styleClass="xcp_column_Number">
+					<f:facet name="header">
+						<h:outputText value="Lotados" />
+					</f:facet>
+					<h:outputText
+						value="#{node.qtdOcup}"
+						rendered="#{node.qtdOcup >= 0}" />
+				</p:column>
+
+
+				<p:column style="width:24px">
+					<f:facet name="header">
+						<h:outputText value="#{bundle.col_situacao}" />
+					</f:facet>
+					<xcp:commandButton
+						update=":dlgInfo"
+						icon="ui-icon-search"
+						action="#{vagasPorLotacaoBacking.actionBuscarInfo}"
+						rendered="#{node.tipo == 5}">
+						<f:setPropertyActionListener
+							value="#{node}"
+							target="#{vagasPorLotacaoBacking.selectedRow}" />
+					</xcp:commandButton>
+				</p:column>
+
+
+			</p:treeTable>
+			<p:outputPanel
+				id="pnlExportar"
+				style="padding-top: 5px;padding-left: 5px;">
+				<xcp:commandButton
+					id="btn_exportar"
+					value="#{bundle.btn_exportar}"
+					icon="ui-icon-arrowthick-1-e"
+					ajax="false"
+					immediate="true"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)">
+					<p:fileDownload
+						value="#{vagasPorLotacaoBacking.export}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+			</p:outputPanel>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgInfo"
+			header="#{bundle.title_informacoes}"
+			widgetVar="dlgInfo_w"
+			modal="true"
+			width="1050"
+			height="700">
+			<xcp:form id="frmFunc">
+
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovDocumento"
+						value="#{vagasPorLotacaoBacking.documentoFk}"
+						label="#{bundle.lbl_documento}"
+						query="cargoshistoricos"
+						size="10"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovConvenio"
+						value="#{vagasPorLotacaoBacking.documentoFk.codconvFk}"
+						label="#{bundle.lbl_convenio}"
+						query="consignacoes"
+						readonly="true"
+						size="10" />
+
+					<xcp:lov
+						id="lovTipoato"
+						value="#{vagasPorLotacaoBacking.documentoFk.tipoFk}"
+						label="#{bundle.lbl_tipo}"
+						query="tipoato"
+						size="10"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovMotivo"
+						value="#{vagasPorLotacaoBacking.documentoFk.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						query="motivoato"
+						size="10"
+						readonly="true" />
+
+					<xcp:lov
+						id="lovSituacaoVaga"
+						value="#{vagasPorLotacaoBacking.situacaoFk}"
+						label="#{bundle.lbl_situacao}"
+						query="situacaovagas"
+						required="true"
+						size="10"
+						readonly="true" />
+				</xcp:panelForm>
+
+				<p:spacer height="2px" />
+
+				<p:dataTable
+					id="tblLot"
+					var="row"
+					value="#{vagasPorLotacaoBacking.listLot}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}">
+
+					<f:facet name="header">#{bundle.title_lotacao}</f:facet>
+
+					<xcp:column
+						headerText="#{bundle.col_setor}"
+						value="#{row.setorFk.descricao}"
+						type="String"
+						size="4">
+						<xcp:outputSimple value="#{row.setorFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipo}"
+						value="#{row.setorFk.tipClassseplag}"
+						type="String"
+						size="2"
+						itens="#{vagasPorLotacaoBacking.itensTipClassseplag}">
+						<xcp:outputSimple
+							value="#{row.setorFk.tipClassseplag}"
+							itens="#{vagasPorLotacaoBacking.itensTipClassseplag}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtaIni}"
+						value="#{row.dtaIni}"
+						type="Date"
+						size="2">
+						<xcp:outputSimpleDate value="#{row.dtaIni}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtaFim}"
+						value="#{row.dtaFim}"
+						type="Date"
+						size="2">
+						<xcp:outputSimpleDate value="#{row.dtaFim}" />
+					</xcp:column>
+				</p:dataTable>
+
+				<p:spacer height="1" />
+
+				<p:dataTable
+					id="tblHist"
+					var="row"
+					value="#{vagasPorLotacaoBacking.listHist}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="#{viewUtil.tableRows}">
+
+					<f:facet name="header">#{bundle.title_historico}</f:facet>
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						value="#{row.matricula}"
+						type="Number"
+						size="2">
+						<xcp:outputSimpleNumber
+							value="#{row.matricula}"
+							precision="20"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{row.matriculaFk.nome}"
+						type="String"
+						size="10">
+						<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtaIni}"
+						value="#{row.dtaIni}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtaIni}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtaFim}"
+						value="#{row.dtaFim}"
+						type="Date"
+						size="7">
+						<xcp:outputSimpleDate value="#{row.dtaFim}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desprov}"
+						value="#{cargosFuncaoGratifBacking.getDesProv(row)}"
+						type="String"
+						size="15">
+						<xcp:outputSimpleDate
+							value="#{cargosFuncaoGratifBacking.getDesProv(row)}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_destipmovvaga}"
+						value="#{cargosFuncaoGratifBacking.getDesVacancia(row)}"
+						type="String"
+						size="15">
+						<xcp:outputSimple
+							value="#{cargosFuncaoGratifBacking.getDesVacancia(row)}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgInfo_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

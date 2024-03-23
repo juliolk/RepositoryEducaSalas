@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Assistenciatipo"
+		backing="#{assistenciatipoBacking}"
+		masterId="Assistencia">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.tipo}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="60">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtTipo_Assistenciatipo"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					value="#{assistenciatipoBacking.entity.tipo}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					readonly="#{not assistenciatipoBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_Assistenciatipo"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{assistenciatipoBacking.entity.descricao}"
+					size="50" />
+
+				<xcp:combo
+					id="cboIndCons"
+					value="#{assistenciatipoBacking.entity.ind_consulta}"
+					label="#{bundle.lbl_ConsLanc}"
+					itens="#{assistenciatipoBacking.itensIndSimNao}" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

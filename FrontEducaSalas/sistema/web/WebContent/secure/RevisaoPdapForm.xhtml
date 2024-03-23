@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.combo select {
+	width: 200px !important;
+}
+
+.combo  label {
+	width: 191px !important;
+}
+
+.mytable {
+	width: auto !important;
+	margin: 0px !important;
+}
+
+.mytable td {
+	border: none !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	padding-left: 0px !important;
+}
+
+.colleft {
+	text-align: right;
+}
+
+.colright {
+	text-align: left;
+}
+</style>
+
+		<xcp:panelContent>
+			<h:panelGroup id="panelGeral">
+				<h:panelGroup
+					id="panelSemPesquisa"
+					rendered="#{revisaoPdapBacking.statusTela == 0}">
+					<xcp:panelForm>
+						<xcp:outputSimple value="#{bundle.msg_sem_revisoes}" />
+					</xcp:panelForm>
+				</h:panelGroup>
+
+				<h:panelGroup
+					id="panelPesquisas"
+					rendered="#{revisaoPdapBacking.statusTela == 1}">
+
+					<p:dataTable
+						id="tableBoletinsPendentes"
+						var="row"
+						value="#{revisaoPdapBacking.listaBoletim}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="false"
+						resizableColumns="true"
+						selectionMode="single"
+						selection="#{revisaoPdapBacking.boletimSelecionado}"
+						rowKey="#{row.PK}">
+
+						<p:ajax
+							event="rowSelect"
+							resetValues="true"
+							update=":#{p:component('panelGeral')}"
+							listener="#{revisaoPdapBacking.actionMontaBoletim}" />
+
+						<xcp:column
+							type="Number"
+							size="2"
+							headerText="#{bundle.col_matricula}">
+							<xcp:outputSimpleNumber
+								value="#{row.funcionarioFk.matricula}"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="22"
+							headerText="#{bundle.col_nome}">
+							<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+						</xcp:column>
+
+						<xcp:column
+							type="Date"
+							size="3"
+							headerText="#{bundle.col_numeroBol}">
+							<xcp:outputSimpleNumber
+								value="#{row.numero}"
+								scale="0"
+								precision="5" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_ini_boletim}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.dataini}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_fim_boletim}"
+							type="Date"
+							size="6">
+							<xcp:outputSimpleDate value="#{row.datafim}" />
+						</xcp:column>
+
+
+					</p:dataTable>
+				</h:panelGroup>
+
+				<h:panelGroup
+					id="panelPesquisa"
+					rendered="#{revisaoPdapBacking.statusTela == 2}">
+					<xcp:panelForm>
+
+						<xcp:text
+							id="txtNome"
+							label="#{bundle.lbl_nome}"
+							value="#{revisaoPdapBacking.boletimSelecionado.funcionarioFk.nome}"
+							readonly="true"
+							size="70" />
+
+						<xcp:dateRange
+							id="data"
+							label="#{bundle.lbl_data}"
+							valueStart="#{revisaoPdapBacking.boletimSelecionado.dataini}"
+							valueEnd="#{revisaoPdapBacking.boletimSelecionado.datafim}"
+							readonly="true" />
+
+					</xcp:panelForm>
+
+					<p:dataTable
+						id="tabNotas"
+						value="#{revisaoPdapBacking.listaBoletinNotas}"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						var="row"
+						paginator="false">
+
+						<xcp:column
+							type="String"
+							size="50"
+							headerText="#{bundle.col_conhecimento}">
+
+							<xcp:commandLink
+								actionListener="#{revisaoPdapBacking.abreHelp(row)}"
+								immediate="true"
+								update=":frmDlgHelp"
+								id="btn_help">
+
+								<h:graphicImage
+									value="/resources/img/ajuda.png"
+									styleClass="xcp_fav_icon2" />
+							</xcp:commandLink>
+
+							<h:outputText
+								value="#{row.descricao}"
+								escape="false" />
+
+						</xcp:column>
+
+						<xcp:column
+							type="String"
+							size="30"
+							headerText="#{bundle.col_respostas}">
+							<xcp:combo
+								id="cmbNotaReadOnly"
+								label="#{row.boletimNotaReadOnly.conhecimentoFk.descricao}"
+								simple="true"
+								styleClass="combo"
+								value="#{row.boletimNotaReadOnly.nota}"
+								rendered="#{row.tipResposta == 2}"
+								required="#{row.boletimNotaReadOnly.conhecimentoFk.obrigatorio == 1}"
+								readonly="true">
+								<f:selectItems
+									value="#{row.listaNotas}"
+									var="it"
+									itemValue="#{it.nota}"
+									itemLabel="#{it.descricao}" />
+							</xcp:combo>
+
+							<xcp:memo
+								id="txtDescritivaReadOnly"
+								label="#{row.boletimNotaReadOnly.conhecimentoFk.descricao}"
+								required="#{row.boletimNotaReadOnly.conhecimentoFk.obrigatorio == 1}"
+								simple="true"
+								rendered="#{row.tipResposta != 2}"
+								value="#{row.boletimNotaReadOnly.obs}"
+								size="4000"
+								cols="50"
+								readonly="true" />
+						</xcp:column>
+
+
+					</p:dataTable>
+
+					<p:fieldset
+						legend="#{bundle.title_aperfeicoamento}"
+						rendered="#{revisaoPdapBacking.avalDesempenho}">
+
+						<xcp:panelForm>
+
+							<xcp:memo
+								id="txtPontoforte"
+								label="#{bundle.lbl_pontoforte}"
+								value="#{revisaoPdapBacking.boletimSelecionado.pontoforte}"
+								size="4000"
+								readonly="true" />
+
+							<xcp:memo
+								id="txtPontomelhoria"
+								label="#{bundle.lbl_pontomelhoria}"
+								value="#{revisaoPdapBacking.boletimSelecionado.pontomelhoria}"
+								size="4000"
+								readonly="true" />
+
+							<xcp:memo
+								id="txtJustificativa"
+								label="#{bundle.lbl_justificativa}"
+								value="#{revisaoPdapBacking.boletimSelecionado.justificativa}"
+								size="4000"
+								readonly="true" />
+
+						</xcp:panelForm>
+					</p:fieldset>
+
+					<p:fieldset legend="#{bundle.title_itens}">
+
+						<p:dataTable
+							id="tblItens"
+							value="#{revisaoPdapBacking.listItens}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							var="row"
+							paginator="false">
+
+							<xcp:column
+								headerText="#{bundle.col_numero}"
+								type="Number"
+								size="10">
+								<xcp:outputSimpleNumber
+									value="#{row.item}"
+									precision="3"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_tipoItemAval}"
+								type="String"
+								size="10">
+								<xcp:outputSimple
+									value="#{row.tipo}"
+									itens="#{revisaoPdapBacking.itensTipoItem}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_descricao}"
+								type="String"
+								size="20">
+								<xcp:outputSimple
+									value="#{row.tipo == 1 ? row.descricao : row.detalhe}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_prazo}"
+								type="Number"
+								size="10">
+								<xcp:outputSimpleNumber
+									value="#{row.prazo}"
+									precision="3"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_tipoPrazo}"
+								type="String"
+								size="10">
+								<xcp:outputSimple
+									value="#{row.tipoPrazo}"
+									itens="#{revisaoPdapBacking.itensPrazo}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_prioridade}"
+								type="Number"
+								size="10">
+								<xcp:outputSimpleNumber
+									value="#{row.prioridade}"
+									precision="3"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="1">
+								<xcp:commandLink
+									oncomplete="PF('dlgItem_w').show();"
+									update=":dlgItem">
+
+									<h:graphicImage
+										rendered="#{revisaoPdapBacking.tipoAcesso == 1}"
+										value="/resources/img/procurar.png"
+										style="margin-top:3px;" />
+									<p:outputPanel
+										rendered="#{revisaoPdapBacking.tipoAcesso == 2}">
+										<i
+											class="fa fa-fw fa-pencil"
+											style="font-size: 16px" />
+									</p:outputPanel>
+									<f:setPropertyActionListener
+										target="#{revisaoPdapBacking.itemSel}"
+										value="#{row}" />
+								</xcp:commandLink>
+							</xcp:column>
+
+						</p:dataTable>
+					</p:fieldset>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_voltar"
+								value="#{bundle.btn_voltar}"
+								process="@form"
+								update="@form"
+								immediate="true"
+								action="#{revisaoPdapBacking.setStatusTela(1)}"
+								icon="ui-icon-arrowreturnthick-1-w" />
+
+							<xcp:commandButton
+								id="btn_aprovar"
+								value="#{bundle.btn_aprovar}"
+								process="@form"
+								update="@form"
+								action="#{revisaoPdapBacking.actionFinaliza(1)}"
+								icon="ui-icon-check">
+								<p:confirm
+									header="#{bundle.tit_confirma_aprovacao_rev}"
+									message="#{bundle.msg_confirma_aprovacao_rev}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+
+							<xcp:commandButton
+								id="btn_reprovar"
+								value="#{bundle.btn_reprovar}"
+								process="@form"
+								update="@form"
+								action="#{revisaoPdapBacking.actionFinaliza(0)}"
+								icon="ui-icon-close">
+								<p:confirm
+									header="#{bundle.tit_confirma_reprovacao_rev}"
+									message="#{bundle.msg_confirma_reprovacao_rev}"
+									icon="ui-icon-alert" />
+							</xcp:commandButton>
+						</f:facet>
+					</p:toolbar>
+				</h:panelGroup>
+			</h:panelGroup>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			header="#{bundle.title_item}"
+			modal="true"
+			id="dlgItem"
+			widgetVar="dlgItem_w"
+			styleClass="full-page-dialog rightside-dialog">
+			<xcp:form id="frmDlgItem">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtItem"
+						label="#{bundle.lbl_numero}"
+						required="true"
+						value="#{revisaoPdapBacking.itemSel.item}"
+						size="5"
+						precision="5"
+						scale="0"
+						readonly="true" />
+
+					<xcp:combo
+						id="cboTipoItem"
+						value="#{boletimNotasBacking.itemSel.tipo}"
+						label="#{bundle.lbl_tipoitem}"
+						required="true"
+						readonly="true"
+						itens="#{revisaoPdapBacking.itensTipoItem}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{revisaoPdapBacking.itemSel.descricao}"
+						size="80"
+						readonly="true"
+						rendered="#{revisaoPdapBacking.tipoItemGeral}" />
+
+					<xcp:number
+						id="txtPrioridade"
+						label="#{bundle.lbl_prioridadeitem}"
+						value="#{revisaoPdapBacking.itemSel.prioridade}"
+						size="3"
+						precision="3"
+						scale="0"
+						readonly="true"
+						maxValue="999"
+						rendered="#{revisaoPdapBacking.tipoItemGeral}" />
+
+					<xcp:memo
+						id="txtDetalhe"
+						label="#{bundle.lbl_detalhe}"
+						readonly="true"
+						value="#{revisaoPdapBacking.itemSel.detalhe}"
+						size="1000" />
+
+					<xcp:number
+						id="txtPrazo"
+						label="#{bundle.lbl_prazo}"
+						value="#{revisaoPdapBacking.itemSel.prazo}"
+						size="3"
+						precision="3"
+						readonly="true"
+						scale="0"
+						maxValue="999"
+						rendered="#{revisaoPdapBacking.tipoItemGeral}" />
+
+					<xcp:combo
+						id="cboTipoPrazo"
+						value="#{revisaoPdapBacking.itemSel.tipoPrazo}"
+						label="#{bundle.lbl_unidade}"
+						required="true"
+						readonly="true"
+						itens="#{revisaoPdapBacking.itensPrazo}"
+						rendered="#{revisaoPdapBacking.tipoItemGeral}" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgItem_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			modal="true"
+			id="dlgHelp"
+			width="950"
+			height="500"
+			header="#{bundle.title_ajuda}"
+			widgetVar="dlgHelp_w">
+			<xcp:form id="frmDlgHelp">
+
+				<h:panelGrid columns="1">
+					<h:outputText
+						style="font-weight: bold;"
+						value="#{revisaoPdapBacking.boletimNotasSelecionado.boletimNota.conhecimentoFk.obs}" />
+				</h:panelGrid>
+
+				<p:dataTable
+					id="tabConceiros"
+					value="#{revisaoPdapBacking.boletimNotasSelecionado.listaNotas}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					var="rowResp"
+					paginator="false">
+
+					<xcp:column
+						type="String"
+						size="20"
+						headerText="#{bundle.col_respostas}">
+						<xcp:outputSimple value="#{rowResp.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						size="50"
+						headerText="#{bundle.col_obs}">
+						<xcp:memo
+							simple="true"
+							id="obsResp"
+							readonly="true"
+							value="#{rowResp.obs}"
+							cols="100"
+							size="600" />
+					</xcp:column>
+
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Partescorpo"
+			backing="#{partescorpoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_parte}"
+					value="#{row.parte}"
+					type="Number"
+					size="9">
+					<xcp:outputSimpleNumber
+						value="#{row.parte}"
+						precision="9"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="100">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="String"
+					size="14">
+					<xcp:outputSimple value="#{row.codigo}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_lateralidade}"
+					value="#{row.codigo}"
+					type="String"
+					size="14">
+					<xcp:outputSimple value="#{row.lateralidade}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtParte"
+						label="#{bundle.lbl_parte}"
+						required="true"
+						value="#{partescorpoBacking.entity.parte}"
+						size="9"
+						precision="9"
+						scale="0"
+						maxValue="999999999"
+						readonly="#{not partescorpoBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{partescorpoBacking.entity.descricao}"
+						size="500" />
+
+					<xcp:mask
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						mask="99.99.99.999"
+						required="true"
+						value="#{partescorpoBacking.entity.codigo}" />
+
+					<xcp:combo
+						id="cboLateralidade"
+						value="#{partescorpoBacking.entity.lateralidade}"
+						label="#{bundle.lbl_lateralidade}"
+						required="true"
+						itens="#{partescorpoBacking.itensLateralidade}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Linha"
+			backing="#{linhaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_linha}"
+					value="#{row.linha}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.linha}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_transportador}"
+					value="#{row.transportadorFk.descricao}"
+					size="50"
+					type="String">
+					<xcp:outputSimple value="#{row.transportadorFk.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+
+					<xcp:number
+						id="txtLinha"
+						label="#{bundle.lbl_linha}"
+						required="true"
+						value="#{linhaBacking.entity.linha}"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999"
+						readonly="#{not linhaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{linhaBacking.entity.descricao}"
+						size="75" 
+						maxlength="80"/>
+
+					<xcp:lov
+						id="lovTransportador"
+						value="#{linhaBacking.entity.transportadorFk}"
+						label="#{bundle.lbl_transportador}"
+						required="true"
+						query="transportador"
+						size="5" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor_transportes}"
+						type="Number"
+						required="true"
+						size="15"
+						value="#{linhaBacking.entity.valor}"
+						precision="12"
+						scale="2" />
+					<!-- 
+					<xcp:number
+						id="txtCartao"
+						label="#{bundle.lbl_cartao}"
+						value="#{linhaBacking.entity.cartao}"
+						size="3"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtFicha"
+						label="#{bundle.lbl_ficha}"
+						value="#{linhaBacking.entity.ficha}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999" />
+ -->
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="LinhaForm/LinhaValoresForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

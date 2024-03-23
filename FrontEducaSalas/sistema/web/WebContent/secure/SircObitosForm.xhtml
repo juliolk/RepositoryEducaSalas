@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags" template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>	
+
+				<xcp:border 
+					id="brd_obitos"
+					header="#{bundle.tit_dados_filtro}">
+					
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:text
+										id="nome"
+										label="#{bundle.lbl_nome}"
+										value="#{sircObitosBacking.nome}"
+										size="70"
+										maxlength="70" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:text
+										id="cpf"
+										label="#{bundle.lbl_cpf}"
+										value="#{sircObitosBacking.cpf}"
+										size="11"
+										maxlength="11" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:commandButton
+										icon="ui-icon-search"
+										value="#{bundle.btn_pesquisar}"
+										action="#{sircObitosBacking.actionPesquisar}"
+										update="tblObtos"
+										id="btn_pesquisar">
+									</xcp:commandButton>
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					
+				</xcp:border>
+				
+			<p:dataTable
+				id="tblObtos"
+				var="row"
+				value="#{sircObitosBacking.list}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{row}"
+				paginator="true"
+				rows="50">
+				
+				<p:column
+					filterBy="#{row.dataConsulta}" 
+					filterFunction="#{sircObitosBacking.filterBy}"
+					headerText="#{bundle.col_dtconsulta}"
+					width="5" >
+					<xcp:outputSimpleTimestamp value="#{row.dataConsulta}" pattern="dd/MM/yyyy HH:mm:ss"/>
+				</p:column>
+				
+				<p:column
+					filterBy="#{row.nomeOperador}" 
+					filterFunction="#{sircObitosBacking.filterBy}"
+					headerText="#{bundle.col_operadores_matricula}"
+					width="50">
+					<xcp:outputSimple value="#{row.nomeOperador}" />
+				</p:column>
+				
+				<p:column
+					filterBy="#{row.cpf}" 
+					filterFunction="#{sircObitosBacking.filterBy}"
+					headerText="#{bundle.col_funcionarios_cpf}"
+					width="5">
+					<xcp:outputSimple value="#{row.cpf}" />
+				</p:column>
+		
+				<p:column
+					filterBy="#{row.nome}"
+					filterFunction="#{sircObitosBacking.filterBy}"
+					headerText="#{bundle.col_nome}"
+					width="50">
+					<xcp:outputSimple value="#{row.nome}" />
+				</p:column>
+				
+				<p:column
+					filterBy="#{row.dataNascimento}" 
+					filterFunction="#{sircObitosBacking.filterBy}"
+					headerText="#{bundle.col_dtnascimento}"
+					width="5" >
+					<xcp:outputSimpleDate value="#{row.dataNascimento}" />
+				</p:column>				
+	
+				<p:column
+					filterBy="#{row.dataObito}" 
+					filterFunction="#{sircObitosBacking.filterBy}"
+					headerText="#{bundle.col_dataobito}"
+					width="5">
+					<xcp:outputSimpleDate value="#{row.dataObito}" />
+				</p:column>
+	
+							
+			</p:dataTable>
+		</xcp:panelContent>		
+	</ui:define>
+	
+</ui:composition>

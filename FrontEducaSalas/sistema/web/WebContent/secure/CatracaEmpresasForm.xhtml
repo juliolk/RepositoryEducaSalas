@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="CatracaEmpresas"
+			backing="#{catracaEmpresasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_emp}"
+					value="#{row.empresa}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.empresa}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtEmpresa"
+						label="#{bundle.lbl_emp}"
+						required="true"
+						value="#{catracaEmpresasBacking.entity.empresa}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not catracaEmpresasBacking.entity.novo}" />
+
+					<xcp:memo
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						value="#{catracaEmpresasBacking.entity.nome}"
+						size="1000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

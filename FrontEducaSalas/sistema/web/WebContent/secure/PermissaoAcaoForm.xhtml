@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="PermissaoAcao"
+			backing="#{permissaoAcaoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_permissao}"
+					value="#{row.permissao}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.permissao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_rotina}"
+					value="#{row.rotina}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.rotina}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desRotina}"
+					value="#{row.rotinaFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.rotinaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_acao}"
+					value="#{row.acao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.acao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_operador}"
+					value="#{row.operador}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.operador}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_operador}"
+					value="#{row.operadorFk.nome}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.operadorFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desPerfil}"
+					value="#{row.perfilFk.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.perfilFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_bloqueia}"
+					value="#{row.situacao}"
+					itens="#{permissaoAcaoBacking.itensIndSimNao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{permissaoAcaoBacking.itensIndSimNao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtPermissao"
+						label="#{bundle.lbl_permissao}"
+						required="true"
+						value="#{permissaoAcaoBacking.entity.permissao}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						readonly="#{not permissaoAcaoBacking.entity.novo}" />
+
+					<xcp:lov
+						id="lovRotina"
+						value="#{permissaoAcaoBacking.entity.rotinaFk}"
+						label="#{bundle.lbl_rotina}"
+						required="true"
+						query="rotinas"
+						size="6" />
+
+					<xcp:text
+						id="txtAcao"
+						label="#{bundle.lbl_acao}"
+						required="true"
+						value="#{permissaoAcaoBacking.entity.acao}"
+						size="50" />
+
+					<xcp:lov
+						id="lovOperador"
+						value="#{permissaoAcaoBacking.entity.operadorFk}"
+						label="#{bundle.lbl_operador}"
+						query="operadoreslov"
+						size="15" />
+
+					<xcp:lov
+						id="lovPerfil"
+						value="#{permissaoAcaoBacking.entity.perfilFk}"
+						label="#{bundle.lbl_perfil}"
+						query="perfislov"
+						size="4" />
+
+					<xcp:check
+						id="indSituacao"
+						value="#{permissaoAcaoBacking.entity.indSituacao}"
+						label="#{bundle.lbl_bloqueia}"
+						required="true" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

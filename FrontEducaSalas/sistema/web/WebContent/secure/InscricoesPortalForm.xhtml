@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+	
+		<xcp:panelTreinamento
+			id="Inscricoes"
+			backing="#{inscricoesPortalBacking}"
+			portal="true">
+
+			<ui:define name="panelLista">
+				<div>
+					<p:fieldset legend="#{bundle.tit_inscricao}">
+						<p:outputPanel
+							rendered="#{inscricoesPortalBacking.turmaSelecionada == null}">
+							<xcp:outputSimple value="#{bundle.txt_selecione_uma_turma}" />
+						</p:outputPanel>
+
+						<p:outputPanel
+							rendered="#{inscricoesPortalBacking.turmaSelecionada != null}">
+
+							<xcp:outputSimple
+								value="#{inscricoesPortalBacking.labelInscricao}" />
+
+							<xcp:commandButton
+								id="btn_inscrever"
+								value="#{bundle.btn_inscrever}"
+								action="#{inscricoesPortalBacking.actionInscrever}"
+								process="@this"
+								update="@form"
+								disabled="#{inscricoesPortalBacking.statusTela != 1}"
+								rendered="#{inscricoesPortalBacking.renderedBtnInscricao}" />
+
+							<xcp:commandButton
+								id="btn_desinscrever"
+								value="#{bundle.btn_desinscrever}"
+								action="#{inscricoesPortalBacking.actionDesinscrever}"
+								process="@this"
+								update="@form"
+								disabled="#{inscricoesPortalBacking.statusTela != 1}"
+								rendered="#{inscricoesPortalBacking.renderedBtnDesinscricao}" />
+						</p:outputPanel>
+					</p:fieldset>
+				</div>
+			</ui:define>
+
+			<ui:define name="panelDet">
+				<p:panelGrid
+					id="panelTotais"
+					columns="4"
+					styleClass="tabela_alinhamento"
+					rendered="#{inscricoesPortalBacking.turmaSelecionada != null}">
+
+
+					<xcp:number
+						id="txtNrovagas"
+						label="#{bundle.lbl_nrovagasdisport}"
+						value="#{inscricoesPortalBacking.turmaSelecionada.nrovagasPortal}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+
+					<xcp:number
+						id="txtInscritos"
+						label="#{bundle.lbl_inscritosport}"
+						value="#{inscricoesPortalBacking.qtdInscritos}"
+						readonly="true"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999" />
+				</p:panelGrid>
+			</ui:define>
+
+			<ui:define name="ultcolunastrei">
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandButton
+						id="btn_info_trei"
+						icon="ui-icon-search"
+						action="#{inscricoesPortalBacking.actionOpenInfoTreinamento(rowTreinamento)}"
+						update=":formInfo"
+						title="#{bundle.tit_info_treinamento}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="ultcolunasturma">
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandButton
+						id="btn_info_turma"
+						icon="ui-icon-search"
+						action="#{inscricoesPortalBacking.actionOpenInfoTurma(rowDatas)}"
+						update=":formDatas"
+						title="#{bundle.tit_info_turma}" />
+				</xcp:column>
+			</ui:define>
+		</xcp:panelTreinamento>
+
+		<p:dialog
+			header="#{bundle.tit_mot_canc}"
+			modal="true"
+			id="dlgMotCanc"
+			widgetVar="dlgMotCanc_w">
+
+			<xcp:form id="frmCanc">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovCodigo"
+						required="true"
+						value="#{inscricoesPortalBacking.treimot}"
+						label="#{bundle.lbl_codigo}"
+						query="treinamento_motivo_c"
+						size="5" />
+
+					<xcp:memo
+						id="txtCanc"
+						label="#{bundle.lbl_obs}"
+						size="500"
+						value="#{inscricoesPortalBacking.obs}" />
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_salvar"
+							action="#{inscricoesPortalBacking.actionSalvarMot}"
+							value="#{bundle.btn_gravar}"
+							update=":form:detalhes" />
+					</f:facet>
+				</p:toolbar>
+				<p:remoteCommand
+					name="rcFormAtualiza"
+					process="@this"
+					update="frmCanc" />
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgInfo"
+			header="#{bundle.tit_informacoes}"
+			widgetVar="wDlgInfo"
+			width="650"
+			height="500"
+			resizable="false"
+			modal="true">
+			<xcp:form id="formInfo">
+				<p:tabView id="tabInfo">
+					<p:tab title="#{bundle.tit_objetivos}">
+						<xcp:memo
+							id="txtObjetivos"
+							style="width:99%;overflow-y: scroll; height: 400px; resize: none;"
+							simple="true"
+							readonly="true"
+							label="#{bundle.lbl_topicos}"
+							value="#{inscricoesPortalBacking.treinaInfo.treinamento.objetivo}" />
+
+					</p:tab>
+					<p:tab title="#{bundle.tit_topicos}">
+						<xcp:memo
+							id="txtTopicos"
+							style="width:99%;overflow-y: scroll; height: 400px; resize: none;"
+							simple="true"
+							readonly="true"
+							label="#{bundle.lbl_topicos}"
+							value="#{inscricoesPortalBacking.treinaInfo.treinamento.topicos}" />
+					</p:tab>
+				</p:tabView>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgInfoData"
+			header="#{bundle.tit_informacoes}"
+			widgetVar="wDlgInfoData"
+			width="650"
+			height="500"
+			resizable="true"
+			modal="true">
+			<xcp:form id="formDatas">
+				<p:dataTable
+					id="tabDatasTreinamento"
+					editable="true"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					value="#{inscricoesPortalBacking.treinaInfo.list}"
+					var="rowData">
+
+					<p:column headerText="#{bundle.col_datainicio}">
+						<xcp:outputSimpleDate value="#{rowData.datainicio}" />
+					</p:column>
+
+					<p:column headerText="#{bundle.col_datafinal}">
+						<xcp:outputSimpleDate value="#{rowData.datafinal}" />
+					</p:column>
+
+					<p:column headerText="#{bundle.col_horainicial}">
+						<xcp:outputSimpleTimeNumber
+							value="#{rowData.horainicial}"
+							precision="5"
+							scale="2" />
+					</p:column>
+
+					<p:column headerText="#{bundle.col_horafinal}">
+						<xcp:outputSimpleTimeNumber
+							value="#{rowData.horafinal}"
+							precision="5"
+							scale="2" />
+					</p:column>
+				</p:dataTable>
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:fieldset
+				legend="#{bundle.title_informacoes}"
+				style="padding-bottom:5px">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovMedico"
+						value="#{agendaMedicaBacking.medicosLov}"
+						label="#{bundle.lbl_medico}"
+						query="lov_medicos"
+						required="true"
+						size="12"
+						selectionListener="#{agendaMedicaBacking.selectMedico}"
+						update="pnlAgenda"
+						readonly="#{agendaMedicaBacking.medico}" />
+				</xcp:panelForm>
+
+
+			</p:fieldset>
+
+			<p:outputPanel id="pnlAgenda">
+				<p:schedule
+					id="tblAgenda"
+					value="#{agendaMedicaBacking.model}"
+					style="padding:5px"
+					rendered="#{agendaMedicaBacking.medicosLov != null}"
+					widgetVar="tblAgenda_w"
+					timeFormat="HH:mm"
+					axisFormat="HH"
+					timeZone="America/Sao_Paulo"
+					draggable="#{not agendaMedicaBacking.consulta}"
+					resizable="#{not agendaMedicaBacking.consulta}">
+					<p:ajax
+						event="dateSelect"
+						listener="#{agendaMedicaBacking.onDateSelect}"
+						update=":frmAgenda"
+						disabled="#{agendaMedicaBacking.consulta}" />
+					<p:ajax
+						event="eventSelect"
+						listener="#{agendaMedicaBacking.onEventSelect}"
+						update=":frmAgenda" />
+					<p:ajax
+						event="eventMove"
+						listener="#{agendaMedicaBacking.onEventMove}" />
+					<p:ajax
+						event="eventResize"
+						listener="#{agendaMedicaBacking.onEventResize}" />
+				</p:schedule>
+			</p:outputPanel>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.title_agenda}"
+			modal="true"
+			id="dlgAgenda"
+			widgetVar="dlgAgenda_w">
+			<xcp:form id="frmAgenda">
+				<xcp:panelForm>
+
+					<xcp:dateTimeRange
+						id="txtData"
+						required="true"
+						valueStart="#{agendaMedicaBacking.entity.dtini}"
+						valueEnd="#{agendaMedicaBacking.entity.dtfim}"
+						label="#{bundle.lbl_dtini}" />
+
+					<xcp:combo
+						id="cboTippaciente"
+						value="#{agendaMedicaBacking.entity.tippaciente}"
+						label="#{bundle.lbl_tippaciente}"
+						required="true"
+						itens="#{agendaMedicaBacking.itensTippaciente}">
+						<p:ajax
+							update="lovMatricula,lovMatricula_l,lovPessoa,lovPessoa_l,txtTelefone,txtTelefone_l,txtCelular,txtCelular_l,txtEmail,txtEmail_l" />
+	
+					</xcp:combo>
+					
+					<xcp:lov
+						id="lovMatricula"
+						value="#{agendaMedicaBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_servidor}"
+						query="funcionariosLov"
+						size="10"
+						update="txtTelefone,txtTelefone_l,txtCelular,txtCelular_l,txtEmail,txtEmail_l"
+						rendered="#{agendaMedicaBacking.entity.tippaciente == 1}"
+						required="true" />
+
+					<xcp:lov
+						id="lovTipoagenda"
+						value="#{agendaMedicaBacking.entity.tipoagendaFk}"
+						label="#{bundle.lbl_tipo}"
+						query="tipoagenda"
+						size="10"
+						required="true" />
+
+					<xcp:lov
+						id="lovPessoa"
+						value="#{agendaMedicaBacking.entity.pessoaFk}"
+						label="#{bundle.lbl_autonomo}"
+						query="autonomos"
+						size="10"
+						update="txtTelefone,txtTelefone_l,txtCelular,txtCelular_l,txtEmail,txtEmail_l"
+						rendered="#{agendaMedicaBacking.entity.tippaciente == 2}"
+						required="true" />
+
+					<xcp:fone
+						id="txtTelefone"
+						label="#{bundle.lbl_telefone}"
+						value="#{agendaMedicaBacking.telefone}"
+						size="30"
+						readonly="true"
+						rendered="#{agendaMedicaBacking.telefone != null}" />
+
+					<xcp:fone
+						id="txtCelular"
+						label="#{bundle.lbl_celular}"
+						value="#{agendaMedicaBacking.celular}"
+						size="30"
+						readonly="true"
+						rendered="#{agendaMedicaBacking.celular != null}" />
+
+					<xcp:email
+						id="txtEmail"
+						label="#{bundle.lbl_email}"
+						value="#{agendaMedicaBacking.email}"
+						size="50"
+						readonly="true"
+						rendered="#{agendaMedicaBacking.email != null}" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{agendaMedicaBacking.entity.obs}"
+						size="1000" />
+
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							action="#{agendaMedicaBacking.actionGravar}"
+							value="#{bundle.btn_gravar}"
+							disabled="#{agendaMedicaBacking.consulta}" />
+
+						<xcp:commandButton
+							id="btn_remover"
+							icon="ui-icon-trash"
+							action="#{agendaMedicaBacking.actionRemover}"
+							value="#{bundle.btn_remover}"
+							disabled="#{agendaMedicaBacking.consulta}">
+
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+
+						</xcp:commandButton>
+
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

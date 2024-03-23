@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:panelGroup id="formVinculo">
+		<xcp:panelForm>
+
+			<xcp:lov
+				id="lovVinculo"
+				value="#{editalRemBacking.editalVinculosManut.vinculoFk}"
+				label="#{bundle.lbl_vinculo}"
+				query="vinculos"
+				size="18"
+				required="true" />
+
+		</xcp:panelForm>
+		<p:toolbar
+			styleClass="xcp_pmanut_form_toolbar"
+			rendered="#{not editalRemBacking.detailsEdit}">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btnGravar_Vinculo"
+					icon="ui-icon-disk"
+					value="#{bundle.btn_gravar}"
+					action="#{editalRemBacking.actionGravarVinculo}"
+					disabled="#{editalRemBacking.disabledGravar}" />
+
+				<xcp:commandButton
+					id="btnVoltar_Concurso"
+					immediate="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgVinc_w').hide();" />
+			</f:facet>
+		</p:toolbar>
+	</h:panelGroup>
+</ui:composition>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent multipart="true">
+
+			<p:fieldset legend="#{bundle.title_estruturaArq}">
+				<xcp:panelForm>
+
+					<xcp:inputFile
+						label="#{bundle.lbl_arquivo}"
+						id="inpFile"
+						value="#{impPontoBacking.file}"
+						required="true" />
+
+					<xcp:numberRange
+						id="numMat"
+						required="true"
+						valueStart="#{impPontoBacking.helperVO.numMatIni}"
+						valueEnd="#{impPontoBacking.helperVO.numMatFim}"
+						label="#{bundle.lbl_numMat}" />
+
+					<xcp:numberRange
+						id="numConta"
+						required="true"
+						valueStart="#{impPontoBacking.helperVO.numTipPontoIni}"
+						valueEnd="#{impPontoBacking.helperVO.numTipPontoFim}"
+						label="#{bundle.lbl_numTipPonto}" />
+
+					<xcp:numberRange
+						id="numValor"
+						required="true"
+						valueStart="#{impPontoBacking.helperVO.numHorasIni}"
+						valueEnd="#{impPontoBacking.helperVO.numHorasFim}"
+						label="#{bundle.lbl_numHoras}" />
+
+					<xcp:numberRange
+						id="numData"
+						valueStart="#{impPontoBacking.helperVO.numDataIni}"
+						valueEnd="#{impPontoBacking.helperVO.numDataFim}"
+						label="#{bundle.lbl_numData}" />
+
+					<h:outputLabel value="#{bundle.txt_atencao}" />
+					<p:outputPanel style="width:400px">
+						<h:outputLabel
+							value="#{bundle.txt_impPonto}"
+							style="color:red;" />
+					</p:outputPanel>
+
+				</xcp:panelForm>
+			</p:fieldset>
+			<h:panelGrid columns="2">
+
+			</h:panelGrid>
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_importar"
+						ajax="false"
+						value="#{bundle.btn_importar}"
+						action="#{impPontoBacking.actionImportar}" />
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgMsg}"
+			widgetVar="w_msg"
+			dynamic="true"
+			modal="true"
+			height="500"
+			width="600">
+			<xcp:form id="formDlg">
+				<h:panelGrid columns="1">
+					<p:fieldset legend="#{bundle.title_aviso}">
+						<h:outputText value="#{bundle.msg_linhas_nao_inseridas}" />
+					</p:fieldset>
+					<p:spacer height="5px;" />
+					<p:dataTable
+						id="tblErro"
+						var="row"
+						value="#{impPontoBacking.errorList}"
+						rows="#{viewUtil.tableRows}"
+						paginator="true">
+						<p:column headerText="#{bundle.col_linha}">
+							<h:outputText value="#{row.desLinha}" />
+						</p:column>
+						<p:column headerText="#{bundle.col_msg}">
+							<h:outputText value="#{row.desMessage}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

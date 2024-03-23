@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.labelWidth {
+	width: 80px;
+}
+</style>
+
+		<xcp:panelManut
+			id="Jornadas"
+			backing="#{jornadasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_jornada}"
+					value="#{row.jornada}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.jornada}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_hrinicio}"
+					value="#{row.hrinicio}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.hrinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hrfim}"
+					value="#{row.hrfim}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.hrfim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hrinicio2}"
+					value="#{row.hrinicio2}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.hrinicio2}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_hrfim2}"
+					value="#{row.hrfim2}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.hrfim2}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_hrinicio3}"
+					value="#{row.hrinicio3}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.hrinicio3}" />
+				</xcp:column>
+				<xcp:column
+					headerText="#{bundle.col_hrfim3}"
+					value="#{row.hrfim3}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.hrfim3}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdTotal}"
+					value="#{row.qtdTotalHoras}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.qtdTotalHoras}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtdTotalIntervalo}"
+					value="#{row.qtdTotalIntervalo}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleTimeNumber value="#{row.qtdTotalIntervalo}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+					<xcp:number
+						id="txtJornada"
+						label="#{bundle.lbl_jornada}"
+						required="true"
+						value="#{jornadasBacking.entity.jornada}"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999"
+						readonly="#{not jornadasBacking.entity.novo}" />
+				</xcp:panelForm>
+
+				<p:fieldset legend="#{bundle.tit_jornada1}">
+					<h:panelGrid
+						columns="6"
+						columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+						<xcp:timeNumber
+							id="txtHrinicio"
+							label="#{bundle.lbl_hrinicio}"
+							size="8"
+							required="true"
+							value="#{jornadasBacking.entity.hrinicio}"
+							precision="5"
+							scale="2" />
+
+						<xcp:timeNumber
+							id="txtHrfim"
+							label="#{bundle.lbl_hrfim}"
+							size="8"
+							required="true"
+							value="#{jornadasBacking.entity.hrfim}"
+							precision="5"
+							scale="2" />
+
+					</h:panelGrid>
+
+				</p:fieldset>
+
+				<p:fieldset legend="#{bundle.tit_jornada2}">
+					<h:panelGrid
+						columns="6"
+						columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+						<xcp:timeNumber
+							id="txtHrinicio2"
+							label="#{bundle.lbl_hrinicio2}"
+							size="8"
+							value="#{jornadasBacking.entity.hrinicio2}"
+							precision="5"
+							scale="2" />
+
+						<xcp:timeNumber
+							id="txtHrfim2"
+							label="#{bundle.lbl_hrfim2}"
+							size="8"
+							value="#{jornadasBacking.entity.hrfim2}"
+							precision="5"
+							scale="2" />
+
+					</h:panelGrid>
+				</p:fieldset>
+
+
+				<p:fieldset legend="#{bundle.tit_jornada3}">
+					<h:panelGrid
+						columns="6"
+						columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+						<xcp:timeNumber
+							id="txtHrinicio3"
+							label="#{bundle.lbl_hrinicio3}"
+							size="8"
+							value="#{jornadasBacking.entity.hrinicio3}"
+							precision="5"
+							scale="2" />
+
+						<xcp:timeNumber
+							id="txtHrfim3"
+							label="#{bundle.lbl_hrfim3}"
+							size="8"
+							value="#{jornadasBacking.entity.hrfim3}"
+							precision="5"
+							scale="2" />
+
+					</h:panelGrid>
+				</p:fieldset>
+
+
+				<p:fieldset
+					legend="#{bundle.tit_intervalo}"
+					rendered="#{!jornadasBacking.entity.novo}">
+					<h:panelGrid
+						columns="4"
+						columnClasses="form_label labelWidth,form_content,form_label labelWidth,form_content,form_label labelWidth,form_content">
+						<xcp:timeNumber
+							id="txtQtdTotalHoras"
+							label="#{bundle.lbl_qtdTotalHoras}"
+							readonly="true"
+							size="8"
+							value="#{jornadasBacking.entity.qtdTotalHoras}"
+							precision="5"
+							scale="2" />
+
+						<xcp:timeNumber
+							id="txtQtdTotalIntervalo"
+							label="#{bundle.lbl_qtdTotalIntervalo}"
+							size="8"
+							readonly="true"
+							value="#{jornadasBacking.entity.qtdTotalIntervalo}"
+							precision="5"
+							scale="2" />
+
+					</h:panelGrid>
+				</p:fieldset>
+				<xcp:panelEsoc backing="#{jornadasBacking}" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

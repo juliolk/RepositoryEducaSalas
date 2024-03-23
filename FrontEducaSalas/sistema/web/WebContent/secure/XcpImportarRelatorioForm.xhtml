@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				id="fldfiltro"
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+
+
+				<xcp:panelForm>
+					<xcp:check
+						id="chkSemModelo"
+						label="#{bundle.lbl_semModelo}"
+						value="#{xcpImportarRelatorioBacking.semModelo}" />
+
+					<xcp:check
+						id="chkSemFonte"
+						label="#{bundle.lbl_semFonte}"
+						value="#{xcpImportarRelatorioBacking.semFonte}" />
+
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton
+						value="#{bundle.btn_pesquisar}"
+						icon="ui-icon-refresh"
+						action="#{xcpImportarRelatorioBacking.actionPesquisar}"
+						update="tblobjs"
+						process=":form:fldfiltro @this" />
+				</f:facet>
+			</p:toolbar>
+
+			<p:dataTable
+				id="tblobjs"
+				var="row"
+				resizableColumns="true"
+				value="#{xcpImportarRelatorioBacking.lista}"
+				filteredValue="#{xcpImportarRelatorioBacking.listaFiltrados}"
+				rows="#{viewUtil.tableRows}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				paginatorPosition="bottom"
+				selection="#{xcpImportarRelatorioBacking.listaSel}"
+				rowKey="#{row}">
+
+				<p:column
+					selectionMode="multiple"
+					style="width:3%;text-align:center" />
+
+				<xcp:column
+					headerText="#{bundle.col_codObjeto}"
+					value="#{row.codObjeto}"
+					type="String"
+					size="30">
+					<xcp:outputSimpleNumber
+						value="#{row.codObjeto}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desModelo}"
+					value="#{row.codModelo}"
+					type="String"
+					size="30">
+					<xcp:outputSimpleNumber
+						value="#{row.codModelo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:fieldset
+				legend="#{bundle.title_configuracoes}"
+				style="margin-top: 5px">
+
+				<xcp:panelForm>
+					<xcp:text
+						id="txtOrigem"
+						label="#{bundle.lbl_caminhoorigem}"
+						value="#{xcpImportarRelatorioBacking.desOrigem}"
+						required="true"
+						maxlength="300" />
+
+					<xcp:output
+						id="txtDestino"
+						label="#{bundle.lbl_destino}"
+						value="#{xcpImportarRelatorioBacking.desDestino}" />
+
+					<p:spacer width="1" />
+
+					<p:commandButton
+						value="#{bundle.btn_importar}"
+						action="#{xcpImportarRelatorioBacking.actionImportar}"
+						process="@form"
+						icon="ui-icon-gear"
+						update="tblobjs :formDlg"
+						style="margin-top: 5px">
+						<p:confirm
+							header="#{bundle.tit_confirma_import_relatorio}"
+							message="#{bundle.msg_confirma_import_relatorio}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+
+				</xcp:panelForm>
+			</p:fieldset>
+
+
+		</xcp:panelContent>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgMsg}"
+			widgetVar="w_msg"
+			dynamic="true"
+			modal="true"
+			height="500"
+			width="600">
+			<xcp:form id="formDlg">
+				<h:panelGrid
+					columns="1"
+					style="width:100%">
+					<p:fieldset legend="#{bundle.title_aviso}">
+						<h:outputText value="#{bundle.msg_modelos_nao_importados}" />
+					</p:fieldset>
+					<p:spacer height="5px;" />
+
+					<p:inputTextarea
+						id="ocPOC1NotesTx"
+						value="#{xcpImportarRelatorioBacking.erros}"
+						style="height: 400px; width: 100%; overflow:auto; white-space: nowrap;"
+						autoResize="false" />
+
+				</h:panelGrid>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

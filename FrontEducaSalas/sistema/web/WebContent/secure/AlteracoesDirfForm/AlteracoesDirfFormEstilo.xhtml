@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<!-- estilo separa por que nao pode ser formatado -->
+	
+ 	<style>
+      	 @-moz-document url-prefix(){
+		.calendar {;position:relative; top:8px;}	
+		}
+
+		.calendar{
+			right:1px;
+		}
+		
+		.label-column {
+			vertical-align: middle !important;
+			padding: 0 5px !important;
+		}
+
+		.listagem-cinza .ui-datatable-odd.tipo-conta-provento {
+		    background-color: rgba(0, 0, 0, 0.05);
+		}
+		.listagem-cinza .ui-datatable-even.tipo-conta-provento {
+		    background-color: rgba(0, 0, 0, 0.05);
+		}
+		.listagem-cinza .ui-datatable-odd.tipo-conta-desconto {
+		    background-color: rgba(0, 0, 0, 0.1);
+		}
+		.listagem-cinza .ui-datatable-even.tipo-conta-desconto {
+		    background-color: rgba(0, 0, 0, 0.1);
+		}
+		.listagem-cinza .ui-datatable-odd.tipo-conta-base-resultado {
+		    background-color: rgba(0, 0, 0, 0.0);
+		}
+		.listagem-cinza .ui-datatable-even.tipo-conta-base-resultado {
+		    background-color: rgba(0, 0, 0, 0.0);
+		}
+		
+		.listagem-cores .ui-datatable-odd.tipo-conta-provento {
+		    background-color: rgba(0, 255, 0, 0.15);
+		}
+		.listagem-cores .ui-datatable-even.tipo-conta-provento {
+		    background-color: rgba(0, 255, 0, 0.1);
+		}
+		.listagem-cores .ui-datatable-odd.tipo-conta-desconto {
+		    background-color: rgba(255, 0, 0, 0.15);
+		}
+		.listagem-cores .ui-datatable-even.tipo-conta-desconto {
+		    background-color: rgba(255, 0, 0, 0.1);
+		}
+		.listagem-cores .ui-datatable-odd.tipo-conta-base-resultado {
+		    background-color: rgba(0, 0, 0, 0.05);
+		}
+		.listagem-cores .ui-datatable-even.tipo-conta-base-resultado {
+		    background-color: rgba(0, 0, 0, 0.0);
+		}
+		
+		#form\:tblleft tr{
+			border: none;
+		}
+		
+		#form\:tblleft td{
+			text-align: left;
+		}
+		
+		div#form\:cboTiposFolhas_c{
+			width: 100%;
+		}
+	</style>
+		
+	
+</ui:composition>

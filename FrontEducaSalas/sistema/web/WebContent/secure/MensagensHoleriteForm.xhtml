@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="MensagensHolerite"
+			backing="#{mensagensHoleriteBacking}">
+
+			<ui:define name="barraLista">
+				<p:column>
+					<xcp:commandButton
+						id="btn_lanc_lote"
+						value="#{bundle.btn_lanc_lote}"
+						style="margin-left: 2px"
+						action="#{mensagensHoleriteBacking.actionOpenLote}" />
+				</p:column>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_referencia}"
+					value="#{row.referencia}"
+					type="Date"
+					size="1">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipofolha}"
+					value="#{row.tipofolhaFk.descricao}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.tipofolhaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipTexto}"
+					value="#{row.tipTexto}"
+					type="String"
+					size="10"
+					itens="#{mensagensHoleriteBacking.itensTipTexto}">
+					<xcp:outputSimple
+						value="#{row.tipTexto}"
+						itens="#{mensagensHoleriteBacking.itensTipTexto}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovTipofolha"
+						value="#{mensagensHoleriteBacking.entity.tipofolhaFk}"
+						label="#{bundle.col_tipofolha}"
+						required="true"
+						query="tipofolha"
+						size="10"
+						readonly="#{not mensagensHoleriteBacking.entity.novo}"
+						selectionListener="#{mensagensHoleriteBacking.selectTipoFolha}"
+						update="lovPeriodo" />
+
+					<xcp:lov
+						id="lovPeriodo"
+						value="#{mensagensHoleriteBacking.entity.periodoFk}"
+						label="#{bundle.lbl_referencia}"
+						required="true"
+						query="periodos"
+						size="10"
+						params="#{mensagensHoleriteBacking.params}"
+						readonly="#{not mensagensHoleriteBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboTipTexto"
+						value="#{mensagensHoleriteBacking.entity.tipTexto}"
+						label="#{bundle.lbl_tipTexto}"
+						itens="#{mensagensHoleriteBacking.itensTipTexto}"
+						required="true">
+						<p:ajax
+							event="change"
+							update="lovSeqTexto,lovSeqTexto_l,txtTxtTexto,txtTxtTexto_l" />
+					</xcp:combo>
+
+					<xcp:memo
+						id="txtTxtTexto"
+						value="#{mensagensHoleriteBacking.entity.txtTexto}"
+						label="#{bundle.lbl_txtTexto}"
+						required="true"
+						rendered="#{mensagensHoleriteBacking.entity.tipTexto == 1}" />
+
+					<xcp:lov
+						id="lovSeqTexto"
+						value="#{mensagensHoleriteBacking.entity.seqTextoFk}"
+						label="#{bundle.lbl_seqTexto}"
+						query="xcp_texto"
+						required="true"
+						rendered="#{mensagensHoleriteBacking.entity.tipTexto == 2}"
+						size="20" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

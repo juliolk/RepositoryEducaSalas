@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelFuncionarioLazy
+			id="ConsFinan"
+			backing="#{consultaFinanceiraBacking}"
+			scrollable="false"
+			renderedNovo="false">
+
+			<ui:define name="filtros">
+				<div style="width: 100%; overflow: hidden;">
+					<div
+						style="width: 200px; float: left; margin-left: 10px"
+						class="tabela_ocorrencia_fixas">
+						<p:fieldset legend="Opcoes">
+							<h:panelGrid>
+								<p:outputLabel
+									value="#{bundle.lbl_tipfolha}: *"
+									for="lovTipofolha"  />
+
+								<xcp:lov
+									id="lovTipofolha"
+									value="#{consultaFinanceiraBacking.helper.tipofolhaSel}"
+									label="#{bundle.lbl_tipfolha}"
+									required="true"
+									query="tipofolha"
+									size="5"
+									sizeDesc="20"
+									simple="true"
+									update=":form"
+									selectionListener="#{consultaFinanceiraBacking.selectTipofolha}" />
+
+								<p:outputLabel
+									value="#{bundle.lbl_conta}: *"
+									for="lovConta" />
+
+								<xcp:lov
+									id="lovConta"
+									value="#{consultaFinanceiraBacking.helper.contaSel}"
+									label="#{bundle.lbl_tipofolha}"
+									required="true"
+									query="contas"
+									size="5"
+									sizeDesc="20"
+									simple="true"
+									update=":form"
+									selectionListener="#{consultaFinanceiraBacking.selectConta}" />
+							</h:panelGrid>
+
+							<xcp:panelForm>
+								<xcp:date
+									id="txtDtinicio"
+									required="true"
+									value="#{consultaFinanceiraBacking.helper.dtaInicio}"
+									label="#{bundle.lbl_dtini}">
+									<p:ajax
+										event="change"
+										update=":form"
+										listener="#{consultaFinanceiraBacking.calcular}" />
+									<p:ajax
+										event="dateSelect"
+										update=":form"
+										listener="#{consultaFinanceiraBacking.calcular}" />
+								</xcp:date>
+
+								<xcp:date
+									id="txtDtfim"
+									required="true"
+									value="#{consultaFinanceiraBacking.helper.dtaFim}"
+									label="#{bundle.lbl_datafim}">
+									<p:ajax
+										event="change"
+										update=":form"
+										listener="#{consultaFinanceiraBacking.calcular}" />
+									<p:ajax
+										event="dateSelect"
+										update=":form"
+										listener="#{consultaFinanceiraBacking.calcular}" />
+								</xcp:date>
+							</xcp:panelForm>
+						</p:fieldset>
+					</div>
+					<div style="margin-left: 360px; margin-right: 18px">
+						<p:fieldset
+							id="fldtotais"
+							legend="Totais">
+							<xcp:panelForm>
+
+								<xcp:number
+									id="txtVltTotal"
+									label="#{bundle.lbl_vlrTotal}"
+									readonly="true"
+									size="12"
+									value="#{consultaFinanceiraBacking.helper.vlrTotal}"
+									precision="18"
+									scale="2" />
+
+								<xcp:number
+									id="txtQtdTotal"
+									label="#{bundle.lbl_qtdTotal}"
+									readonly="true"
+									size="12"
+									value="#{consultaFinanceiraBacking.helper.qtdTotal}"
+									precision="18"
+									scale="2" />
+
+								<xcp:number
+									id="txtFreq"
+									label="#{bundle.lbl_freq}"
+									readonly="true"
+									size="12"
+									value="#{consultaFinanceiraBacking.helper.vlrFreq}"
+									precision="18"
+									scale="2" />
+
+								<xcp:number
+									id="txtVlrMedio"
+									label="#{bundle.lbl_vlrMed}"
+									readonly="true"
+									size="12"
+									value="#{consultaFinanceiraBacking.helper.vlrMedio}"
+									precision="18"
+									scale="2" />
+
+								<xcp:number
+									id="txtQtdMedia"
+									label="#{bundle.lbl_qtdMed}"
+									readonly="true"
+									size="12"
+									value="#{consultaFinanceiraBacking.helper.qtdMedia}"
+									precision="18"
+									scale="2" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+					</div>
+				</div>
+
+
+			</ui:define>
+
+			<ui:define name="colunas">
+				<xcp:column
+					headerText="#{bundle.col_referencia}"
+					type="Date"
+					size="5">
+					<xcp:outputSimpleDate value="#{row.referencia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipolcto}"
+					type="Center"
+					itens="#{consultaFinanceiraBacking.itensTipolcto}"
+					size="3">
+					<xcp:outputSimple value="#{row.tipolcto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_incidencia}"
+					type="Center"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.incidencia}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtd}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.qtd}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+
+
+			</ui:define>
+
+		</xcp:panelFuncionarioLazy>
+	</ui:define>
+</ui:composition>

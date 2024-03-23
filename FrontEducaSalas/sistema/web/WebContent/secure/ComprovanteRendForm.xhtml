@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:outputPanel
+				rendered="#{comprovanteRendBacking.listAno.size() == 0}"
+				style="padding: 30px;">
+
+				<div
+					class="alert alert-info"
+					role="alert">
+					<h4>Atenção</h4>
+					#{bundle.lbl_sem_comprovante}
+				</div>
+
+			</p:outputPanel>
+
+			<ui:fragment rendered="#{comprovanteRendBacking.listAno.size() > 0}">
+
+				<p:fieldset legend="#{bundle.lbl_selecione_ano}">
+
+					<h:panelGroup
+						id="panel-contracheque"
+						layout="block">
+
+						<xcp:panelForm
+							controlsSizeClass="big-controls"
+							floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-lg-2 col-sm-3">
+										<xcp:combo
+											id="cboAno"
+											simple="true"
+											label=""
+											value="#{comprovanteRendBacking.ano}"
+											itens="#{comprovanteRendBacking.listAno}">
+											<p:ajax event="change" />
+										</xcp:combo>
+									</div>
+								</div>
+							</div>
+
+						</xcp:panelForm>
+
+					</h:panelGroup>
+
+				</p:fieldset>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+	
+						<xcp:commandButton
+							id="btnDownload"
+							styleClass="btn-main-action"
+							icon="ui-icon-print"
+							immediate="true"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+							value="#{bundle.btn_imprimir}">
+							<p:fileDownload
+								value="#{comprovanteRendBacking.getDownloadDocumento()}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+
+					</f:facet>
+				</p:toolbar>
+
+
+			</ui:fragment>
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

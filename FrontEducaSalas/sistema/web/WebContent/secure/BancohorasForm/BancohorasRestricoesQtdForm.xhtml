@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="BancohorasRest"
+		backing="#{bancohorasRestricoesQtdBacking}"
+		masterId="Bancohoras">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_restricao}"
+				value="#{row.restricao}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.restricao}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipolanc}"
+				value="#{row.tipolanc}"
+				type="String"
+				size="7"
+				itens="#{bancohorasRestricoesQtdBacking.itensTipolanc}">
+				<xcp:outputSimple
+					value="#{row.tipolanc}"
+					precision="1"
+					scale="0"
+					itens="#{bancohorasRestricoesQtdBacking.itensTipolanc}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_dataini}"
+				value="#{row.dataini}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.dataini}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_datafim}"
+				value="#{row.datafim}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleDate value="#{row.datafim}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:combo
+					id="cboTipolanc_BancohorasRest"
+					value="#{bancohorasRestricoesQtdBacking.entity.tipolanc}"
+					label="#{bundle.lbl_tipolancRest}"
+					required="true"
+					itens="#{bancohorasRestricoesQtdBacking.itensTipolanc}"
+					readonly="#{!bancohorasRestricoesQtdBacking.entity.novo}">
+					<p:ajax
+						event="change"
+						update="cboTipoDoc_BancohorasRest,cboTipoDoc_BancohorasRest_l,txtDi_BancohorasRest,txtDi_BancohorasRest_l,txtDf_BancohorasRest,txtDf_BancohorasRest_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboTipoDoc_BancohorasRest"
+					value="#{bancohorasRestricoesQtdBacking.entity.tipdoc}"
+					label="#{bundle.lbl_tipDoc}"
+					required="true"
+					itens="#{bancohorasRestricoesQtdBacking.itensTipoDoc}"
+					rendered="#{bancohorasRestricoesQtdBacking.renderedData}" />
+
+
+				<xcp:number
+					id="txtQtdIni_BancohorasRest"
+					label="#{bundle.lbl_qtdIni}"
+					required="true"
+					value="#{bancohorasRestricoesQtdBacking.entity.qtdIni}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+				<xcp:number
+					id="txtQtdFim_BancohorasRest"
+					label="#{bundle.lbl_qtdFim}"
+					required="true"
+					value="#{bancohorasRestricoesQtdBacking.entity.qtdFim}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+				<xcp:date
+					id="txtDi_BancohorasRest"
+					value="#{bancohorasRestricoesQtdBacking.entity.dataini}"
+					label="#{bundle.lbl_dataini}"
+					rendered="#{bancohorasRestricoesQtdBacking.renderedData}"
+					required="true" />
+
+				<xcp:date
+					id="txtDf_BancohorasRest"
+					value="#{bancohorasRestricoesQtdBacking.entity.datafim}"
+					label="#{bundle.lbl_datafim}"
+					rendered="#{bancohorasRestricoesQtdBacking.renderedData}"
+					required="true" />
+
+				<xcp:text
+					id="txtFuncao"
+					label="#{bundle.lbl_funcao}"
+					value="#{bancohorasRestricoesQtdBacking.entity.funcao}"
+					size="50"
+					maxlength="100" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

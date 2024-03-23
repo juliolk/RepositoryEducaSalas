@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="EditalnommsgCand"
+		backing="#{editalnommsgCandBacking}"
+		masterId="Editalnommsg">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_candidato}"
+				value="#{row.candidato}"
+				type="Number"
+				size="18">
+				<xcp:outputSimpleNumber
+					value="#{row.candidato}"
+					precision="18"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_email}"
+				value="#{row.email}"
+				type="String"
+				size="100">
+				<xcp:outputSimple value="#{row.email}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCandidato_EditalnommsgCand"
+					value="#{editalnommsgCandBacking.entity.candidatoFk}"
+					label="#{bundle.lbl_candidato}"
+					required="true"
+					query="candidatos"
+					size="18"
+					readonly="true" />
+
+				<xcp:text
+					id="txtEmail_EditalnommsgCand"
+					label="#{bundle.lbl_email}"
+					value="#{editalnommsgCandBacking.entity.email}"
+					size="100"
+					readonly="true" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Funcantigos"
+			backing="#{funcantigosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_admissao}"
+					value="#{row.admissao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.admissao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_demissao}"
+					value="#{row.demissao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.demissao}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCodigo"
+						label="#{bundle.lbl_codigo}"
+						required="true"
+						value="#{funcantigosBacking.entity.codigo}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999"
+						readonly="#{not funcantigosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtNome"
+						label="#{bundle.lbl_nome}"
+						required="true"
+						value="#{funcantigosBacking.entity.nome}"
+						size="50" />
+
+					<xcp:date
+						id="txtAdmissao"
+						required="true"
+						value="#{funcantigosBacking.entity.admissao}"
+						label="#{bundle.lbl_dtadmissao}" />
+
+					<xcp:date
+						id="txtDemissao"
+						required="true"
+						value="#{funcantigosBacking.entity.demissao}"
+						label="#{bundle.lbl_dtdemissao}" />
+
+					<xcp:lov
+						id="lovMotivo"
+						value="#{funcantigosBacking.entity.motivoFk}"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						query="tipomovtos"
+						size="3" />
+
+					<xcp:number
+						id="txtMatricula"
+						label="#{bundle.lbl_matricula}"
+						value="#{funcantigosBacking.entity.matricula}"
+						size="8"
+						precision="8"
+						scale="0"
+						maxValue="99999999" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="FuncantigosForm/FuncantigosocupForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Difcomplemento"
+			backing="#{difComplementoBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_competencia}"
+					value="#{row.competencia}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.competencia}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtacordo}"
+					value="#{row.dtacordo}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtacordo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtCompetencia"
+						required="true"
+						value="#{difComplementoBacking.entity.competencia}"
+						label="#{bundle.lbl_competencia}" />
+
+					<xcp:date
+						id="txtDtacordo"
+						required="true"
+						value="#{difComplementoBacking.entity.dtacordo}"
+						label="#{bundle.lbl_dtacordo}" />
+
+					<xcp:memo
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{difComplementoBacking.entity.descricao}"
+						size="255" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

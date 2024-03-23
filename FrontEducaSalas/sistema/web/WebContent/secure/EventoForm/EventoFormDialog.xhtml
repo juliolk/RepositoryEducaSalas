@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+
+	<p:dialog
+		header="#{bundle.title_ocorrencias}"
+		modal="true"
+		id="dlgOcor"
+		widgetVar="wocor"
+		width="1000"
+		resizable="false">
+
+		<xcp:form id="frm">
+			<p:outputPanel>
+				<p:dataTable
+					id="tblocor"
+					var="row"
+					value="#{backing.helper.listOcor}"
+					filteredValue="#{backing.helper.listOcorFiltrado}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					paginator="true"
+					paginatorPosition="bottom"
+					resizableColumns="true"
+					selection="#{backing.selectedEntity}"
+					rowKey="#{row}"
+					style="width: 980px;"
+					styleClass="ocor"
+					rows="7">
+
+					<p:column
+						headerText="#{bundle.col_codigo}"
+						width="50">
+						<xcp:outputSimple value="#{row.codigo}" />
+					</p:column>
+
+					<p:column
+						headerText="#{bundle.col_descricao}"
+						width="400">
+						<h:outputText
+							value="#{row.descricao}"
+							style="white-space: pre-wrap;" />
+					</p:column>
+
+					<p:column
+						headerText="#{bundle.col_localizacao}"
+						width="300"
+						style="white-space: normal;">
+						<xcp:outputSimple value="#{row.localizacao}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:outputPanel>
+		</xcp:form>
+	</p:dialog>
+
+	<p:dialog
+		header="#{bundle.title_xmls}"
+		modal="true"
+		id="dlgXmls"
+		widgetVar="dlgXmls_w"
+		width="700"
+		resizable="false">
+
+		<xcp:form id="frmXml">
+			<p:tabView>
+				<p:tab title="#{bundle.title_evento}">
+					<pre>
+							<code class="xml">#{backing.helper.xmlvo.desXmlEvento}"</code>
+						</pre>
+				</p:tab>
+				<p:tab
+					title="#{bundle.title_loteenvio}"
+					rendered="#{not empty backing.helper.xmlvo.desXmlLoteEnvio}">
+					<pre>
+							<code class="xml">#{backing.helper.xmlvo.desXmlLoteEnvio}</code>
+						</pre>
+				</p:tab>
+				<p:tab
+					title="#{bundle.title_loteretorno}"
+					rendered="#{not empty backing.helper.xmlvo.desXmlLoteRetorno}">
+					<pre>
+							<code class="xml">#{backing.helper.xmlvo.desXmlLoteRetorno}</code>
+						</pre>
+				</p:tab>
+				<p:tab
+					title="#{bundle.title_consenvio}"
+					rendered="#{not empty backing.helper.xmlvo.desXmlConsultaEnvio}">
+					<pre>
+							<code class="xml">#{backing.helper.xmlvo.desXmlConsultaEnvio}</code>
+						</pre>
+				</p:tab>
+				<p:tab
+					title="#{bundle.title_consret}"
+					rendered="#{not empty backing.helper.xmlvo.desXmlConsultaRetorno}">
+					<pre>
+							<code class="xml">#{backing.helper.xmlvo.desXmlConsultaRetorno}</code>
+						</pre>
+				</p:tab>
+			</p:tabView>
+
+			<script> $('pre code').each(function(i, block) {
+				    hljs.highlightBlock(block);
+				  });</script>
+		</xcp:form>
+
+	</p:dialog>
+
+	<p:dialog
+		header="#{bundle.title_erro}"
+		modal="true"
+		id="dlgFor"
+		widgetVar="wErro">
+		<xcp:form id="frmFor">
+			<p:inputTextarea
+				value="#{backing.entity.desErro}"
+				cols="90"
+				rows="40"
+				autoResize="false" />
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

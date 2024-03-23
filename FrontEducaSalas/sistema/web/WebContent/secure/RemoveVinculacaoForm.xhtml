@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.title_informacoes}">
+				<xcp:panelForm>
+
+					<xcp:combo
+						id="cboTipUtilizacao"
+						value="#{removeVinculacaoBacking.tipUtilizacao}"
+						label="#{bundle.lbl_tipUtilizacao}"
+						itens="#{removeVinculacaoBacking.itensTipUtilizacao}"
+						required="true">
+						<p:ajax
+							process="@this"
+							update="@form"
+							listener="#{removeVinculacaoBacking.actionChangeTipUtilizacao}" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{removeVinculacaoBacking.tipDocFk}"
+						label="#{bundle.lbl_tipodocdlg}"
+						required="true"
+						query="tipodocexec"
+						size="6"
+						params="#{removeVinculacaoBacking.paramsTipoDoc}" />
+
+					<xcp:text
+						id="txtNrdoc"
+						label="#{bundle.lbl_nrdoc}"
+						required="true"
+						value="#{removeVinculacaoBacking.nrdoc}"
+						size="20"
+						maxlength="18" />
+
+					<xcp:dateRange
+						id="txtDtIntervalo"
+						label="#{bundle.lbl_dtpublicacao}"
+						valueStart="#{removeVinculacaoBacking.dtini}"
+						valueEnd="#{removeVinculacaoBacking.dtfim}"
+						requiredStart="true" />
+
+				</xcp:panelForm>
+			</p:fieldset>
+
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_executar"
+						value="#{bundle.btn_executar}"
+						action="#{removeVinculacaoBacking.actionExecutar}"
+						icon="ui-icon-gear">
+						<p:confirm
+							header="#{bundle.tit_confirma_remocao}"
+							message="#{bundle.msg_confirma_remocao_vinc}" />
+					</xcp:commandButton>
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+
+	</ui:define>
+</ui:composition>

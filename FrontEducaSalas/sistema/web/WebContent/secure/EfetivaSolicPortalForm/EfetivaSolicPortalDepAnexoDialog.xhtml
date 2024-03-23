@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.tit_anexos}"
+		modal="true"
+		id="dlgDepAnex"
+		width="600"
+		widgetVar="dlgDepAnexo_w"
+		dynamic="true">
+
+		<xcp:form
+			id="frmDepAnex"
+			multipart="true">
+
+			<p:dataTable
+				id="tabDepAnex"
+				value="#{efetivaSolicPortalBacking.dependenteSelecionado.listAnexos}"
+				var="rowAnex"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{rowAnex}">
+
+				<xcp:column 
+					type="String"
+					width="20%"
+					headerText="#{bundle.lbl_tipo_solicitacao}">
+					<xcp:outputSimple
+						value='#{rowAnex.tipoSolicitacao}'
+						itens='#{efetivaSolicPortalBacking.itensTipo}'
+					/>
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_numero}"
+					type="Number"
+					width="10%">
+					<xcp:outputSimple
+						id="outDepAnexoNumero"
+						value="#{rowAnex.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipo}"
+					type="String"
+					width="30%">
+					<xcp:outputSimple
+						id="outDepAnexoTipo"
+						value="#{rowAnex.tipoanexoFk.descricao}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					type="String"
+					width="30%">
+					<xcp:outputSimple
+						id="outDepAnexoNome"
+						value="#{rowAnex.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					width="10%">
+					<xcp:commandLink
+						immediate="true"
+						id="btn_download_depanex"
+						update="tabAnex"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						ajax="false">
+						<h:graphicImage
+							value="/resources/img/download.png"
+							style="margin-top:3px;" />
+						<p:fileDownload
+							value="#{efetivaSolicPortalBacking.getDepAnexo(rowAnex)}"
+							contentDisposition="attachment" />
+					</xcp:commandLink>
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_vtl_depanx_car"
+						immediate="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						process="@this"
+						oncomplete="PF('dlgDepAnexo_w').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

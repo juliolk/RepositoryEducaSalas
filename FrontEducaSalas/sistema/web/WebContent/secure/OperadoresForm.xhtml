@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Operadores"
+			backing="#{operadoresBacking}">
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_criar_novo"
+					value="#{bundle.btn_criar_novo}"
+					action="#{operadoresBacking.actionCopiar(1)}"
+					update="@form" />
+				<xcp:commandButton
+					id="btn_copiar_permissao"
+					value="#{bundle.btn_copiar_permissao}"
+					action="#{operadoresBacking.actionCopiar(2)}"
+					update="@form">
+				</xcp:commandButton>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					value="#{row.operador}"
+					size="15"
+					type="Number"
+					headerText="#{bundle.col_operador}">
+					<xcp:outputSimpleNumber
+						value="#{row.operador}"
+						size="15"
+						scale="0" />
+				</xcp:column>
+				<!-- 
+				<xcp:column
+					value="#{row.matricula}"
+					size="8"
+					scale="0"
+					type="Number"
+					headerText="#{bundle.col_matricula}">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						size="8"
+						scale="0" />
+				</xcp:column>
+ -->
+				<xcp:column
+					value="#{row.nome}"
+					size="40"
+					type="String"
+					headerText="#{bundle.col_nome}">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="formCustom">
+				<p:outputPanel rendered="#{operadoresBacking.telaCopia == 1}">
+					<ui:include src="OperadoresForm/OperadoresCopiaForm.xhtml" />
+				</p:outputPanel>
+				<p:outputPanel rendered="#{operadoresBacking.telaCopia == 2}">
+					<ui:include src="OperadoresForm/OperadoresCopiaPermissaoForm.xhtml" />
+				</p:outputPanel>
+			</ui:define>
+			<ui:define name="formBarraCustom">
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_duplicar"
+							rendered="#{operadoresBacking.telaCopia == 1}"
+							value="#{bundle.btn_duplicar}"
+							action="#{operadoresBacking.actionDuplicar}"
+							onstart="PF('w_dlgXcpExecStatus').show();"
+							oncomplete="PF('w_dlgXcpExecStatus').hide();"
+							update="@form" />
+
+						<xcp:commandButton
+							id="btn_copiar"
+							rendered="#{operadoresBacking.telaCopia != 1}"
+							value="#{bundle.btn_copiar}"
+							action="#{operadoresBacking.actionDuplicar}"
+							onstart="PF('w_dlgXcpExecStatus').show();"
+							oncomplete="PF('w_dlgXcpExecStatus').hide();"
+							update="@form" />
+
+						<xcp:commandButton
+							id="btn_voltar_duplicar"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar_duplicar}"
+							action="#{operadoresBacking.actionVoltar('OperadoresCopiaForm')}"
+							process="@this"
+							update="@form" />
+					</f:facet>
+				</p:toolbar>
+			</ui:define>
+
+			<ui:define name="form">
+				<c:if test="#{operadoresBacking.modo == operadoresBacking.modoForm}">
+					<table>
+						<tr>
+							<td width="1500px"><p:tabView
+									id="tabOperador"
+									dynamic="true">
+									<p:ajax
+										event="tabChange"
+										listener="#{operadoresBacking.onTabChange}" />
+									<p:tab title="#{bundle.tit_operador}">
+										<ui:include src="OperadoresForm/OperadoresOperadorForm.xhtml" />
+									</p:tab>
+									<p:tab title="#{bundle.tit_empresas}">
+										<ui:include src="OperadoresForm/OperadoresEmpresasForm.xhtml" />
+									</p:tab>
+									<p:tab title="#{bundle.tit_perfis}">
+										<ui:include src="OperadoresForm/OperadoresPerfisForm.xhtml" />
+									</p:tab>
+									<p:tab title="#{bundle.tit_liberacoes_especiais}">
+										<ui:include src="OperadoresForm/OperadoresRotinasForm.xhtml" />
+									</p:tab>
+									<p:tab
+										title="#{bundle.tit_restricoes}"
+										id="restricoes">
+										<ui:include src="OperadoresForm/OperadoresRestricaoForm.xhtml" />
+									</p:tab>
+									<p:tab
+										title="#{bundle.tit_consulta_menu}"
+										id="menu">
+										<ui:include src="OperadoresForm/OperadoresMenusForm.xhtml" />
+									</p:tab>
+									<p:tab
+										title="#{bundle.tit_horariostrab}"
+										id="hortrab">
+										<ui:include src="OperadoresForm/OperadoresHorarios.xhtml" />
+									</p:tab>
+									<p:tab
+										id="tabColunasComplementares"
+										rendered="#{operadoresBacking.xcpTabelaColunaVO.colunaComplementar}"
+										title="#{bundle.tit_colunas_complementares}">
+										<ui:include src="OperadoresForm/OperadoresColunas.xhtml" />
+									</p:tab>
+								</p:tabView></td>
+						</tr>
+					</table>
+
+				</c:if>
+			</ui:define>
+
+			<ui:define name="barraForm">
+				<xcp:commandButton
+					id="btn_criar_novo_form"
+					value="#{bundle.btn_criar_novo_form}"
+					action="#{operadoresBacking.actionCopiar(1)}"
+					update="@form" />
+				<xcp:commandButton
+					id="btn_copiar_permissao_form"
+					value="#{bundle.btn_copiar_permissao_form}"
+					action="#{operadoresBacking.actionCopiar(2)}"
+					update="@form" />
+			</ui:define>
+
+			<ui:define name="formWizard">
+				<c:if
+					test="#{operadoresBacking.modo == operadoresBacking.modoZizard}">
+					<p:wizard
+						id="wizardOperador"
+						style="width: 100%;"
+						flowListener="#{operadoresBacking.proximaTela}"
+						nextLabel="#{bundle.btn_proximo}"
+						backLabel="#{bundle.btn_anterior}">
+						<p:tab
+							title="#{bundle.tit_operador}"
+							id="operador">
+							<ui:include src="OperadoresForm/OperadoresOperadorForm.xhtml" />
+						</p:tab>
+
+						<p:tab
+							title="#{bundle.tit_empresas}"
+							id="empresas">
+							<ui:include src="OperadoresForm/OperadoresEmpresasForm.xhtml" />
+						</p:tab>
+						<p:tab
+							title="#{bundle.tit_perfis}"
+							id="perfis">
+							<ui:include src="OperadoresForm/OperadoresPerfisForm.xhtml" />
+						</p:tab>
+
+						<p:tab
+							title="#{bundle.tit_liberacoes_especiais}"
+							id="extras">
+							<ui:include src="OperadoresForm/OperadoresRotinasForm.xhtml" />
+						</p:tab>
+						<p:tab
+							title="#{bundle.tit_restricoes}"
+							id="restricoes">
+							<ui:include src="OperadoresForm/OperadoresRestricaoForm.xhtml" />
+							<p:toolbar
+								rendered="#{!operadoresBacking.xcpTabelaColunaVO.colunaComplementar}"
+								styleClass="xcp_pmanut_form_toolbar">
+								<f:facet name="right">
+									<xcp:commandButton
+										id="btn_finalizar"
+										icon="ui-icon-disk"
+										value="#{bundle.btn_finalizar}"
+										action="#{operadoresBacking.actionGravar('formWizard')}"
+										process="@form"
+										update="@form"
+										disabled="#{operadoresBacking.disabledGravar}" />
+								</f:facet>
+							</p:toolbar>
+						</p:tab>
+
+						<p:tab
+							id="colunasComplementares"
+							rendered="#{operadoresBacking.xcpTabelaColunaVO.colunaComplementar}"
+							title="#{bundle.tit_colunas_complementares}">
+							<ui:include src="OperadoresForm/OperadoresColunas.xhtml" />
+							<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+								<f:facet name="right">
+									<xcp:commandButton
+										id="btn_finalizar_complemento"
+										icon="ui-icon-disk"
+										value="#{bundle.btn_finalizar}"
+										action="#{operadoresBacking.actionGravar('formWizard')}"
+										process="@form"
+										update="@form"
+										disabled="#{operadoresBacking.disabledGravar}" />
+								</f:facet>
+							</p:toolbar>
+
+						</p:tab>
+
+					</p:wizard>
+				</c:if>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgHor"
+			header="#{bundle.title_adicionarhorarios}"
+			widgetVar="dlgHor_w">
+			<xcp:form id="frmHor">
+				<xcp:panelForm>
+					<xcp:combo
+						id="cboDia"
+						value="#{operadoresBacking.horario.dia}"
+						itens="#{operadoresBacking.itensDia}"
+						label="#{bundle.lbl_diaSemana}"
+						required="true" />
+					<xcp:time
+						id="hrInicio"
+						label="#{bundle.lbl_hrinicio}"
+						value="#{operadoresBacking.horario.hrInicio}"
+						required="true" />
+					<xcp:time
+						id="hrFim"
+						label="#{bundle.lbl_hrfim}"
+						value="#{operadoresBacking.horario.hrFim}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravar"
+							icon="ui-icon-disk"
+							update="@form"
+							value="#{bundle.btn_gravar}"
+							action="#{operadoresBacking.actionNovoHorario}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_det_acao}"
+			modal="true"
+			id="dlgAcao"
+			widgetVar="dlgAcao_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmDlgAcao">
+				<ui:include src="OperadoresForm/OperadoresDlgAcoes.xhtml" />
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

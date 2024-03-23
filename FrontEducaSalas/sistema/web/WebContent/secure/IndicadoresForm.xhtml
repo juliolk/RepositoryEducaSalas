@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Indicadores"
+			backing="#{indicadoresBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_indicador}"
+					value="#{row.indicador}"
+					type="String"
+					size="5">
+					<xcp:outputSimple value="#{row.indicador}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_periodicidade}"
+					value="#{row.periodicidadeFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.periodicidadeFk.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtIndicador"
+						label="#{bundle.lbl_indicador}"
+						required="true"
+						value="#{indicadoresBacking.entity.indicador}"
+						size="5"
+						readonly="#{not indicadoresBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{indicadoresBacking.entity.descricao}"
+						size="50" />
+
+					<xcp:lov
+						id="lovPeriodicidade"
+						value="#{indicadoresBacking.entity.periodicidadeFk}"
+						label="#{bundle.lbl_periodicidade}"
+						required="true"
+						query="periodicidade"
+						size="2" />
+						
+					<xcp:combo
+						id="cboTipo"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						value="#{indicadoresBacking.entity.indTipo}"
+						itens="#{indicadoresBacking.itensTipo}"
+						readonly="#{not indicadoresBacking.entity.novo}">
+					</xcp:combo>	
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{indicadoresBacking.entity.obs}"
+						size="4000" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="IndicadoresForm/ValoresForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

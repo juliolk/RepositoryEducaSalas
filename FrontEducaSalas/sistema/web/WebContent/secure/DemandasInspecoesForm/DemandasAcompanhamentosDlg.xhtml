@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		modal="true"
+		id="dlgAcompanhamentos"
+		header="#{bundle.title_acompanhamentos}"
+		widgetVar="dlgAcompanhamentos_w">
+		<xcp:form id="frmAcompanhamentos">
+			<xcp:panelForm>
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtNumero_DemandasAcompanhamentos"
+						label="#{bundle.lbl_numero}"
+						required="true"
+						value="#{demandasAcoesBacking.helper.demandasAcompanhamentosSelecionada.numero}"
+						size="5"
+						precision="5"
+						scale="0"
+						maxValue="99999"
+						readonly="#{not demandasAcoesBacking.helper.demandasAcompanhamentosSelecionada.novo}" />
+
+					<xcp:date
+						id="txtData_DemandasAcompanhamentos"
+						required="true"
+						value="#{demandasAcoesBacking.helper.demandasAcompanhamentosSelecionada.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:memo
+						id="txtDescricao_DemandasAcompanhamentos"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{demandasAcoesBacking.helper.demandasAcompanhamentosSelecionada.descricao}"
+						size="4000" />
+
+					<xcp:text
+						id="txtResponsavel_DemandasAcompanhamentos"
+						label="#{bundle.lbl_responsavel}"
+						required="true"
+						value="#{demandasAcoesBacking.helper.demandasAcompanhamentosSelecionada.responsavel}"
+						size="50" />
+
+				</xcp:panelForm>
+
+
+			</xcp:panelForm>
+
+			<p:toolbar>
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_gravar"
+						icon="ui-icon-disk"
+						update="@form :form:table_Acompanhamentos"
+						value="#{bundle.btn_gravar}"
+						action="#{demandasAcoesBacking.actionGravarAcompanhamento}" />
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgAcompanhamentos_w').hide(); return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+
+</ui:composition>

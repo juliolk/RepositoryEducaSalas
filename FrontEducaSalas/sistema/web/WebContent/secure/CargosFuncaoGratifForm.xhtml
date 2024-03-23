@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+		<style>
+#form\:outcargo_l>label {
+	font-weight: bold;
+}
+</style>
+
+		<xcp:panelContent>
+
+			<p:outputPanel
+				id="pnllista"
+				rendered="#{cargosFuncaoGratifBacking.helper.modo == 1}">
+
+				<p:dataTable
+					id="tblCargos"
+					var="row"
+					rowKey="#{row.PK}"
+					value="#{cargosFuncaoGratifBacking.helper.listCargos}"
+					selectionMode="single"
+					selection="#{cargosFuncaoGratifBacking.helper.cargoSel}"
+					sortMode="multiple"
+					scrollHeight="120"
+					rows="#{viewUtil.tableRows}"
+					paginator="true"
+					paginatorPosition="bottom"
+					resizableColumns="true"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowStyleClass="#{tipodocCoresBacking.getStyelclass(row.tipodoc)}">
+
+					<p:ajax
+						event="rowSelect"
+						update=":form:pnlvagas"
+						listener="#{cargosFuncaoGratifBacking.actionSelectCargo}" />
+
+					<xcp:column
+						headerText="#{bundle.col_cargo}"
+						value="#{row.cargo}"
+						type="Number"
+						size="2">
+						<xcp:outputSimpleNumber
+							value="#{row.cargo}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.descricao}"
+						type="String"
+						size="12">
+						<xcp:outputSimple value="#{row.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_tipo}"
+						value="#{row.tipoFk.descricao}"
+						type="String"
+						size="8">
+						<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_situacao}"
+						value="#{row.situacao}"
+						type="String"
+						size="5"
+						itens="#{cargosFuncaoGratifBacking.itensSituacaoCargo}">
+						<xcp:outputSimple
+							value="#{row.situacao}"
+							itens="#{cargosFuncaoGratifBacking.itensSituacaoCargo}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_qtdDist}"
+						value="#{row.qtdDist}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.qtdDist}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_qdtDisp}"
+						value="#{row.qtdDisponivel}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.qtdDisponivel}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_qtdOcupada}"
+						value="#{row.qtdOcupada}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{row.qtdOcupada}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_qtdLiberada}"
+						value="#{cargosFuncaoGratifBacking.getQtdLiberada(row)}"
+						type="Number"
+						size="5">
+						<xcp:outputSimpleNumber
+							value="#{cargosFuncaoGratifBacking.getQtdLiberada(row)}"
+							precision="6"
+							scale="0" />
+					</xcp:column>
+
+				</p:dataTable>
+
+				<p:spacer height="5" />
+
+				<p:outputPanel id="pnlvagas">
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btn_novo"
+								icon="ui-icon-document"
+								disabled="true"
+								value="#{bundle.btn_novo}"
+								action="#{cargosFuncaoGratifBacking.actionNovo}"
+								process="@form"
+								update="@form" />
+						</f:facet>
+
+					</p:toolbar>
+
+					<p:dataTable
+						id="tblVagas"
+						var="row"
+						rowKey="#{row.PK}"
+						value="#{cargosFuncaoGratifBacking.helper.listCargosVagas}"
+						selectionMode="single"
+						selection="#{cargosFuncaoGratifBacking.helper.cargoVagaSel}"
+						sortMode="multiple"
+						scrollHeight="120"
+						rows="#{viewUtil.tableRows}"
+						paginator="true"
+						paginatorPosition="bottom"
+						resizableColumns="true"
+						emptyMessage="#{bundle.msg_sem_resultado}">
+
+						<p:ajax
+							event="rowSelect"
+							update="@form"
+							listener="#{cargosFuncaoGratifBacking.actionSelectCargoVaga}" />
+
+						<xcp:column
+							headerText="#{bundle.col_numSeqVaga}"
+							value="#{row.numSeqVaga}"
+							type="Number"
+							size="1">
+							<xcp:outputSimpleNumber
+								value="#{row.numSeqVaga}"
+								precision="18"
+								scale="0" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_descricao}"
+							value="#{row.descricao}"
+							type="String"
+							size="5">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtaIniVig}"
+							value="#{row.dtaIniVig}"
+							type="Date"
+							size="5">
+							<xcp:outputSimpleDate value="#{row.dtaIniVig}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_dtaFimVig}"
+							value="#{row.dtaFimVig}"
+							type="Date"
+							size="5">
+							<xcp:outputSimpleDate value="#{row.dtaFimVig}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_situacao}"
+							value="#{row.situacaoFk.descricao}"
+							type="String"
+							size="5">
+							<xcp:outputSimple value="#{row.situacaoFk.descricao}" />
+						</xcp:column>
+
+						<xcp:column
+							headerText="#{bundle.col_documento}"
+							value="#{row.documentoFk.documento}"
+							type="Number"
+							size="5">
+							<xcp:outputSimpleNumber
+								value="#{row.documentoFk.documento}"
+								precision="10"
+								scale="0" />
+						</xcp:column>
+
+					</p:dataTable>
+				</p:outputPanel>
+			</p:outputPanel>
+
+			<p:outputPanel
+				id="pnlform"
+				rendered="#{cargosFuncaoGratifBacking.helper.modo == 2}">
+
+				<p:fieldset legend="#{bundle.title_informacoes}">
+					<xcp:panelForm>
+						<xcp:output
+							id="outcargo"
+							label="#{bundle.lbl_cargo}"
+							value="#{cargosFuncaoGratifBacking.helper.cargoSel.cargo} - #{cargosFuncaoGratifBacking.helper.cargoSel.descricao}" />
+					</xcp:panelForm>
+				</p:fieldset>
+
+				<p:spacer height="2" />
+
+				<p:fieldset legend="#{bundle.title_vaga}">
+					<xcp:panelForm>
+						<xcp:number
+							id="txtNumSeqVaga_CargosVagas"
+							label="#{bundle.lbl_numSeqVaga}"
+							required="true"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.numSeqVaga}"
+							size="18"
+							precision="18"
+							scale="0"
+							maxValue="999999999999999999"
+							rendered="#{not cargosFuncaoGratifBacking.helper.cargoVagaSel.novo}" />
+
+						<xcp:text
+							id="txtDescricao_CargosVagas"
+							label="#{bundle.lbl_descricao}"
+							required="true"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.descricao}"
+							size="80"
+							maxlength="1000" />
+
+						<xcp:dateRange
+							id="txtDtaVig"
+							requiredStart="true"
+							valueStart="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.dtaIniVig}"
+							valueEnd="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.dtaFimVig}"
+							label="#{bundle.lbl_dtaIniVig}" />
+
+						<xcp:lov
+							id="lovDocumento"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.documentoFk}"
+							label="#{bundle.lbl_documento}"
+							query="cargoshistoricos"
+							size="10"
+							update="lovConvenio lovConvenio_l lovMotivo lovTipoato lovCargoVagaExt lovCargoVagaExt_l dtrefdoc dtrefdoc_l"
+							readonly="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.documentoFk != null}"
+							selectionListener="#{cargosFuncaoGratifBacking.selectDocumento}"
+							params="#{cargosFuncaoGratifBacking.paramsDocumento}" />
+
+						<xcp:date
+							id="dtrefdoc"
+							label="#{bundle.lbl_referenciadoc}"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.documentoFk.referencia}"
+							readonly="true" />
+
+						<xcp:lov
+							id="lovConvenio"
+							value="#{cargosFuncaoGratifBacking.helper.documentoFk.codconvFk}"
+							label="#{bundle.lbl_convenio}"
+							query="consignacoes"
+							readonly="true"
+							size="10"
+							rendered="#{cargosFuncaoGratifBacking.helper.documentoFk.codconvFk != null}" />
+
+						<xcp:lov
+							id="lovTipoato"
+							value="#{cargosFuncaoGratifBacking.helper.documentoFk.tipoFk}"
+							label="#{bundle.lbl_tipo}"
+							required="true"
+							query="tipoato"
+							size="10"
+							readonly="true" />
+
+						<xcp:lov
+							id="lovMotivo"
+							value="#{cargosFuncaoGratifBacking.helper.documentoFk.motivoFk}"
+							label="#{bundle.lbl_motivo}"
+							query="motivoato"
+							size="10"
+							readonly="true" />
+
+						<xcp:lov
+							id="lovCargoVagaExt"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.numSeqVagaExtFk}"
+							label="#{bundle.lbl_vagaext}"
+							query="cargosvagasext"
+							rendered="#{cargosFuncaoGratifBacking.renderedVagaExt}"
+							size="10"
+							required="true" />
+
+						<xcp:lov
+							id="lovSituacaoVaga"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.situacaoFk}"
+							label="#{bundle.lbl_situacao}"
+							query="#{cargosFuncaoGratifBacking.querySit}"
+							required="true"
+							size="10"
+							readonly="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.situacaoFk.tipo == 2}" />
+
+						<xcp:lov
+							id="lovFormaprov"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.formaprovFk}"
+							label="#{bundle.lbl_formaprovatual}"
+							query="formaprov"
+							size="10" />
+
+						<xcp:memo
+							id="txtObs_CargosVagas"
+							label="#{bundle.lbl_obs}"
+							value="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.obs}"
+							size="4000" />
+					</xcp:panelForm>
+
+					<p:fieldset
+						id="fldlotacao"
+						legend="#{bundle.title_lotacao}"
+						rendered="#{not cargosFuncaoGratifBacking.helper.cargoVagaSel.novo}">
+
+						<p:dataTable
+							id="tblLotacao"
+							var="row"
+							rowKey="#{row.PK}"
+							value="#{cargosFuncaoGratifBacking.helper.listLotacoes}"
+							sortMode="multiple"
+							scrollHeight="120"
+							rows="#{viewUtil.tableRows}"
+							paginator="true"
+							paginatorPosition="bottom"
+							resizableColumns="true"
+							emptyMessage="#{bundle.msg_sem_resultado}">
+
+							<xcp:column
+								headerText="#{bundle.col_setor}"
+								value="#{row.setorFk.descricao}"
+								type="String"
+								size="1">
+								<xcp:outputSimple value="#{row.setorFk.setor} - #{row.setorFk.descricao}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_dtaIni}"
+								value="#{row.dtaIni}"
+								type="Date"
+								size="7">
+								<xcp:outputSimpleDate value="#{row.dtaIni}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_dtaFim}"
+								value="#{row.dtaFim}"
+								type="Date"
+								size="7">
+								<xcp:outputSimpleDate value="#{row.dtaFim}" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="2">
+								<xcp:commandButton
+									id="btn_editarSel"
+									icon="icon-navegar"
+									update=":frmLotacao"
+									action="#{cargosFuncaoGratifBacking.actionOpenLotacao(row)}" />
+								<xcp:commandButton
+									id="btn_excluir"
+									icon="ui-icon-trash"
+									update="tblLotacao"
+									action="#{cargosFuncaoGratifBacking.actionExcluirLotacao(row)}">
+
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+
+								</xcp:commandButton>
+							</xcp:column>
+
+						</p:dataTable>
+						<center>
+							<xcp:commandButton
+								id="btnNovo"
+								icon="ui-icon-document"
+								value="#{bundle.btn_novo}"
+								action="#{cargosFuncaoGratifBacking.actionNovoLotacao}"
+								process="@this"
+								update=":frmLotacao" />
+						</center>
+					</p:fieldset>
+
+					<p:spacer height="10" />
+
+					<p:fieldset
+						id="fldHistorico"
+						legend="#{bundle.title_historico}"
+						rendered="#{not cargosFuncaoGratifBacking.helper.cargoVagaSel.novo}">
+
+						<p:dataTable
+							id="tblHistorico"
+							var="row"
+							rowKey="#{row.PK}"
+							value="#{cargosFuncaoGratifBacking.helper.listVagas}"
+							sortMode="multiple"
+							scrollHeight="120"
+							rows="#{viewUtil.tableRows}"
+							paginator="true"
+							paginatorPosition="bottom"
+							resizableColumns="true"
+							emptyMessage="#{bundle.msg_sem_resultado}">
+
+							<xcp:column
+								headerText="#{bundle.col_matricula}"
+								value="#{row.matricula}"
+								type="Number"
+								size="1">
+								<xcp:outputSimpleNumber
+									value="#{row.matricula}"
+									precision="20"
+									scale="0" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_nome}"
+								value="#{row.matriculaFk.nome}"
+								type="String"
+								size="10">
+								<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_dtaIni}"
+								value="#{row.dtaIni}"
+								type="Date"
+								size="7">
+								<xcp:outputSimpleDate value="#{row.dtaIni}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_dtaFim}"
+								value="#{row.dtaFim}"
+								type="Date"
+								size="7">
+								<xcp:outputSimpleDate value="#{row.dtaFim}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_desprov}"
+								value="#{cargosFuncaoGratifBacking.getDesProv(row)}"
+								type="String"
+								size="15">
+								<xcp:outputSimpleDate
+									value="#{cargosFuncaoGratifBacking.getDesProv(row)}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_destipmovvaga}"
+								value="#{cargosFuncaoGratifBacking.getDesVacancia(row)}"
+								type="String"
+								size="15">
+								<xcp:outputSimple
+									value="#{cargosFuncaoGratifBacking.getDesVacancia(row)}" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="2">
+								<xcp:commandButton
+									id="btn_editarSel"
+									icon="icon-navegar"
+									update=":frmHist"
+									action="#{cargosFuncaoGratifBacking.actionOpenHist(row)}" />
+							</xcp:column>
+
+						</p:dataTable>
+
+					</p:fieldset>
+
+					<p:spacer height="2" />
+
+					<p:fieldset
+						id="fldOcor"
+						legend="#{bundle.title_ocorvaga}"
+						rendered="#{not cargosFuncaoGratifBacking.helper.cargoVagaSel.novo}">
+
+						<p:dataTable
+							id="tblOcor"
+							var="row"
+							rowKey="#{row.PK}"
+							value="#{cargosFuncaoGratifBacking.helper.listOcor}"
+							sortMode="multiple"
+							scrollHeight="120"
+							rows="#{viewUtil.tableRows}"
+							paginator="true"
+							paginatorPosition="bottom"
+							resizableColumns="true"
+							emptyMessage="#{bundle.msg_sem_resultado}">
+
+							<xcp:column
+								headerText="#{bundle.col_data}"
+								value="#{row.data}"
+								type="Date"
+								size="1">
+								<xcp:outputSimpleDate value="#{row.data}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_processo}"
+								value="#{row.processo}"
+								type="String"
+								size="1">
+								<xcp:outputSimple value="#{row.processo}" />
+							</xcp:column>
+
+							<xcp:column
+								headerText="#{bundle.col_detalhamento}"
+								value="#{row.detalhamento}"
+								type="String"
+								size="7">
+								<xcp:outputSimple value="#{row.detalhamento}" />
+							</xcp:column>
+
+							<xcp:column
+								type="String"
+								size="2">
+								<xcp:commandButton
+									id="btn_editarSel"
+									icon="icon-navegar"
+									update=":frmHist"
+									action="#{cargosFuncaoGratifBacking.actionOpenOcor(row)}" />
+
+								<xcp:commandButton
+									id="btn_excluir"
+									icon="ui-icon-trash"
+									update="tblOcor"
+									action="#{cargosFuncaoGratifBacking.actionExcluirOcor(row)}">
+									<p:confirm
+										header="#{bundle.tit_confirma_remover}"
+										message="#{bundle.msg_confirma_remover}"
+										icon="ui-icon-alert" />
+								</xcp:commandButton>
+
+							</xcp:column>
+
+
+						</p:dataTable>
+
+						<center>
+							<xcp:commandButton
+								id="btnNovoOcor"
+								icon="ui-icon-document"
+								value="#{bundle.btn_novo}"
+								action="#{cargosFuncaoGratifBacking.actionNovoOcor}"
+								process="@this"
+								update=":frmOcor" />
+						</center>
+
+					</p:fieldset>
+
+
+					<p:spacer height="2" />
+
+					<p:toolbar>
+						<f:facet name="left">
+							<xcp:commandButton
+								id="btnGravar"
+								value="#{bundle.btn_gravar}"
+								icon="ui-icon-disk"
+								update="@form"
+								process=":form:pnlform"
+								action="#{cargosFuncaoGratifBacking.actionGravar}" />
+
+							<xcp:commandButton
+								id="btnRemover"
+								value="#{bundle.btn_remover}"
+								icon="ui-icon-disk"
+								update="@form"
+								process="@this"
+								action="#{cargosFuncaoGratifBacking.actionExcluir}" />
+
+							<xcp:commandButton
+								id="btnVoltar"
+								value="#{bundle.btn_voltar}"
+								icon="ui-icon-arrowreturnthick-1-w"
+								update="@form"
+								immediate="true"
+								action="#{cargosFuncaoGratifBacking.actionVoltar}" />
+
+							<xcp:commandButton
+								id="btnAuditoria"
+								icon="ui-icon-gear"
+								value="#{bundle.btn_auditoria}"
+								action="#{xcpAuditoriaBacking.actionAuditoria(cargosFuncaoGratifBacking)}"
+								process="@this"
+								update=":formAudit"
+								disabled="#{cargosFuncaoGratifBacking.helper.cargoVagaSel.novo}"
+								rendered="#{xcpAuditoriaBacking.isAtivo(cargosFuncaoGratifBacking.helper.cargoVagaSel)}" />
+						</f:facet>
+					</p:toolbar>
+				</p:fieldset>
+			</p:outputPanel>
+		</xcp:panelContent>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgLotacao"
+			widgetVar="w_lotacao"
+			header="#{bundle.title_lotacao}"
+			modal="true">
+			<xcp:form id="frmLotacao">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovSetor_CargosVagasLot"
+						value="#{cargosFuncaoGratifBacking.helper.lotacaoSel.setorFk}"
+						label="#{bundle.lbl_setor}"
+						required="true"
+						query="setores_ativos"
+						size="10" />
+
+					<xcp:dateRange
+						id="txtDta"
+						requiredStart="true"
+						valueStart="#{cargosFuncaoGratifBacking.helper.lotacaoSel.dtaIni}"
+						valueEnd="#{cargosFuncaoGratifBacking.helper.lotacaoSel.dtaFim}"
+						label="#{bundle.lbl_dtaIni}" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							update=":form:tblLotacao"
+							action="#{cargosFuncaoGratifBacking.actionGravarLotacao}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							value="#{bundle.btn_voltar}"
+							icon="ui-icon-arrowreturnthick-1-w"
+							immediate="true"
+							oncomplete="PF('w_lotacao').hide()" />
+
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgHist"
+			widgetVar="w_hist"
+			header="#{bundle.title_obs}"
+			modal="true">
+			<xcp:form id="frmHist">
+				<xcp:panelForm>
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{cargosFuncaoGratifBacking.helper.histSel.obs}"
+						size="2000" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							update=":form:tblLotacao"
+							action="#{cargosFuncaoGratifBacking.actionGravarHist}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							value="#{bundle.btn_voltar}"
+							icon="ui-icon-arrowreturnthick-1-w"
+							immediate="true"
+							oncomplete="PF('w_hist').hide()" />
+
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+		<p:dialog
+			id="dlgOcor"
+			widgetVar="w_ocor"
+			header="#{bundle.title_ocorrencia}"
+			modal="true">
+			<xcp:form id="frmOcor">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtData_VagasOcor"
+						required="true"
+						value="#{cargosFuncaoGratifBacking.helper.ocorSel.data}"
+						label="#{bundle.lbl_data}" />
+
+					<xcp:lov
+						id="lovProcesso_VagasOcor"
+						value="#{cargosFuncaoGratifBacking.helper.ocorSel.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						size="25" />
+
+					<xcp:memo
+						id="txtDetalhamento_VagasOcor"
+						label="#{bundle.lbl_detalhamento}"
+						required="true"
+						value="#{cargosFuncaoGratifBacking.helper.ocorSel.detalhamento}"
+						size="4000" />
+
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btnGravar"
+							value="#{bundle.btn_gravar}"
+							icon="ui-icon-disk"
+							update=":form:tblOcor"
+							action="#{cargosFuncaoGratifBacking.actionGravarOcor}" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							value="#{bundle.btn_voltar}"
+							icon="ui-icon-arrowreturnthick-1-w"
+							immediate="true"
+							oncomplete="PF('w_ocor').hide()" />
+
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+
+
+	</ui:define>
+
+</ui:composition>

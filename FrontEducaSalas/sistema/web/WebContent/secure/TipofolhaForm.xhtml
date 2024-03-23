@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Tipofolha"
+			backing="#{tipofolhaBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_tipofolha}"
+					value="#{row.tipofolha}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.tipofolha}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+				
+				<xcp:column
+					headerText="#{bundle.col_grupo}"
+					value="#{row.grupo}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.grupo}" itens="#{tipofolhaBacking.itensGrupo}"/>
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtTipofolha"
+						label="#{bundle.lbl_tipofolha}"
+						required="true"
+						value="#{tipofolhaBacking.entity.tipofolha}"
+						size="4"
+						precision="4"
+						scale="0"
+						maxValue="9999"
+						readonly="#{not tipofolhaBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{tipofolhaBacking.entity.descricao}"
+						maxlength="40"
+						size="72" />
+
+					<xcp:memo
+						id="txtSelecao"
+						label="#{bundle.lbl_selecao}"
+						value="#{tipofolhaBacking.entity.selecao}"
+						size="1000" />
+
+					<xcp:number
+						id="txtTce"
+						label="#{bundle.lbl_tce}"
+						value="#{tipofolhaBacking.entity.tce}"
+						size="4"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:combo
+						id="cboLib"
+						value="#{tipofolhaBacking.entity.libtodos}"
+						label="#{bundle.lbl_libtodos}"
+						itens="#{tipofolhaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboTiposFolhas"
+						label="#{bundle.lbl_tipo_folha_pre}"
+						value="#{tipofolhaBacking.entity.tipfolhaPre}"
+						itens="#{tipofolhaBacking.itensTipoFolha}"
+						styleClass="combotipofolhas">
+					</xcp:combo>
+					
+					<xcp:combo
+						id="cboGrupos"
+						label="#{bundle.lbl_grupo}"
+						value="#{tipofolhaBacking.entity.grupo}"
+						itens="#{tipofolhaBacking.itensGrupo}">
+					</xcp:combo>
+
+					<xcp:combo
+						id="chkCompoeContracheque"
+						label="#{bundle.lbl_compoecontracheque}"
+						value="#{tipofolhaBacking.entity.compoecontracheque}"
+						itens="#{tipofolhaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboEnviaesocial"
+						value="#{tipofolhaBacking.entity.enviaesocial}"
+						label="#{bundle.lbl_enviaesocial}"
+						required="true"
+						itens="#{tipofolhaBacking.itensIndSimNao}" />
+
+				</xcp:panelForm>
+
+
+				<xcp:border
+					id="brdCalcular"
+					header="#{bundle.lbl_incidencia}">
+
+					<xcp:radio
+						id="cboRais"
+						value="#{tipofolhaBacking.entity.rais}"
+						label="#{bundle.lbl_rais}"
+						required="true"
+						itens="#{tipofolhaBacking.itensIndSimNao}" />
+
+					<xcp:radio
+						id="cboCaged"
+						value="#{tipofolhaBacking.entity.caged}"
+						required="true"
+						label="#{bundle.lbl_caged}"
+						itens="#{tipofolhaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboFgts"
+						value="#{tipofolhaBacking.entity.fgts}"
+						label="#{bundle.lbl_fgts}"
+						itens="#{tipofolhaBacking.itensIndSimNao}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{tipofolhaBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{tipofolhaBacking.itensTipo}" />
+
+
+
+				</xcp:border>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

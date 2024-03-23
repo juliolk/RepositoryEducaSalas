@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AssistPsicoAtend"
+		backing="#{assistPsicoAtendBacking}"
+		masterId="Assistenciasocial">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_dthAtend}"
+				value="#{row.dthAtend}"
+				type="Date"
+				size="7">
+				<xcp:outputSimpleTimestamp value="#{row.dthAtend}" />
+			</xcp:column>
+			
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipoFk.descricao}"
+				type="String"
+				size="15">
+				<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_relato}"
+				value="#{row.relato}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.relato}" />
+			</xcp:column>
+			
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:dateTime
+					id="txtDthAtend_AssistPsicoAtend"
+					required="true"
+					value="#{assistPsicoAtendBacking.entity.dthAtend}"
+					label="#{bundle.lbl_dthAtend}" />
+
+				<xcp:lov
+					id="lovTipo"
+					value="#{assistPsicoAtendBacking.entity.tipoFk}"
+					params="#{assistPsicoBacking.paramsAssistencia}"
+					label="#{bundle.lbl_tipoAtend}"
+					query="assistenciatipo"
+					required="true"
+					size="8" />
+
+				<xcp:memo
+					id="txtRelato_AssistPsicoAtend"
+					label="#{bundle.lbl_relato}"
+					value="#{assistPsicoAtendBacking.entity.relato}"
+					size="16000" />
+
+			</xcp:panelForm>
+
+			<p:fieldset
+				legend="#{bundle.title_tecnicos}"
+				rendered="#{not assistPsicoAtendBacking.entity.novo}">
+				<p:dataTable
+					id="tblTec"
+					var="row"
+					value="#{assistPsicoAtendBacking.listTec}"
+					rowKey="#{row}"
+					paginator="false"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					style="width:650px">
+
+					<p:column
+						headerText="#{bundle.col_matricula}"
+						width="70">
+						<xcp:outputSimple value="#{row.matricula}" />
+					</p:column>
+
+					<p:column headerText="#{bundle.col_nome}">
+						<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+					</p:column>
+
+					<p:column
+						headerText="#{bundle.col_responsavel}"
+						width="70">
+						<xcp:outputSimple
+							value="#{row.tecresponsavel == 1 ? bundle.opt_ind_1 : bundle.opt_ind_2}" />
+					</p:column>
+
+					<p:column style="width:32px">
+						<p:commandButton
+							id="btn_rem_tecnico"
+							icon="ui-icon-trash"
+							update="tblTec"
+							action="#{assistPsicoAtendBacking.actionRemoveTec(row)}">
+							<p:confirm
+								header="#{bundle.tit_confirma_remover}"
+								message="#{bundle.msg_confirma_remover}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+				<xcp:commandButton
+					id="btn_adicionar"
+					value="#{bundle.btn_novo}"
+					style="margin-top: 5px"
+					rendered="#{not assistPsicoAtendBacking.entity.novo}"
+					action="#{assistPsicoAtendBacking.actionOpenTec}"
+					icon="ui-icon-document"
+					update=":frmDlgTec" />
+			</p:fieldset>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

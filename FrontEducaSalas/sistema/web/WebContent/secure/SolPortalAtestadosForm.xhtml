@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+    template="#{xcp:getLayout('manut')}">
+    <ui:define name="conteudo">
+        <style type="text/css">
+            li.anexo:before {
+                content: "\f0c6";
+                font-family: FontAwesome;
+                position: absolute;
+                font-size: 2.5em;
+                top: 5px;
+                left: -45px;
+            }
+            
+            .datacard-item small {
+                color: #999;
+            }
+            
+            li.situacao:before {
+                font-family: FontAwesome;
+                position: absolute;
+                font-size: 2.5em;
+                top: 5px;
+                left: -45px;
+            }
+            
+            li.situacaopendente:before {
+                content: "\f017";
+                color: var(--default-color) !important;
+            }
+            
+            li.situacaohomologada:before {
+                content: "\f058";
+                color: var(--success-color) !important;
+            }
+            
+            li.situacaonaohomologada:before {
+                content: "\f00d";
+                color: var(--negative-color) !important;
+            }
+            
+            li.situacaopericia:before {
+                content: "\f073";
+                color: var(--positive-color) !important;
+            }
+            
+            li.situacaoanalisemedica:before {
+                content: "\f0f0";
+                color: var(--positive-color) !important;
+            }
+            
+            li.situacaocomplementoinformacoes:before {
+                content: "\f2b6";
+                color: var(--default-color) !important;
+            }
+        </style>
+        <div class="content_bg-gray ">
+            <xcp:panelContent multipart="true">
+
+                <div class="datacard-container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="datacard-listcontainer">
+
+                                <p:outputPanel
+                                    rendered="#{solPortalAtestadosBacking.tipTela == 1}">
+
+                                    <div class="datacard datacard-grouped">
+                                        <div class="datacard-title">
+                                            #{bundle.lbl_atestados_solicitados}
+                                            <h:commandLink id="btn_add_solicitacao" href="#"
+                                                immediate="true"
+                                                action="#{solPortalAtestadosBacking.actionNovo}"
+                                                styleClass="datacard-icon-action"
+                                                title="#{bundle.lbl_nova_solicitacao}">
+                                                <i class="fa fa-fw fa-plus"></i> #{bundle.lbl_nova_solicitacao}
+                                            </h:commandLink>
+                                        </div>
+                                        <p:outputPanel id="pnl_dados_solicitacao"
+                                            class="datacard-content">
+
+                                            <ui:fragment
+                                                rendered="#{empty solPortalAtestadosBacking.lista }">
+                                                <div class="datacard-empty-message">#{bundle.msg_nenhum_solicitacao_realizada}</div>
+                                            </ui:fragment>
+
+                                            <ul class="datacard-itemslist-container">
+                                                <ui:repeat var="solicitacao"
+                                                    value="#{solPortalAtestadosBacking.lista}">
+                                                    <li
+                                                        class="datacard-item container-fluid situacao #{solPortalAtestadosBacking.getClasseSituacao(solicitacao.situacao)}">
+                                                        <div class="row">
+                                                            <h:commandLink id="view_solicitacao" href="#"
+                                                                immediate="true"
+                                                                action="#{solPortalAtestadosBacking.actionSelectRow(solicitacao)}">
+                                                                <div class="col-sm-12 col-xs-12">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-2">
+                                                                            <div class="datacard-item-highlight">
+                                                                                #{solicitacao.assistenciaFk.descricao}<br />
+                                                                            </div>
+                                                                            <small>#{bundle.lbl_situacao}</small><br />
+                                                                            #{solPortalAtestadosBacking.getLabelSituacao(solicitacao.situacao)}
+                                                                        </div>
+                                                                        <div class="datacard-item-info">
+                                                                            <div class="col-sm-2">
+                                                                                <small>#{bundle.lbl_data_solicitacao}</small><br />
+                                                                                <xcp:outputSimpleTimestamp
+                                                                                    value="#{solicitacao.datasolicitacao}"></xcp:outputSimpleTimestamp>
+                                                                                <br /> <small>#{bundle.lbl_matricula}</small><br />
+                                                                                #{solicitacao.matricula}
+                                                                            </div>
+                                                                            <div class="col-sm-2">
+                                                                                <small>#{bundle.col_dtinicio}</small><br />
+                                                                                <xcp:outputSimpleDate
+                                                                                    value="#{solicitacao.datainicio}"></xcp:outputSimpleDate>
+                                                                                <br /> <small>#{bundle.lbl_dttermino}</small><br />
+                                                                                <xcp:outputSimpleDate
+                                                                                    value="#{solicitacao.datatermino}"></xcp:outputSimpleDate>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <small>#{bundle.lbl_medico}</small><br />
+                                                                                <h:outputText
+                                                                                    value="#{solPortalAtestadosBacking.getHtmlText(solicitacao.medico)}"
+                                                                                    escape="false" />
+                                                                            </div>
+                                                                            <div class="col-sm-2">
+                                                                                <ui:fragment rendered="#{solicitacao.situacao == 4}">                                                                               
+                                                                                    <small>#{bundle.lbl_data_pericia}</small><br />
+                                                                                    <xcp:outputSimpleTimestamp
+                                                                                        value="#{solicitacao.datapericia}"></xcp:outputSimpleTimestamp>
+                                                                                    <br /> <small>#{bundle.lbl_documentos_necessarios}</small><br />
+                                                                                    <h:outputText
+                                                                                        value="#{solPortalAtestadosBacking.getHtmlText(solicitacao.documentospericia)}"
+                                                                                        escape="false" />                                                                               
+                                                                                </ui:fragment>
+                                                                            </div>
+                                                                            <ui:fragment rendered="#{solPortalAtestadosBacking.isEditavel(solicitacao)}">
+                                                                                <div class="col-sm-1">
+                                                                                    <div class="datacard-item-actions">
+                                                                                        <div class="item-action-col">
+                                                                                            <h:commandLink id="edit_solicitacao" href="#"
+                                                                                                immediate="true"
+                                                                                                rendered="#{solPortalAtestadosBacking.isEditavel(solicitacao)}"
+                                                                                                action="#{solPortalAtestadosBacking.actionSelectRow(solicitacao)}">
+                                                                                                <i class="fa fa-fw fa-pencil fa-lg"></i>
+                                                                                            </h:commandLink>
+                                                                                        </div>
+                                                                                        <div class="item-action-col">
+                                                                                            <xcp:commandLink title="Remover"
+                                                                                            rendered="#{solicitacao.situacao == 1}"
+                                                                                                ajax="true" immediate="true">
+                                                                                                <p:confirm
+                                                                                                    header="#{bundle.tit_confirma_remover}"
+                                                                                                    message="#{bundle.msg_confirma_remover}"
+                                                                                                    icon="ui-icon-alert" />
+                                                                                                <p:ajax update="@form"
+                                                                                                    listener="#{solPortalAtestadosBacking.actionRemover(solicitacao)}" />
+                                                                                                <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                                            </xcp:commandLink>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </ui:fragment>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </h:commandLink>
+                                                        </div>
+                                                    </li>
+                                                </ui:repeat>
+                                            </ul>
+                                        </p:outputPanel>
+                                    </div>
+
+                                </p:outputPanel>
+
+                                <p:outputPanel
+                                    rendered="#{solPortalAtestadosBacking.tipTela == 2}">
+
+                                    <div class="datacard datacard-grouped">
+                                        <div class="datacard-title">#{bundle.lbl_dados_solicitacao}</div>
+                                        <div class="row">
+                                            <div class="col-lg-5 col-md-6">
+                                                <xcp:panelForm id="form_atestados"
+                                                    floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+
+                                                    <xcp:text id="txtEmail" label="#{bundle.lbl_email}"
+                                                        readonly="true" noFloat="true" style="color: gray"
+                                                        value="#{solPortalAtestadosBacking.funcionario.email}" />
+
+                                                    <xcp:text id="txtTelefone" label="#{bundle.lbl_fone}"
+                                                        readonly="true" noFloat="true" style="color: gray"
+                                                        value="#{solPortalAtestadosBacking.funcionario.fone}" />
+
+													<xcp:combo
+														id="txtAssistencia"
+														required="true"
+														value="#{solPortalAtestadosBacking.entity.assistencia}"
+														label="#{bundle.lbl_assistencia_social}"
+														itens="#{solPortalAtestadosBacking.listaAssistencia}"
+														readonly="#{!solPortalAtestadosBacking.entity.novo}"
+														noFloat="true">
+														<p:ajax
+															event="change"
+															update=":form:panelOrient" 
+															listener="#{solPortalAtestadosBacking.selectAssistencia}"/>
+													</xcp:combo>
+
+													<xcp:date id="txtDtinicio" required="true"
+                                                        value="#{solPortalAtestadosBacking.entity.datainicio}"
+                                                        label="#{bundle.col_dtinicio}"
+                                                        readonly="#{!solPortalAtestadosBacking.entity.novo}"
+                                                        noFloat="true">
+                                                        <p:ajax event="change"
+                                                            listener="#{solPortalAtestadosBacking.calculaDias}"
+                                                            update="txtDiasAtestado" />
+                                                        <p:ajax event="dateSelect"
+                                                            listener="#{solPortalAtestadosBacking.calculaDias}"
+                                                            update="txtDiasAtestado" />
+                                                    </xcp:date>
+
+                                                    <xcp:date id="txtDttermino" 
+                                                        value="#{solPortalAtestadosBacking.entity.datatermino}"
+                                                        label="#{bundle.lbl_dttermino}"
+                                                        readonly="#{!solPortalAtestadosBacking.entity.novo}"
+                                                        noFloat="true">
+                                                        <p:ajax event="change"
+                                                            listener="#{solPortalAtestadosBacking.calculaDias}"
+                                                            update="txtDiasAtestado" />
+                                                        <p:ajax event="dateSelect"
+                                                            listener="#{solPortalAtestadosBacking.calculaDias}"
+                                                            update="txtDiasAtestado" />
+                                                    </xcp:date>
+
+                                                    <xcp:number id="txtDiasAtestado"
+                                                        value="#{solPortalAtestadosBacking.qtdDiasAtestado}"
+                                                        label="#{bundle.lbl_diasAfastamento}" size="10"
+                                                        precision="5" scale="0"
+                                                        readonly="#{!solPortalAtestadosBacking.entity.novo}"
+                                                        noFloat="true">
+                                                        <p:ajax event="change"
+                                                            listener="#{solPortalAtestadosBacking.calculaData}"
+                                                            update="txtDttermino" />
+                                                    </xcp:number>
+                                                    
+                                                    <xcp:memo id="txtObservacoes"
+                                                        label="#{bundle.lbl_observacoes}"
+                                                        required="false"
+                                                        value="#{solPortalAtestadosBacking.entity.observacoes}"
+                                                        size="4000" style="width:470px;"
+                                                        readonly="#{!solPortalAtestadosBacking.editavel}"
+                                                        noFloat="true" />
+
+                                                    <xcp:memo id="txtMedico"
+                                                        label="#{bundle.lbl_medico_nome_registro}"
+                                                        required="true"
+                                                        value="#{solPortalAtestadosBacking.entity.medico}"
+                                                        size="4000" style="width:470px;"
+                                                        readonly="#{!solPortalAtestadosBacking.pendente}"
+                                                        noFloat="true" />
+
+                                                </xcp:panelForm>
+                                                <p:outputPanel
+                                                    rendered="#{solPortalAtestadosBacking.entity.novo and not empty solPortalAtestadosBacking.listaOutrasMatriculas}">
+                                                    <div style="display: inline-block">
+                                                        <xcp:check id="checkOutrasMatriculas"
+                                                            value="#{solPortalAtestadosBacking.solicitarOutrasMatriculas}" />
+                                                    </div>
+                                                    <span>#{solPortalAtestadosBacking.getLabelOutrasMatriculas()}</span>
+                                                </p:outputPanel>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="datacard datacard-grouped">
+										<p:outputPanel
+											id="panelOrient"
+											class="datacard-content">
+											<p:outputPanel
+												rendered="#{solPortalAtestadosBacking.entity.assistenciaFk.indPortal == 1 and not empty solPortalAtestadosBacking.entity.assistenciaFk.txtOrientPortal}">
+												<div class="datacard-title">#{bundle.tit_orientacoes}</div>
+
+												<p:outputPanel
+													rendered="#{solPortalAtestadosBacking.entity.assistenciaFk.indPortal == 1}"
+													style="background:#dedede">
+													<h:outputText
+														value="#{solPortalAtestadosBacking.entity.assistenciaFk.txtOrientPortal}"
+														escape="false" />
+												</p:outputPanel>
+
+											</p:outputPanel>
+										</p:outputPanel>
+									</div>
+									<div class="datacard datacard-grouped">
+                                        <div class="datacard-title">
+                                            #{bundle.tit_cid}
+                                            <ui:fragment
+                                                rendered="#{solPortalAtestadosBacking.pendente}">
+                                            <h:commandLink id="btn_add_cid" immediate="true"
+                                                styleClass="datacard-icon-action"
+                                                onclick="PF('w_cid').show(); return false;"
+                                                process="@this" >
+                                                <i class="fa fa-fw fa-plus"></i> #{bundle.lbl_adicionar_cid}
+                                            </h:commandLink>
+                                            </ui:fragment>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                                <p:outputPanel id="panelCid" class="datacard-content">
+                                                    <ui:fragment
+                                                        rendered="#{empty solPortalAtestadosBacking.entity.listCid }">
+                                                        <div class="datacard-empty-message">#{bundle.msg_adicionar_cid}</div>
+                                                    </ui:fragment>
+                                                    <ul class="datacard-itemslist-container">
+                                                    <ui:repeat var="cid"
+                                                        value="#{solPortalAtestadosBacking.entity.listCid}">
+                                                        <li class="datacard-item container-fluid">
+                                                            <ui:fragment
+                                                                rendered="#{solPortalAtestadosBacking.pendente}">
+                                                            <div class="datacard-item-actions">
+                                                                <div class="item-action-col">
+                                                                    <xcp:commandLink title="Remover"
+                                                                        rendered="#{solPortalAtestadosBacking.pendente}"
+                                                                        ajax="true" immediate="true">
+                                                                        <p:confirm
+                                                                            header="#{bundle.tit_confirma_remover_cid}"
+                                                                            message="#{bundle.tit_confirma_exclusao}"
+                                                                            icon="ui-icon-alert" />
+                                                                        <p:ajax
+                                                                            listener="#{solPortalAtestadosBacking.actionRemoverCid(cid)}"
+                                                                            update=":form:panelCid" />
+                                                                        <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                    </xcp:commandLink>
+                                                                </div>
+                                                            </div>
+                                                            </ui:fragment>
+                                                            <div class="row">
+                                                                <div class="col-sm-12 col-xs-12">
+                                                                    <div class="datacard-item-highlight">
+                                                                        #{cid.getCidFk().getCid()} - #{cid.getCidFk().getDescricao()}</div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ui:repeat>
+                                                    </ul>                                                
+                                                </p:outputPanel>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="datacard datacard-grouped">
+                                        <div class="datacard-title">
+                                            #{bundle.lbl_anexos}
+                                            <ui:fragment
+                                                rendered="#{solPortalAtestadosBacking.rendererBtnAnexos}">
+                                            <h:commandLink id="btn_add_anexo" immediate="true"
+                                                styleClass="datacard-icon-action"
+                                                onclick="PF('w_anexo').show(); return false;"
+                                                process="@this" update=":frmAnexo">
+                                                <i class="fa fa-fw fa-plus"></i> #{bundle.tit_dlgAnexo}
+                                            </h:commandLink>
+                                            </ui:fragment>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                                <p:outputPanel id="panelAnexos" class="datacard-content">
+                                                    <ui:fragment
+                                                        rendered="#{empty solPortalAtestadosBacking.entity.listAnexos }">
+                                                        <div class="datacard-empty-message">#{bundle.msg_adicionar_anexos}</div>
+                                                    </ui:fragment>
+                                                    <ul class="datacard-itemslist-container">
+                                                        <ui:repeat var="anexo"
+                                                            value="#{solPortalAtestadosBacking.entity.listAnexos}">
+                                                            <li class="datacard-item container-fluid anexo">
+                                                                <ui:fragment
+                                                                    rendered="#{solPortalAtestadosBacking.editavel}">
+                                                                <div class="datacard-item-actions">
+                                                                    <div class="item-action-col">
+                                                                        <xcp:commandLink title="Remover"
+                                                                            rendered="#{solPortalAtestadosBacking.editavel}"
+                                                                            ajax="true" immediate="true">
+                                                                            <p:confirm
+                                                                                header="#{bundle.tit_confirma_remover} #{bundle.lbl_anexo}"
+                                                                                message="#{bundle.tit_confirma_exclusao}"
+                                                                                icon="ui-icon-alert" />
+                                                                            <p:ajax
+                                                                                listener="#{solPortalAtestadosBacking.actionRemoverAnexo(anexo)}"
+                                                                                update=":form:panelAnexos" />
+                                                                            <i class="fa fa-fw fa-trash fa-lg"></i>
+                                                                        </xcp:commandLink>
+                                                                    </div>
+                                                                </div>
+                                                                </ui:fragment>
+                                                                <div class="row">
+                                                                    <h:commandLink href="#"
+                                                                        onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+                                                                        ajax="false" immediate="true">
+                                                                        <p:fileDownload
+                                                                            value="#{solPortalAtestadosBacking.actionDownloadAnexo(anexo)}"
+                                                                            contentDisposition="attachment" />
+
+                                                                        <div class="col-sm-12 col-xs-12">
+                                                                            <div class="datacard-item-highlight">
+                                                                                #{anexo.nomeanexo}</div>
+                                                                        </div>
+                                                                    </h:commandLink>
+                                                                </div>
+                                                            </li>
+                                                        </ui:repeat>
+                                                    </ul>
+
+                                                </p:outputPanel>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p:outputPanel
+                                        rendered="#{solPortalAtestadosBacking.entity.novo}">
+                                        <div class="datacard datacard-grouped">
+                                            <div class="datacard-title">#{bundle.lbl_termos}</div>
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div style="display: inline-block">
+                                                        <xcp:check id="declaracaoCiente1"
+                                                            value="#{solPortalAtestadosBacking.entity.declaracaoCiente1}" />
+                                                    </div>
+                                                    <span>#{bundle.msg_declaracao_atestado1}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div style="display: inline-block">
+                                                        <xcp:check id="declaracaoCiente2"
+                                                            value="#{solPortalAtestadosBacking.entity.declaracaoCiente2}" />
+                                                    </div>
+                                                    <span>#{bundle.msg_declaracao_atestado2}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div style="display: inline-block">
+                                                        <xcp:check id="declaracaoCiente3"
+                                                            value="#{solPortalAtestadosBacking.entity.declaracaoCiente3}" />
+                                                    </div>
+                                                    <span>#{bundle.msg_declaracao_atestado3}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div style="display: inline-block">
+                                                        <xcp:check id="declaracaoCiente4"
+                                                            value="#{solPortalAtestadosBacking.entity.declaracaoCiente4}" />
+                                                    </div>
+                                                    <span>#{bundle.msg_declaracao_atestado4}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div style="display: inline-block">
+                                                        <xcp:check id="declaracaoCiente5"
+                                                            value="#{solPortalAtestadosBacking.entity.declaracaoCiente5}" />
+                                                    </div>
+                                                    <span>#{bundle.msg_declaracao_atestado5}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </p:outputPanel>
+
+                                    <p:toolbar styleClass="xcp_pmanut_form_toolbar">
+                                        <f:facet name="left">
+                                            <xcp:commandButton id="btn_GravarSolicitacao"
+                                                rendered="#{solPortalAtestadosBacking.editavel}"
+                                                value="#{bundle.btn_gravar_solicitacao}" ajax="false"
+                                                process="@form" update="@form"
+                                                action="#{solPortalAtestadosBacking.actionGravaSolicitacao}"
+                                                icon="ui-icon-disk" />
+
+                                            <xcp:commandButton id="btn_voltar"
+                                                value="#{bundle.btn_voltar}" ajax="false" immediate="true"
+                                                action="#{solPortalAtestadosBacking.actionVoltar}" />
+
+                                            <xcp:commandButton id="btnDownloadRelatorio"
+                                                widgetVar="wBtnDownloadRelatorio" ajax="false"
+                                                immediate="true" process="@this" style="display: none;"
+                                                onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)">
+                                                <p:fileDownload value="#{xcpExecObjBacking.file}"
+                                                    contentDisposition="attachment" />
+                                            </xcp:commandButton>
+                                        </f:facet>
+                                    </p:toolbar>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+            function showStatus() {
+                PF('w_dlgXcpExecStatus').show();
+            }
+            function hideStatus() {
+                PF('w_dlgXcpExecStatus').hide();
+            }
+            </script>
+
+            </xcp:panelContent>
+        </div>
+
+        <p:dialog id="dlgAnexo" widgetVar="w_anexo"
+            header="#{bundle.tit_dlgAnexo}" modal="true">
+            <xcp:form id="frmAnexo">
+
+                <p:fileUpload mode="advanced" auto="true"
+                    label="#{bundle.tit_dlgAnexo}"
+                    sizeLimit="#{solPortalAtestadosBacking.limiteTamanhoArquivoUpload}"
+                    fileUploadListener="#{solPortalAtestadosBacking.actionAddAnexo}"
+                    update=":form:panelAnexos"
+                    invalidSizeMessage="#{bundle.msg_upload_tamanho_invalido}"
+                    requiredMessage='#{ empty requiredMessage ?  bundle.msg_upload_requerido : requiredMessage }'
+                    validator="xcpInputFileValidator" />
+
+
+                <p:toolbar>
+                    <f:facet name="left">
+                        <xcp:commandButton id="btn_voltar_anexo" immediate="true"
+                            process="@this" value="#{bundle.btn_cancelar}"
+                            oncomplete="PF('w_anexo').hide();" />
+
+                    </f:facet>
+                </p:toolbar>
+            </xcp:form>
+        </p:dialog>
+
+        <p:dialog id="dlgCid" widgetVar="w_cid"
+            header="#{bundle.lbl_adicionar_cid}" modal="true"
+            width="800px" dynamic="true">
+
+            <h:form>
+                <p:dataTable
+                    id="table_cid"
+                    var="row"
+                    value="#{solPortalAtestadosBacking.tabelaCid}"
+                    widgetVar="table_cid_w"
+                    rows="#{viewUtil.tableRows}"
+                    emptyMessage="#{bundle.msg_sem_resultado}"
+                    paginator="true"
+                    paginatorPosition="bottom"
+                    selectionMode="single"
+                    resizableColumns="true"
+                    selection="#{solPortalAtestadosBacking.cidSelecionado}"
+                    rowKey="#{row.PK}"
+                    lazy="true"
+                    style="width: 750px"
+                    tableStyle="width: 750px">
+                    
+                    <p:ajax
+                        event="rowSelect"
+                        update="table_cid"/>
+                    
+                    <xcp:column headerText="#{bundle.lbl_cid}"
+                        type="String" sortBy="cid" value="#{row.cid}" width="5%">
+                        <xcp:outputSimple value="#{row.cid}" />
+                    </xcp:column>
+                    
+                    <xcp:column headerText="#{bundle.lbl_descricao}"
+                        type="String" sortBy="descricao" value="#{row.descricao}" width="50%">
+                        <xcp:outputSimple value="#{row.descricao}" />
+                    </xcp:column> 
+                    
+                </p:dataTable>
+            </h:form>
+
+
+            <p:toolbar>
+                <f:facet name="left">
+                    <xcp:commandButton id="btn_dlg_cid_add" immediate="true"
+                        process="@this" value="#{bundle.btn_add}"
+                        update=":form:panelCid"
+                        action="#{solPortalAtestadosBacking.actionAdicionarCid}"
+                        oncomplete="PF('w_cid').hide();" />
+                    <xcp:commandButton id="btn_dlg_cid_voltar" immediate="true"
+                        process="@this" value="#{bundle.btn_cancelar}"
+                        oncomplete="PF('w_cid').hide();" />
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>

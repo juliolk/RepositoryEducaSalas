@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		header="#{bundle.title_historicos}"
+		modal="true"
+		id="dlgHisDoc"
+		widgetVar="dlgHisDoc_w"
+		dynamic="true">
+		<xcp:form id="frmHisDoc">
+
+			<xcp:panelForm>
+
+				<xcp:date
+					id="txtDataDoc"
+					required="true"
+					value="#{funcionariosBacking.historicosDocSel.data}"
+					label="#{bundle.lbl_data}"
+					readonly="true" />
+
+				<xcp:number
+					id="numSeqDoc"
+					required="true"
+					size="10"
+					readonly="true"
+					value="#{funcionariosBacking.historicosDocSel.sequencia}"
+					label="#{bundle.lbl_seq}" />
+
+				<xcp:lov
+					id="lovTipodocDoc"
+					value="#{funcionariosBacking.historicosDocSel.tipodocFk}"
+					label="#{bundle.lbl_tipodoc}"
+					readonly="true"
+					query="tipodocumento"
+					size="10" />
+
+				<xcp:lov
+					id="lovPortariaDoc"
+					value="#{funcionariosBacking.historicosDocSel.registroFk}"
+					params="#{funcionariosBacking.paramsTipodocumentoHist}"
+					label="#{bundle.lbl_documento}"
+					readonly="true"
+					query="documentos"
+					size="10"
+					update=":frmHis:btnDownloadDocumento" />
+					
+				<xcp:lov
+					id="lovProcesso"
+					value="#{funcionariosBacking.historicosDocSel.processoFk}"
+					label="#{bundle.lbl_processo}"
+					query="processos"
+					readonly="true"
+					size="25" />
+
+				<p:spacer
+					height="1"
+					width="1" />
+				<p:splitButton
+					id="btnDownloadDocumento"
+					value="#{bundle.btn_visualizar}"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+					disabled="#{funcionariosBacking.historicosDocSel.registroFk == null}">
+					<p:fileDownload
+						value="#{documentosBacking.getDownloadDocumento(funcionariosBacking.historicosDocSel.registro)}"
+						contentDisposition="attachment" />
+					<p:menuitem
+						value="#{bundle.btn_detalhes_doc}"
+						action="#{funcionariosBacking.modelHist.actionOpenVisDialog(funcionariosBacking.historicosDocSel.registro)}"
+						process="@this" />
+
+				</p:splitButton>
+				
+
+				<xcp:number
+					id="txtPontosDoc"
+					label="#{bundle.lbl_pontos}"
+					size="10"
+					required="true"
+					value="#{funcionariosBacking.historicosDocSel.pontos}"
+					precision="7"
+					scale="2"
+					readonly="true" />
+
+				<xcp:memo
+					id="txtObsDoc"
+					label="#{bundle.lbl_obs}"
+					required="true"
+					value="#{funcionariosBacking.historicosDocSel.obs}"
+					size="400"
+					cols="81"
+					readonly="true" />
+			</xcp:panelForm>
+
+
+
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

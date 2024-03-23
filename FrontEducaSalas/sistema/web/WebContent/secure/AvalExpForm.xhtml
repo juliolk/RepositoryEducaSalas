@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="AvalExp"
+			backing="#{avalExpBacking}">
+
+			<ui:define name="filtro">
+				<style>
+.vertical-align {
+	vertical-align: top;
+}
+</style>
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+
+					<h:panelGrid
+						columns="3"
+						columnClasses=",,vertical-align">
+						<xcp:panelForm>
+
+							<xcp:numberRange
+								id="txtNrdocFiltro"
+								label="#{bundle.lbl_codigo}"
+								valueStart="#{avalExpBacking.helper.filtro.numProbIni}"
+								valueEnd="#{avalExpBacking.helper.filtro.numProbFim}"
+								size="13"
+								maxlength="10" />
+
+							<xcp:text
+								id="txtDescricaoFiltro"
+								label="#{bundle.lbl_descricao}"
+								value="#{avalExpBacking.helper.filtro.desProb}"
+								maxlength="100"
+								size="75" />
+
+							<xcp:lov
+								id="lovMatriculaFiltro"
+								value="#{avalExpBacking.helper.filtro.funcionariosLov}"
+								label="#{bundle.lbl_matricula}"
+								query="funcionariosLov"
+								size="6" />
+
+
+						</xcp:panelForm>
+						<p:spacer width="15px" />
+						<xcp:panelForm>
+
+							<xcp:dateRange
+								id="txtDtprobiniFiltro"
+								valueStart="#{avalExpBacking.helper.filtro.dtaProbIniIni}"
+								valueEnd="#{avalExpBacking.helper.filtro.dtaProbIniFim}"
+								label="#{bundle.lbl_inicio}"
+								size="13" />
+
+							<xcp:dateRange
+								id="txtDtprobfimFiltro"
+								valueStart="#{avalExpBacking.helper.filtro.dtaProbFimIni}"
+								valueEnd="#{avalExpBacking.helper.filtro.dtaProbFimFim}"
+								label="#{bundle.lbl_termino}"
+								size="13" />
+
+
+						</xcp:panelForm>
+					</h:panelGrid>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_probatorio}"
+					value="#{row.probatorio}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.probatorio}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_inicio}"
+					value="#{row.inicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.inicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_termino}"
+					value="#{row.termino}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.termino}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_situacaoprob}"
+					value="#{row.situacao}"
+					type="String"
+					size="10"
+					itens="#{avalExpBacking.itensSituacao}"
+					style="padding-top: 0px !important; border-top:0px !important;">
+					<xcp:outputSimple
+						value="#{row.situacao}"
+						itens="#{avalExpBacking.itensSituacao}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtProbatorio"
+						label="#{bundle.lbl_probatorio}"
+						required="true"
+						value="#{avalExpBacking.entity.probatorio}"
+						size="8"
+						precision="18"
+						scale="0"
+						maxValue="999999999999999999"
+						readonly="true"
+						rendered="#{not avalExpBacking.entity.novo}" />
+
+					<xcp:combo
+						id="cboSituacao"
+						value="#{avalExpBacking.entity.situacao}"
+						label="#{bundle.lbl_situacaoprob}"
+						required="true"
+						rendered="#{not avalExpBacking.entity.novo}"
+						readonly="true"
+						itens="#{avalExpBacking.itensSituacao}"
+						width="92px !important;" />
+
+					<xcp:lov
+						id="lovMatricula"
+						value="#{avalExpBacking.entity.funcionarioFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						readonly="#{not avalExpBacking.entity.novo}"
+						query="funcionariosLov"
+						size="8" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{avalExpBacking.entity.descricao}"
+						size="77"
+						readonly="#{avalExpBacking.readOnlyForm}"
+						maxlength="80" />
+
+					<xcp:lov
+						id="lovComissao"
+						value="#{avalExpBacking.entity.comissaoFk}"
+						label="#{bundle.lbl_comis}"
+						required="true"
+						query="comissao"
+						size="8"
+						readonly="#{not avalExpBacking.entity.novo and avalExpBacking.readOnlyForm}" />
+
+					<xcp:combo
+						id="cboTipo"
+						value="#{avalExpBacking.entity.tipo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{avalExpBacking.itensTipo}"
+						readonly="#{avalExpBacking.entity.registroFk!=null and !avalExpBacking.entity.novo}"
+						width="92px !important;">
+						<p:ajax
+							event="change"
+							update="lovRegistroProb lovRegistroProb_l" />
+					</xcp:combo>
+
+					<xcp:lov
+						id="lovRegistroProb"
+						value="#{avalExpBacking.entity.registroFk}"
+						label="#{bundle.lbl_documento}"
+						required="true"
+						rendered="#{!avalExpBacking.renderedBoletim}"
+						query="documentosfunc"
+						params="#{avalExpBacking.paramsDoc}"
+						size="8"
+						readonly="#{not avalExpBacking.entity.novo and avalExpBacking.readOnlyForm}" />
+
+					<xcp:dateRange
+						id="txtPeriodo"
+						requiredStart="true"
+						valueStart="#{avalExpBacking.entity.inicio}"
+						valueEnd="#{avalExpBacking.entity.termino}"
+						label="#{bundle.lbl_inicio}"
+						readonly="#{not avalExpBacking.entity.novo and avalExpBacking.readOnlyForm}"
+						margin="6px !important;"
+						size="8" />
+
+					<xcp:memo
+						id="txtObs"
+						label="#{bundle.lbl_obs}"
+						value="#{avalExpBacking.entity.obs}"
+						size="4000"
+						cols="79" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+				<ui:include src="AvalExpForm/AvalExpSindicanciaForm.xhtml" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

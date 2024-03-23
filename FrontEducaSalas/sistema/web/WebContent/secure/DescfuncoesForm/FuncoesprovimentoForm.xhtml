@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="Funcoesprovimento"
+		backing="#{funcoesprovimentoBacking}"
+		masterId="Descfuncoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codig}"
+				value="#{row.codigo}"
+				type="Number"
+				size="5">
+				<xcp:outputSimpleNumber
+					value="#{row.codigo}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="100">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				type="Center"
+				size="5">
+
+				<xcp:commandButton
+					id="btnDownloadDocumentoTable"
+					icon="ui-icon-download"
+					ajax="false"
+					immediate="true"
+					process="@this"
+					onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)"
+					disabled="#{row.documento == null}">
+					<p:fileDownload
+						value="#{funcoesprovimentoBacking.getDownloadDocumento(row)}"
+						contentDisposition="attachment" />
+				</xcp:commandButton>
+
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtCodigo_Funcoesprovimento"
+					label="#{bundle.lbl_codigo}"
+					required="true"
+					value="#{funcoesprovimentoBacking.entity.codigo}"
+					size="5"
+					precision="5"
+					scale="0"
+					maxValue="99999"
+					readonly="#{not funcoesprovimentoBacking.entity.novo}" />
+
+				<xcp:text
+					id="txtDescricao_Funcoesprovimento"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{funcoesprovimentoBacking.entity.descricao}"
+					size="100" />
+
+				<xcp:combo
+					id="cboTipAnexoVaga"
+					value="#{funcoesprovimentoBacking.entity.tipAnexoVaga}"
+					label="#{bundle.lbl_tipAnexoVaga}"
+					itens="#{funcoesprovimentoBacking.itensTipAnexoVaga}"
+					/>
+
+				<p:outputLabel value="#{bundle.lbl_documento}#{viewUtil.labelSufix}" />
+				<p:toolbar id="toolBarDocumento">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btnUploadDocumento"
+							onclick="PF('wDlgUploadDocumento').show();"
+							type="button"
+							value="#{bundle.btn_upload}" />
+
+						<xcp:commandButton
+							id="btnDownloadDocumento"
+							value="#{bundle.btn_visualizar}"
+							ajax="false"
+							immediate="true"
+							process="@this"
+							onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)"
+							disabled="#{funcoesprovimentoBacking.entity.documento == null}">
+							<p:fileDownload
+								value="#{funcoesprovimentoBacking.getDownloadDocumento(funcoesprovimentoBacking.entity)}"
+								contentDisposition="attachment" />
+						</xcp:commandButton>
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:panelForm>
+		</ui:define>
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

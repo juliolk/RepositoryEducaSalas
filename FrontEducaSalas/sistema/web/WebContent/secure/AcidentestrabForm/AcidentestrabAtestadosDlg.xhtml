@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog
+		modal="true"
+		id="dlgAtest"
+		header="#{bundle.title_atestados}"
+		widgetVar="dlgAtest_w"
+		width="1050">
+		<xcp:form id="frmAtest">
+
+			<p:dataTable
+				id="tblCand"
+				var="row"
+				value="#{acidentestrabBacking.listAtestados}"
+				rows="#{viewUtil.tableRows}"
+				rowKey="#{row}"
+				paginator="false"
+				emptyMessage="#{bundle.msg_sem_resultado}">
+
+				<xcp:column
+					headerText="#{bundle.col_dataini}"
+					size="2"
+					type="Date">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datafim}"
+					size="2"
+					type="Date">
+					<xcp:outputSimpleDate value="#{row.dtretorno}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_duracao}"
+					size="1"
+					type="Number">
+					<xcp:outputSimpleNumber
+						value="#{row.duracao}"
+						precision="6"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_medico}"
+					size="5"
+					type="String">
+					<xcp:outputSimple value="#{not empty row.medicoFk.nome ? row.medicoFk.nome : row.medicoFk.matriculaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_diagnostico}"
+					size="8"
+					type="String">
+					<xcp:outputSimple value="#{row.diagnostico}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_obs}"
+					size="8"
+					type="String">
+					<xcp:outputSimple value="#{row.obs}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cids}"
+					size="5"
+					type="String">
+					<xcp:outputSimple value="#{row.cids}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btnVoltar"
+						image="true"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						onclick="PF('dlgAtest_w').hide(); return false;" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+
+</ui:composition>

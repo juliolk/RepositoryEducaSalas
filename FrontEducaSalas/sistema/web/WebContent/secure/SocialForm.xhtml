@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelFuncionarioDet
+			id="Social"
+			backing="#{socialBacking}"
+			renderedDependentes="true"
+			renderedProfissional="true">
+			<ui:define name="form">
+
+				<p:tab
+					id="tabDadosAfastamentos"
+					title="#{bundle.tit_afastamentos}">
+					<ui:include src="SocialForm/SocialFormAfastamentos.xhtml" />
+				</p:tab>
+
+				<p:tab
+					id="tabDadosFormacao"
+					title="#{bundle.tit_formacao}">
+					<ui:include src="SocialForm/SocialFormFormacao.xhtml" />
+				</p:tab>
+
+				<p:tab
+					id="tabDadosSocial"
+					title="#{bundle.tit_social}">
+					<ui:include src="SocialForm/SocialForm.xhtml" />
+				</p:tab>
+
+			</ui:define>
+
+		</xcp:panelFuncionarioDet>
+	</ui:define>
+</ui:composition>

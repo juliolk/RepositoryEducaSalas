@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="GruposMatFaixas"
+		backing="#{gruposMatFaixasBacking}"
+		masterId="GruposMat">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_faixa}"
+				value="#{row.faixa}"
+				type="Number"
+				size="3">
+				<xcp:outputSimpleNumber
+					value="#{row.faixa}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_matriculaIni}"
+				value="#{row.matriculaIni}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.matriculaIni}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_matriculaFim}"
+				value="#{row.matriculaFim}"
+				type="Number"
+				size="8">
+				<xcp:outputSimpleNumber
+					value="#{row.matriculaFim}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtFaixa_GruposMatFaixas"
+					label="#{bundle.lbl_numFaixa}"
+					required="true"
+					value="#{gruposMatFaixasBacking.entity.faixa}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999"
+					rendered="#{not gruposMatFaixasBacking.entity.novo}"
+					readonly="true" />
+
+				<xcp:number
+					id="txtMatriculaIni_GruposMatFaixas"
+					label="#{bundle.lbl_matriculaIni}"
+					required="true"
+					value="#{gruposMatFaixasBacking.entity.matriculaIni}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<xcp:number
+					id="txtMatriculaFim_GruposMatFaixas"
+					label="#{bundle.lbl_matriculaFim}"
+					required="true"
+					value="#{gruposMatFaixasBacking.entity.matriculaFim}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

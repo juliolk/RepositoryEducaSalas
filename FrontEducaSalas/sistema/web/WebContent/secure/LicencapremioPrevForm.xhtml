@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.top td {
+	vertical-align: top;
+}
+</style>
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.title_filtro}">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtReferencia"
+						value="#{licencapremioPrevBacking.helper.referencia}"
+						required="true"
+						label="#{bundle.lbl_referencia}" />
+
+					<xcp:radio
+						id="cboTipSecretaria"
+						value="#{licencapremioPrevBacking.helper.tipSecretaria}"
+						label="#{bundle.lbl_secretarias}"
+						required="true"
+						itens="#{licencapremioPrevBacking.itensTipo}" />
+
+					<!-- PONTO -->
+					<xcp:lov
+						id="lovCreator_tipoponto"
+						label="#{bundle.lbl_faltas}"
+						value="#{licencapremioPrevBacking.helper.tipoponto}"
+						query="tipoponto"
+						selectionListener="#{licencapremioPrevBacking.selectTipoPonto}"
+						update="multiCreator_tipoponto" />
+
+					<p:spacer width="1" />
+
+					<h:panelGrid
+						columns="2"
+						styleClass="top">
+						<p:dataTable
+							id="multiCreator_tipoponto"
+							value="#{licencapremioPrevBacking.helper.listTipoponto}"
+							var="row"
+							rows="10"
+							style="width:500px"
+							scrollHeight="null"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							scrollRows="400"
+							scrollable="true"
+							rowKey="#{row}"
+							selection="#{licencapremioPrevBacking.helper.listTipopontoSel}">
+
+							<p:column
+								selectionMode="multiple"
+								style="width:20px;text-align:center" />
+
+							<p:column headerText="#{bundle.col_descricao}">
+								<xcp:outputSimple value="#{row.descricao}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:commandButton
+							action="#{licencapremioPrevBacking.actionClearTipoponto}"
+							process="@this multiCreator_tipoponto"
+							icon="icon-limpar"
+							styleClass="lov_btnLimpar"
+							update="multiCreator_tipoponto" />
+					</h:panelGrid>
+
+
+					<!-- MVTOS -->
+					<xcp:lov
+						id="lovCreator_mvtos"
+						label="#{bundle.lbl_sit}"
+						value="#{licencapremioPrevBacking.helper.tipmovto}"
+						query="tipomovtos"
+						params="#{row.paramsLov}"
+						update="multiCreator_mvtos"
+						selectionListener="#{licencapremioPrevBacking.selectTipMovto}" />
+
+					<p:spacer width="1" />
+
+					<h:panelGrid
+						columns="2"
+						styleClass="top">
+						<p:dataTable
+							id="multiCreator_mvtos"
+							value="#{licencapremioPrevBacking.helper.listMvtos}"
+							var="row"
+							rows="10"
+							style="width:500px"
+							scrollHeight="null"
+							scrollRows="400"
+							rowKey="#{row}"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							scrollable="true"
+							selection="#{licencapremioPrevBacking.helper.listMvtosSel}">
+
+							<p:column
+								selectionMode="multiple"
+								style="width:20px;text-align:center" />
+
+							<p:column
+								headerText="#{bundle.col_descricao}"
+								width="20px">
+								<xcp:outputSimple value="#{row.descricao}" />
+							</p:column>
+
+						</p:dataTable>
+						<p:commandButton
+							action="#{licencapremioPrevBacking.actionClearTipMovto}"
+							icon="icon-limpar"
+							styleClass="lov_btnLimpar"
+							process="@this multiCreator_mvtos"
+							update="multiCreator_mvtos" />
+					</h:panelGrid>
+				</xcp:panelForm>
+
+
+			</p:fieldset>
+			<p:toolbar>
+				<p:toolbarGroup>
+					<xcp:commandButton
+						id="btnPesquisar"
+						value="#{bundle.btn_pesquisar}"
+						icon="ui-icon-gear"
+						action="#{licencapremioPrevBacking.actionPesquisar}"
+						update="tbLic" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:spacer height="5" />
+
+			<p:dataTable
+				id="tbLic"
+				value="#{licencapremioPrevBacking.helper.list}"
+				var="row"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				selection="#{licencapremioPrevBacking.helper.listSel}"
+				rowKey="#{row}">
+
+				<p:column
+					selectionMode="multiple"
+					style="width:10px;text-align:center" />
+
+				<xcp:column
+					headerText="#{bundle.col_prioridade}"
+					value="#{row.prioridade}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.prioridade}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.matricula}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.matricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvctoini}"
+					value="#{row.dtvcto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtvctoini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtvcto}"
+					value="#{row.dtvcto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtvcto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_seq}"
+					value="#{row.seq}"
+					type="Number"
+					size="2">
+					<xcp:outputSimpleNumber
+						value="#{row.seq}"
+						precision="2"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					value="#{row.processo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.processo}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<xcp:commandButton
+						id="btnConfirmar"
+						value="#{bundle.btn_lancar}"
+						icon="ui-icon-gear"
+						action="#{licencapremioPrevBacking.actionConfirmar}"
+						update="tbLic">
+						<p:confirm
+							header="#{bundle.tit_confirma_gravar}"
+							message="#{bundle.msg_confirma_gravar}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</p:toolbarGroup>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

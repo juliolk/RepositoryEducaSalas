@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.tit_filtros}">
+				<xcp:panelForm>
+
+					<xcp:dateRange
+						id="txtDataPeriodo"
+						valueStart="#{efetivacaoLPBacking.helper.dtaIni}"
+						valueEnd="#{efetivacaoLPBacking.helper.dtaFim}"
+						label="#{bundle.lbl_data_licenca}" />
+
+					<xcp:date
+						id="txtDatapgto"
+						required="true"
+						value="#{efetivacaoLPBacking.helper.dtaPagto}"
+						label="#{bundle.lbl_datapgto}"
+						rendered="#{efetivacaoLPBacking.renderedDtPgto}" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{efetivacaoLPBacking.helper.orgao}"
+						selectionListener="#{efetivacaoLPBacking.selectOrgao}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos"
+						update="lovDivisao,lovSetor"
+						size="8" />
+
+					<xcp:lov
+						id="lovDivisao"
+						value="#{efetivacaoLPBacking.helper.divisao}"
+						label="#{bundle.lbl_divisao}"
+						query="divisoes_orgao"
+						selectionListener="#{efetivacaoLPBacking.selectDivisao}"
+						params="#{efetivacaoLPBacking.paramsDivisao}"
+						update="lovSetor"
+						size="8" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{efetivacaoLPBacking.helper.setor}"
+						label="#{bundle.lbl_setor}"
+						params="#{efetivacaoLPBacking.paramsSetor}"
+						query="setores_divisao"
+						size="8" />
+
+					<xcp:lov
+						id="lovVinculo"
+						value="#{efetivacaoLPBacking.helper.vinculo}"
+						label="#{bundle.lbl_vinculo}"
+						query="vinculos"
+						size="8" />
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{efetivacaoLPBacking.helper.cargo}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="8" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_buscar"
+							value="#{bundle.btn_buscar}"
+							icon="ui-icon-search"
+							action="#{efetivacaoLPBacking.actionBuscaFuncionarios}"
+							update="tblFuncionarios" />
+
+						<xcp:commandButton
+							id="btn_limpar"
+							value="#{bundle.btn_limparSelecao}"
+							icon="ui-icon-search"
+							action="#{efetivacaoLPBacking.actionLimparSelecao}"
+							update="tblFuncionarios" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:fieldset legend="#{bundle.tit_selecionados}">
+				<p:dataTable
+					id="tblFuncionarios"
+					var="row"
+					rowKey="#{row.PK}"
+					value="#{efetivacaoLPBacking.helper.listaProgramacaoLicencapremio}"
+					selection="#{efetivacaoLPBacking.helper.listaProgramacaoLicencapremioSel}"
+					sortMode="multiple"
+					scrollHeight="240"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					scrollable="false">
+
+					<p:column
+						selectionMode="multiple"
+						style="width:5%;text-align:center" />
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						value="#{row.matricula}"
+						type="Number"
+						width="10%">
+						<xcp:outputSimple value="#{row.matricula}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{efetivacaoLPBacking.helper.mapNomeFuncionario.get(row.matricula)}"
+						type="String"
+						width="25%">
+						<xcp:outputSimple
+							value="#{efetivacaoLPBacking.helper.mapNomeFuncionario.get(row.matricula)}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_vinculo}"
+						value="#{efetivacaoLPBacking.helper.mapVinculoFuncionario.get(row.matricula)}"
+						type="String"
+						width="25%">
+						<xcp:outputSimple
+							value="#{efetivacaoLPBacking.helper.mapVinculoFuncionario.get(row.matricula)}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtvcto}"
+						value="#{row.dtvcto}"
+						type="Date"
+						width="15%">
+						<xcp:outputSimpleDate value="#{row.dtvcto}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dataprevista}"
+						value="#{row.dtGozoPrev}"
+						type="Date"
+						width="15%">
+						<xcp:outputSimpleDate value="#{row.dtGozoPrev}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_aceite}"
+						value="#{row.dtAceite}"
+						type="Date"
+						width="15%">
+						<xcp:outputSimpleDate value="#{row.dtAceite}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_diaslicenca}"
+						value="#{row.diasLicencaPrev}"
+						type="Number"
+						width="10%">
+						<xcp:outputSimpleNumber
+							value="#{row.diasLicencaPrev}"
+							precision="2"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_obs}"
+						value="#{row.obs}"
+						type="String"
+						width="35%">
+						<xcp:outputSimple value="#{row.obs}" />
+					</xcp:column>
+
+				</p:dataTable>
+			</p:fieldset>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_gravar"
+						value="#{bundle.btn_aceita_solicitacao}"
+						icon="ui-icon-gear"
+						action="#{efetivacaoLPBacking.actionEfetivar}"
+						update="tblFuncionarios :frmMsg "
+						disabled="#{efetivacaoLPBacking.disabledLancamentos}" />
+
+					<xcp:commandButton
+						id="btn_rejeitar"
+						value="#{bundle.btn_rejeita_solicitacao}"
+						icon="ui-icon-cancelar"
+						action="#{efetivacaoLPBacking.actionRejeitar}"
+						update="tblFuncionarios :frmMsg"
+						disabled="#{efetivacaoLPBacking.disabledLancamentos}" />
+
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgErros"
+			header="#{bundle.tit_dlgErrosMat}"
+			widgetVar="wDlgErros"
+			width="610"
+			resizable="true"
+			modal="true">
+
+			<h:panelGroup
+				id="mypanel"
+				layout="block"
+				style="padding-bottom: 10px;font-weight: bold;">
+				<h:outputText value="#{bundle.tit_sol_nao_processada}" />
+			</h:panelGroup>
+
+			<xcp:form id="formErros">
+				<p:inputTextarea
+					value="#{efetivacaoLPBacking.listErrosStr}"
+					cols="80"
+					autoResize="false"
+					rows="20" />
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			header="#{efetivacaoLPBacking.msgDialogHeader}"
+			modal="true"
+			id="dlgMsg"
+			widgetVar="dlgMsg_w"
+			dynamic="true"
+			resizable="false">
+			<xcp:form id="frmMsg">
+
+				<p:outputPanel id="panelGeral">
+					<xcp:panelForm>
+						<xcp:memo
+							id="obsMsg"
+							label="#{bundle.lbl_mensagem}"
+							value="#{efetivacaoLPBacking.helper.mensagem}"
+							size="2000" />
+
+					</xcp:panelForm>
+
+					<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+						<f:facet name="left">
+
+							<xcp:commandButton
+								id="btn_finalizar"
+								value="#{efetivacaoLPBacking.msgDialogHeader}"
+								process="@form"
+								update=":form :formErros"
+								action="#{efetivacaoLPBacking.actionConfirmar}"
+								icon="#{efetivacaoLPBacking.msgDialogButtonIcon}"
+								oncomplete="PF('dlgMsg_w').hide();">
+								<p:confirm
+									header="#{efetivacaoLPBacking.msgDialogConfirmHeader}"
+									message="#{efetivacaoLPBacking.msgDialogConfirmMessage}"
+									icon="ui-icon-alert" />
+
+							</xcp:commandButton>
+
+						</f:facet>
+					</p:toolbar>
+
+				</p:outputPanel>
+
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes id="ComissaoReuniaoParticipantes"
+		backing="#{comissaoReuniaoParticipantesBacking}"
+		masterId="ComissaoReuniao">
+
+		<ui:define name="colunas">
+
+			<xcp:column headerText="#{bundle.col_seq}" value="#{row.seq}"
+				type="Number" size="18">
+				<xcp:outputSimpleNumber value="#{row.seq}" precision="18" scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_seqReuniao}"
+				value="#{row.seqReuniao}" type="Number" size="18">
+				<xcp:outputSimpleNumber value="#{row.seqReuniao}" precision="18"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}" type="Number" size="10">
+				<xcp:outputSimpleNumber value="#{row.matricula}" precision="10"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number id="txtSeq_ComissaoReuniaoParticipantes"
+					label="#{bundle.lbl_seq}" required="true"
+					value="#{comissaoReuniaoParticipantesBacking.entity.seq}" size="18"
+					precision="18" scale="0" maxValue="999999999999999999"
+					readonly="#{not comissaoReuniaoParticipantesBacking.entity.novo}" />
+
+				<xcp:lov id="lovSeqReuniao_ComissaoReuniaoParticipantes"
+					value="#{comissaoReuniaoParticipantesBacking.entity.seqReuniaoFk}"
+					label="#{bundle.lbl_seqReuniao}" required="true"
+					query="comissao_reuniao" size="18" />
+
+				<xcp:number id="txtMatricula_ComissaoReuniaoParticipantes"
+					label="#{bundle.lbl_matricula}" required="true"
+					value="#{comissaoReuniaoParticipantesBacking.entity.matricula}"
+					size="10" precision="10" scale="0" maxValue="9999999999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

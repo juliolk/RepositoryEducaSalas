@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"	
+template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="ContribuicoesFaps"
+			backing="#{contribuicoesFapsBacking}">
+		
+			<ui:define name="colunas">
+																
+								<xcp:column
+									headerText="#{bundle.col_referencia}"
+									value="#{row.referencia}"
+									type="Date"
+									size="7">
+				   				   									<xcp:outputSimpleDate value="#{row.referencia}" />
+				   				   								</xcp:column>
+								
+								<xcp:column
+									headerText="#{bundle.col_tipofolha}"
+									value="#{row.tipofolha}"
+									size="30"
+									itens="#{contribuicoesFapsBacking.itensTipofolha}">
+				   									<xcp:outputSimple
+				                    value="#{row.tipofolha}"
+									itens="#{contribuicoesFapsBacking.itensTipofolha}"/>
+				   				 </xcp:column>		   				 
+								
+								<xcp:column
+									headerText="#{bundle.col_base}"
+									value="#{row.base}"
+									type="Number"
+									size="19">
+				   									<xcp:outputSimpleNumber
+				                    value="#{row.base}"
+									precision="16"
+									scale="2"/>
+				   				   				   								</xcp:column>
+								
+								<xcp:column
+									headerText="#{bundle.col_valor}"
+									value="#{row.valor}"
+									type="Number"
+									size="19">
+				   									<xcp:outputSimpleNumber
+				                    value="#{row.valor}"
+									precision="16"
+									scale="2"/>
+				   				   				   								</xcp:column>
+								
+								<xcp:column
+									headerText="#{bundle.col_patronal}"
+									value="#{row.patronal}"
+									type="Number"
+									size="19">
+				   									<xcp:outputSimpleNumber
+				                    value="#{row.patronal}"
+									precision="16"
+									scale="2"/>
+				   				   				   								</xcp:column>
+								
+								<xcp:column
+									headerText="#{bundle.col_passivoatuarial}"
+									value="#{row.passivoatuarial}"
+									type="Number"
+									size="19">
+				   									<xcp:outputSimpleNumber
+				                    value="#{row.passivoatuarial}"
+									precision="16"
+									scale="2"/>
+				   				   				   								</xcp:column>
+								
+							</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+																				
+																											<xcp:date
+										id="txtReferencia" 
+																					required="true"
+																				value="#{contribuicoesFapsBacking.entity.referencia}"
+										label="#{bundle.lbl_referencia}"
+											
+												 			readonly="#{not contribuicoesFapsBacking.entity.novo}"
+					  					 />
+															  					 
+					  					 
+					  					 <xcp:combo
+						id="cboTipofolha"
+						required="true"
+						value="#{contribuicoesFapsBacking.entity.tipofolha}"
+						label="#{bundle.lbl_tipofolha}"
+						itens="#{contribuicoesFapsBacking.itensTipofolha}" 
+						readonly="#{not contribuicoesFapsBacking.entity.novo}"/>
+					  					 					  					
+					  					 
+										
+																											<xcp:number
+										id="txtBase" 
+										label="#{bundle.lbl_base}" 
+																				size="19"
+										value="#{contribuicoesFapsBacking.entity.base}" 
+										precision="16"
+										scale="2"
+											
+											 />
+										
+																											<xcp:number
+										id="txtValor" 
+										label="#{bundle.lbl_valor}" 
+																				size="19"
+										value="#{contribuicoesFapsBacking.entity.valor}" 
+										precision="16"
+										scale="2"
+											
+											 />
+										
+																											<xcp:number
+										id="txtPatronal" 
+										label="#{bundle.lbl_patronal}" 
+																				size="19"
+										value="#{contribuicoesFapsBacking.entity.patronal}" 
+										precision="16"
+										scale="2"
+											
+											 />
+										
+																											<xcp:number
+										id="txtPassivoatuarial" 
+										label="#{bundle.lbl_passivoatuarial}" 
+																				size="19"
+										value="#{contribuicoesFapsBacking.entity.passivoatuarial}" 
+										precision="16"
+										scale="2"
+											
+											 />
+										
+																											<xcp:memo
+										id="txtObs"
+										required="true" 
+										label="#{bundle.lbl_obs}"
+										value="#{contribuicoesFapsBacking.entity.obs}" size="4000"
+											
+											 />
+									
+				</xcp:panelForm>
+			</ui:define>
+
+							</xcp:panelFuncionario>
+				</ui:define>
+			</ui:composition>

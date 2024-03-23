@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<xcp:panelForm>
+
+			<xcp:memo
+				id="descricaoBemDireito"
+				required="true"
+				size="4000"
+				value="#{declaracaobensPortalBacking.bemEdicao.descricao}"
+				label="#{bundle.col_descricao_bem_direito}"
+				style="overflow: auto; height: 100px; max-height: 100px;"
+				placeholder="#{declaracaobensPortalBacking.placeholderBem}" />
+
+			<xcp:number
+				id="valorBemDireito"
+				required="true"
+				label="#{bundle.col_valor}"
+				value="#{declaracaobensPortalBacking.bemEdicao.valor}"
+				precision="16"
+				scale="2" />
+
+		</xcp:panelForm>
+
+		<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btnGravarBem"
+					value="#{bundle.btn_gravar}"
+					process="@form"
+					update=":#{p:component('tabBens')}"
+					action="#{declaracaobensPortalBacking.actionGravarBem}"
+					icon="ui-icon-disk" />
+
+				<xcp:commandButton
+					id="btnVoltarBem"
+					immediate="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgBens_w').hide();" />
+			</f:facet>
+		</p:toolbar>
+
+	</p:outputPanel>
+</ui:composition>

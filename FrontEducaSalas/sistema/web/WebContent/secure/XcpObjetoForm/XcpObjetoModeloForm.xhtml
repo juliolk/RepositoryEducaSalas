@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="XcpObjetoModelo"
+		backing="#{xcpObjetoModeloBacking}"
+		masterId="XcpObjeto"
+		rendered="#{xcpObjetoBacking.entity.tipObjeto == 1}">
+
+		<ui:define name="barraListaDet">
+			<xcp:commandButton
+				id="btnDownloadMod"
+				icon="ui-icon-gear"
+				value="#{bundle.btn_downloadMod}"
+				immediate="true"
+				styleClass="btndownloadstyle"
+				onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+				rendered="#{not empty xcpObjetoModeloBacking.lista}"
+				ajax="false">
+				<p:fileDownload
+					value="#{xcpObjetoModeloBacking.downloadModelos}"
+					contentDisposition="attachment" />
+			</xcp:commandButton>
+		</ui:define>
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_desModelo}"
+				value="#{row.desModelo}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.desModelo}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_desNome}"
+				value="#{row.desNome}"
+				type="String"
+				size="50">
+				<xcp:outputSimple value="#{row.desNome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="String"
+				size="20"
+				itens="#{xcpObjetoModeloBacking.itensTipoNull}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{xcpObjetoModeloBacking.itensTipoNull}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:text
+					id="txtDesModelo_XcpObjetoModelo"
+					label="#{bundle.lbl_desModelo}"
+					required="true"
+					value="#{xcpObjetoModeloBacking.entity.desModelo}"
+					size="50" />
+
+				<xcp:text
+					id="txtDesNome_XcpObjetoModelo"
+					label="#{bundle.lbl_desNome}"
+					required="true"
+					value="#{xcpObjetoModeloBacking.entity.desNome}"
+					size="50">
+					<p:ajax update="btnsModelo,outTemJrxml,outTemJasper" />
+				</xcp:text>
+
+				<xcp:radio
+					id="cboTipo"
+					value="#{xcpObjetoModeloBacking.entity.tipo}"
+					label="#{bundle.lbl_tipoModelo}"
+					itens="#{xcpObjetoModeloBacking.itensTipo}" />
+
+				<xcp:radio
+					id="cboIndCabRodModelo"
+					value="#{xcpObjetoModeloBacking.entity.indCabRod}"
+					label="#{bundle.lbl_indCabRod}"
+					itens="#{xcpObjetoModeloBacking.itensIndSimNao}" />
+
+				<xcp:radio
+					id="cboIndPaisagemModelo"
+					value="#{xcpObjetoModeloBacking.entity.indPaisagem}"
+					label="#{bundle.lbl_indPaisagem}"
+					required="true"
+					itens="#{xcpObjetoModeloBacking.itensIndSimNao}" />
+
+				<xcp:number
+					id="txtNumOrdem_XcpObjetoModelo"
+					label="#{bundle.lbl_numOrdem}"
+					required="true"
+					value="#{xcpObjetoModeloBacking.entity.numOrdem}"
+					size="10"
+					precision="10"
+					scale="0"
+					maxValue="9999999999" />
+
+				<p:outputLabel
+					value="#{bundle.lbl_arquivo_fonte}#{viewUtil.labelSufix}" />
+				<h:outputText
+					id="outTemJrxml"
+					value="#{xcpObjetoModeloBacking.temJrxml ? bundle.opt_sim : bundle.opt_nao}"
+					style="color: #{xcpObjetoModeloBacking.temJrxml ? 'green' : 'red'}" />
+
+				<p:outputLabel
+					value="#{bundle.lbl_arquivo_compilado}#{viewUtil.labelSufix}" />
+				<h:outputText
+					id="outTemJasper"
+					value="#{xcpObjetoModeloBacking.temJasper ? bundle.opt_sim : bundle.opt_nao}"
+					style="color: #{xcpObjetoModeloBacking.temJasper ? 'green' : 'red'}" />
+
+			</xcp:panelForm>
+
+			<p:toolbar
+				id="btnsModelo"
+				rendered="#{xcpObjetoModeloBacking.pathRel != null}">
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btnGerarJrxml"
+						value="#{bundle.btn_gerar}"
+						action="#{xcpObjetoModeloBacking.actionGerarJrxml}"
+						update="grpForm_XcpObjetoModelo btnsModelo"
+						onstart="PF('wBlock_XcpObjetoModelo').show()"
+						oncomplete="PF('wBlock_XcpObjetoModelo').hide()" />
+
+					<xcp:commandButton
+						id="btnDownloadJrxml"
+						value="#{bundle.btn_download}"
+						action="#{xcpObjetoModeloBacking.actionDownloadJrxml}"
+						rendered="#{xcpObjetoModeloBacking.temJrxml}"
+						update="grpForm_XcpObjetoModelo btnsModelo" />
+
+					<xcp:commandButton
+						id="btnCompilarJrxml"
+						value="#{bundle.btn_compilar}"
+						action="#{xcpObjetoModeloBacking.actionCompilarJrxml}"
+						rendered="#{xcpObjetoModeloBacking.temJrxml}"
+						update="grpForm_XcpObjetoModelo btnsModelo"
+						onstart="PF('wBlock_XcpObjetoModelo').show()"
+						oncomplete="PF('wBlock_XcpObjetoModelo').hide()" />
+
+					<xcp:commandButton
+						id="btnUploadJrxml"
+						value="#{bundle.btn_upload}"
+						update="grpForm_XcpObjetoModelo btnsModelo"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) { PF('wDlgUploadJrxml').show();}" />
+
+				</f:facet>
+			</p:toolbar>
+
+			<xcp:commandButton
+				id="btnDownloadModelo"
+				widgetVar="wBtnDownloadModelo"
+				ajax="false"
+				immediate="true"
+				process="@this"
+				onclick="PrimeFaces.monitorDownload(xcpDownloadModeloStart, xcpDownloadModeloStop)"
+				style="display: none;">
+				<p:fileDownload
+					value="#{xcpObjetoModeloBacking.file}"
+					contentDisposition="attachment" />
+			</xcp:commandButton>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+
+	<script type="text/javascript">
+		function xcpDownloadModeloStart() {
+			PF('w_dlgXcpExecStatus').show();
+		}
+
+		function xcpDownloadModeloStop() {
+			PF('w_dlgXcpExecStatus').hide();
+		}
+	</script>
+</ui:composition>

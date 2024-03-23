@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<style>
+.ui-selectonemenu.cmb_aval {
+	width: 330px !important;
+}
+
+.ui-selectonemenu-label.cmb_aval {
+	width: 330px !important;
+}
+.listagem-cinza .ui-datatable-odd.tipo-conta-provento {
+   	background-color: rgba(0, 0, 0, 0.05);
+}
+.listagem-cinza .ui-datatable-even.tipo-conta-provento {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.listagem-cinza .ui-datatable-odd.tipo-conta-desconto {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.listagem-cinza .ui-datatable-even.tipo-conta-desconto {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.listagem-cinza .ui-datatable-odd.tipo-conta-base-resultado {
+    background-color: rgba(0, 0, 0, 0.0);
+}
+.listagem-cinza .ui-datatable-even.tipo-conta-base-resultado {
+    background-color: rgba(0, 0, 0, 0.0);
+}
+
+.listagem-cores .ui-datatable-odd.tipo-conta-provento {
+    background-color: rgba(0, 255, 0, 0.15);
+}
+.listagem-cores .ui-datatable-even.tipo-conta-provento {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+.listagem-cores .ui-datatable-odd.tipo-conta-desconto {
+    background-color: rgba(255, 0, 0, 0.15);
+}
+.listagem-cores .ui-datatable-even.tipo-conta-desconto {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+.listagem-cores .ui-datatable-odd.tipo-conta-base-resultado {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.listagem-cores .ui-datatable-even.tipo-conta-base-resultado {
+    background-color: rgba(0, 0, 0, 0.0);
+}
+
+</style>
+		
+		<xcp:panelFuncionario
+			id="Rescisao"
+			apresentaIndice="true"
+			backing="#{rescisaoBacking}"
+			renderedGravar="#{not rescisaoBacking.disabledCalculos}"
+			renderedRemover="#{not rescisaoBacking.disabledCalculos}"
+			scrollable="false"			
+			tableStyleClass="#{rescisaoBacking.tableStyle}"
+			rowStyleClass="#{rescisaoBacking.getClasseLancamento(row)}">
+
+			<ui:define name="barraLista">
+				<p:column>
+					<xcp:commandButton
+						immediate="true"
+						icon="ui-icon-gear"
+						value="#{bundle.btn_gera_grrf}"
+						oncomplete="XcpMenu.popup('ExpGRRFForm.xhtml')" />
+				</p:column>
+			</ui:define>
+
+			<ui:define name="filtros">
+				<div
+					class="tabela_ocorrencia_fixas"
+					style="width: 350px; padding: 10px; padding-left: 30px;">
+					<h:panelGrid id="panelFiltroGeral">
+						<p:row>
+							<p:column colspan="5">
+								<p:selectOneMenu
+									id="cboTiposRescisao"
+									label="#{bundle.lbl_motivo_rescisao}"
+									styleClass="cmb_aval"
+									value="#{rescisaoBacking.tipoRescisao}">
+									<f:selectItems value="#{rescisaoBacking.itensTipoRescisao}" />
+									<p:ajax
+										event="change"
+										process="@this"
+										listener="#{rescisaoBacking.actionTrocaTipoRescisao}"
+										resetValues="txtDataAviso,txtDataAviso_l"
+										update="txtDataAviso,txtDataAviso_l,cboTiposAvisoPrevio,cboTiposAvisoPrevio_l" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:panelGroup id="panelControleDatas">
+									<xcp:panelForm>
+										<xcp:date
+											id="txtDataDemissao"
+											required="true"
+											value="#{rescisaoBacking.dataDemissao}"
+											label="#{bundle.lbl_data_demissao}" />
+
+										<xcp:date
+											required="true"
+											id="txtDataAviso"
+											rendered="#{rescisaoBacking.avisoPrevio}"
+											value="#{rescisaoBacking.dataAvisoPrevio}"
+											label="#{bundle.lbl_data_aviso}" />
+
+										<xcp:combo
+											id="cboTiposAvisoPrevio"
+											required="true"
+											rendered="#{rescisaoBacking.avisoPrevio}"
+											label="#{bundle.lbl_TiposAvisoPrevio}"
+											value="#{rescisaoBacking.tipoAviso}"
+											itens="#{rescisaoBacking.itensTipoAvisoPrevio}" />
+
+										<xcp:check
+											id="txtPrevia"
+											value="#{rescisaoBacking.previa}"
+											label="#{bundle.lbl_calculo_previo}" />
+									</xcp:panelForm>
+								</h:panelGroup>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="6">
+								<xcp:commandButton
+									value="#{bundle.btn_calcular}"
+									disabled="#{rescisaoBacking.disabledCalculos}"
+									style="width:108px; float:left;"
+									action="#{rescisaoBacking.actionCalcular}"
+									update="table_Rescisao,panelControleDatas,panelFiltroGeral"
+									id="btn_calcular">
+								</xcp:commandButton>
+								<xcp:commandButton
+									value="#{bundle.btn_descalcular}"
+									disabled="#{rescisaoBacking.disabledCalculos}"
+									style="width:108px; float:left; margin-left:44px"
+									action="#{rescisaoBacking.actionDescalcular}"
+									update="table_Rescisao"
+									id="btn_descalcular" />
+							</p:column>
+						</p:row>
+					</h:panelGrid>
+				</div>
+			</ui:define>
+
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_conta}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.conta}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_des_conta}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.contaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_incidencia}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.incidencia}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_qtd}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.qtd}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_percentual}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.percentual}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.valor}"
+						precision="16"
+						scale="2" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipolcto}"
+					type="Center"
+					itens="#{rescisaoBacking.itensTipolcto}"
+					size="3">
+					<xcp:outputSimple value="#{row.tipolcto}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovConta"
+						value="#{rescisaoBacking.entity.contaFk}"
+						label="#{bundle.lbl_conta}"
+						required="true"
+						query="contas"
+						size="4"
+						readonly="#{not rescisaoBacking.entity.novo}" />
+
+					<xcp:number
+						id="txtIncidencia"
+						label="#{bundle.lbl_incidencia}"
+						required="true"
+						value="#{rescisaoBacking.entity.incidencia}"
+						size="4"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:number
+						id="txtQtd"
+						label="#{bundle.lbl_qtd}"
+						required="true"
+						size="19"
+						value="#{rescisaoBacking.entity.qtd}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtPercentual"
+						label="#{bundle.lbl_percentual}"
+						size="19"
+						value="#{rescisaoBacking.entity.percentual}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						size="19"
+						value="#{rescisaoBacking.entity.valor}"
+						precision="16"
+						scale="2" />
+
+					<xcp:combo
+						id="txtTipolcto"
+						label="#{bundle.lbl_tipolcto}"
+						readonly="true"
+						value="#{rescisaoBacking.entity.tipolcto}"
+						itens="#{rescisaoBacking.itensTipolcto}"
+						size="2" />
+
+					<xcp:memo
+						id="txtObs"
+						required="#{rescisaoBacking.entity.tipolcto == 'F'}"
+						label="#{bundle.lbl_obs}"
+						value="#{rescisaoBacking.entity.obs}"
+						size="200" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

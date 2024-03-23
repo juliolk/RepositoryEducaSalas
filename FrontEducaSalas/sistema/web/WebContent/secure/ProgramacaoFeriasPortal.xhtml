@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		
+		<div class="content_bg-gray">
+			<xcp:panelContent>
+			<h:panelGroup id="panelProgramacao">
+			<div class="container-fluid">
+				<p:outputPanel rendered="#{programacaoFeriasPortalBacking.podeProgramarFerias}">
+				<div class="row flex-container flex-wrap">
+					<div class="col-md-6 flex-container flex-grow-1">
+						<div class="list-container flex-grow-1">
+							<div class="list-header info-bgcolor">
+								<i class="fa fa-fw fa-calendar-plus-o list-header-icon"></i>
+								<h3 class="list-title">Férias para Programar</h3>
+								<p>Selecione um exercício na listagem abaixo para cadastrar a sua programação de férias.</p>
+							</div>
+							
+							<p:outputPanel rendered="#{programacaoFeriasPortalBacking.mapProgramacao.size() == 0}">
+								<div class="list-message">
+										Você não tem períodos de férias disponíveis para programação.
+								</div>
+							</p:outputPanel>
+							
+							<ul class="list-items no-hover">
+							<ui:repeat value="#{programacaoFeriasPortalBacking.mapProgramacao.entrySet().toArray()}" var="entry">
+								<c:set var="feriasReferencia" value="#{entry.getKey()}"/>
+								<c:set var="listaProgramacao" value="#{entry.getValue()}"/>
+
+								<li>
+									<div class="list-item">
+									
+										<xcp:commandLink 
+											href="#" 
+											id="lnkprogramar"
+											action="#{programacaoFeriasPortalBacking.reprogramarFerias(feriasReferencia)}"
+											styleClass="list-item-top-button ui-button">
+											
+											<p:ajax
+												update=":frmProgramacaoFerias" 
+												onstart="PF('w_dlgXcpExecStatus').show();"
+												oncomplete="PF('w_dlgXcpExecStatus').hide(); " />
+											
+												<i class="fa fa-fw fa-pencil"></i> Programar
+										</xcp:commandLink>
+																
+										<i class="list-item-icon fa fa-fw fa-calendar-plus-o info-color"></i>
+										
+										<div class="container-fluid">
+											<div class="row">
+												<div class="col-xs-12 list-item-group">
+													<span class="list-item-label">Exercício</span>
+													<h2 class="list-item-data">
+														<xcp:outputSimple
+															value="#{programacaoFeriasPortalBacking.getExercioFerias(feriasReferencia)}"/>
+													</h2>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xs-12 list-item-group">
+													<span class="list-item-label">
+														#{bundle.lbl_periodoaquisitivo}:
+														<strong>
+															<span class="nowrap">
+																<h:outputText 
+																	escape="false" 
+																	value="#{programacaoFeriasPortalBacking.getFaixaAquisitivoString(feriasReferencia)}"/>
+															</span>
+														</strong>
+													</span>
+													
+													<span class="list-item-label">
+														Disponíveis: 
+														<strong>
+															#{programacaoFeriasPortalBacking.getDiasDisponiveisParaProgramacao(feriasReferencia)} dias
+														</strong>
+													</span>
+														
+													<ui:fragment rendered="#{feriasReferencia.dataprevista == null}">
+														<span class="label label-info">
+														Programação a Realizar
+														</span>
+													</ui:fragment>
+														
+													<ui:fragment rendered="#{feriasReferencia.dataprevista != null}">
+														<span class="label">
+														Programação a Efetivar 
+														</span>
+													</ui:fragment>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+								<ui:repeat value="#{listaProgramacao}" var="ferias" varStatus="status">
+									<ui:fragment rendered="#{ferias.dataprevista != null}">
+								
+										<li>
+											<c:set var="numPeriodoProgramacao" value="#{programacaoFeriasPortalBacking.getNumPeriodoProgramacao(ferias.getDtvcto(), status.index)}"/>
+										
+											<div class="list-item child-item">
+											
+												<div class="list-item-container container-fluid">
+												
+													<div class="row">
+														<div class="col-xs-12">
+															<legend>#{numPeriodoProgramacao}&#186; Período</legend>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-xs-6 list-item-group">
+															<span class="list-item-label">#{bundle.lbl_dataprevista}</span>
+															<h2 class="list-item-data">
+																<xcp:outputSimpleDate value="#{ferias.dataprevista}"/>
+															</h2>
+														</div>
+														<div class="col-xs-6 list-item-group">
+															<span class="list-item-label">#{bundle.lbl_diasdeferias}</span>
+															<span class="list-item-data">
+																<xcp:outputSimpleNumber
+																	value="#{ferias.diasferprev}"
+																	scale="0"/>
+															</span>
+														</div>	                
+													</div>
+													
+													<div class="row">
+														<div class="col-sm-3 col-xs-4 list-item-group">
+															<span class="list-item-label">#{bundle.lbl_feriasprevretorno}</span>
+															<span class="list-item-data">
+																	<xcp:outputSimpleDate value="#{programacaoFeriasPortalBacking.getPrevisaoRetorno(ferias)}" scale="0"/>
+															</span>
+														</div>
+															                
+														<h:panelGroup rendered="#{programacaoFeriasPortalBacking.configProgramacao.exibirdiasabono == 1}">
+														<div class="col-sm-3 col-xs-4 list-item-group">
+															<span class="list-item-label">#{bundle.lbl_diasabono}</span>
+															<span class="list-item-data">
+																<xcp:outputSimpleNumber
+																	value="#{ferias.diasaboprev == null ? 0 : ferias.diasaboprev}"
+																	scale="0"/>
+															</span>
+														</div>
+														</h:panelGroup>
+														<h:panelGroup rendered="#{programacaoFeriasPortalBacking.exibeAnt13}">                
+														<div class="col-sm-4 col-xs-4 list-item-group">
+															<span class="list-item-label">#{bundle.lbl_gera13}</span>
+															<span class="list-item-data">
+																<xcp:outputSimple
+																	value="#{ferias.gera13 == 1 ? 'Sim' : 'Não'}"
+																	/>
+															</span>
+														</div>
+														</h:panelGroup>
+													</div>
+												
+													<div class="row">
+														<div class="col-xs-9 list-item-group list-data-small-text">
+															<span class="list-item-label">#{bundle.col_observ}</span>
+															<span class="list-item-data">
+																<xcp:outputSimple value="#{ferias.obs}"/>
+															</span>
+														</div>
+														<h:panelGroup rendered="#{programacaoFeriasPortalBacking.configProgramacao.permitemaisperiodos == 0}">
+														<div class="col-xs-3">
+															<h:commandLink href="#" 
+																action="#{programacaoFeriasPortalBacking.editarProgramacaoFerias(ferias)}"
+																styleClass="list-item-top-button ui-button">
+																
+																<p:ajax
+																	update=":frmProgramacaoFerias" 
+																	onstart="PF('w_dlgXcpExecStatus').show();"
+																	oncomplete="PF('w_dlgXcpExecStatus').hide(); " />
+																
+																	<i class="fa fa-fw fa-pencil"></i> Alterar/Reprogramar
+															</h:commandLink>
+														</div>
+														</h:panelGroup>
+													</div>
+												</div>
+											
+											</div>
+										
+										</li>
+									</ui:fragment>								
+								</ui:repeat>
+								<!-- ui:repeat listaProgramacao -->
+							
+							</ui:repeat>
+							<!-- ui:repeat mapProgramacao -->
+							
+							</ul>
+							
+						</div>
+					</div>
+					<div class="col-md-6 flex-container flex-grow-1">
+						<div class="list-container flex-grow-1">
+							<div class="list-header warn-bgcolor">
+								<i class="fa fa-fw fa-calendar-check-o list-header-icon"></i>
+								<h3 class="list-title">Férias Aprovadas</h3>
+								<p>Alteração de férias..</p>
+							</div>
+							<p:outputPanel rendered="#{programacaoFeriasPortalBacking.listaFeriasAprovadas.size() == 0}">
+								<div class="list-message">
+										Você não tem férias confirmadas disponíveis.
+								</div>
+							</p:outputPanel>
+							
+							
+								<p:outputPanel rendered="#{programacaoFeriasPortalBacking.listaFeriasAprovadas.size() > 0}">
+									<ul class="list-items no-hover">
+										<c:forEach
+											items="#{programacaoFeriasPortalBacking.listaFeriasAprovadas}"
+											var="feriasAprovada">
+										
+											<li> 
+												<div class="list-item">
+												
+							                        <xcp:commandLink
+						    	                        id="btn_remove_ferias_#{feriasAprovada.uuid}"
+						        	                    icon="ui-icon-trash"
+						            	                immediate="true"
+						            	                title="Alterar"
+						            	                styleClass="list-item-top-button ui-button"
+						                	            update=":form:panelProgramacao"
+						                	            rendered="#{programacaoFeriasPortalBacking.podeRemoverFeriasEfetivada(feriasAprovada)}"
+						                	            action="#{programacaoFeriasPortalBacking.removeFeriasEfetivada(feriasAprovada)}">
+						                    	        <p:confirm
+							                                header="Alteração de Férias Aprovadas"
+						    	                            message="#{bundle.msg_confirma_remover_ferias_efetivada}"
+						        	                        icon="ui-icon-alert" />
+						                            	<span class="default-color">
+						        	                        <i class="fa fa-fw fa-pencil"></i> Alterar
+					        	                        </span>
+						            	            </xcp:commandLink>
+												
+													<i class="list-item-icon fa fa-fw fa-calendar-check-o warn-color"></i>
+												
+													<div class="container-fluid">
+														<div class="row">
+															<div class="col-xs-12 list-item-group">
+																<span class="list-item-label">
+																	#{bundle.lbl_dtgozo}
+																</span>
+																<h2 class="list-item-data">
+																	<xcp:outputSimpleDate
+																		value="#{feriasAprovada.dtgozo}"/>
+																</h2>
+															</div>
+														</div>
+														
+														<div class="row">
+															<div class="col-xs-12 list-item-group">
+																<div class="row">
+																	<div class="col-sm-7">
+																		<span class="list-item-label">
+																			#{bundle.lbl_dtret}: 																
+																			<strong>
+																				<span class="nowrap">
+																					<xcp:outputSimpleDate
+																						value="#{feriasAprovada.dtret}"/>
+																				</span>
+																			</strong>																																																			
+																		</span>
+																		<span class="list-item-label">
+																			#{bundle.lbl_diasdeferias}: 
+																			<strong>
+																				<span class="nowrap">
+																					<xcp:outputSimpleNumber
+																						value="#{feriasAprovada.diasferias}"
+																						scale="0"/> dias
+																				</span>
+																			</strong>																																		
+																		</span>
+																	</div>
+																	<div class="col-sm-5">
+																		<h:panelGroup rendered="#{programacaoFeriasPortalBacking.configProgramacao.exibirdiasabono == 1}">
+																		<span class="list-item-label">
+																			#{bundle.lbl_diasabono}: 																
+																			<strong>
+																				<span class="nowrap">
+																					<xcp:outputSimpleNumber
+																						value="#{feriasAprovada.diasabono}"
+																						scale="0"/>																		
+																				</span>																			
+																			</strong>																	
+																		</span>
+																		</h:panelGroup>
+																		<h:panelGroup rendered="#{programacaoFeriasPortalBacking.exibeAnt13}">
+														  				<span class="list-item-label" >
+																			#{bundle.lbl_gera13}: 
+																			<strong>
+																				<span class="nowrap">
+																					<xcp:outputSimple
+																						value="#{feriasAprovada.gera13 == 1 ? 'Sim' : 'Não'}"/>																	
+																				</span>																			
+																			</strong>
+																		</span>
+																		</h:panelGroup>
+																	</div>
+																</div>
+																<span class="list-item-label">
+																	#{bundle.lbl_periodoaquisitivo}: 																	
+																	<strong>
+																		<span class="nowrap">
+																			<h:outputText 
+																				escape="false" 
+																				value="#{programacaoFeriasPortalBacking.getFaixaAquisitivoString(feriasAprovada)}"/>
+																		</span>
+																	</strong>																	
+																</span>																
+															</div>
+																                
+														</div>
+													
+														<div class="row">
+															<div class="col-xs-12 list-item-group list-data-small-text">
+																<span class="list-item-label">#{bundle.col_observ}</span>
+																<span class="list-item-data">
+																	<xcp:outputSimple value="#{feriasAprovada.obs}"/>
+																</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</li>
+										</c:forEach>
+									</ul>
+								</p:outputPanel>
+							
+						</div>
+					</div>
+				</div>
+				</p:outputPanel>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="list-container">
+							<div class="list-header default-bgcolor">
+								<i class="fa fa-fw fa-calendar-o list-header-icon"></i>
+								<h3 class="list-title">Histórico de Férias</h3>
+								<p>Abaixo a lista dos períodos de férias já gozados por você.</p>
+							</div>
+							<p:outputPanel rendered="#{programacaoFeriasPortalBacking.listaFeriasHistorico.size() == 0}">
+								<div class="list-message">
+										Você não tem períodos de férias já gozados.
+								</div>
+							</p:outputPanel>
+							
+							<p:outputPanel id="form-historico">
+								<p:outputPanel rendered="#{programacaoFeriasPortalBacking.listaFeriasHistorico.size() > 0}">
+									<ul class="list-items no-hover">
+										<ui:repeat value="#{programacaoFeriasPortalBacking.listaFeriasHistorico}" var="ferias">
+											<li> 
+												<div class="list-item hide-detail">
+												
+							                        <a href="#" class="list-item-top-button btn-show-detail">
+					        	                        <span class="default-color show-detail">
+						        	                        <i class="fa fa-fw fa-plus-circle"></i> Detalhes
+					        	                        </span>
+					        	                        <span class="default-color hide-detail">
+						        	                        <i class="fa fa-fw fa-minus-circle"></i> Detalhes
+					        	                        </span>
+						            	            </a>
+												
+												
+													<i class="list-item-icon fa fa-fw fa-calendar-o default-color"></i>
+												
+													<div class="container-fluid">
+														<div class="row">
+															<div class="col-md-4 col-xs-12 list-item-group">
+																<div class="row">
+																	<div class="col-xs-6 list-item-group">
+																		<span class="list-item-label">#{bundle.lbl_dtgozo}</span>
+																		<h2 class="list-item-data">
+																			<xcp:outputSimpleDate
+																				value="#{ferias.dtgozo}"/>
+																		</h2>
+																	</div>
+																	<div class="col-xs-6 list-item-group">
+																		<span class="list-item-label">#{bundle.lbl_diasdeferias}</span>
+																		<span class="list-item-data">
+																			<xcp:outputSimpleNumber
+																				value="#{ferias.diasferias}"
+																				scale="0"/>
+																		</span>
+																	</div>	            
+																</div>
+															</div>
+																
+															<div class="col-md-8 col-xs-12 list-item-group">
+																<div class="row">
+																	<div class="col-sm-2 col-xs-6 list-item-group">
+																		<span class="list-item-label">#{bundle.lbl_dtret}</span>
+																		<span class="list-item-data">
+																			<xcp:outputSimpleDate
+																				value="#{ferias.dtret}"/>
+																		</span>
+																	</div>
+																	
+																	<div class="col-sm-4 col-xs-6 list-item-group">
+																		<span class="list-item-label">#{bundle.lbl_situacao}</span>
+																		<span class="list-item-data">
+																			<xcp:outputSimple value="#{ferias.situacaoFk.descricao}"/>
+																		</span>
+																	</div>
+		
+																	<div class="col-sm-6 col-xs-6 list-item-group">
+																		<span class="list-item-label">#{bundle.lbl_periodoaquisitivo}</span>
+																		<span class="list-item-data">
+																		<p:outputPanel style="font-size: 18px !important;">
+																		    <h:outputText 
+								    											escape="false" 
+								    											value="#{programacaoFeriasPortalBacking.getFaixaAquisitivoString(ferias)}"/>
+								    										<!--  <p:commandButton value="#{bundle.btn_suspendergozo}"
+								    										   style="vertical-align: text-bottom;margin-left: 5px;padding-top:5px !important;padding-bottom:5px !important;" 
+								    										   action="#{programacaoFeriasPortalBacking.actionOpenSuspenderGozo(ferias)}" 
+								    										   icon="ui-icon-cancel"
+								    										   rendered="#{programacaoFeriasPortalBacking.renderedSuspender(ferias)}" process="@this" update=":frmSuspendGozo"/>-->
+								    									</p:outputPanel>
+																		</span> 
+																	</div>
+																		                
+																 </div>
+															 </div>
+													     </div>
+													
+														<div class="row">
+															<h:panelGroup rendered="#{programacaoFeriasPortalBacking.configProgramacao.exibirdiasabono == 1}">
+															<div class="col-xs-6 list-item-group">
+																<span class="list-item-label">#{bundle.lbl_diasabono}</span>
+																<span class="list-item-data">
+																	<xcp:outputSimpleNumber
+																		value="#{ferias.diasabono}"
+																		scale="0"/>
+																</span>
+															</div>
+															</h:panelGroup>
+
+															<h:panelGroup rendered="#{programacaoFeriasPortalBacking.exibeAnt13}">
+															<div class="col-xs-6 list-item-group" >
+																<span class="list-item-label">#{bundle.lbl_gera13}</span>
+																<span class="list-item-data">
+																	<xcp:outputSimple
+																		value="#{ferias.gera13 == 1 ? 'Sim' : 'Não'}"
+																		/>
+																</span>
+															</div>
+															</h:panelGroup>
+														</div>
+														<div class="row">
+															<div class="col-xs-12 list-item-group list-data-small-text">
+																<span class="list-item-label">#{bundle.col_observ}</span>
+																<span class="list-item-data">
+																	<xcp:outputSimple value="#{ferias.obs}"/>
+																</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</li>
+										</ui:repeat>
+									</ul>
+								</p:outputPanel>
+							</p:outputPanel>
+						</div>
+					</div>
+				</div>
+			</div>			
+			</h:panelGroup>
+			</xcp:panelContent>		
+		</div>
+		
+		<script type="text/javascript">
+			$(function(){
+				$('body').on('click', '.btn-show-detail', function(e){
+					e.preventDefault(); 
+					$(this).closest('.list-item').toggleClass('hide-detail');
+				});
+				$('body').on('click', '.ui-widget-overlay',  function(){
+					PF('dlgIncluirProgramacao_w').hide();
+				});
+			});
+		</script>
+				
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_incluir_programacao_ferias}"
+			modal="true"
+			id="dlgIncluirProgramacao"
+			widgetVar="dlgIncluirProgramacao_w"
+			dynamic="true"
+			resizable="false"
+			draggable="false"
+			closable="false"
+			focus="dlgIncluirProgramacao"
+			closeOnEscape="true"
+			style="max-width:560px;"
+			styleClass="full-page-dialog rightside-dialog"
+			onShow="$(this).eachHasValue();">
+
+			<xcp:form id="frmProgramacaoFerias">
+	  			<xcp:panelForm 
+	  				controlsSizeClass="big-controls"
+					floatingLabel="#{xcpLoginBacking.tipoAcesso == 2}">
+					
+					<div class="container-fluid">
+					
+					
+						<p:outputPanel
+							class="section-header modal-main-panel info-bgcolor">
+							<div class="section-info">
+								<h1>Exercício:
+									#{programacaoFeriasPortalBacking.getExercioFerias(programacaoFeriasPortalBacking.entity)}</h1>
+								<p>#{bundle.lbl_periodoaquisitivo}:
+									<span class="nowrap">
+									    <h:outputText 
+									    	escape="false" 
+									    	value="#{programacaoFeriasPortalBacking.getFaixaAquisitivoString(programacaoFeriasPortalBacking.entity)}"/>
+							    	</span>
+								</p>
+								<p>Disponíveis para Programação:
+									#{programacaoFeriasPortalBacking.getDiasDisponiveisParaProgramacao(programacaoFeriasPortalBacking.entity)}&#160;dias</p>
+							</div>
+						</p:outputPanel>
+										
+						<p:outputPanel
+							class="row"
+							rendered="#{programacaoFeriasPortalBacking.renderedCmbPeriodos()}">
+							<div class="col-sm-12">
+							    <label for="frmProgramacaoFerias:cboQtdePeriodos_c_input" class="long-label">Em quantos períodos você deseja programar suas férias?</label>
+								<xcp:combo
+									id="cboQtdePeriodos"
+									value="#{programacaoFeriasPortalBacking.qtdePeriodos}"
+									label=""
+									noLabel="true"
+									itens="#{programacaoFeriasPortalBacking.listaQtdePeriodos}"
+									size="4">
+									<p:ajax 
+										listener="#{programacaoFeriasPortalBacking.changeQtdePeriodos}"
+										update="panelFormsProgramacao"
+										oncomplete="$(this).eachHasValue();" />	
+								</xcp:combo>
+							</div>
+						</p:outputPanel>
+						
+						
+						<h:panelGroup id="panelFormsProgramacao" layout="block" style="margin-top:40px;">
+						
+							<p:fieldset
+								rendered="#{programacaoFeriasPortalBacking.qtdeProgAprovadas > 0}" 
+								legend="#{programacaoFeriasPortalBacking.configProgramacao.permitemaisperiodos == 1 ? 'Períodos Aprovados' : 'Período Aprovado'}">
+								
+								<table
+									class="table material table-inspector table-medium table-noborder">
+									<thead>
+										<tr>
+											<th>Período</th>
+											<th class="text-center">#{bundle.lbl_dtgozo}</th>
+											<th class="text-center">#{bundle.lbl_diasdeferias}</th>
+										</tr>
+									</thead>
+									<tbody>							
+										<ui:repeat value="#{programacaoFeriasPortalBacking.listaEntidadesFormProgramacao}" var="ferias" varStatus="status">
+											<c:set var="config" value="#{programacaoFeriasPortalBacking.configProgramacao}"/>
+											<c:set var="numPeriodoProgramacao" value="#{status.index + 1}"/>
+										
+											<ui:fragment rendered="#{ferias.dtgozo != null}">								
+												<tr>
+													<td>#{config.permitemaisperiodos == 1 ? numPeriodoProgramacao.toString().concat('º Período') : 'Período Aprovado'}</td>
+													<td class="text-center"><xcp:outputSimpleDate value="#{ferias.dtgozo}"/></td>
+													<td class="text-center">#{ferias.diasferias} dias</td>
+												</tr>
+											</ui:fragment>								
+										</ui:repeat>
+									</tbody>
+								</table>
+							</p:fieldset>
+							
+
+							<ui:repeat value="#{programacaoFeriasPortalBacking.listaEntidadesFormProgramacao}" var="ferias" varStatus="status">
+								<c:set var="config" value="#{programacaoFeriasPortalBacking.configProgramacao}"/>
+								<c:set var="numPeriodoProgramacao" value="#{status.index + 1}"/>
+							
+								<ui:fragment rendered="#{programacaoFeriasPortalBacking.renderedFormPeriodo(ferias)}">
+									<p:fieldset legend="#{programacaoFeriasPortalBacking.getLabelProgramacaoPeriodo(numPeriodoProgramacao)}">
+									
+										<div class="row">
+											<div class="col-sm-6">
+												<xcp:date 
+													id="dtPrevista"
+													required="true"
+													value="#{ferias.dataprevista}"
+													label="#{bundle.lbl_dataprevista}" 						
+												/>
+											</div>
+										</div>
+									
+										<div class="row">
+											<div class="col-sm-6">
+												<xcp:combo
+													id="cboDiasPrev"
+													value="#{ferias.diasferprev}"
+													required="true"
+													label="#{bundle.lbl_diasdeferias}"
+													itens="#{programacaoFeriasPortalBacking.listaDiasFerias}"
+													size="4" 
+													rendered="#{programacaoFeriasPortalBacking.getDiasPerdidos(ferias) == 0}"
+												/>
+												
+												<xcp:number
+													id="txtDiasPrev"
+													value="#{ferias.diasferprev}"
+													required="true"
+													label="#{bundle.lbl_diasdeferias}"
+													size="4" scale="0" precision="2"
+													rendered="#{programacaoFeriasPortalBacking.getDiasPerdidos(ferias) > 0}"
+												/>
+											</div>
+										</div>
+												
+										<div class="row">
+											<div class="col-sm-6">
+												<xcp:combo
+													id="nrDiasAbonoCmb"
+													value="#{ferias.diasaboprev}"
+													label="#{bundle.lbl_diasabono}"
+													itens="#{programacaoFeriasPortalBacking.itensAbonos}"
+													rendered="#{config != null and config.exibirdiasabono == 1}" />
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-sm-6">
+												<xcp:combo
+													id="cboAdiantDecimo"
+													label="#{bundle.lbl_gera13}"
+													value="#{ferias.gera13}"
+													itens="#{programacaoFeriasPortalBacking.itensIndSimNao}"
+													size="4"
+													required="true"
+													rendered="#{programacaoFeriasPortalBacking.exibeAnt13 or programacaoFeriasPortalBacking.podeSolicitar13}"
+												 />
+											</div>
+										</div>
+												 
+										<div class="row">
+											<div class="col-sm-12">
+												<xcp:memo  
+													id="txtObs"
+													label="#{bundle.col_observ}"
+													rows="2"
+													value="#{ferias.obs}"
+												 />
+											</div>
+										</div>
+									</p:fieldset>
+								</ui:fragment>
+							</ui:repeat>					
+						</h:panelGroup>
+					</div>
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_salvar"
+							value="#{bundle.btn_salvar}"
+							process="@form"
+							update="@form"
+							oncomplete="$(this).eachHasValue();"	
+							action="#{programacaoFeriasPortalBacking.gravar}"/>
+							
+						<xcp:commandButton
+							id="btnCancelar"
+							immediate="true"
+							value="#{bundle.btn_cancelar}"
+							onclick="PF('dlgIncluirProgramacao_w').hide();" />
+
+							
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+			<p:ajax event="close" listener="#{programacaoFeriasPortalBacking.atualizarMapProgramacao}" update=":form:panelProgramacao" />
+		</p:dialog>
+
+		<p:dialog
+			header="#{bundle.tit_suspender_ferias}"
+			modal="true"
+			id="dlgSuspendGozo"
+			widgetVar="dlgSuspendGozo_w"
+			dynamic="true"
+			resizable="false"
+			draggable="false"
+			closable="false"
+			focus="dlgIncluirProgramacao"
+			closeOnEscape="true"
+			style="max-width:560px;"
+			styleClass="full-page-dialog rightside-dialog"
+			onShow="$(this).eachHasValue();">
+			<xcp:form id="frmSuspendGozo">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="dtUltGozo"
+						required="true"
+						value="#{programacaoFeriasPortalBacking.dtUltGozo}"
+						label="#{bundle.lbl_dtultgozo}" />
+
+					<xcp:combo
+						id="cboTipoFerias"
+						value="#{programacaoFeriasPortalBacking.tipoFerias}"
+						label="#{bundle.lbl_situacaoferiasprog}"
+						noLabel="true"
+						required="true"
+						itens="#{programacaoFeriasPortalBacking.listaTipoFerias}"
+						size="4"/> 
+
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_salvar_susp"
+							value="#{bundle.btn_salvar}"
+							action="#{programacaoFeriasPortalBacking.actionSaveSuspenderGozo}" update=":form:form-historico"/>
+							
+						<xcp:commandButton
+							id="btn_cancelar_susp"
+							immediate="true"
+							value="#{bundle.btn_cancelar}"
+							onclick="PF('dlgSuspendGozo_w').hide();" />
+							
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+		
+</ui:composition>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tabEnvolvidosAcao"
+		value="#{planoConflitosAcoesBacking.listaEnvolvidosAcao}"
+		var="row"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		selection="#{planoConflitosAcoesBacking.envolvidoAcao}"
+		rowKey="#{row}">
+
+			<xcp:column headerText="#{bundle.col_matricula}"
+				value="#{row.matricula}" type="Number" width="20%">
+				<xcp:outputSimpleNumber value="#{row.matricula}" precision="10"
+					scale="0" />
+			</xcp:column>
+			
+			<xcp:column headerText="#{bundle.col_nome}"
+				value="#{row.funcionarioFk.nome}" type="String" width="75%">
+				<xcp:outputSimple value="#{row.funcionarioFk.nome}" />
+			</xcp:column>			
+
+			<xcp:column
+				type="String"
+				width="5%">
+				<xcp:commandLink
+					immediate="true"
+					id="btn_remove_envolvido_acao"
+					update="tabEnvolvidosAcao"
+					action="#{planoConflitosAcoesBacking.actionRemoverEnvolvidoAcao(row)}">
+					<h:graphicImage
+						title="#{bundle.hint_remover}"
+						value="/resources/img/remover.png"
+						style="margin-top:3px;" />
+					<p:confirm
+						header="#{bundle.tit_confirma_remover}"
+						message="#{bundle.msg_confirma_remover}"
+						icon="ui-icon-alert" />
+				</xcp:commandLink>
+			</xcp:column>
+
+	</p:dataTable>
+
+	<xcp:commandButton
+		id="btn_adicionar_envolvido"
+		value="#{bundle.btn_adicionar_envolvido_acao}"
+		update="tabEnvolvidosAcao :dlgEnvolvidosAcao"
+		oncomplete="PF('dlgEnvolvidosAcao_w').show();"
+		icon="ui-icon-plusthick">
+		<f:setPropertyActionListener
+			target="#{planoConflitosAcoesBacking.envolvidoAcao}"
+			value="#{null}" />
+	</xcp:commandButton>
+
+	<p:remoteCommand
+		name="rcTabEnvolvidosAcao"
+		update="tabEnvolvidosAcao" />
+</ui:composition>

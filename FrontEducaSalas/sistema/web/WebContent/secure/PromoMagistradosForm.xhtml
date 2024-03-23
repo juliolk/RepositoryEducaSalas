@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.tit_filtros}">
+				<xcp:panelForm>
+					<xcp:combo
+						id="txtSituacao"
+						value="#{promoMagistradosBacking.tipEdital}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{promoMagistradosBacking.itensTipEdital}" />
+				</xcp:panelForm>
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_pesquisar"
+							value="#{bundle.btn_pesquisar}"
+							update="tabEditais :form:pnlvagas"
+							action="#{promoMagistradosBacking.actionPesquisar}" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:spacer height="1px" />
+
+			<p:dataTable
+				id="tabEditais"
+				value="#{promoMagistradosBacking.listEdital}"
+				var="row"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				rowKey="#{row}"
+				selection="#{promoMagistradosBacking.edital}"
+				selectionMode="single">
+
+				<f:facet name="header">
+					<h:outputLabel value="#{bundle.title_editais}" />
+				</f:facet>
+
+				<p:ajax
+					event="rowSelect"
+					update=":form:pnlvagas"
+					listener="#{promoMagistradosBacking.actionSelectRow}" />
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{row.numero}"
+					type="Number"
+					size="8">
+					<xcp:outputSimple value="#{row.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipEdital}"
+					value="#{row.descricao}"
+					type="String"
+					size="20"
+					itens="#{promoMagistradosBacking.itensTipEdital}">
+					<xcp:outputSimple
+						value="#{row.tipEdital}"
+						itens="#{promoMagistradosBacking.itensTipEdital}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{row.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtinicio}"
+					value="#{row.dtinicio}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtinicio}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtfim}"
+					value="#{row.dtfim}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtfim}" />
+				</xcp:column>
+
+			</p:dataTable>
+
+			<p:spacer height="1px" />
+
+			<p:outputPanel id="pnlvagas">
+
+				<p:dataTable
+					id="tabVagas"
+					value="#{promoMagistradosBacking.listVagas}"
+					var="row"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rowKey="#{row}"
+					rendered="#{not empty promoMagistradosBacking.listVagas}">
+
+					<f:facet name="header">
+						<h:outputLabel value="#{bundle.title_vagas}" />
+					</f:facet>
+
+					<xcp:column
+						headerText="#{bundle.col_numSeqVaga}"
+						value="#{row.numSeqVaga}"
+						type="Number"
+						size="1">
+						<xcp:outputSimpleNumber
+							value="#{row.numSeqVaga}"
+							precision="18"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.desVaga}"
+						type="String"
+						size="5">
+						<xcp:outputSimple value="#{row.desVaga}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_formaprov}"
+						value="#{row.desFormaProv}"
+						type="String"
+						size="4">
+						<xcp:outputSimple value="#{row.desFormaProv}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtultocup}"
+						value="#{row.dtUltOcupacao}"
+						type="Date"
+						size="1">
+						<xcp:outputSimpleDate value="#{row.dtUltOcupacao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_motivovac}"
+						value="#{row.desMotivoVac}"
+						type="String"
+						size="4">
+						<xcp:outputSimple value="#{row.desMotivoVac}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						value="#{row.desMotivoVac}"
+						type="String"
+						size="10">
+						<xcp:lov
+							id="lovMatricula"
+							value="#{row.funcionarioLov}"
+							label="#{bundle.lbl_matricula}"
+							simple="true"
+							query="funcionariosLovProm"
+							size="4"
+							sizeDesc="30"
+							params="#{promoMagistradosBacking.paramsFunc}" />
+					</xcp:column>
+
+				</p:dataTable>
+
+				<p:spacer height="5" />
+
+				<center>
+				<!-- :frmDoc -->
+					<xcp:commandButton
+						id="btn_encerrar"
+						value="#{bundle.btn_encerrar}"
+						icon="ui-icon-gear"
+						action="#{promoMagistradosBacking.actionEncerrar}"
+						update="@form "
+						rendered="#{not empty promoMagistradosBacking.listVagas}" />
+				</center>
+			</p:outputPanel>
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<!-- <p:dialog
+			header="#{bundle.lbl_documento}"
+			modal="true"
+			minWidth="400"
+			id="dlgAnexos"
+			widgetVar="dlgDoc_w"
+			closeOnEscape="true">
+			<xcp:form id="frmDoc">
+				<xcp:panelForm>
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{promoMagistradosBacking.doc.descricao}"
+						maxlength="100"
+						size="75"
+						required="true" />
+
+					<xcp:lov
+						id="lovTipodoc"
+						value="#{promoMagistradosBacking.doc.tipoDocFk}"
+						label="#{bundle.lbl_tipodocdlg}"
+						required="true"
+						query="tipodocumento_transf"
+						size="6"
+						params="#{promoMagistradosBacking.paramsTipoDoc}"
+						update="lovProcesso lovProcesso_l" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{promoMagistradosBacking.doc.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						required="#{promoMagistradosBacking.requiredProcNovo}"
+						size="25" />
+
+					<xcp:text
+						id="txtNrdoc"
+						label="#{bundle.lbl_nrdoc}"
+						required="#{promoMagistradosBacking.requiredDoc}"
+						value="#{promoMagistradosBacking.doc.nrdoc}"
+						size="20"
+						maxlength="18" />
+
+					<xcp:date
+						id="txtDtpublicacao"
+						value="#{promoMagistradosBacking.doc.dtpublicacao}"
+						label="#{bundle.lbl_dtpublicacao_doc}"
+						size="13" />
+
+					<xcp:date
+						id="txtDtassinatura"
+						value="#{promoMagistradosBacking.doc.dtassinatura}"
+						label="#{bundle.lbl_dtassinatura}"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:date
+						id="txtDtini"
+						value="#{promoMagistradosBacking.doc.dtini}"
+						label="#{bundle.lbl_dtini_doc}"
+						size="13"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:combo
+						id="cboTiporgaopub"
+						value="#{promoMagistradosBacking.doc.tiporgaopub}"
+						label="#{bundle.lbl_tiporgaopub}"
+						itens="#{documentosBacking.itensTiporgaopub}"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:number
+						id="txtNumpublicacao"
+						label="#{bundle.lbl_numpublicacao}"
+						value="#{promoMagistradosBacking.doc.numpublicacao}"
+						size="10"
+						precision="10"
+						scale="0"
+						maxValue="9999999999"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:text
+						id="txtNropaginadiario"
+						label="#{bundle.lbl_nropaginadiario}"
+						value="#{promoMagistradosBacking.doc.nropaginadiario}"
+						size="20"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:number
+						id="txtNropagina"
+						label="#{bundle.lbl_nropagina}"
+						value="#{promoMagistradosBacking.doc.nropagina}"
+						size="13"
+						precision="11"
+						scale="0"
+						maxValue="9999999999"
+						rendered="#{not diarioBacking.renderedDiario}" />
+
+					<xcp:date
+						id="txtDtdispub"
+						value="#{promoMagistradosBacking.doc.dtdispub}"
+						label="#{bundle.lbl_dtdispub}"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+					<xcp:memo
+						id="txtObservacoes"
+						value="#{promoMagistradosBacking.doc.observacoes}"
+						label="#{bundle.lbl_observacoes}"
+						rendered="#{diarioBacking.renderedDiario}" />
+
+
+				</xcp:panelForm>
+
+				<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gerar_dialog"
+							value="#{bundle.btn_gerar}"
+							action="#{promoMagistradosBacking.actionEncerrarDialog}"
+							icon="ui-icon-search"
+							update=":form" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog> -->
+	</ui:define>
+
+</ui:composition>

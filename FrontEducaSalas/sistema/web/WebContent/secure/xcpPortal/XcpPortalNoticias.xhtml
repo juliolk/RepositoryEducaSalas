@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<section  id="noticias">
+				<h1>#{bundle.txt_noticias}</h1>
+				<div class="content row">
+					<c:if test="#{xcpPortalBacking.listaNoticias.isEmpty()}">
+						<div class="col-md-12">
+							<h2>Nenhuma notícia disponível.</h2>
+						</div>
+					</c:if>
+					<c:if test="#{!xcpPortalBacking.listaNoticias.isEmpty()}">
+                       	<ui:repeat value="#{xcpPortalBacking.listaNoticias}" var="noticia">
+							<div class="col-md-6 post-portal">
+								<h2>
+									<p:outputPanel 
+										rendered="#{not empty noticia.imagem}"
+										class="img-post" 
+										style="background-image: url('#{request.contextPath}#{xcpPortalBacking.getDesPathNoticia(noticia)}')">
+									</p:outputPanel>
+									<span class="titulo-post">#{noticia.titulo}</span>
+								</h2>
+								<p class="conteudo-post">
+									<h:outputText value="#{noticia.resumo}" escape="false"/>
+								</p>
+								<h:outputText class="conteudo-noticia" value="#{noticia.descricao}" escape="false" style="display: none;"/>
+								<span class="publicacao">
+									Publicada em: 
+									<h:outputText value="#{noticia.publicacao}">
+							        	<f:convertDateTime pattern="dd/MM/yyyy" />
+								    </h:outputText>
+								</span>
+							</div>
+						</ui:repeat>
+					</c:if>
+				</div>
+			</section>
+		</div>
+	</div>
+
+</ui:composition>

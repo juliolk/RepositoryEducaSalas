@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Tipofaixas"
+			backing="#{tipofaixasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_faixa}"
+					value="#{row.faixa}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.faixa}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_valor}"
+					value="#{row.valor}"
+					type="Center"
+					itens="#{vinculosBacking.itensIndSimNaoNull}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.valor}"
+						itens="#{vinculosBacking.itensIndSimNao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_deducao}"
+					value="#{row.deducao}"
+					type="Center"
+					itens="#{vinculosBacking.itensIndSimNaoNull}"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.deducao}"
+						itens="#{vinculosBacking.itensIndSimNao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtFaixa"
+						label="#{bundle.lbl_faixa}"
+						required="true"
+						value="#{tipofaixasBacking.entity.faixa}"
+						size="6"
+						precision="6"
+						scale="0"
+						maxValue="999999"
+						readonly="#{not tipofaixasBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{tipofaixasBacking.entity.descricao}"
+						size="50" />
+					<xcp:border
+						id="brd_montagem"
+						header="#{bundle.tit_valores_solicitados}"
+						stylefieldset="margin-left: 0px !important">
+						<xcp:radio
+							id="cboValor"
+							value="#{tipofaixasBacking.entity.valor}"
+							label="#{bundle.lbl_valor}"
+							itens="#{vinculosBacking.itensIndSimNao}" />
+
+						<xcp:radio
+							id="cboDeducao"
+							value="#{tipofaixasBacking.entity.deducao}"
+							label="#{bundle.lbl_deducao}"
+							itens="#{vinculosBacking.itensIndSimNao}" />
+					</xcp:border>
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

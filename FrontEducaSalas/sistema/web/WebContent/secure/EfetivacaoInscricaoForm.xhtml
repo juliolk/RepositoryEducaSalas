@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset legend="#{bundle.tit_filtros}">
+				<xcp:panelForm>
+
+					<xcp:dateRange
+						id="txtDataPeriodo"
+						valueStart="#{efetivacaoInscricaoBacking.helper.dtaIni}"
+						valueEnd="#{efetivacaoInscricaoBacking.helper.dtaFim}"
+						label="#{bundle.lbl_data_inscricao}" />
+
+					<xcp:lov
+						id="lovOrgao"
+						value="#{efetivacaoInscricaoBacking.helper.orgao}"
+						selectionListener="#{efetivacaoInscricaoBacking.selectOrgao}"
+						label="#{bundle.lbl_orgao}"
+						query="orgaos"
+						readonly="#{efetivacaoInscricaoBacking.ejbVars.restricaoOrgao != null}"
+						update="lovDivisao,lovSetor"
+						size="8" />
+
+					<xcp:lov
+						id="lovDivisao"
+						value="#{efetivacaoInscricaoBacking.helper.divisao}"
+						label="#{bundle.lbl_divisao}"
+						query="divisoes_orgao"
+						selectionListener="#{efetivacaoInscricaoBacking.selectDivisao}"
+						params="#{efetivacaoInscricaoBacking.paramsDivisao}"
+						readonly="#{efetivacaoInscricaoBacking.ejbVars.restricaoDivisao != null}"
+						update="lovSetor"
+						size="8" />
+
+					<xcp:lov
+						id="lovSetor"
+						value="#{efetivacaoInscricaoBacking.helper.setor}"
+						label="#{bundle.lbl_setor}"
+						params="#{efetivacaoInscricaoBacking.paramsSetor}"
+						query="setores_divisao"
+						readonly="#{efetivacaoInscricaoBacking.ejbVars.restricaoSetor != null}"
+						size="8" />
+
+					<xcp:lov
+						id="lovVinculo"
+						value="#{efetivacaoInscricaoBacking.helper.vinculo}"
+						label="#{bundle.lbl_vinculo}"
+						readonly="#{efetivacaoInscricaoBacking.ejbVars.restricaoVinculo != null}"
+						query="vinculos"
+						size="8" />
+
+					<xcp:lov
+						id="lovTreinamento"
+						value="#{efetivacaoInscricaoBacking.helper.treinamento}"
+						label="#{bundle.lbl_treinamento}"
+						query="treinamento"
+						size="8" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_buscar"
+							value="#{bundle.btn_buscar}"
+							icon="ui-icon-search"
+							action="#{efetivacaoInscricaoBacking.actionBuscaFuncionarios}"
+							update="tblFuncionarios" />
+
+						<xcp:commandButton
+							id="btn_limpar"
+							value="#{bundle.btn_limparSelecao}"
+							icon="ui-icon-search"
+							action="#{efetivacaoInscricaoBacking.actionLimparSelecao}"
+							update="tblFuncionarios" />
+					</f:facet>
+				</p:toolbar>
+			</p:fieldset>
+
+			<p:fieldset legend="#{bundle.tit_selecionados}">
+				<p:dataTable
+					id="tblFuncionarios"
+					var="row"
+					rowKey="#{row}"
+					value="#{efetivacaoInscricaoBacking.helper.lista}"
+					selection="#{efetivacaoInscricaoBacking.helper.listaSel}"
+					sortMode="multiple"
+					scrollHeight="120"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					scrollable="true">
+
+					<p:column
+						selectionMode="multiple"
+						style="width:5%;text-align:center" />
+
+					<xcp:column
+						headerText="#{bundle.col_matricula}"
+						value="#{row.func.matricula}"
+						type="Number"
+						width="5%">
+						<xcp:outputSimple value="#{row.func.matricula}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_nome}"
+						value="#{row.func.nome}"
+						type="String"
+						width="20%">
+						<xcp:outputSimple value="#{row.func.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dthincricao}"
+						value="#{row.functrei.dthinscricao}"
+						type="Date"
+						width="5%">
+						<xcp:outputSimpleDate value="#{row.functrei.dthinscricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_treinamento}"
+						value="#{row.trei.treinamento}"
+						type="Number"
+						width="5%">
+						<xcp:outputSimple value="#{row.trei.treinamento}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.trei.descricao}"
+						type="String"
+						width="20%">
+						<xcp:outputSimple value="#{row.trei.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_turma}"
+						value="#{row.turma.turma}"
+						type="Number"
+						width="5%">
+						<xcp:outputSimple value="#{row.turma.turma}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_descricao}"
+						value="#{row.turma.descricao}"
+						type="String"
+						width="25%">
+						<xcp:outputSimple value="#{row.turma.descricao}" />
+					</xcp:column>
+
+					<xcp:column
+						type="String"
+						width="25%">
+
+						<xcp:commandButton
+							id="btn_info"
+							icon="ui-icon-search"
+							action="#{efetivacaoInscricaoBacking.actionOpenInfo(row)}"
+							title="#{bundle.tit_info_turma}"
+							update=":formInfo" />
+
+					</xcp:column>
+
+				</p:dataTable>
+			</p:fieldset>
+
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_gravar"
+						value="#{bundle.btn_aceita_solicitacao}"
+						icon="ui-icon-gear"
+						action="#{efetivacaoInscricaoBacking.actionEfetivar(true)}"
+						update="tblFuncionarios">
+						<p:confirm
+							header="#{bundle.tit_confirma_aceite_solicitacao}"
+							message="#{bundle.msg_confirma_aceite_solicitacao}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+
+					<xcp:commandButton
+						id="btn_rejeitar"
+						value="#{bundle.btn_rejeita_solicitacao}"
+						icon="ui-icon-cancelar"
+						action="#{efetivacaoInscricaoBacking.actionOpenRejeitarDialog}"
+						update=":formCanc" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+
+
+	<ui:define name="modalPanelArea">
+
+		<p:dialog
+			id="dlgInfo"
+			header="#{bundle.tit_informacoes}"
+			widgetVar="wDlgInfo"
+			width="650"
+			height="500"
+			resizable="true"
+			modal="true">
+			<xcp:form id="formInfo">
+				<p:tabView id="tabInfo">
+					<p:tab title="#{bundle.tit_objetivos}">
+						<xcp:memo
+							id="txtObjetivos"
+							style="width:99%"
+							simple="true"
+							readonly="true"
+							label="#{bundle.lbl_topicos}"
+							rows="30"
+							value="#{efetivacaoInscricaoBacking.helper.treinaInfo.treinamento.objetivo}" />
+
+					</p:tab>
+					<p:tab title="#{bundle.tit_topicos}">
+						<xcp:memo
+							id="txtTopicos"
+							style="width:99%"
+							simple="true"
+							readonly="true"
+							label="#{bundle.lbl_topicos}"
+							rows="30"
+							value="#{efetivacaoInscricaoBacking.helper.treinaInfo.treinamento.topicos}" />
+					</p:tab>
+					<p:tab title="#{bundle.tit_datas}">
+						<p:dataTable
+							id="tabDatasTreinamento"
+							editable="true"
+							emptyMessage="#{bundle.msg_sem_resultado}"
+							value="#{efetivacaoInscricaoBacking.helper.treinaInfo.list}"
+							var="rowData">
+
+							<p:column headerText="#{bundle.col_datainicio}">
+								<xcp:outputSimpleDate value="#{rowData.datainicio}" />
+							</p:column>
+
+							<p:column headerText="#{bundle.col_datafinal}">
+								<xcp:outputSimpleDate value="#{rowData.datafinal}" />
+							</p:column>
+
+							<p:column headerText="#{bundle.col_horainicial}">
+								<xcp:outputSimpleTimeNumber
+									value="#{rowData.horainicial}"
+									precision="5"
+									scale="2" />
+							</p:column>
+
+							<p:column headerText="#{bundle.col_horafinal}">
+								<xcp:outputSimpleTimeNumber
+									value="#{rowData.horafinal}"
+									precision="5"
+									scale="2" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+			</xcp:form>
+		</p:dialog>
+
+
+		<p:dialog
+			id="dlgMot"
+			header="#{bundle.tit_dlgMotRejei}"
+			widgetVar="wDlgMot"
+			width="650"
+			resizable="true"
+			modal="true">
+			<xcp:form id="formCanc">
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovCodigo"
+						required="true"
+						value="#{efetivacaoInscricaoBacking.helper.motivo}"
+						label="#{bundle.lbl_codigo}"
+						query="treinamento_motivo_r"
+						size="5" />
+
+					<xcp:memo
+						id="txtCanc"
+						label="#{bundle.lbl_obs}"
+						size="500"
+						cols="60"
+						value="#{efetivacaoInscricaoBacking.helper.obs}" />
+				</xcp:panelForm>
+
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_rejeitar"
+							value="#{bundle.btn_rejeita_solicitacao}"
+							icon="ui-icon-cancelar"
+							action="#{efetivacaoInscricaoBacking.actionEfetivar(false)}"
+							update=":form:tblFuncionarios">
+							<p:confirm
+								header="#{bundle.tit_confirma_rejeicao_solicitacao}"
+								message="#{bundle.msg_confirma_rejeicao_solicitacao}"
+								icon="ui-icon-alert" />
+						</xcp:commandButton>
+
+						<xcp:commandButton
+							id="btn_sair"
+							value="#{bundle.btn_sair}"
+							immediate="true"
+							icon="ui-icon-cancelar"
+							oncomplete="PF('wDlgMot').hide()" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

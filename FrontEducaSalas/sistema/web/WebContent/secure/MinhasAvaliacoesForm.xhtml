@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+
+			<p:outputPanel
+				rendered="#{minhasAvaliacoesBacking.list.size() == 0}"
+				style="padding: 30px;">
+				<div
+					class="alert alert-info"
+					role="alert">
+					<h4>Atenção</h4>
+					#{bundle.msg_nenhuma_avaliacao_disp}
+				</div>
+			</p:outputPanel>
+
+			<p:dataTable
+				id="tableAval"
+				var="row"
+				rendered="#{minhasAvaliacoesBacking.list.size() > 0}"
+				value="#{minhasAvaliacoesBacking.list}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="false"
+				resizableColumns="true"
+				selectionMode="single"
+				rowKey="#{row.PK}">
+
+
+				<xcp:column
+					headerText="#{bundle.col_processo}"
+					type="Date"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.probatorio}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_numero}"
+					type="Date"
+					size="1">
+					<xcp:outputSimpleNumber
+						value="#{row.numero}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					type="Date"
+					size="5"
+					headerText="#{bundle.col_tipo}">
+					<xcp:outputSimple
+						value="#{row.probatorioFk.origem}"
+						itens="#{minhasAvaliacoesBacking.itensOrigem}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dataini}"
+					type="Date"
+					size="5">
+					<xcp:outputSimpleDate value="#{row.dataini}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datafim}"
+					type="Date"
+					size="2">
+					<xcp:outputSimpleDate value="#{row.datafim}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_ciencia_aceite}"
+					type="Date"
+					size="3">
+					<xcp:outputSimpleDate
+						value="#{row.aceite}"
+						rendered="#{row.probatorioFk.origem != 3 or row.aceite != null}" />
+
+					<xcp:commandButton
+						id="btnInfAceite"
+						rendered="#{row.probatorioFk.origem == 3 and row.aceite == null}"
+						immediate="true"
+						value="#{bundle.btn_informar}"
+						action="#{minhasAvaliacoesBacking.actionOpenDialog(row)}"
+						update=":frmDlgCiencia" />
+				</xcp:column>
+
+				<xcp:column
+					type="Date"
+					size="4">
+					<xcp:commandButton
+						id="btnDownloadAval"
+						rendered="#{row.seqExecucaoResp != null and row.dtresposta != null}"
+						ajax="false"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						immediate="true"
+						value="#{bundle.btn_avaliacao}"
+						style="margin-left:5px;margin-right:5px;">
+						<p:fileDownload
+							value="#{minhasAvaliacoesBacking.getDownloadDocumento(row,false)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+				</xcp:column>
+				<xcp:column
+					type="Date"
+					size="5">
+					<xcp:commandButton
+						id="btnFormulario"
+						ajax="false"
+						rendered="#{minhasAvaliacoesBacking.isRenderedRelatorios(row)}"
+						immediate="true"
+						action="#{minhasAvaliacoesBacking.actionDownload(row)}"
+						value="#{bundle.btn_relatorios}"
+						style="margin-left:5px;margin-right:5px;" />
+				</xcp:column>
+				<xcp:column
+					type="Date"
+					size="5">
+					<xcp:commandButton
+						id="btnDownloadAuto"
+						rendered="#{row.seqExecucaoRespAuto != null and row.dtrespostaauto != null}"
+						ajax="false"
+						immediate="true"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						value="#{bundle.btn_autoavaliacao}"
+						style="margin-left:5px;margin-right:5px;">
+						<p:fileDownload
+							value="#{minhasAvaliacoesBacking.getDownloadDocumento(row,true)}"
+							contentDisposition="attachment" />
+					</xcp:commandButton>
+				</xcp:column>
+
+
+			</p:dataTable>
+
+		</xcp:panelContent>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			modal="true"
+			id="dlgHelp"
+			width="400"
+			height="500"
+			header="#{bundle.title_informar_ciencia}"
+			widgetVar="dlgCiencia_w">
+			<xcp:form id="frmDlgCiencia">
+				<xcp:panelForm>
+					<xcp:date
+						id="dtaCiencia"
+						label="#{bundle.lbl_ciencia}"
+						required="true"
+						readonly="true"
+						value="#{minhasAvaliacoesBacking.dtciencia}" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							icon="ui-icon-document"
+							value="#{bundle.btn_gravar}"
+							action="#{minhasAvaliacoesBacking.actionGravarDialog}"
+							update=":form:tableAval" />
+
+						<xcp:commandButton
+							id="btnVoltar"
+							image="true"
+							icon="ui-icon-arrowreturnthick-1-w"
+							value="#{bundle.btn_voltar}"
+							onclick="PF('dlgCiencia_w').hide();return false;" />
+					</f:facet>
+				</p:toolbar>
+
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

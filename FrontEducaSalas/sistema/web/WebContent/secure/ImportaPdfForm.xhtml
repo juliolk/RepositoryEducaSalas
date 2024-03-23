@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent multipart="true">
+
+			<p:fieldset legend="#{bundle.title_estruturaArq}">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtReferencia"
+						value="#{importaPdfBacking.dtaReferencia}"
+						label="#{bundle.lbl_referencia}"
+						required="true">
+						<p:ajax
+							event="change"
+							process="@this"
+							update="lblAtencao,pnlAtencao" />
+						<p:ajax
+							event="dateSelect"
+							process="@this"
+							update="lblAtencao,pnlAtencao" />
+					</xcp:date>
+
+					<xcp:combo
+						id="cboArquivo"
+						value="#{importaPdfBacking.tipArquivo}"
+						label="#{bundle.lbl_tipo}"
+						required="true"
+						itens="#{importaPdfBacking.itensArquivo}">
+						<p:ajax
+							event="change"
+							process="@this"
+							update="lblAtencao,pnlAtencao" />
+					</xcp:combo>
+
+					<h:outputLabel
+						id="lblAtencao"
+						value="#{bundle.txt_atencao}" />
+
+					<p:outputPanel
+						id="pnlAtencao"
+						style="width:400px">
+						<h:outputLabel
+							value="#{importaPdfBacking.msg}"
+							style="color:red;" />
+					</p:outputPanel>
+
+				</xcp:panelForm>
+			</p:fieldset>
+			<h:panelGrid columns="2">
+
+			</h:panelGrid>
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_importar"
+						ajax="false"
+						value="#{bundle.btn_importar}"
+						action="#{importaPdfBacking.actionImportar}">
+					</xcp:commandButton>
+					<xcp:commandButton
+						id="btnDownloadLog"
+						widgetVar="wBtnDownloadLog"
+						ajax="false"
+						immediate="true"
+						process="@this"
+						onclick="PrimeFaces.monitorDownload(xcpDownloadFileStart, xcpDownloadFileStop)"
+						style="display: none;">
+						<p:fileDownload
+							value="#{importaPdfBacking.file}"
+							contentDisposition="attachment" />						
+					</xcp:commandButton>					
+				</f:facet>
+			</p:toolbar>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

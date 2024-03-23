@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelFuncionario
+			id="Crachas"
+			backing="#{crachasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_dtsolicitacao}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtsolicitacao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_motivo}"
+					type="String"
+					size="50">
+					<xcp:outputSimple value="#{row.motivo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtentrega}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtentrega}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indPgto}"
+					type="Number"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.indPgto}"
+						itens="#{crachasBacking.itensIndSimNao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_indDev}"
+					type="Number"
+					size="5">
+					<xcp:outputSimple
+						value="#{row.indDev}"
+						itens="#{crachasBacking.itensIndSimNao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_via}"
+					value="#{row.via}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.via}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_operador}"
+					type="Number"
+					size="15">
+					<xcp:outputSimpleNumber
+						value="#{row.operadorFk.nome}"
+						precision="15"
+						scale="0" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:date
+						id="txtDtsolicitacao"
+						required="true"
+						value="#{crachasBacking.entity.dtsolicitacao}"
+						label="#{bundle.lbl_dtsolicitacao}"
+						readonly="true" />
+
+					<xcp:text
+						id="txtMotivo"
+						label="#{bundle.lbl_motivo}"
+						required="true"
+						value="#{crachasBacking.entity.motivo}"
+						size="50" />
+
+					<xcp:date
+						id="txtDtentrega"
+						value="#{crachasBacking.entity.dtentrega}"
+						label="#{bundle.lbl_dtentrega}" />
+
+					<xcp:number
+						id="txtVia"
+						label="#{bundle.lbl_via}"
+						readonly="true"
+						value="#{crachasBacking.entity.via}"
+						size="10"
+						precision="3"
+						scale="0"
+						maxValue="999" />
+
+					<xcp:combo
+						id="cboIndPgto"
+						value="#{crachasBacking.entity.indPgto}"
+						label="#{bundle.lbl_indPgto}"
+						required="true"
+						itens="#{crachasBacking.itensIndSimNaoNull}"
+						width="80px !important" />
+
+					<xcp:combo
+						id="cboIndDev"
+						value="#{crachasBacking.entity.indDev}"
+						label="#{bundle.lbl_indDev}"
+						required="true"
+						itens="#{crachasBacking.itensIndSimNaoNull}" 
+						size="4"
+						width="80px !important" />
+
+
+					<xcp:lov
+						id="lovOperador"
+						value="#{crachasBacking.entity.operadorFk}"
+						label="#{bundle.lbl_operador}"
+						readonly="true"
+						rendered="#{!crachasBacking.entity.novo}"
+						query="operadores"
+						size="10" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelFuncionario>
+	</ui:define>
+</ui:composition>

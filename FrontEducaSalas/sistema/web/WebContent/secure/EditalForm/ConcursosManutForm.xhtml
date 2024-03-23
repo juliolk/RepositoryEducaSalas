@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<h:panelGroup id="formConcurso">
+		<xcp:panelForm>
+
+			<!--  <xcp:lov
+				id="lovOrgao"
+				value="#{editalBacking.concursoManut.orgaoFk}"
+				label="#{bundle.lbl_orgao}"
+				required="true"
+				query="orgaos"
+				size="10"
+				readonly="#{not editalBacking.concursoManut.novo}"
+				rendered="#{editalBacking.clienteTribunal}" />
+-->
+			<xcp:lov
+				id="lovFuncao"
+				value="#{editalBacking.concursoManut.funcaoFk}"
+				label="#{bundle.lbl_funcao}"
+				required="true"
+				query="funcoes"
+				size="10"
+				readonly="#{not editalBacking.concursoManut.novo}" />
+
+			<xcp:lov
+				id="lovAvaliacao"
+				value="#{editalBacking.concursoManut.avaliacaoFk}"
+				label="#{bundle.lbl_avalForm}"
+				query="avaliacoesConhec"
+				update="lovConhecimento,lovConhecimento_l"
+				selectionListener="#{editalBacking.selectAvaliacao}"
+				size="6"
+				rendered="#{editalBacking.clienteTribunal}" />
+
+			<xcp:lov
+				id="lovConhecimento"
+				value="#{editalBacking.concursoManut.conhecimentoFk}"
+				label="#{bundle.lbl_conhecForm}"
+				query="conhecimentos"
+				params="#{editalBacking.paramsAvaliacao}"
+				size="6"
+				rendered="#{editalBacking.clienteTribunal}" />
+
+			<xcp:date
+				id="txtValidade"
+				required="true"
+				value="#{editalBacking.concursoManut.validade}"
+				label="#{bundle.lbl_validade}" />
+
+			<xcp:number
+				id="txtVagas"
+				label="#{bundle.lbl_vagas}"
+				value="#{editalBacking.concursoManut.vagas}"
+				size="10"
+				required="true"
+				precision="4"
+				scale="0"
+				maxValue="9999">
+				<p:ajax
+					event="change"
+					update="txtDeficientes txtAfro"
+					listener="#{editalBacking.changeQtdVagas}" />
+			</xcp:number>
+
+			<xcp:number
+				id="txtDeficientes"
+				label="#{bundle.lbl_deficientes}"
+				value="#{editalBacking.concursoManut.deficientes}"
+				size="10"
+				precision="5"
+				scale="0"
+				maxValue="99999" />
+
+			<xcp:number
+				id="txtAfro"
+				label="#{bundle.lbl_afro}"
+				value="#{editalBacking.concursoManut.afro}"
+				size="10"
+				precision="5"
+				scale="0"
+				maxValue="99999" />
+
+			<xcp:number
+				id="txtQtdmeses"
+				label="#{bundle.lbl_qtdmeses}"
+				value="#{editalBacking.concursoManut.qtdmeses}"
+				size="4"
+				precision="4"
+				scale="0"
+				maxValue="9999">
+				<p:ajax
+					event="change"
+					update="txtDtprorrog"
+					listener="#{editalBacking.changeQtdMeses}" />
+			</xcp:number>
+
+
+			<xcp:date
+				id="txtDtprorrog"
+				value="#{editalBacking.concursoManut.dtprorrog}"
+				label="#{bundle.lbl_dtprorrog}" />
+
+
+
+		</xcp:panelForm>
+		<p:toolbar
+			styleClass="xcp_pmanut_form_toolbar"
+			rendered="#{not editalBacking.detailsEdit}">
+			<f:facet name="left">
+
+				<xcp:commandButton
+					id="btnGravar_Concurso"
+					icon="ui-icon-disk"
+					value="#{bundle.btn_gravar}"
+					action="#{editalBacking.actionGravarConcurso}"
+					disabled="#{editalBacking.disabledGravar}" />
+
+				<xcp:commandButton
+					id="btnVoltar_Concurso"
+					immediate="true"
+					icon="ui-icon-arrowreturnthick-1-w"
+					value="#{bundle.btn_voltar}"
+					onclick="PF('dlgConcurso_w').hide();" />
+			</f:facet>
+		</p:toolbar>
+	</h:panelGroup>
+</ui:composition>

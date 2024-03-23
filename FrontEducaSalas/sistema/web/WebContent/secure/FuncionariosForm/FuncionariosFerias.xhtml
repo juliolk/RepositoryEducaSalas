@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dataTable
+		id="tabListaFerias"
+		value="#{funcionariosBacking.listaFerias}"
+		paginator="true"
+		paginatorPosition="bottom"
+		rows="14"
+		var="ferias"
+		emptyMessage="#{bundle.msg_sem_resultado}"
+		styleClass="tabelaFerias">
+
+		<xcp:column
+			headerText="#{bundle.col_dtvcto}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{ferias.dtvcto}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_seq}"
+			type="Number"
+			size="2">
+			<xcp:outputSimpleNumber
+				value="#{ferias.seq}"
+				precision="2"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtgozo}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{ferias.dtgozo}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dtret}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{ferias.dtret}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_diasferias}"
+			type="Number"
+			size="2">
+			<xcp:outputSimpleNumber
+				value="#{ferias.diasferias}"
+				precision="2"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_datapgto}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{ferias.datapgto}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_diasperdidos}"
+			type="Number"
+			size="4">
+			<xcp:outputSimpleNumber
+				value="#{ferias.diasperdidos}"
+				precision="4"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_dataprevista}"
+			type="Date"
+			size="7">
+			<xcp:outputSimpleDate value="#{ferias.dataprevista}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_diasabono}"
+			type="Number"
+			size="4">
+			<xcp:outputSimpleNumber
+				value="#{ferias.diasabono}"
+				precision="4"
+				scale="0" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_portaria}"
+			type="String"
+			size="10">
+			<xcp:outputSimple value="#{ferias.registroFk.nrdoc}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_situacao}"
+			type="String"
+			size="25">
+			<xcp:outputSimple value="#{ferias.situacaoFk.descricao}" />
+		</xcp:column>
+
+		<xcp:column
+			headerText="#{bundle.col_gera13}"
+			itens="#{funcionariosBacking.itensIndSimNaoNull}"
+			type="Number"
+			size="3">
+			<xcp:outputSimple
+				value="#{ferias.gera13}"
+				itens="#{funcionariosBacking.itensIndSimNao}" />
+		</xcp:column>
+	</p:dataTable>
+
+
+</ui:composition>

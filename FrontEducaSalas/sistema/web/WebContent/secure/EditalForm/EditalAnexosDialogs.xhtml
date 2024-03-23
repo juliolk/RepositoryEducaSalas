@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:dialog
+		id="dlgAnexo"
+		widgetVar="w_anexo"
+		header="#{bundle.tit_dlgAnexo}"
+		modal="true">
+		<xcp:form id="frmAnexo">
+
+			<xcp:panelForm>
+				<xcp:text
+					id="txtDescricao"
+					required="true"
+					label="#{bundle.lbl_descricao}"
+					size="80"
+					value="#{editalBacking.editalAnexo.descricao}" />
+			</xcp:panelForm>
+
+			<p:spacer height="1" />
+
+			<p:fileUpload
+				mode="advanced"
+				auto="true"
+				label="#{bundle.btn_upload}"
+				fileUploadListener="#{editalBacking.actionFileUpload}" />
+
+			<p:spacer height="1" />
+
+			<p:toolbar>
+				<f:facet name="left">
+					<!-- update=":form:tabAnex" -->
+					<xcp:commandButton
+						id="btn_gravar"
+						process="@this txtDescricao"
+						update=":form:tabView:tabAnex"
+						action="#{editalBacking.actionGravarAnexo}"
+						icon="ui-icon-disk"
+						value="#{bundle.btn_gravar}" />
+
+					<xcp:commandButton
+						id="btn_voltar_anexo"
+						immediate="true"
+						process="@this"
+						icon="ui-icon-arrowreturnthick-1-w"
+						value="#{bundle.btn_voltar}"
+						oncomplete="PF('w_anexo').hide();" />
+
+				</f:facet>
+			</p:toolbar>
+		</xcp:form>
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<p:outputPanel>
+				<h1 class="datacard-container-title">
+					<a
+						class="datacard-icon-action"
+						data-toggle="collapse"
+						data-target="#pnlcoltrei"><i class='fa fa-minus-square-o' /></a>#{bundle.title_capacitacao}
+				</h1>
+			</p:outputPanel>
+			<div
+				id="pnlcoltrei"
+				class="collapse in">
+				<div class="datacard-listcontainer">
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">#{bundle.tit_treinamento}</div>
+						<p:outputPanel
+							id="listaCursosTreinamentos"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listaTreinamento }">
+								<div class="datacard-empty-message">
+									#{bundle.msg_nenhum_curso}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="treinamento"
+									value="#{talentosPortalBacking.helper.listaTreinamento}">
+									<li class="datacard-item container-fluid">
+
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{treinamento.treinamentoFk.descricao}</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span><h:outputText
+															value="#{treinamento.desHorario}"
+															escape="false" /></span>
+												</div>
+											</div>
+											<div
+												class="col-sm-4"
+												style="text-align: right;">
+												<p:commandButton
+													value="#{bundle.btn_emitir_certificado}"
+													style="margin-top: 0px;"
+													action="#{talentosPortalBacking.actionImprimirCertificado(treinamento)}"
+													rendered="#{talentosPortalBacking.renderedBtnCertificado}" />
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ui:composition>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:panel
+		id="panelCopiaCandidato"
+		header="#{bundle.tit_CopiaCandidato}">
+		<xcp:panelForm>
+			<xcp:lov
+				id="lovEditalCopiaCandidato"
+				value="#{funcionariosCopiaFormBacking.edital}"
+				selectionListener="#{funcionariosCopiaFormBacking.selecionaEdital}"
+				label="#{bundle.lbl_edital}"
+				query="edital"
+				size="8"
+				required="true"
+				update="lovConcursoCopiaCandidato" />
+
+			<xcp:lov
+				id="lovConcursoCopiaCandidato"
+				value="#{funcionariosCopiaFormBacking.concurso}"
+				params="#{funcionariosCopiaFormBacking.lovConcursoParams}"
+				selectionListener="#{funcionariosCopiaFormBacking.selecionaConcurso}"
+				label="#{bundle.lbl_concurso}"
+				query="concurso_edital"
+				size="8"
+				required="true"
+				update="lovCandidatoCopiaCandidato"
+				readonly="#{funcionariosCopiaFormBacking.edital == null}" />
+
+			<xcp:lov
+				id="lovCandidatoCopiaCandidato"
+				value="#{funcionariosCopiaFormBacking.candidato}"
+				label="#{bundle.lbl_candidato}"
+				query="candid_edital_livre"
+				params="#{funcionariosCopiaFormBacking.lovCandidatoParams}"
+				size="8"
+				required="true"
+				readonly="#{funcionariosCopiaFormBacking.concurso == null}" />
+
+<!-- 
+			<xcp:number
+				id="txtCpMatriculaDestinoCandidato"
+				size="8"
+				value="#{funcionariosCopiaFormBacking.matriculaDestino}"
+				label="#{bundle.lbl_matriculaDestino}"
+				required="true">
+				<p:ajax
+					event="blur"
+					listener="#{funcionariosCopiaFormBacking.validaMatricula}"
+					update="txtCpMatriculaDestinoCandidato,txtCpMatriculaDestinoCandidato_l" />
+			</xcp:number>
+ -->
+		</xcp:panelForm>
+	</p:panel>
+	<p:toolbar>
+		<f:facet name="left">
+			<xcp:commandButton
+				id="btn_copiar_candidato"
+				value="#{bundle.btn_copiar_candidato}"
+				update="@form"
+				process="@this panelCopiaCandidato"
+				action="#{funcionariosCopiaFormBacking.actionGravarCopiaCandidato}" />
+		</f:facet>
+	</p:toolbar>
+
+</ui:composition>

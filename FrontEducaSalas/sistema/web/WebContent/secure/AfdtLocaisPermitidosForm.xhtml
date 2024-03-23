@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo" >
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiCWgO4Q_r2Ylm0ESUhAdXcxk3PZkjkoA" type="text/javascript" /> <!-- AIzaSyCyviBlJi0COmamLpbIfaCOeHS0BM92jC4 -->
+		
+		<xcp:panelManut id="AfdtLocaisPermitidos" backing="#{afdtLocaisPermitidosBacking}">
+
+			<ui:define name="colunas" >
+
+				<xcp:column headerText="#{bundle.col_codigo}" value="#{row.seqlocal}"
+					type="Number" size="2">
+					<xcp:outputSimpleNumber value="#{row.seqlocal}" precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}" type="String" size="15">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_inicioval}"
+					value="#{row.dataInicioValidade}" type="Date" size="7">
+					<xcp:outputSimpleDate value="#{row.dataInicioValidade}" />
+				</xcp:column>
+
+				<xcp:column headerText="#{bundle.col_fimval}"
+					value="#{row.dataFimValidade}" type="Date" size="7">
+					<xcp:outputSimpleDate value="#{row.dataFimValidade}" />
+				</xcp:column>
+				
+			</ui:define>
+					
+			<ui:define name="form" >
+				<xcp:panelForm >
+
+					<xcp:text id="txtDescricao" label="#{bundle.lbl_descricao}"
+						required="true" value="#{afdtLocaisPermitidosBacking.entidadeSelecionada.descricao}"
+						size="70" />
+
+					<xcp:date id="txtDataInicioValidade"
+						value="#{afdtLocaisPermitidosBacking.entidadeSelecionada.dataInicioValidade}"
+						label="#{bundle.col_inicioval}" />
+
+					<xcp:date id="txtDataFimValidade"
+						value="#{afdtLocaisPermitidosBacking.entidadeSelecionada.dataFimValidade}"
+						label="#{bundle.col_fimval}" />
+					
+					<xcp:memo id="txtGeometria" label="#{bundle.lbl_local}" readonly="true"
+						required="true" value="#{afdtLocaisPermitidosBacking.geocoordenadas}"
+						size="300" cols="95"/>
+						
+					<xcp:commandButton id="btnLimpar" value="#{bundle.btn_limparlocal}" 
+						actionListener="#{afdtLocaisPermitidosBacking.limparModel}"
+						update="form:txtGeometria form:googleMap"/>
+						
+					<p:gmap center="#{afdtLocaisPermitidosBacking.center}"  zoom="#{afdtLocaisPermitidosBacking.zoom}" type="satellite" 
+						navigationControl="true" id="googleMap" mapTypeControl="false" 
+						style="width:600px;height:400px" model="#{afdtLocaisPermitidosBacking.model}">
+						<p:ajax event="pointSelect" listener="#{afdtLocaisPermitidosBacking.onPointSelect}"
+							update="form:txtGeometria form:googleMap" />
+						<p:ajax event="stateChange" listener="#{afdtLocaisPermitidosBacking.onStateChange}" />
+					</p:gmap>
+					
+					<script type="text/javascript">
+						var gmap = PF()
+					</script>
+					
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="AfdtLocaisPermitidosForm/AfdtLocaisAutorizacaoForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

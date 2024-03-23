@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	xmlns:xcpfunc="http://www.xcapesoftware.com.br/xcp_func_tags">
+
+	<p:panelGrid>
+		<p:row>
+			<p:column>
+				<xcp:endereco
+					id="empresa"
+					readonly="true"
+					value="#{talentosPortalBacking.funcionarioDet.endereco}" />
+
+				<p:fieldset
+					legend="#{bundle.tit_dados_contato_cons}"
+					style="margin-bottom:7px;">
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<h:panelGrid
+									columns="4"
+									columnClasses="tamanhocoluna"
+									rowClasses="tamanholinha"
+									styleClass="tabela_alinhamento2">
+									<xcp:fone
+										id="txtFone"
+										readonly="true"
+										label="#{bundle.lbl_fone_cons}"
+										value="#{talentosPortalBacking.funcionarioDet.fone}"
+										size="30" />
+									<xcp:fone
+										id="txtCelular"
+										readonly="true"
+										label="#{bundle.lbl_celular_cons}"
+										value="#{talentosPortalBacking.funcionarioDet.celular}"
+										size="30"
+										style="padding-left:50px !important" />
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:panelGrid
+									columns="2"
+									columnClasses="tamanhocoluna"
+									rowClasses="tamanholinha"
+									styleClass="tabela_alinhamento2"
+									style="margin-top:3px;">
+
+									<xcp:email
+										id="txtEmail"
+										label="#{bundle.lbl_email_cons}"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.email}"
+										size="77"
+										maxlength="50" />
+
+								</h:panelGrid>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<xcp:panelForm>
+					<xcp:lov
+						id="lovNatural"
+						value="#{talentosPortalBacking.funcionarioDet.naturalFk}"
+						readonly="true"
+						label="#{bundle.lbl_natural_cons}"
+						query="cidades"
+						selectionListener="#{funcionariosBacking.selectNatural}"
+						update="txtDtchegada,txtDtchegada_l"
+						maxlength="7"
+						size="7" />
+
+					<xcp:date
+						id="txtDtchegada"
+						label="#{bundle.lbl_dtchegada_cons}"
+						readonly="true"
+						required="true"
+						value="#{talentosPortalBacking.funcionarioDet.dtchegada}"
+						rendered="#{funcionariosBacking.helper.renderedDtChegada}"
+						size="7" />
+
+					<xcp:lov
+						id="lovGrauInst"
+						required="true"
+						readonly="true"
+						value="#{talentosPortalBacking.funcionarioDet.grauFk}"
+						label="#{bundle.lbl_GrauInst_cons}"
+						query="graus"
+						maxlength="8"
+						size="7" />
+				</xcp:panelForm>
+			</p:column>
+			<p:column>
+				<p:fieldset
+					legend="#{bundle.tit_dados_carteira_prof_cons}"
+					id="brd_dados_carteira_prof">
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:number
+										id="txtCpnumero"
+										label="#{bundle.lbl_cpnumero_cons}"
+										value="#{talentosPortalBacking.funcionarioDet.cpnumero}"
+										readonly="true"
+										maxlength="8"
+										maxValue="99999999"
+										size="10" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:text
+										id="txtCpserie"
+										label="#{bundle.lbl_cpserie_cons}"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.cpserie}"
+										size="15"
+										maxlength="20" />
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:panelGrid
+									columns="2"
+									style="margin-top:3px;">
+									<xcp:combo
+										id="cboCpuf"
+										value="#{talentosPortalBacking.funcionarioDet.cpuf}"
+										label="#{bundle.lbl_cpuf_cons}"
+										readonly="true"
+										itens="#{funcionariosBacking.itensUf}"
+										styleClass="combouf" />
+
+								</h:panelGrid>
+							</p:column>
+							<p:column colspan="2">
+								<h:panelGrid
+									columns="2"
+									style="margin-top:1px; margin-left:7px;">
+									<xcp:date
+										id="txtCpdtemissao"
+										value="#{talentosPortalBacking.funcionarioDet.cpdtemissao}"
+										readonly="true"
+										label="#{bundle.lbl_cpdtemissao_cons}" />
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset
+					id="brd_dados_pis"
+					legend="#{bundle.tit_dados_pis_cons}">
+					<p:panelGrid styleClass="tabela_alinhamento">
+						<p:row>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:date
+										id="txtDtcadpis"
+										value="#{talentosPortalBacking.funcionarioDet.dtcadpis}"
+										readonly="true"
+										label="#{bundle.lbl_dtcadpis_cons}" />
+								</xcp:panelForm>
+							</p:column>
+							<p:column>
+								<xcp:panelForm>
+									<xcp:number
+										id="txtPis"
+										label="#{bundle.lbl_pis_cons}"
+										value="#{talentosPortalBacking.funcionarioDet.pis}"
+										readonly="true"
+										size="12"
+										maxValue="999999999999" />
+								</xcp:panelForm>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<div>
+					<p:fieldset
+						id="brd_dados_titulo"
+						legend="#{bundle.tit_dados_titulo_cons}"
+						class="alinha_label">
+						<p:panelGrid styleClass="tabela_alinhamento">
+							<p:row>
+								<p:column>
+									<xcp:number
+										id="txtTitulo"
+										label="#{bundle.lbl_titulo_cons}"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.titulo}"
+										size="12"
+										maxValue="999999999999" />
+								</p:column>
+								<p:column>
+									<xcp:number
+										id="txtZona"
+										label="#{bundle.lbl_zona_cons}"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.zona}"
+										size="3"
+										maxValue="999" />
+								</p:column>
+								<p:column>
+									<xcp:text
+										id="txtSessao"
+										readonly="true"
+										label="#{bundle.lbl_sessao_cons}"
+										value="#{talentosPortalBacking.funcionarioDet.sessao}"
+										size="5"
+										maxValue="99999" />
+
+								</p:column>
+								<p:column>
+
+									<xcp:combo
+										id="cboTitulouf"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.titulouf}"
+										label="#{bundle.lbl_titulouf_cons}"
+										itens="#{funcionariosBacking.itensUf}"
+										styleClass="combouf" />
+
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</div>
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<div style="width: 190px;">
+								<xcp:border
+									id="brd_identidade"
+									header="#{bundle.tit_dados_identidade}">
+
+									<xcp:text
+										id="txtIdentidade"
+										label="#{bundle.lbl_identidade_cons}"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.identidade}"
+										size="13"
+										maxlength="15" />
+
+									<xcp:date
+										id="txtDtidentidade"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.dtidentidade}"
+										label="#{bundle.lbl_cpdtemissao_cons}"
+										style="float:left;"
+										size="8" />
+
+									<xcp:text
+										id="txtOrgaoexp"
+										readonly="true"
+										label="#{bundle.lbl_orgaoexp_cons}"
+										value="#{talentosPortalBacking.funcionarioDet.orgaoexp}"
+										size="13"
+										maxlength="16" />
+
+									<xcp:combo
+										id="cboIdentidadeuf"
+										readonly="true"
+										value="#{talentosPortalBacking.funcionarioDet.identidadeuf}"
+										label="#{bundle.lbl_identidadeuf_cons}"
+										itens="#{funcionariosBacking.itensUf}"
+										styleClass="combouf" />
+								</xcp:border>
+							</div>
+						</p:column>
+
+						<p:column>
+
+							<xcp:border
+								id="brd_identidade_prof"
+								header="#{bundle.tit_dados_ident_prof_cons}">
+
+								<xcp:text
+									id="txtCredencial"
+									label="#{bundle.lbl_credencial_cons}"
+									value="#{talentosPortalBacking.funcionarioDet.credencial}"
+									readonly="true"
+									maxlength="20"
+									size="12" />
+
+								<xcp:combo
+									id="cboCredenciador"
+									readonly="true"
+									value="#{talentosPortalBacking.funcionarioDet.credenciador}"
+									label="#{bundle.lbl_credenciador_cons}"
+									itens="#{funcionariosBacking.itensCredenciadores}"
+									styleClass="combosituacao"
+									class="combo_entidadeclasse" />
+
+								<xcp:combo
+									id="cboCredencialsit"
+									readonly="true"
+									value="#{talentosPortalBacking.funcionarioDet.credencialsit}"
+									label="#{bundle.lbl_credencialsit_cons}"
+									itens="#{funcionariosBacking.itensCredencialSit}"
+									styleClass="combosituacao"
+									class="combo_entidadeclasse" />
+
+								<xcp:combo
+									id="cboCredencialuf"
+									value="#{talentosPortalBacking.funcionarioDet.credencialuf}"
+									readonly="true"
+									label="#{bundle.lbl_credencialuf_cons}"
+									itens="#{funcionariosBacking.itensUf}"
+									styleClass="combouf"
+									class="combo_entidadeclasse" />
+
+							</xcp:border>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:column>
+			<p:column>
+				<div style="width: 155px;">
+					<p:fieldset
+						legend="#{bundle.tit_dados_pessoais_cons}"
+						id="brd_pessoais"
+						style="height:337px;"
+						class="alinha_label">
+
+						<xcp:date
+							id="txtDtnascimento"
+							readonly="true"
+							required="true"
+							value="#{talentosPortalBacking.funcionarioDet.dtnascimento}"
+							label="#{bundle.lbl_dtnascimento_cons}"
+							size="10" />
+
+						<xcp:combo
+							id="cboSexo"
+							value="#{talentosPortalBacking.funcionarioDet.sexo}"
+							readonly="true"
+							required="true"
+							label="#{bundle.lbl_sexo_cons}"
+							itens="#{funcionariosBacking.itensSexo}"
+							styleClass="dadospessoaisselect"
+							class="combo_infogerais" />
+
+						<xcp:text
+							id="txtReservista"
+							label="#{bundle.lbl_reservista_cons}"
+							readonly="true"
+							value="#{talentosPortalBacking.funcionarioDet.reservista}"
+							maxlength="14"
+							class="txt-infogerais" />
+
+						<xcp:number
+							id="txtReservistacat"
+							label="#{bundle.lbl_reservistacat_cons}"
+							readonly="true"
+							value="#{talentosPortalBacking.funcionarioDet.reservistacat}"
+							maxlength="2"
+							maxValue="99"
+							class="txt-infogerais" />
+
+						<xcp:combo
+							id="cboEC"
+							value="#{talentosPortalBacking.funcionarioDet.ec}"
+							readonly="true"
+							required="true"
+							label="#{bundle.lbl_ec_cons}"
+							itens="#{funcionariosBacking.itensEC}"
+							styleClass="dadospessoaisselect">
+						</xcp:combo>
+
+						<xcp:combo
+							id="cboCor"
+							value="#{talentosPortalBacking.funcionarioDet.cor}"
+							readonly="true"
+							required="true"
+							label="#{bundle.lbl_cor_cons}"
+							itens="#{funcionariosBacking.itensCor}"
+							styleClass="dadospessoaisselect"
+							class="combo_infogerais" />
+
+						<xcp:combo
+							id="cboDeficiencias"
+							value="#{talentosPortalBacking.funcionarioDet.deficiente}"
+							readonly="true"
+							required="true"
+							label="#{bundle.lbl_deficiencias_cons}"
+							itens="#{funcionariosBacking.itensDeficiencias}"
+							styleClass="dadospessoaisselect"
+							class="combo_infogerais" />
+					</p:fieldset>
+				</div>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+</ui:composition>

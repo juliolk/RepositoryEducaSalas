@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:panelGrid>
+				<p:row>
+					<p:column styleClass="alinhatopo">
+
+						<p:fieldset
+							legend="#{bundle.tit_filtros_geracao}"
+							style="width:310px;height:300px;">
+							<xcp:panelForm>
+								<xcp:date
+									id="txtDataInicial"
+									required="true"
+									value="#{expGRRFBacking.dataInicial}"
+									label="#{bundle.lbl_data_inicial}" />
+
+								<xcp:date
+									id="txtDataFinal"
+									required="true"
+									value="#{expGRRFBacking.dataFinal}"
+									label="#{bundle.lbl_data_final}" />
+
+								<xcp:date
+									id="txtDataRecolhimento"
+									required="true"
+									value="#{expGRRFBacking.dataRecolhimento}"
+									label="#{bundle.lbl_data_recolhimento}" />
+
+							</xcp:panelForm>
+						</p:fieldset>
+					</p:column>
+					<p:column styleClass="alinhatopo">
+
+						<p:fieldset
+							legend="#{bundle.tit_filtros_serivdores}"
+							style="width:510px;height:300px;">
+
+							<p:dataTable
+								id="funcGrrf"
+								var="rowMult"
+								value="#{expGRRFBacking.listaFuncionarios}"
+								selection="#{expGRRFBacking.listaFuncionariosSel}"
+								rowKey="#{rowMult.PK}"
+								scrollHeight="247"
+								scrollWidth="700"
+								scrollable="true"
+								emptyMessage="#{bundle.msg_sem_resultado}">
+
+
+								<p:ajax
+									event="toggleSelect"
+									update=":#{p:component('btn_gerar_grrf')}" />
+								<p:ajax
+									event="rowSelectCheckbox"
+									update=":#{p:component('btn_gerar_grrf')}" />
+								<p:ajax
+									event="rowUnselectCheckbox"
+									update=":#{p:component('btn_gerar_grrf')}" />
+								<p:column
+									selectionMode="multiple"
+									style="width:20px;text-align:center" />
+
+								<xcp:column
+									headerText="#{bundle.col_numMatricula}"
+									type="Number"
+									size="6">
+									<xcp:outputSimpleNumber
+										value="#{rowMult.matricula}"
+										precision="8"
+										scale="0" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_desNome}"
+									type="String"
+									size="30">
+									<xcp:outputSimple value="#{rowMult.nome}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_vinculo}"
+									type="String"
+									size="20">
+									<xcp:outputSimple value="#{rowMult.vinculoFk.descricao}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_tpmov}"
+									type="Number"
+									size="2">
+									<xcp:outputSimpleNumber
+										precision="3"
+										scale="0"
+										value="#{rowMult.tipmov}" />
+								</xcp:column>
+
+								<xcp:column
+									headerText="#{bundle.col_dtmov}"
+									type="Date"
+									size="7">
+									<xcp:outputSimpleDate value="#{rowMult.dtmov}" />
+								</xcp:column>
+
+							</p:dataTable>
+						</p:fieldset>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:toolbar styleClass="xcp_pmanut_form_toolbar">
+				<f:facet name="left">
+					<xcp:commandButton
+						id="btn_busca_grrf"
+						update="funcGrrf"
+						value="#{bundle.btn_busca_grrf}"
+						action="#{expGRRFBacking.actionBuscar}"
+						icon="ui-icon-gear" />
+
+					<xcp:commandButton
+						id="btn_gerar_grrf"
+						update="funcGrrf"
+						value="#{bundle.btn_gerar_grrf}"
+						disabled="#{expGRRFBacking.listaFuncionariosSel.size()==0}"
+						action="#{expGRRFBacking.actionBuscarGerarGRRF}"
+						onstart="PF('w_dlgXcpExecStatus').show();"
+						oncomplete="PF('w_dlgXcpExecStatus').hide();"
+						icon="ui-icon-gear" />
+
+				</f:facet>
+			</p:toolbar>
+
+			<xcp:commandButton
+				id="btnDownloadFile"
+				widgetVar="wBtnDownloadFile"
+				ajax="false"
+				immediate="true"
+				process="@this"
+				onclick="PrimeFaces.monitorDownload(downloadFileStart, downloadFileStop)"
+				style="display: none;">
+				<p:fileDownload
+					value="#{expGRRFBacking.file}"
+					contentDisposition="attachment" />
+			</xcp:commandButton>
+
+			<script type="text/javascript">
+				function downloadFileStart() {
+					PF('w_dlgXcpExecStatus').show();
+				}
+		
+				function downloadFileStop() {
+					PF('w_dlgXcpExecStatus').hide();
+				}
+			</script>
+
+		</xcp:panelContent>
+	</ui:define>
+
+</ui:composition>

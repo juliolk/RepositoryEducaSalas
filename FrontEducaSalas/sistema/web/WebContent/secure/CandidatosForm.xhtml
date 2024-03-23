@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style type="text/css">
+.alinhamento {
+	padding-left: 8px;
+}
+</style>
+		<xcp:panelMestre
+			id="Candidatos"
+			backing="#{candidatosBacking}">
+
+			<ui:define name="filtroMestre">
+				<p:fieldset
+					legend="#{bundle.title_filtro}"
+					style="margin-bottom: 5px">
+					<xcp:panelForm>
+
+						<xcp:numberRange
+							id="txtSeqPesq"
+							label="#{bundle.lbl_edital}"
+							size="10"
+							valueStart="#{candidatosBacking.numeroPesqIni}"
+							valueEnd="#{candidatosBacking.numeroPesqFim}"
+							precision="18"
+							scale="0" />
+
+						<xcp:combo
+							id="txtTipoEdital"
+							label="#{bundle.lbl_tipo}"
+							size="10"
+							value="#{candidatosBacking.tipoEdital}"
+							itens="#{candidatosBacking.itensTipoEdital}" />
+
+						<xcp:dateRange
+							id="txtDataPesq"
+							valueStart="#{candidatosBacking.dtaPubPesqIni}"
+							valueEnd="#{candidatosBacking.dtaPubPesqFim}"
+							label="#{bundle.lbl_datapub}"
+							size="8" />
+
+						<xcp:combo
+							id="txtSituacaoPesq"
+							label="#{bundle.lbl_situacao}"
+							size="10"
+							value="#{candidatosBacking.situacaoPesq}"
+							itens="#{candidatosBacking.itensSituacaoEdital}" />
+
+						<xcp:lov
+							id="lovFuncao"
+							value="#{candidatosBacking.funcoesPesq}"
+							label="#{bundle.lbl_funcao}"
+							query="funcoes"
+							size="10" />
+
+					</xcp:panelForm>
+				</p:fieldset>
+			</ui:define>
+
+			<ui:define name="colunasMaster">
+
+				<xcp:column
+					headerText="#{bundle.col_edital}"
+					value="#{rowMaster.editalFk.numero}"
+					type="Number"
+					size="8">
+					<xcp:outputSimple value="#{rowMaster.editalFk.numero}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desEdital}"
+					value="#{rowMaster.editalFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{rowMaster.editalFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_funcao}"
+					value="#{rowMaster.funcao}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{rowMaster.funcao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_desFuncao}"
+					value="#{rowMaster.funcaoFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimpleNumber value="#{rowMaster.funcaoFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_data}"
+					value="#{rowMaster.data}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{rowMaster.data}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_vagas}"
+					value="#{rowMaster.vagas}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{rowMaster.vagas}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+			</ui:define>
+
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{row.codigo}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.codigo}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_dtnascimento}"
+					value="#{row.dtnascimento}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.dtnascimento}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_classfinal}"
+					value="#{row.classfinal}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.classfinal}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_identprof}"
+					value="#{row.identprof}"
+					type="Number"
+					size="15">
+					<xcp:outputSimpleNumber
+						value="#{row.identprof}"
+						precision="15"
+						scale="0" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+
+				<p:fieldset
+					id="brd_dados_concruso"
+					legend="#{bundle.tit_dados_concurso}">
+					<h:panelGrid
+						columns="6"
+						styleClass="tabela_alinhamento">
+
+						<xcp:number
+							id="txtEdital"
+							label="#{bundle.lbl_edital}"
+							value="#{candidatosBacking.masterEntity.editalFk.edital}"
+							size="8"
+							precision="8"
+							scale="0"
+							maxValue="99999999"
+							readonly="true" />
+
+						<xcp:text
+							id="txtDescricao"
+							label="#{bundle.lbl_descricao_edital}"
+							value="#{candidatosBacking.masterEntity.editalFk.descricao}"
+							size="60"
+							readonly="true" />
+
+						<xcp:date
+							id="txtData"
+							value="#{candidatosBacking.masterEntity.editalFk.data}"
+							label="#{bundle.lbl_data_edital}"
+							readonly="true" />
+
+						<xcp:number
+							id="txtFuncao"
+							label="#{bundle.lbl_funcao_edital}"
+							value="#{candidatosBacking.masterEntity.funcao}"
+							size="8"
+							precision="8"
+							scale="0"
+							maxValue="99999999"
+							readonly="true" />
+
+						<xcp:text
+							id="txtDescricaoFuncao"
+							label="#{bundle.lbl_descricao_funcao_edital}"
+							value="#{candidatosBacking.masterEntity.funcaoFk.descricao}"
+							size="60"
+							readonly="true" />
+					</h:panelGrid>
+				</p:fieldset>
+				<p:spacer width="10px" />
+
+				<xcp:border
+					id="brd_inscricao"
+					header="#{bundle.tit_inscricao}">
+
+					<h:panelGrid>
+						<h:panelGrid
+							columns="8"
+							styleClass="tabela_alinhamento">
+
+							<xcp:number
+								id="txtCodigo"
+								label="#{bundle.lbl_codigo}"
+								required="true"
+								value="#{candidatosBacking.entity.codigo}"
+								size="8"
+								precision="8"
+								scale="0"
+								maxValue="99999999"
+								readonly="#{candidatosBacking.disabled or not candidatosBacking.entity.novo}" />
+
+							<xcp:number
+								id="txtDigito"
+								size="1"
+								precision="1"
+								scale="0"
+								maxValue="9"
+								value="#{candidatosBacking.entity.digito}"
+								label="#{bundle.lbl_digito}"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:number
+								id="txtClassfinal"
+								size="5"
+								value="#{candidatosBacking.entity.classfinal}"
+								label="#{bundle.lbl_classfinal}"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:number
+								id="txtNota"
+								label="#{bundle.lbl_nota}"
+								size="7"
+								value="#{candidatosBacking.entity.nota}"
+								precision="5"
+								scale="2"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:number
+								id="txtMatricula"
+								label="#{bundle.lbl_matricula}"
+								value="#{candidatosBacking.entity.matricula}"
+								rendered="#{candidatosBacking.entity.selecionado == null}"
+								size="8"
+								precision="8"
+								scale="0"
+								maxValue="99999999"
+								readonly="#{candidatosBacking.disabled}" />
+
+						</h:panelGrid>
+
+						<xcp:panelForm labelClass="alinhamento">
+
+							<xcp:lov
+								id="lovOrgao"
+								value="#{candidatosBacking.entity.orgaoFk}"
+								label="#{bundle.lbl_orgao}"
+								query="orgaos"
+								size="8"
+								required="true"
+								rendered="#{candidatosBacking.selecaoComarca or candidatosBacking.selecaoZona}"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:date
+								id="txtDatainscr"
+								value="#{candidatosBacking.entity.datainscr}"
+								label="#{bundle.lbl_datainscr}"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:combo
+								id="cboSituacao"
+								value="#{candidatosBacking.entity.situacao}"
+								label="#{bundle.lbl_situacao}"
+								itens="#{candidatosBacking.itensSituacao}"
+								readonly="#{candidatosBacking.disabledSituacao}">
+								<p:ajax
+									event="change"
+									update="lovProcesso,lovProcesso_l,txtDesEdital,txtDesEdital_l" />
+							</xcp:combo>
+
+							<xcp:lov
+								id="lovProcesso"
+								value="#{candidatosBacking.entity.processoFk}"
+								label="#{bundle.lbl_processo}"
+								query="processos"
+								size="25"
+								rendered="#{candidatosBacking.renderedFimFila}"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:text
+								id="txtDesEdital"
+								label="#{bundle.lbl_desEdital}"
+								value="#{candidatosBacking.entity.desEdital}"
+								size="10"
+								rendered="#{candidatosBacking.renderedFimFila}"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:memo
+								id="txtObs"
+								label="#{bundle.lbl_obs}"
+								value="#{candidatosBacking.entity.obs}"
+								size="500"
+								style="width:290px;"
+								readonly="#{candidatosBacking.disabled}" />
+						</xcp:panelForm>
+					</h:panelGrid>
+				</xcp:border>
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:fieldset
+								legend="#{bundle.tit_dados_pessoais}"
+								id="brd_dados_pessoais">
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<xcp:panelForm>
+												<xcp:text
+													id="txtNome"
+													label="#{bundle.lbl_nome}"
+													required="true"
+													value="#{candidatosBacking.entity.nome}"
+													maxlength="100"
+													size="50"
+													readonly="#{candidatosBacking.disabled}" />
+
+												<xcp:cpf
+													id="txtCpf"
+													required="true"
+													label="#{bundle.lbl_cpf}"
+													value="#{candidatosBacking.entity.cpf}"
+													readonly="#{candidatosBacking.disabled}" />
+
+												<xcp:date
+													id="txtDtnascimento"
+													value="#{candidatosBacking.entity.dtnascimento}"
+													label="#{bundle.lbl_dtnascimento}"
+													required="true"
+													readonly="#{candidatosBacking.disabled}" />
+
+												<xcp:combo
+													id="cboSexo"
+													required="true"
+													value="#{candidatosBacking.entity.sexo}"
+													label="#{bundle.lbl_sexo}"
+													itens="#{candidatosBacking.itensSexo}"
+													styleClass="dadospessoaisselect"
+													readonly="#{candidatosBacking.disabled}" />
+
+												<xcp:combo
+													id="cboEc"
+													required="true"
+													value="#{candidatosBacking.entity.ec}"
+													label="#{bundle.lbl_ec}"
+													itens="#{candidatosBacking.itensEc}"
+													styleClass="dadospessoaisselect"
+													readonly="#{candidatosBacking.disabled}" />
+
+												<xcp:combo
+													id="cboDeficiencia"
+													required="true"
+													value="#{candidatosBacking.entity.deficiencia}"
+													label="#{bundle.lbl_deficiencia}"
+													itens="#{candidatosBacking.itensDeficiencia}"
+													styleClass="dadospessoaisselect"
+													readonly="#{candidatosBacking.disabled}" />
+
+												<xcp:combo
+													id="cboAfro"
+													required="true"
+													value="#{candidatosBacking.entity.afro}"
+													label="#{bundle.lbl_afro}"
+													itens="#{candidatosBacking.itensAfro}"
+													styleClass="dadospessoaisselect"
+													readonly="#{candidatosBacking.disabled}" />
+
+												<xcp:lov
+													id="lovGrauInst"
+													required="true"
+													value="#{candidatosBacking.entity.grauFk}"
+													label="#{bundle.lbl_grauInst}"
+													query="graus"
+													maxlength="8"
+													size="7"
+													readonly="#{candidatosBacking.disabled}" />
+											</xcp:panelForm>
+										</p:column>
+										<p:column>
+											<p:panel
+												style="border:none;"
+												id="panelFoto"
+												rendered="#{not candidatosBacking.entity.novo}">
+												<xcp:commandLink
+													id="btn_selecao_foto"
+													immediate="true"
+													oncomplete="PF('dlgFoto_w').show()">
+
+													<p:fieldset
+														style="width:85px; height:110px; border:1px solid #cccccc; margin-bottom:10px; text-align: center; line-height: 110px; ">
+														<p:graphicImage
+															id="imgFoto"
+															value="#{candidatosBacking.getDesPathImg()}"
+															cache="false"
+															style="max-width:85px; max-height:110px ;padding:0px; border:none; vertical-align: middle;" />
+													</p:fieldset>
+												</xcp:commandLink>
+											</p:panel>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:fieldset>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+
+							<xcp:endereco
+								id="txtEnderecoCandidato"
+								value="#{candidatosBacking.entity.endereco}"
+								readonly="#{candidatosBacking.disabled}" />
+
+							<xcp:border
+								id="brd_reingresso"
+								header="#{bundle.tit_reingresso}">
+
+								<!-- NAO PODE MECHER PORQUE NA COPIA DO CANDIDATO PARA EFETIVACAO -->
+								<!-- ELE ATRELA A NOVA MATRICULA DELE COM ESSE CANDIDATO PARA SABER A ORIGEM-->
+								<xcp:combo
+									id="cboTrabemp"
+									value="#{candidatosBacking.entity.trabemp}"
+									label="#{bundle.lbl_trabemp}"
+									itens="#{candidatosBacking.itensTrabemp}"
+									readonly="#{candidatosBacking.disabled or !candidatosBacking.entity.novo}">
+									<p:ajax
+										event="change"
+										update="lovMatricula,lovMatricula_l" />
+								</xcp:combo>
+
+								<xcp:lov
+									id="lovMatricula"
+									label="#{bundle.lbl_matricula}"
+									rendered="#{candidatosBacking.entity.trabemp==1}"
+									required="#{candidatosBacking.entity.trabemp==1}"
+									value="#{candidatosBacking.entity.matriculaFk}"
+									query="funcionariosLov"
+									readonly="#{candidatosBacking.disabled or !candidatosBacking.entity.novo}" />
+							</xcp:border>
+						</p:column>
+						<p:column>
+							<xcp:border
+								id="brd_identidade_candidato"
+								header="#{bundle.tit_identidade_candidato}">
+
+								<xcp:text
+									id="txtIdentidade"
+									label="#{bundle.lbl_identidade}"
+									value="#{candidatosBacking.entity.identidade}"
+									size="15"
+									readonly="#{candidatosBacking.disabled}" />
+
+								<xcp:text
+									id="txtExpedidor"
+									label="#{bundle.lbl_expedidor}"
+									value="#{candidatosBacking.entity.expedidor}"
+									size="30"
+									readonly="#{candidatosBacking.disabled}" />
+							</xcp:border>
+							<xcp:border
+								id="brd_contato"
+								header="#{bundle.tit_contato_candidato}">
+								<xcp:fone
+									id="txtFone"
+									label="#{bundle.lbl_fone}"
+									value="#{candidatosBacking.entity.fone}"
+									size="30"
+									readonly="#{candidatosBacking.disabled}" />
+
+								<xcp:fone
+									id="txtCelular"
+									label="#{bundle.lbl_celular}"
+									value="#{candidatosBacking.entity.celular}"
+									size="30"
+									readonly="#{candidatosBacking.disabled}" />
+
+								<xcp:email
+									id="txtEmail"
+									label="#{bundle.lbl_email}"
+									value="#{candidatosBacking.entity.email}"
+									size="30"
+									readonly="#{candidatosBacking.disabled}" />
+							</xcp:border>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+			</ui:define>
+
+		</xcp:panelMestre>
+
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			id="dlgFoto"
+			modal="true"
+			widgetVar="dlgFoto_w"
+			header="#{bundle.title_importar_foto}">
+			<xcp:form
+				id="formfoto"
+				multipart="true">
+				<xcp:panelForm>
+					<xcp:inputFile
+						label="#{bundle.lbl_foto}"
+						id="inpFile"
+						value="#{candidatosBacking.uploadFoto}"
+						required="true" />
+				</xcp:panelForm>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_upload"
+							value="#{bundle.btn_upload}"
+							ajax="false"
+							action="#{candidatosBacking.actionSalvarFoto}"
+							icon="ui-icon-gear" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

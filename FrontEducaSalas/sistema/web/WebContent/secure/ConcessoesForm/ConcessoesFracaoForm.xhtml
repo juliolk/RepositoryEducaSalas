@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="ConcessoesFracao"
+		backing="#{concessoesFracaoBacking}"
+		masterId="Concessoes">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_diasMin}"
+				value="#{row.diasMin}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.diasMin}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_diasMax}"
+				value="#{row.diasMax}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.diasMax}"
+					precision="3"
+					scale="0" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+
+				<xcp:number
+					id="txtDiasMin_ConcessoesFracao"
+					label="#{bundle.lbl_diasMin}"
+					required="true"
+					value="#{concessoesFracaoBacking.entity.diasMin}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999"
+					readonly="#{not concessoesFracaoBacking.entity.novo}" />
+
+				<xcp:number
+					id="txtDiasMax_ConcessoesFracao"
+					label="#{bundle.lbl_diasMax}"
+					required="true"
+					value="#{concessoesFracaoBacking.entity.diasMax}"
+					size="3"
+					precision="3"
+					scale="0"
+					maxValue="999" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutTabDetalhes
+		id="CargosHistorico"
+		backing="#{cargosHistoricoBacking}"
+		masterId="Cargos"
+		update=":form:txtTotVag :form:cboSituacao">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_documento}"
+				value="#{row.documento}"
+				type="Number">
+				<xcp:outputSimpleNumber
+					value="#{row.documento}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_referencia}"
+				value="#{row.referencia}"
+				type="Date">
+				<xcp:outputSimpleDate value="#{row.referencia}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_vagas}"
+				value="#{row.vagas}"
+				type="Number">
+				<xcp:outputSimpleNumber
+					value="#{row.vagas}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipoFk.descricao}"
+				type="String">
+				<xcp:outputSimple value="#{row.tipoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_motivo}"
+				value="#{row.motivoFk.descricao}"
+				type="String">
+				<xcp:outputSimple value="#{row.motivoFk.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_obs}"
+				value="#{row.obs}"
+				type="String"
+				size="80">
+				<xcp:outputSimple value="#{row.obs}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="lovCodconv_ch"
+					value="#{cargosHistoricoBacking.entity.codconvFk}"
+					label="#{bundle.lbl_codconvenio}"
+					query="consignacoes_dta"
+					size="10"
+					rendered="#{cargosHistoricoBacking.vagaIndividual}"
+					params="#{cargosHistoricoBacking.paramsConv}"
+					update="lovTermo_ch lovTermo_ch_l" />
+
+				<xcp:lov
+					id="lovTermo_ch"
+					value="#{cargosHistoricoBacking.entity.termoFk}"
+					label="#{bundle.lbl_termo}"
+					query="termoaditivo"
+					size="18"
+					rendered="#{cargosHistoricoBacking.entity.codconvFk != null}"
+					required="true"
+					params="#{cargosHistoricoBacking.paramsTermo}"
+					selectionListener="#{cargosHistoricoBacking.selectTermo}"
+					update="txtDocumento_ch txtReferencia_ch txtVagas_ch" />
+
+				<xcp:number
+					id="txtDocumento_ch"
+					label="#{bundle.lbl_documento}"
+					required="true"
+					value="#{cargosHistoricoBacking.entity.documento}"
+					size="10"
+					maxValue="9999999999"
+					readonly="#{not cargosHistoricoBacking.entity.novo or cargosHistoricoBacking.entity.termoFk != null}" />
+
+				<xcp:date
+					id="txtReferencia_ch"
+					required="true"
+					value="#{cargosHistoricoBacking.entity.referencia}"
+					label="#{bundle.lbl_referencia}"
+					readonly="#{cargosHistoricoBacking.entity.termoFk != null}" />
+
+				<xcp:lov
+					id="lovMotivo_ch"
+					value="#{cargosHistoricoBacking.entity.motivoFk}"
+					label="#{bundle.lbl_motivo}"
+					required="true"
+					query="motivoato"
+					update="txtVagas_ch,txtVagas_ch_l"
+					size="2" />
+
+				<xcp:number
+					id="txtVagas_ch"
+					label="#{bundle.lbl_vagas}"
+					required="true"
+					value="#{cargosHistoricoBacking.entity.vagas}"
+					size="4"
+					rendered="#{cargosHistoricoBacking.entity.motivoFk.indicador != 3}"
+					readonly="#{cargosHistoricoBacking.entity.codconvFk != null}"
+					maxValue="99999" />
+
+				<xcp:lov
+					id="lovTipo_ch"
+					value="#{cargosHistoricoBacking.entity.tipoFk}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					query="tipoato"
+					size="2" />
+
+				<xcp:memo
+					id="txtObs_ch"
+					label="#{bundle.lbl_obs}"
+					value="#{cargosHistoricoBacking.entity.obs}"
+					size="4000" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+		<ui:define name="barraDet">
+
+			<p:commandButton
+				id="btnAnexo"
+				value="#{bundle.lbl_anexo}"
+				update=":frmAnexo"
+				icon="#{cargosHistoricoBacking.anexoIcon}"
+				oncomplete="PF('dlgAnexo_w').show()"
+				rendered="#{not cargosHistoricoBacking.entity.novo}"
+				process="@this" />
+
+		</ui:define>
+
+	</xcp:panelManutTabDetalhes>
+</ui:composition>

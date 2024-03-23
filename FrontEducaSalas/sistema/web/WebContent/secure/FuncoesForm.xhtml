@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<xcp:panelManut
+			id="Funcoes"
+			backing="#{funcoesBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_funcao}"
+					value="#{row.funcao}"
+					type="Number"
+					size="6">
+					<xcp:outputSimpleNumber
+						value="#{row.funcao}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cbo}"
+					value="#{row.cbo}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{row.cbo}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_fpas}"
+					value="#{row.fpas}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.fpas}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtFuncao"
+						label="#{bundle.lbl_funcao}"
+						required="true"
+						value="#{funcoesBacking.entity.funcao}"
+						size="8"
+						precision="6"
+						scale="0"
+						maxValue="999999"
+						readonly="#{not funcoesBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{funcoesBacking.entity.descricao}"
+						size="100" />
+
+					<xcp:number
+						id="txtSalexperiencia"
+						label="#{bundle.lbl_salexperiencia}"
+						size="8"
+						maxlength="20"
+						value="#{funcoesBacking.entity.salexperiencia}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtSalbase"
+						label="#{bundle.lbl_salbase}"
+						size="8"
+						maxlength="20"
+						value="#{funcoesBacking.entity.salbase}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtSalmedia"
+						label="#{bundle.lbl_salmedia}"
+						size="8"
+						maxlength="19"
+						value="#{funcoesBacking.entity.salmedia}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtSalteto"
+						label="#{bundle.lbl_salteto}"
+						size="8"
+						maxlength="20"
+						value="#{funcoesBacking.entity.salteto}"
+						precision="16"
+						scale="2" />
+
+					<xcp:number
+						id="txtPercinsal"
+						label="#{bundle.lbl_percinsal}"
+						size="8"
+						maxlength="14"
+						value="#{funcoesBacking.entity.percinsal}"
+						precision="10"
+						scale="3" />
+
+					<xcp:number
+						id="txtPercperic"
+						label="#{bundle.lbl_percperic}"
+						size="8"
+						maxlength="14"
+						value="#{funcoesBacking.entity.percperic}"
+						precision="10"
+						scale="3" />
+
+					<xcp:number
+						id="txtPontos"
+						label="#{bundle.lbl_pontos}"
+						size="8"
+						maxlength="8"
+						value="#{funcoesBacking.entity.pontos}"
+						precision="7"
+						scale="2" />
+
+					<xcp:lov
+						id="lovCbo"
+						value="#{funcoesBacking.entity.cboFk}"
+						label="#{bundle.lbl_cbo}"
+						required="true"
+						query="cbo"
+						size="8" />
+
+					<xcp:lov
+						id="lovGrupo"
+						value="#{funcoesBacking.entity.grupoFk}"
+						label="#{bundle.lbl_grupo}"
+						query="grupofunc"
+						size="8" />
+
+					<xcp:lov
+						id="lovFpas"
+						value="#{funcoesBacking.entity.fpasFk}"
+						label="#{bundle.lbl_fpas}"
+						query="fpas"
+						size="8" />
+
+					<xcp:lov
+						id="lovVariavel"
+						value="#{funcoesBacking.entity.variavelFk}"
+						label="#{bundle.lbl_variavel}"
+						query="variaveis"
+						size="10" />
+
+					<xcp:lov
+						id="lovVariavel2"
+						value="#{funcoesBacking.entity.variavel2Fk}"
+						label="#{bundle.lbl_variavel2}"
+						query="variaveis"
+						size="10" />
+
+					<xcp:lov
+						id="lovVariavelSub"
+						value="#{funcoesBacking.entity.variavelSubFk}"
+						label="#{bundle.lbl_variavelSub}"
+						query="variaveis"
+						size="10" />
+
+					<xcp:number
+						id="txtFuncsuperior"
+						label="#{bundle.lbl_funcsuperior}"
+						value="#{funcoesBacking.entity.funcsuperior}"
+						size="8"
+						precision="4"
+						scale="0"
+						maxValue="9999" />
+
+					<xcp:lov
+						id="lovCargo"
+						value="#{funcoesBacking.entity.cargoFk}"
+						label="#{bundle.lbl_cargo}"
+						query="cargos"
+						size="8" />
+
+					<xcp:text
+						id="txtEspecialidade"
+						label="#{bundle.lbl_especialidade}"
+						value="#{funcoesBacking.entity.especialidade}"
+						size="75" />
+
+					<xcp:panelEsoc backing="#{funcoesBacking}" />
+
+				</xcp:panelForm>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="detalhes">
+		<ui:include src="FuncoesForm/FuncoesTransformacaoForm.xhtml" />
+	</ui:define>
+
+</ui:composition>

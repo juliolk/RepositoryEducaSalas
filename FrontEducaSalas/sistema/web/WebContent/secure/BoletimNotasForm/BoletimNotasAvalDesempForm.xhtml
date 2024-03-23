@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<p:fieldset
+		legend="#{bundle.title_aperfeicoamento}"
+		rendered="#{boletimNotasBacking.avalDesempenho}">
+
+		<xcp:panelForm>
+
+			<xcp:memo
+				id="txtPontoforte"
+				label="#{bundle.lbl_pontoforte}"
+				value="#{boletimNotasBacking.boletimSelecionado.pontoforte}"
+				size="4000" />
+
+			<xcp:memo
+				id="txtPontomelhoria"
+				label="#{bundle.lbl_pontomelhoria}"
+				value="#{boletimNotasBacking.boletimSelecionado.pontomelhoria}"
+				size="4000" />
+
+			<xcp:memo
+				id="txtJustificativa"
+				label="#{bundle.lbl_justificativa}"
+				value="#{boletimNotasBacking.boletimSelecionado.justificativa}"
+				size="4000" />
+
+		</xcp:panelForm>
+
+		<p:fieldset legend="#{bundle.title_itens}">
+
+			<p:dataTable
+				id="tblItens"
+				value="#{boletimNotasBacking.listItens}"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				var="row"
+				paginator="false">
+
+				<xcp:column
+					headerText="#{bundle.col_numero}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.item}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipoItemAval}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipo}"
+						itens="#{boletimNotasBacking.itensTipoItem}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					type="String"
+					size="20">
+					<xcp:outputSimple
+						value="#{row.tipo == 1 ? row.descricao : row.detalhe}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_prazo}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.prazo}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipoPrazo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple
+						value="#{row.tipoPrazo}"
+						itens="#{boletimNotasBacking.itensPrazo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_prioridade}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.prioridade}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandLink
+						oncomplete="PF('dlgItem_w').show();"
+						update=":dlgItem">
+
+						<h:graphicImage
+							rendered="#{boletimNotasBacking.tipoAcesso == 1}"
+							value="/resources/img/procurar.png"
+							style="margin-top:3px;" />
+						<p:outputPanel rendered="#{boletimNotasBacking.tipoAcesso == 2}">
+							<i
+								class="fa fa-fw fa-pencil"
+								style="font-size: 16px" />
+						</p:outputPanel>
+						<f:setPropertyActionListener
+							target="#{boletimNotasBacking.itemSel}"
+							value="#{row}" />
+					</xcp:commandLink>
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandLink
+						immediate="true"
+						update="tblItens"
+						action="#{boletimNotasBacking.actionExcluirItem(row)}">
+
+						<h:graphicImage
+							rendered="#{boletimNotasBacking.tipoAcesso == 1}"
+							title="#{bundle.hint_remover}"
+							value="/resources/img/remover.png"
+							style="margin-top:3px;" />
+
+						<p:outputPanel rendered="#{boletimNotasBacking.tipoAcesso == 2}">
+							<i
+								class="fa fa-fw fa-trash"
+								style="font-size: 16px" />
+						</p:outputPanel>
+
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandLink>
+				</xcp:column>
+
+			</p:dataTable>
+		</p:fieldset>
+
+		<xcp:commandButton
+			id="btn_add_item"
+			value="#{bundle.btn_add_item}"
+			style="margin-top: 5px"
+			update=":frmDlgItem"
+			icon="ui-icon-document"
+			oncomplete="PF('dlgItem_w').show()"
+			process="@this">
+			<f:setPropertyActionListener
+				value="#{null}"
+				target="#{boletimNotasBacking.itemSel}" />
+		</xcp:commandButton>
+
+	</p:fieldset>
+
+	<p:remoteCommand
+		name="rcBolItem"
+		update="tblItens" />
+
+</ui:composition>

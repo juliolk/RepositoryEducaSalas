@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Fpas"
+			backing="#{fpasBacking}">
+
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_fpas}"
+					value="#{row.fpas}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.fpas}"
+						precision="5"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_terceiros}"
+					value="#{row.terceiros}"
+					type="Number"
+					size="10">
+					<xcp:outputSimpleNumber
+						value="#{row.terceiros}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_aliquota}"
+					value="#{row.aliquota}"
+					type="Number"
+					size="11">
+					<xcp:outputSimpleNumber
+						value="#{row.aliquota}"
+						precision="6"
+						scale="4" />
+				</xcp:column>
+			</ui:define>
+
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtFpas"
+						label="#{bundle.lbl_fpas}"
+						required="true"
+						value="#{fpasBacking.entity.fpas}"
+						size="10"
+						maxValue="99999"
+						readonly="#{not fpasBacking.entity.novo}" />
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{fpasBacking.entity.descricao}"
+						size="60" />
+					<xcp:number
+						id="txtTerceiros"
+						label="#{bundle.lbl_terceiros}"
+						required="true"
+						value="#{fpasBacking.entity.terceiros}"
+						size="10"
+						maxValue="9999999999" />
+					<xcp:number
+						id="txtAliquota"
+						label="#{bundle.lbl_aliquota}"
+						required="true"
+						size="10"
+						value="#{fpasBacking.entity.aliquota}"
+						precision="6"
+						scale="4" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

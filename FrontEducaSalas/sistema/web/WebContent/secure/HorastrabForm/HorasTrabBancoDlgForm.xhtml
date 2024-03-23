@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:outputPanel id="panelGeral">
+		<h:panelGrid
+			columns="6"
+			columnClasses="form_label,form_label,form_label,form_label,form_label,form_label"
+			footerClass="form_footer"
+			cellpadding="100px"
+			cellspacing="100px"
+			border="0">
+
+			<xcp:output
+				id="txtAcumulado5"
+				label="#{bundle.lbl_txt_acumulado}"
+				value="#{horastrabBacking.bancoHoras.acumulado5}"
+				size="10" />
+			<xcp:output
+				id="txtAcumulado4"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.acumulado4}"
+				size="10" />
+			<xcp:output
+				id="txtAcumulado3"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.acumulado3}"
+				size="10" />
+			<xcp:output
+				id="txtAcumulado2"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.acumulado2}"
+				size="10" />
+			<xcp:output
+				id="txtAcumulado1"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.acumulado1}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtCredito5"
+				label="#{bundle.lbl_txt_credito}"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.creditos5}"
+				size="10" />
+				
+			<xcp:timeNumber
+				id="txtCredito4"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.creditos4}"
+				size="10" />
+			<xcp:timeNumber
+				id="txtCredito3"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.creditos3}"
+				size="10" />
+			<xcp:timeNumber
+				id="txtCredito2"
+				simple="true"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.creditos2}"
+				size="10" />
+			<xcp:timeNumber
+				id="txtCredito1"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.creditos1}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtDedito5"
+				label="#{bundle.lbl_txt_dedito}"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.debitos5}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtDedito4"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.debitos4}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtDedito3"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.debitos3}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtDedito2"
+				simple="true"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.debitos2}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtDedito1"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.debitos1}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtSaldo5"
+				label="#{bundle.lbl_txt_saldo}"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.saldos5}"
+				size="10" />
+				
+			<xcp:timeNumber
+				id="txtSaldo4"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.saldos4}"
+				size="10" />
+				
+			<xcp:timeNumber
+				id="txtSaldo3"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.saldos3}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtSaldo2"
+				simple="true"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.saldos2}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtSaldo1"
+				simple="true"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.saldos1}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtHorasPagas5"
+				label="#{bundle.lbl_txt_pagas}"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.horaspagas5}"
+				size="10" />
+				
+			<xcp:timeNumber
+				id="txtHorasPagas4"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.horaspagas4}"
+				size="10" />
+				
+			<xcp:timeNumber
+				id="txtHorasPagas3"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.horaspagas3}"
+				size="10" />
+			<xcp:timeNumber
+				id="txtHorasPagas2"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.horaspagas2}"
+				size="10" />
+			<xcp:timeNumber
+				id="txtHorasPagas1"
+				simple="true"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.horaspagas1}"
+				size="10" />
+
+			<xcp:timeNumber
+				id="txtHorasAtr5"
+				label="#{bundle.lbl_txt_desc}"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.horasatr5}"
+				size="10" />
+				
+			<xcp:timeNumber
+				id="txtHorasAtr4"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.horasatr4}"
+				size="10" />
+				
+			<xcp:timeNumber
+				id="txtHorasAtr3"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.horasatr3}"
+				size="10" />
+			<xcp:timeNumber
+				id="txtHorasAtr2"
+				readonly="true"
+				simple="true"
+				value="#{horastrabBacking.bancoHoras.horasatr2}"
+				size="10" />
+			<xcp:timeNumber
+				id="txtHorasAtr1"
+				simple="true"
+				readonly="true"
+				value="#{horastrabBacking.bancoHoras.horasatr1}"
+				size="10" />
+
+
+		</h:panelGrid>
+
+		<xcp:panelGrid>
+			<p:row>
+				<p:column colspan="2">
+					<p:spacer width="5" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<xcp:outputSimple value="#{bundle.lbl_saldo_mes_banco}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel
+						style="font-size: 15px; color: red;"
+						value="#{horastrabBacking.bancoHoras.mesReferente}" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<xcp:outputSimple value="#{bundle.lbl_saldo_mes_banco_compl}" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="2">
+					<p:spacer width="5" />
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel
+						style="font-size: 15px; color: red;"
+						value="#{horastrabBacking.bancoHoras.mesPago}" />
+				</p:column>
+				<p:column>
+					<xcp:timeNumber
+						id="txtSaldoMes"
+						simple="true"
+						value="#{horastrabBacking.bancoHoras.compmes}"
+						size="10" />
+
+				</p:column>
+			</p:row>
+		</xcp:panelGrid>
+	</p:outputPanel>
+
+</ui:composition>

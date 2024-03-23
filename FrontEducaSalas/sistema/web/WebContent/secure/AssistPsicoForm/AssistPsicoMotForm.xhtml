@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="AssistPsicoMot"
+		backing="#{assistPsicoMotBacking}"
+		masterId="Assistenciasocial">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_motivo}"
+				value="#{row.motivo}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.motivo}"
+					precision="5"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_motivo}"
+				value="#{row.assistenciamotivoFk.descricao}"
+				type="String"
+				size="30">
+				<xcp:outputSimple value="#{row.assistenciamotivoFk.descricao}" />
+			</xcp:column>
+
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:lov
+					id="txtMotivo_Assistenciasocialmot"
+					value="#{assistPsicoMotBacking.entity.assistenciamotivoFk}"
+					label="#{bundle.lbl_motivo}"
+					params="#{assistPsicoBacking.paramsAssistencia}"
+					required="true"
+					query="assistenciamotivo"
+					readonly="#{not assistPsicoMotBacking.entity.novo}"
+					size="5" />
+
+			</xcp:panelForm>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

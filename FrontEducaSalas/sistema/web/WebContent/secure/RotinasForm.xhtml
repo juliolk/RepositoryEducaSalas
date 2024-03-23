@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Rotinas"
+			backing="#{rotinasBacking}">
+
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_rotina}"
+					type="Number"
+					size="5"
+					value="#{row.rotina}">
+					<xcp:outputSimpleNumber
+						value="#{row.rotina}"
+						precision="6"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					type="String"
+					size="30"
+					value="#{row.descricao}">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_componente}"
+					type="String"
+					size="30"
+					value="#{row.componente}">
+					<xcp:outputSimple value="#{row.componente}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_codObjeto}"
+					type="String"
+					size="30"
+					value="#{row.codObjetoFk.desObjeto}">
+					<xcp:outputSimple value="#{row.codObjetoFk.desObjeto}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtRotina"
+						label="#{bundle.lbl_rotina}"
+						required="true"
+						value="#{rotinasBacking.entity.rotina}"
+						readonly="#{not rotinasBacking.entity.novo}"
+						size="6"
+						maxValue="999999" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						value="#{rotinasBacking.entity.descricao}"
+						size="60" />
+
+					<xcp:combo
+						id="txtTipo"
+						value="#{rotinasBacking.entity.tipRotina}"
+						label="#{bundle.lbl_tipo}"
+						itens="#{rotinasBacking.itensTipRotina}"
+						readonly="#{!rotinasBacking.entity.novo}"
+						required="true">
+						<p:ajax
+							update="txtComponente txtComponente_l lovCodObjeto lovCodObjeto_l txtCodPaginaXcp txtCodPaginaXcp_l lovIdConsulta lovIdConsulta_l" />
+					</xcp:combo>
+
+					<xcp:text
+						id="txtComponente"
+						label="#{bundle.lbl_componente}"
+						value="#{rotinasBacking.entity.componente}"
+						size="60"
+						rendered="#{rotinasBacking.entity.tipRotina == 1}"
+						required="true" />
+
+					<xcp:number
+						id="txtHelp"
+						label="#{bundle.lbl_help}"
+						value="#{rotinasBacking.entity.help}"
+						size="8"
+						maxValue="99999999" />
+
+					<xcp:text
+						id="txtIcone"
+						label="#{bundle.lbl_icone}"
+						value="#{rotinasBacking.entity.icone}"
+						size="100" />
+
+					<xcp:lov
+						id="lovCodObjeto"
+						value="#{rotinasBacking.entity.codObjetoFk}"
+						label="#{bundle.lbl_codObjeto}"
+						query="xcp_objeto"
+						size="50"
+						rendered="#{rotinasBacking.entity.tipRotina == 1 or rotinasBacking.entity.tipRotina == 2  or rotinasBacking.entity.tipRotina == 5}" />
+
+					<xcp:number
+						id="txtCodPaginaXcp"
+						label="#{bundle.lbl_paginaFlow}"
+						value="#{rotinasBacking.entity.codPaginaXcp}"
+						size="8"
+						rendered="#{rotinasBacking.entity.tipRotina == 3 or rotinasBacking.entity.tipRotina == 4}"
+						required="true" />
+
+					<xcp:lov
+						id="lovIdConsulta"
+						value="#{rotinasBacking.entity.idConsultaFk}"
+						label="#{bundle.lbl_idConsulta}"
+						query="portaltransp_cons"
+						size="0"
+						required="true"
+						rendered="#{rotinasBacking.entity.tipRotina == 6}" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

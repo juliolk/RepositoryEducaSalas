@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelContent>
+			<p:fieldset
+				legend="#{bundle.title_filtro}"
+				style="margin-bottom: 5px">
+
+				<h:panelGrid
+					columns="3"
+					columnClasses=",,vertical-align">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovVinculo"
+							value="#{prorrogaContBacking.helper.vinculosFk}"
+							label="#{bundle.lbl_vinculo}"
+							query="vinculos_cont"
+							size="8"
+							required="true" />
+
+						<xcp:number
+							id="txtQtdDias"
+							label="#{bundle.lbl_qtdDias}"
+							required="true"
+							value="#{prorrogaContBacking.helper.qtdDiasProrrog}"
+							size="5"
+							precision="5"
+							scale="0"
+							maxValue="99999" />
+					</xcp:panelForm>
+				</h:panelGrid>
+
+				<p:toolbar>
+					<f:facet name="left">
+
+						<xcp:commandButton
+							id="btn_pesquisar"
+							value="#{bundle.btn_pesquisar}"
+							update="pnlTable,btn_aplicar"
+							icon="ui-icon-search"
+							action="#{prorrogaContBacking.actionPesquisar}" />
+
+						<xcp:commandButton
+							id="btn_aplicar"
+							value="#{bundle.btn_aplicar}"
+							update="pnlTable"
+							icon="ui-icon-gear"
+							action="#{prorrogaContBacking.actionAplicar}"
+							disabled="#{empty prorrogaContBacking.helper.lista}" />
+
+					</f:facet>
+				</p:toolbar>
+
+			</p:fieldset>
+
+			<p:outputPanel id="pnlTable">
+				<p:dataTable
+					id="tblFunc"
+					var="row"
+					value="#{prorrogaContBacking.helper.lista}"
+					selection="#{prorrogaContBacking.helper.listaSel}"
+					rowKey="#{row}"
+					emptyMessage="#{bundle.msg_sem_resultado}"
+					rendered="#{not empty prorrogaContBacking.helper.lista}">
+
+					<p:column
+						selectionMode="multiple"
+						style="width:12px;text-align:center" />
+
+					<xcp:column
+						headerText="#{bundle.col_numMatricula}"
+						value="#{row.matriculaFK.matricula}"
+						type="Number"
+						size="10">
+						<xcp:outputSimpleNumber
+							value="#{row.matriculaFK.matricula}"
+							precision="10"
+							scale="0" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_desNome}"
+						value="#{row.matriculaFK.nome}"
+						type="String"
+						size="40">
+						<xcp:outputSimple value="#{row.matriculaFK.nome}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtaAdmissao}"
+						value="#{row.matriculaFK.admissao}"
+						type="Date"
+						size="10">
+						<xcp:outputSimpleDate value="#{row.matriculaFK.admissao}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtaFimContrato}"
+						value="#{row.matriculaFK.dtfimcontrato}"
+						type="Date"
+						size="10">
+						<xcp:outputSimpleDate value="#{row.matriculaFK.dtfimcontrato}" />
+					</xcp:column>
+
+					<xcp:column
+						headerText="#{bundle.col_dtaFimProposto}"
+						value="#{row.dtFimProposto}"
+						type="Date"
+						size="10">
+						<xcp:outputSimpleDate value="#{row.dtFimProposto}" />
+					</xcp:column>
+
+				</p:dataTable>
+			</p:outputPanel>
+		</xcp:panelContent>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+
+		<style>
+.scrollarea {
+	overflow-y: scroll;
+	max-height: 180px;
+}
+</style>
+
+		<h:outputText
+			value="#{tipodocCoresBacking.getCores(8)}"
+			escape="false" />
+
+		<xcp:panelFuncionario
+			id="panelFunc"
+			backing="#{transferenciasBacking}">
+
+			<ui:define name="barraDetalhes">
+				<p:column>
+					<xcp:commandButton
+						id="btnNovoTransf"
+						icon="ui-icon-document"
+						value="#{bundle.btn_novo}"
+						disabled="#{transferenciasBacking.disabledNovo}"
+						action="#{transferenciasBacking.actionNovo}"
+						resetValues="true">
+						<f:setPropertyActionListener
+							target="#{transferenciasBacking.helper.novo}"
+							value="#{true}" />
+					</xcp:commandButton>
+				</p:column>
+			</ui:define>
+			<ui:define name="formCustom">
+				<p:tabView
+					id="tab"
+					activeIndex="#{transferenciasBacking.helper.activeIdx}"
+					widgetVar="tab_w">
+
+					<p:ajax
+						event="tabChange"
+						listener="#{transferenciasBacking.onTabChange}" />
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_setores" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfSetor}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_setores}" />
+						<ui:param
+							name="renderedObs"
+							value="false" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_funcoes" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfFuncao}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_funcoes}" />
+						<ui:param
+							name="renderedObs"
+							value="false" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+						<ui:param
+							name="renderedDiffDays"
+							value="#{true}" />
+						<ui:param
+							name="renderedPadrao"
+							value="#{true}" />
+					</ui:decorate>
+
+					<ui:decorate
+						template="TransferenciaForm/TransferenciaTabFuncAdic.xhtml">
+						<ui:param
+							name="id"
+							value="tab_funcadic" />
+						<ui:param
+							name="renderedTab"
+							value="#{transferenciasBacking.helper.renderedFuncAdic}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_horario" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfHorarios}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_horarios}" />
+						<ui:param
+							name="renderedObs"
+							value="false" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_ccusto" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfCcustos}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_ccustos}" />
+						<ui:param
+							name="renderedObs"
+							value="false" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+					</ui:decorate>
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_cargos" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfCargos}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_cargos}" />
+						<ui:param
+							name="renderedObs"
+							value="false" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_padrao" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfPadrao}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_padrao}" />
+						<ui:param
+							name="renderedObs"
+							value="true" />
+						<ui:param
+							name="renderedTab"
+							value="#{transferenciasBacking.renderedNivel}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_niveis" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfNiveis}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_niveis}" />
+						<ui:param
+							name="renderedObs"
+							value="true" />
+						<ui:param
+							name="renderedTab"
+							value="#{transferenciasBacking.renderedNivel}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_nomes" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfNomes}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_nomes}" />
+						<ui:param
+							name="renderedObs"
+							value="true" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_supervisor" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfSupervisor}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_supervisor}" />
+						<ui:param
+							name="renderedObs"
+							value="false" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+					</ui:decorate>
+
+					<ui:decorate template="TransferenciaForm/TransferenciaTab.xhtml">
+						<ui:param
+							name="id"
+							value="tab_horamp" />
+						<ui:param
+							name="value"
+							value="#{transferenciasBacking.helper.listaTransfAmpliacao}" />
+						<ui:param
+							name="title"
+							value="#{bundle.title_ampliacao}" />
+						<ui:param
+							name="renderedObs"
+							value="false" />
+						<ui:param
+							name="renderedTab"
+							value="#{true}" />
+					</ui:decorate>
+
+					<ui:decorate
+						template="TransferenciaForm/TransferenciaTabSubs.xhtml">
+						<ui:param
+							name="id"
+							value="tab_substituicao" />
+					</ui:decorate>
+
+					<ui:decorate
+						template="TransferenciaForm/TransferenciaTabFgcc.xhtml">
+						<ui:param
+							name="id"
+							value="tab_averbacaofgcc" />
+					</ui:decorate>
+
+					<ui:decorate
+						template="TransferenciaForm/TransferenciaTabFormaPag.xhtml">
+						<ui:param
+							name="id"
+							value="tab_forma_pag" />
+					</ui:decorate>
+
+				</p:tabView>
+			</ui:define>
+		</xcp:panelFuncionario>
+	</ui:define>
+	<ui:define name="modalPanelArea">
+		<ui:include src="TransferenciaForm/TransferenciaDlgTrans.xhtml" />
+		<ui:include src="TransferenciaForm/TransferenciaDlgTransDoc.xhtml" />
+		<ui:include src="TransferenciaForm/TransferenciaDlgSubs.xhtml" />
+		<ui:include src="TransferenciaForm/TransferenciaDlgSubsDoc.xhtml" />
+		<ui:include src="TransferenciaForm/TransferenciaDlgFgcc.xhtml" />
+		<ui:include src="TransferenciaForm/TransferenciaDlgFormaPag.xhtml" />
+		<ui:include src="TransferenciaForm/TransferenciaDlgFuncAdic.xhtml" />
+
+		<ui:include src="DocManual/DocUnificadoDialog.xhtml">
+			<ui:param
+				name="model"
+				value="#{transferenciasBacking.model}" />
+		</ui:include>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Treinamentomsgfunc"
+		backing="#{treinamentomsgfuncBacking}"
+		masterId="Treinamentomsg"
+		renderedNovo="false"
+		renderedGravar="false"
+		renderedRemover="false">
+
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_matricula}"
+				value="#{row.matriculaFk.matricula}"
+				type="Number"
+				size="10">
+				<xcp:outputSimpleNumber
+					value="#{row.matriculaFk.matricula}"
+					precision="10"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_nome}"
+				value="#{row.matriculaFk.nome}"
+				type="String"
+				size="80">
+				<xcp:outputSimple value="#{row.matriculaFk.nome}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_enviadoPara}"
+				value="#{row.email}"
+				type="String"
+				size="80">
+				<xcp:outputSimple value="#{row.email}" />
+			</xcp:column>
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelDisable disabled="true">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovMatricula_Treinamentomsgfunc"
+						value="#{treinamentomsgfuncBacking.entity.matriculaFk}"
+						label="#{bundle.lbl_matricula}"
+						required="true"
+						query="funcionarios"
+						size="8" />
+
+					<xcp:text
+						id="txtEmail_Treinamentomsgfunc"
+						label="#{bundle.lbl_email}"
+						value="#{treinamentomsgfuncBacking.entity.email}"
+						size="100" />
+
+				</xcp:panelForm>
+			</xcp:panelDisable>
+		</ui:define>
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

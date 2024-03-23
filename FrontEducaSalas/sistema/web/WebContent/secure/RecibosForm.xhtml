@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Recibos"
+			backing="#{recibosBacking}">
+
+			<ui:define name="colunas">
+
+
+				<xcp:column
+					headerText="#{bundle.col_pessoa}"
+					value="#{row.pessoa}"
+					type="Number"
+					size="5">
+					<xcp:outputSimpleNumber
+						value="#{row.pessoa}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.pessoaFk.nome}"
+					type="String"
+					size="15">
+					<xcp:outputSimple value="#{row.pessoaFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cpf}"
+					value="#{row.pessoaFk.cgccpf}"
+					type="String"
+					size="11">
+					<xcp:outputSimple value="#{row.pessoaFk.cgccpf}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_recibo}"
+					value="#{row.recibo}"
+					type="String"
+					size="10">
+					<xcp:outputSimple value="#{row.recibo}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_datalcto}"
+					value="#{row.datalcto}"
+					type="Date"
+					size="7">
+					<xcp:outputSimpleDate value="#{row.datalcto}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_tipopd}"
+					value="#{row.tipopd}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.tipopd}" />
+				</xcp:column>
+
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:lov
+						id="lovPessoa"
+						value="#{recibosBacking.entity.pessoaFk}"
+						label="#{bundle.lbl_pessoa}"
+						required="true"
+						query="autonomos"
+						size="10"
+						readonly="#{not recibosBacking.entity.novo}"
+						update="lovCategoria lovCategoria_l txtBaseirrf txtBaseirrf_l txtBaseinss txtBaseinss_l" />
+
+					<xcp:text
+						id="txtRecibo"
+						label="#{bundle.lbl_recibo}"
+						required="true"
+						value="#{recibosBacking.entity.recibo}"
+						size="10"
+						readonly="#{not recibosBacking.entity.novo}" />
+
+					<xcp:date
+						id="txtDatalcto"
+						required="true"
+						value="#{recibosBacking.entity.datalcto}"
+						label="#{bundle.lbl_datalcto}"
+						readonly="#{not recibosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtTipopd"
+						label="#{bundle.lbl_tipopd}"
+						value="#{recibosBacking.entity.tipopd}"
+						size="10" />
+
+					<xcp:number
+						id="txtInss"
+						label="#{bundle.lbl_inss}"
+						required="true"
+						size="15"
+						value="#{recibosBacking.entity.inss}"
+						precision="12"
+						scale="2" />
+
+					<xcp:number
+						id="txtIrrf"
+						label="#{bundle.lbl_irrf}"
+						required="true"
+						size="15"
+						value="#{recibosBacking.entity.irrf}"
+						precision="12"
+						scale="2" />
+
+					<xcp:number
+						id="txtValor"
+						label="#{bundle.lbl_valor}"
+						required="true"
+						size="15"
+						value="#{recibosBacking.entity.valor}"
+						precision="12"
+						scale="2" />
+
+
+					<xcp:number
+						id="txtValorIss"
+						label="#{bundle.lbl_iss}"
+						size="15"
+						value="#{recibosBacking.entity.iss}"
+						precision="12"
+						scale="2" />
+
+					<xcp:lov
+						id="lovProcesso"
+						value="#{recibosBacking.entity.processoFk}"
+						label="#{bundle.lbl_processo}"
+						query="processos"
+						size="25" />
+
+					<xcp:lov
+						id="lovNatureza"
+						value="#{recibosBacking.entity.naturezaFk}"
+						label="#{bundle.lbl_naturezarend}"
+						query="efd_natureza"
+						size="20" />
+
+					<xcp:lov
+						id="lovServico"
+						value="#{recibosBacking.entity.servicoFk}"
+						label="#{bundle.lbl_classservico}"
+						query="efd_servicos"
+						size="20" />
+
+					<xcp:lov
+						id="lovCategoria"
+						value="#{recibosBacking.entity.categoriaFk}"
+						label="#{bundle.lbl_categoria}"
+						query="categoriatrabesocial"
+						size="3"
+						required="true"
+						rendered="#{recibosBacking.renderedFisica}" />
+
+					<xcp:number
+						id="txtBaseirrf"
+						label="#{bundle.lbl_baseirrf}"
+						size="19"
+						value="#{recibosBacking.entity.baseirrf}"
+						precision="16"
+						scale="2"
+						rendered="#{recibosBacking.renderedJuridica}" />
+						
+					<xcp:number
+						id="txtBaseinss"
+						label="#{bundle.lbl_baseinss}"
+						size="19"
+						value="#{recibosBacking.entity.baseinss}"
+						precision="16"
+						scale="2"
+						rendered="#{recibosBacking.renderedJuridica}" />	
+
+					<xcp:date
+						id="txtDatapgto"
+						required="true"
+						value="#{recibosBacking.entity.datapgto}"
+						label="#{bundle.lbl_datapgto}" />
+
+
+				</xcp:panelForm>
+			</ui:define>
+			<ui:define name="detalhes">
+
+				<ui:include src="RecibosForm/RecibosOutrasfontesForm.xhtml" />
+
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

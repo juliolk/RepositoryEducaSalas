@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<xcp:panelForm>
+
+		<xcp:date
+			id="txtDtaInicioLicPre"
+			required="false"
+			value="#{lancLotesBacking.helper.licencaPremio.dtgozo}"
+			label="#{bundle.lbl_dtaIni}">
+			<p:ajax
+				event="change"
+				listener="#{lancLotesBacking.calculaDiasLicPremio}"
+				update="txtDiasLicencaLicPre" />
+			<p:ajax
+				event="dateSelect"
+				listener="#{lancLotesBacking.calculaDiasLicPremio}"
+				update="txtDiasLicencaLicPre" />
+
+		</xcp:date>
+
+		<xcp:date
+			id="txtDtaRetLicPre"
+			required="false"
+			value="#{lancLotesBacking.helper.licencaPremio.dtretorno}"
+			label="#{bundle.lbl_dtaRet}">
+			<p:ajax
+				event="change"
+				listener="#{lancLotesBacking.calculaDiasLicPremio}"
+				update="txtDiasLicencaLicPre" />
+			<p:ajax
+				event="dateSelect"
+				listener="#{lancLotesBacking.calculaDiasLicPremio}"
+				update="txtDiasLicencaLicPre" />
+		</xcp:date>
+
+		<xcp:number
+			id="txtDiasLicencaLicPre"
+			label="#{bundle.lbl_diasFerias}"
+			value="#{lancLotesBacking.helper.licencaPremio.diaslicenca}"
+			size="2"
+			precision="2"
+			scale="0">
+			<p:ajax
+				event="change"
+				listener="#{lancLotesBacking.calculaDataGozoLicPremio}"
+				update="txtDtaRetLicPre" />
+		</xcp:number>
+
+		<xcp:date
+			id="txtDtaPgtoLicPre"
+			value="#{lancLotesBacking.helper.licencaPremio.dtpgto}"
+			label="#{bundle.lbl_dtaPgto}" />
+
+
+		<xcp:lov
+			id="lovTipodocumentoLic"
+			value="#{lancLotesBacking.helper.tipdoc}"
+			label="#{bundle.lbl_tipodocumento}"
+			params="#{lancLotesBacking.paramsTipoDoc}"
+			update="lovProcessoLic lovProcessoLic_l"
+			query="tipodocumento_lic"
+			size="10" />
+
+		<xcp:lov
+			id="lovDocumentoLic"
+			value="#{lancLotesBacking.helper.doc}"
+			params="#{lancLotesBacking.paramsTipodocumento}"
+			label="#{bundle.lbl_documento}"
+			query="documentosman"
+			size="10"
+			update="lovProcessoLic,lovProcessoLic_l"
+			selectionListener="#{lancLotesBacking.selectDocumento}" />
+
+		<xcp:lov
+			id="lovProcessoLic"
+			value="#{lancLotesBacking.helper.proc}"
+			label="#{bundle.lbl_processo}"
+			query="processos"
+			required="#{lancLotesBacking.requiredProc}"
+			size="25" />
+
+		<xcp:memo
+			id="txtObsLic"
+			label="#{bundle.lbl_txtPort}"
+			value="#{lancLotesBacking.helper.licencaPremio.obs}"
+			size="400" />
+
+		<xcp:memo
+			id="txtObsLivreLic"
+			label="#{bundle.lbl_obsLivre}"
+			value="#{lancLotesBacking.helper.licencaPremio.obsLivre}"
+			size="400" />
+
+	</xcp:panelForm>
+
+</ui:composition>

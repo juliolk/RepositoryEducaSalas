@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:fragment autoUpdate="true">
+		<p:fieldset
+			legend="#{bundle.title_epi}">
+
+			<xcp:panelForm>
+
+				<xcp:combo
+					id="cboTipUtilepc"
+					value="#{setoresInspBacking.helper.funcoesSel.tipUtilepc}"
+					label="#{bundle.lbl_tipUtilepc}"
+					itens="#{setoresInspBacking.itensTipUtilepc}">
+					<p:ajax
+						event="change"
+						update="cboIndEficepc cboIndEficepc_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboIndEficepc"
+					value="#{setoresInspBacking.helper.funcoesSel.indEficepc}"
+					label="#{bundle.lbl_indEficepc}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepc == 2}"
+					required="true" />
+
+				<xcp:combo
+					id="cboTipUtilepi"
+					value="#{setoresInspBacking.helper.funcoesSel.tipUtilepi}"
+					label="#{bundle.lbl_tipUtilepi}"
+					itens="#{setoresInspBacking.itensTipUtilepi}">
+					<p:ajax
+						event="change"
+						update="cboIndEficepi cboIndEficepi_l cboIndCondfuncto cboIndCondfuncto_l cboIndUsoinin cboIndUsoinin_l cboIndPrzvalid cboIndPrzvalid_l cboIndPerictroca cboIndPerictroca_l cboIndHigieniz cboIndHigieniz_l cboIndMedprot cboIndMedprot_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboIndEficepi"
+					value="#{setoresInspBacking.helper.funcoesSel.indEficepi}"
+					label="#{bundle.lbl_indEficepi}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepi == 2}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndCondfuncto"
+					value="#{setoresInspBacking.helper.funcoesSel.indCondfuncto}"
+					label="#{bundle.lbl_indCondfuncto}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepi == 2}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndUsoinin"
+					value="#{setoresInspBacking.helper.funcoesSel.indUsoinin}"
+					label="#{bundle.lbl_indUsoinin}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepi == 2}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndPrzvalid"
+					value="#{setoresInspBacking.helper.funcoesSel.indPrzvalid}"
+					label="#{bundle.lbl_indPrzvalid}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepi == 2}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndPerictroca"
+					value="#{setoresInspBacking.helper.funcoesSel.indPerictroca}"
+					label="#{bundle.lbl_indPerictroca}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepi == 2}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndHigieniz"
+					value="#{setoresInspBacking.helper.funcoesSel.indHigieniz}"
+					label="#{bundle.lbl_indHigieniz}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepi == 2}"
+					required="true" />
+
+				<xcp:combo
+					id="cboIndMedprot"
+					value="#{setoresInspBacking.helper.funcoesSel.indMedprot}"
+					label="#{bundle.lbl_indMedprot}"
+					itens="#{setoresInspBacking.itensIndSimNao}"
+					rendered="#{setoresInspBacking.helper.funcoesSel.tipUtilepi == 2}"
+					required="true" />
+
+			</xcp:panelForm>
+
+			<p:dataTable
+				id="tblEpi"
+				var="rowEpi"
+				rowKey="#{rowEpi.PK}"
+				value="#{setoresInspBacking.helper.funcoesSel.listEpi}"
+				filteredValue="#{setoresInspBacking.helper.funcoesSel.listEpiFilter}"
+				sortMode="multiple"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				paginator="true"
+				paginatorPosition="bottom"
+				rows="#{viewUtil.tableRows}">
+
+				<xcp:column
+					headerText="#{bundle.col_codigo}"
+					value="#{rowEpi.tipomat}"
+					type="Number"
+					size="8">
+					<xcp:outputSimpleNumber
+						value="#{rowEpi.tipomat}"
+						precision="8"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{rowEpi.tipomatFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{rowEpi.tipomatFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					type="String"
+					size="1">
+					<xcp:commandButton
+						icon="ui-icon-trash"
+						immediate="true"
+						id="btn_remove_epi"
+						update="tblEpi"
+						action="#{setoresInspBacking.actionRemoveEpi(rowEpi)}">
+						<p:confirm
+							header="#{bundle.tit_confirma_remover}"
+							message="#{bundle.msg_confirma_remover}"
+							icon="ui-icon-alert" />
+					</xcp:commandButton>
+				</xcp:column>
+
+
+			</p:dataTable>
+
+			<xcp:commandButton
+				id="btn_adicionar_epi"
+				style="margin-top:5px"
+				action="#{setoresInspBacking.actionOpenEpi}"
+				update=":dlgEpi"
+				process="@this"
+				value="#{bundle.btn_adicionar}"
+				icon="ui-icon-plusthick" />
+
+		</p:fieldset>
+	</p:fragment>
+</ui:composition>

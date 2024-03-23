@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Calendarios"
+			backing="#{calendariosBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_calendario}"
+					value="#{row.calendario}"
+					type="Number"
+					size="4">
+					<xcp:outputSimpleNumber
+						value="#{row.calendario}"
+						precision="4"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.descricao}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.descricao}" />
+				</xcp:column>
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelForm>
+
+					<xcp:number
+						id="txtCalendario"
+						label="#{bundle.lbl_calendario}"
+						required="true"
+						value="#{calendariosBacking.entity.calendario}"
+						size="4"
+						maxValue="9999"
+						readonly="#{not calendariosBacking.entity.novo}" />
+
+					<xcp:text
+						id="txtDescricao"
+						label="#{bundle.lbl_descricao}"
+						required="true"
+						value="#{calendariosBacking.entity.descricao}"
+						size="60" />
+
+				</xcp:panelForm>
+			</ui:define>
+
+			<ui:define name="detalhes">
+
+				<ui:include src="CalendariosForm/CalendarioForm.xhtml" />
+
+			</ui:define>
+
+			<ui:define name="barraLista">
+				<xcp:commandButton
+					id="btn_lote"
+					icon="ui-icon-arrowthickstop-1-s"
+					value="#{bundle.btn_novoemlote}"
+					action="#{calendariosBacking.actionNovoLote}"
+					update=":frm" />
+			</ui:define>
+
+		</xcp:panelManut>
+	</ui:define>
+
+	<ui:define name="modalPanelArea">
+		<p:dialog
+			header="#{bundle.tit_dlgNovoEmLote}"
+			widgetVar="w_dlglote"
+			dynamic="true"
+			modal="true">
+			<xcp:form id="frm">
+				<p:fieldset legend="#{bundle.title_calendarios}">
+					<xcp:panelForm>
+						<xcp:lov
+							id="lovCalendarios"
+							value="#{calendariosBacking.calendariosSel}"
+							label="#{bundle.lbl_calendario}"
+							query="calendarios"
+							size="4"
+							update="tblCalendarios"
+							selectionListener="#{calendariosBacking.selectCalendarios}" />
+					</xcp:panelForm>
+
+					<p:dataTable
+						id="tblCalendarios"
+						var="row"
+						value="#{calendariosBacking.listCalendarios}"
+						rowKey="#{row.PK}"
+						rowIndexVar="idx"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="#{viewUtil.tableRows}"
+						style="width: 686px">
+
+						<p:column
+							headerText="#{bundle.col_matricula}"
+							width="20%">
+							<xcp:outputSimple value="#{row.calendario}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_nome}"
+							width="50%">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_acoes}"
+							width="10%">
+							<xcp:commandButton
+								icon="ui-icon-trash"
+								update="tblCalendarios"
+								action="#{calendariosBacking.actionRemoverCalendarios(row)}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+				<p:spacer height="1" />
+				<p:fieldset
+					id="fldDatas"
+					legend="#{bundle.title_datas}">
+					<xcp:panelForm>
+						<xcp:date
+							id="txtData"
+							required="true"
+							value="#{calendariosBacking.calendarioSel.data}"
+							label="#{bundle.lbl_data}" />
+
+						<xcp:text
+							id="txtDescricao"
+							label="#{bundle.lbl_descricao}"
+							required="true"
+							value="#{calendariosBacking.calendarioSel.descricao}"
+							size="75" />
+
+						<xcp:combo
+							id="cboPonto"
+							value="#{calendariosBacking.calendarioSel.ponto}"
+							label="#{bundle.lbl_ponto}"
+							required="true"
+							itens="#{calendarioBacking.itensPonto}"
+							width="81px !important;" />
+
+					</xcp:panelForm>
+
+					<center>
+						<xcp:commandButton
+							id="btn_adicionar_cal"
+							value="#{bundle.btn_add}"
+							icon="ui-icon-plusthick"
+							update="fldDatas"
+							process="@this fldDatas"
+							action="#{calendariosBacking.actionAddCalendario}"
+							oncomplete="PrimeFaces.focus('frm:txtData_c')" />
+					</center>
+
+					<p:spacer height="1" />
+
+					<p:dataTable
+						id="tblCalendario"
+						var="row"
+						value="#{calendariosBacking.listCalendario}"
+						rowKey="#{row.PK}"
+						rowIndexVar="idx"
+						emptyMessage="#{bundle.msg_sem_resultado}"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="#{viewUtil.tableRows}"
+						style="width: 686px">
+
+						<p:column
+							headerText="#{bundle.col_data}"
+							width="15%">
+							<xcp:outputSimpleDate value="#{row.data}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_descricao}"
+							width="50%">
+							<xcp:outputSimple value="#{row.descricao}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_ponto_fac}"
+							width="10%">
+							<xcp:outputSimple
+								value="#{row.ponto}"
+								itens="#{calendariosBacking.itensIndSimNao}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundle.col_acoes}"
+							width="10%">
+							<xcp:commandButton
+								icon="ui-icon-trash"
+								update="tblCalendario"
+								action="#{calendariosBacking.actionRemoverCalendario(row)}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+				<p:toolbar>
+					<f:facet name="left">
+						<xcp:commandButton
+							id="btn_gravarLote"
+							icon="ui-icon-disk"
+							process="@this"
+							value="#{bundle.btn_gravar}"
+							action="#{calendariosBacking.actionExecutarLote}" />
+						<xcp:commandButton
+							id="btn_removerLote"
+							icon="ui-icon-trash"
+							process="@this"
+							value="#{bundle.btn_remover}"
+							action="#{calendariosBacking.actionRemoverLote}" />
+					</f:facet>
+				</p:toolbar>
+			</xcp:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

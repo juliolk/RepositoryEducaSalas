@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<xcp:panelManutDetalhes
+		id="Conhecimentos"
+		backing="#{conhecimentosBacking}"
+		masterId="Avaliacoes">
+		<ui:define name="colunas">
+
+			<xcp:column
+				headerText="#{bundle.col_codigo}"
+				value="#{row.conhecimento}"
+				type="Number"
+				size="1">
+				<xcp:outputSimpleNumber
+					value="#{row.conhecimento}"
+					precision="4"
+					scale="0" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_descricao}"
+				value="#{row.descricao}"
+				type="String"
+				size="8">
+				<xcp:outputSimple value="#{row.descricao}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_obs}"
+				value="#{row.obs}"
+				type="String"
+				size="40"
+				style="white-space:normal !important;">
+				<xcp:outputSimple value="#{row.obs}" />
+			</xcp:column>
+
+			<xcp:column
+				headerText="#{bundle.col_tipo}"
+				value="#{row.tipo}"
+				type="String"
+				itens="#{conhecimentosBacking.itensTipo}"
+				size="10"
+				rendered="#{conhecimentosBacking.mestreBacking.entity.tipo != 1 and conhecimentosBacking.mestreBacking.entity.tipo != 3 and conhecimentosBacking.mestreBacking.entity.tipo != 6 and conhecimentosBacking.mestreBacking.entity.tipo != 7}">
+				<xcp:outputSimple
+					value="#{row.tipo}"
+					itens="#{conhecimentosBacking.itensTipo}" />
+			</xcp:column>
+
+		</ui:define>
+
+		<ui:define name="form">
+			<xcp:panelForm>
+
+				<xcp:number
+					id="txtConhecimento_Conhecimentos"
+					label="#{bundle.lbl_codigo}"
+					required="true"
+					value="#{conhecimentosBacking.entity.conhecimento}"
+					size="4"
+					precision="4"
+					scale="0"
+					maxValue="9999"
+					readonly="#{not conhecimentosBacking.entity.novo}" />
+
+				<xcp:memo
+					id="txtDescricao_Conhecimentos"
+					label="#{bundle.lbl_descricao}"
+					required="true"
+					value="#{conhecimentosBacking.entity.descricao}"
+					size="500"
+					cols="78" />
+
+				<xcp:memo
+					id="txtObs_Conhecimentos"
+					label="#{bundle.lbl_obs}"
+					value="#{conhecimentosBacking.entity.obs}"
+					size="500"
+					cols="78" />
+
+				<xcp:combo
+					id="cboTipo_Conhecimentos"
+					value="#{conhecimentosBacking.entity.tipo}"
+					label="#{bundle.lbl_tipo}"
+					required="true"
+					itens="#{conhecimentosBacking.itensTipo}"
+					readonly="#{not conhecimentosBacking.entity.novo}"
+					rendered="#{conhecimentosBacking.mestreBacking.entity.tipo != 1 and conhecimentosBacking.mestreBacking.entity.tipo != 3 and conhecimentosBacking.mestreBacking.entity.tipo != 6 and conhecimentosBacking.mestreBacking.entity.tipo != 7}">
+					<p:ajax
+						event="change"
+						update="txtQtdpontos_Conhecimentos,txtQtdpontos_Conhecimentos_l" />
+				</xcp:combo>
+
+				<xcp:combo
+					id="cboObrigatorio"
+					value="#{conhecimentosBacking.entity.obrigatorio}"
+					label="#{bundle.lbl_obrigatorio}"
+					itens="#{conhecimentosBacking.itensIndSimNao}"
+					rendered="#{conhecimentosBacking.mestreBacking.entity.tipo != 1 and conhecimentosBacking.mestreBacking.entity.tipo != 3 and conhecimentosBacking.mestreBacking.entity.tipo != 6 and conhecimentosBacking.mestreBacking.entity.tipo != 7}" />
+
+				<xcp:number
+					id="txtQtdpontos_Conhecimentos"
+					label="#{bundle.lbl_qtdpontos}"
+					rendered="#{conhecimentosBacking.entity.tipo==2}"
+					value="#{conhecimentosBacking.entity.qtdpontos}"
+					size="10"
+					precision="12"
+					scale="2"
+					maxValue="9999999999.99" />
+
+				<xcp:lov
+					id="lovGrupo"
+					value="#{conhecimentosBacking.entity.grupoFk}"
+					label="#{bundle.lbl_grupo}"
+					query="grupo_conhecimento"
+					size="5"
+					rendered="#{avaliacoesBacking.entity.tipo == 4 or avaliacoesBacking.entity.tipo == 5}" />
+
+			</xcp:panelForm>
+
+			<p:outputPanel rendered="#{conhecimentosBacking.renderedNotas}">
+				<ui:include src="ConhecimentosNotasForm.xhtml" />
+			</p:outputPanel>
+		</ui:define>
+
+		<ui:define name="headerTitle">
+			<h:outputText
+				value="#{bundle.lbl_titulo_bancotalentos}"
+				rendered="#{conhecimentosBacking.mestreBacking.entity.tipo == 1 or conhecimentosBacking.mestreBacking.entity.tipo == 3}" />
+			<h:outputText
+				value="#{bundle.lbl_titulo_habilidades}"
+				rendered="#{conhecimentosBacking.mestreBacking.entity.tipo == 6}" />
+			<h:outputText
+				value="#{bundle.lbl_titulo_atitudes}"
+				rendered="#{conhecimentosBacking.mestreBacking.entity.tipo == 7}" />
+			<h:outputText
+				value="#{bundle.lbl_titulo_Conhecimentos}"
+				rendered="#{conhecimentosBacking.mestreBacking.entity.tipo != 1 and conhecimentosBacking.mestreBacking.entity.tipo != 3 and conhecimentosBacking.mestreBacking.entity.tipo != 6 and conhecimentosBacking.mestreBacking.entity.tipo != 7}" />
+		</ui:define>
+
+
+	</xcp:panelManutDetalhes>
+</ui:composition>

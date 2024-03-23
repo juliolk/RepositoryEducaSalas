@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags"
+	template="#{xcp:getLayout('manut')}">
+	<ui:define name="conteudo">
+		<xcp:panelManut
+			id="Empresas"
+			backing="#{empresasBacking}">
+
+			<ui:define name="colunas">
+
+				<xcp:column
+					headerText="#{bundle.col_empresa}"
+					value="#{row.empresa}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.empresa}"
+						precision="3"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_nome}"
+					value="#{row.nome}"
+					type="String"
+					size="60">
+					<xcp:outputSimple value="#{row.nome}" />
+				</xcp:column>
+
+
+				<xcp:column
+					headerText="#{bundle.col_responsavel}"
+					value="#{row.responsavelFk.nome}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.responsavelFk.nome}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_categoria}"
+					value="#{row.categoria}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.categoriaFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_cidade}"
+					value="#{row.cidadeFk.descricao}"
+					type="String"
+					size="30">
+					<xcp:outputSimple value="#{row.cidadeFk.descricao}" />
+				</xcp:column>
+
+				<xcp:column
+					size="5"
+					type="Center"
+					headerText="#{bundle.col_status}">
+					<xcp:check
+						id="chk_col_indStatus"
+						simple="true"
+						readonly="true"
+						value="#{row.indStatus}" />
+				</xcp:column>
+
+			</ui:define>
+
+			<ui:define name="form">
+				<xcp:panelGrid columns="2">
+					<p:outputPanel>
+						<xcp:border
+							id="brdEmpresa"
+							header="#{bundle.tit_empresa}">
+
+							<xcp:number
+								id="txtEmpresa"
+								value="#{empresasBacking.entity.empresa}"
+								label="#{bundle.lbl_empresa}"
+								required="true"
+								size="3"
+								readonly="#{not empresasBacking.entity.novo}" />
+
+							<xcp:text
+								id="txtNome"
+								label="#{bundle.lbl_nome}"
+								required="true"
+								value="#{empresasBacking.entity.nome}"
+								size="60" />
+
+							<xcp:check
+								id="chk_indStatus"
+								label="#{bundle.lbl_status}"
+								value="#{empresasBacking.entity.indStatus}"
+								required="true" />
+
+
+						</xcp:border>
+
+						<xcp:endereco
+							id="empresa"
+							value="#{empresasBacking.entity.endereco}"
+							maxlengthcompl="30" />
+
+
+
+						<xcp:border
+							id="brdContato"
+							header="#{bundle.tit_contato}">
+
+							<xcp:fone
+								id="txtFoneemp"
+								label="#{bundle.lbl_foneemp}"
+								required="true"
+								value="#{empresasBacking.entity.foneemp}" />
+
+							<xcp:lov
+								id="lovResponsavel"
+								value="#{empresasBacking.entity.responsavelFk}"
+								params="#{empresasBacking.paramsEmpresa}"
+								label="#{bundle.lbl_responsavel}"
+								query="funcionariosLov"
+								size="8" />
+
+							<xcp:lov
+								id="lovRespa"
+								value="#{empresasBacking.entity.respaFk}"
+								label="#{bundle.lbl_respa}"
+								params="#{empresasBacking.paramsEmpresa}"
+								query="funcionariosLov"
+								size="8" />
+
+							<xcp:lov
+								id="lovRespb"
+								value="#{empresasBacking.entity.respbFk}"
+								label="#{bundle.lbl_respb}"
+								params="#{empresasBacking.paramsEmpresa}"
+								query="funcionariosLov"
+								size="8" />
+
+						</xcp:border>
+
+						<xcp:panelEsoc backing="#{empresasBacking}" />
+
+					</p:outputPanel>
+					<p:outputPanel>
+						<xcp:border
+							id="brdInformacoes"
+							header="#{bundle.tit_informacoes}">
+
+							<xcp:cnpj
+								id="txtCgccei"
+								required="true"
+								label="#{bundle.lbl_cnpj}"
+								size="15"
+								value="#{empresasBacking.entity.cgccei}" />
+
+							<xcp:number
+								id="txtIcm"
+								label="#{bundle.lbl_icm}"
+								value="#{empresasBacking.entity.icm}"
+								size="15"
+								maxlength="14"
+								maxValue="99999999999999" />
+
+							<xcp:lov
+								id="lovAtividade"
+								value="#{empresasBacking.entity.atividadeFk}"
+								label="#{bundle.lbl_atividade}"
+								required="true"
+								query="atividade"
+								size="8" />
+
+							<xcp:lov
+								id="lovNatureza"
+								value="#{empresasBacking.entity.naturezaFk}"
+								label="#{bundle.lbl_natureza}"
+								required="true"
+								query="natureza"
+								size="8" />
+
+							<xcp:lov
+								id="lovCategoria"
+								value="#{empresasBacking.entity.categoriaFk}"
+								label="#{bundle.lbl_categoria}"
+								required="true"
+								query="empcategorias"
+								size="8" />
+
+							<xcp:lov
+								id="txtFpasdefault"
+								label="#{bundle.lbl_fpasdefault}"
+								value="#{empresasBacking.entity.fpasdefaultFk}"
+								query="fpas"
+								selectionListener="#{empresasBacking.selectFpas}"
+								update="txtSiafi, txtSiafi_l"
+								size="8"
+								required="true" />
+
+							<xcp:number
+								id="txtProprietarios"
+								label="#{bundle.lbl_proprietarios}"
+								value="#{empresasBacking.entity.proprietarios}"
+								class="txt-empresasform-informacoes"
+								maxlength="3"
+								maxValue="999" />
+
+							<xcp:number
+								id="txtConveniomtb"
+								label="#{bundle.lbl_conveniomtb}"
+								value="#{empresasBacking.entity.conveniomtb}"
+								class="txt-empresasform-informacoes"
+								maxValue="99999999" />
+
+							<xcp:text
+								id="txtContafgts"
+								label="#{bundle.lbl_contafgts}"
+								value="#{empresasBacking.entity.contafgts}"
+								class="txt-empresasform-informacoes" />
+
+
+							<xcp:combo
+								id="cboDtbaserais"
+								value="#{empresasBacking.entity.dtbaserais}"
+								label="#{bundle.lbl_dtbaserais}"
+								required="true"
+								itens="#{empresasBacking.itensMesesAno}"
+								class="combo-empresasform-informacoes" />
+
+							<xcp:number
+								id="txtPercterc"
+								label="#{bundle.lbl_percterc}"
+								required="true"
+								class="txt-empresasform-informacoes"
+								maxValue="14"
+								value="#{empresasBacking.entity.percterc}"
+								precision="10"
+								scale="4" />
+
+							<xcp:number
+								id="txtCodterc"
+								label="#{bundle.lbl_codterc}"
+								required="true"
+								value="#{empresasBacking.entity.codterc}"
+								class="txt-empresasform-informacoes"
+								maxlength="8"
+								maxValue="99999999" />
+
+							<xcp:text
+								id="txtSiafi"
+								label="#{bundle.lbl_siafi}"
+								value="#{empresasBacking.entity.siafi}"
+								class="txt-empresasform-informacoes"
+								required="#{empresasBacking.exibeSiafi}"
+								maxlength="6" />
+
+							<xcp:combo
+								id="cboRelogio"
+								required="true"
+								value="#{empresasBacking.entity.relogio}"
+								label="#{bundle.lbl_relogio_empresas}"
+								itens="#{empresasBacking.itensRelogio}"
+								style="width: 400px" />
+
+							<xcp:combo
+								id="cboPcd"
+								required="true"
+								value="#{empresasBacking.entity.pcd}"
+								label="#{bundle.lbl_pcd_empresas}"
+								itens="#{empresasBacking.itensPcd}"
+								style="width: 400px" />
+
+							<xcp:combo
+								id="cboAprendiz"
+								required="true"
+								value="#{empresasBacking.entity.aprendiz}"
+								label="#{bundle.lbl_aprendiz_empresas}"
+								itens="#{empresasBacking.itensAprendiz}"
+								style="width: 400px" />
+
+							<xcp:combo
+								id="cboAprendizEntidade"
+								required="true"
+								value="#{empresasBacking.entity.aprendizEntidade}"
+								label="#{bundle.lbl_aprendizent_empresas}"
+								itens="#{empresasBacking.itensIndSimNaoNull}" />
+
+							<xcp:cnpj
+								id="txtCnpjEfr"
+								label="#{bundle.lbl_cnpjefr}"
+								size="15"
+								value="#{empresasBacking.entity.cnpjEfr}" />
+
+
+							<xcp:lov
+								id="lovProcessoFap"
+								value="#{empresasBacking.entity.processoFapFk}"
+								label="#{bundle.lbl_ProcessoFap}"
+								query="processoesoc"
+								size="10" />
+
+
+							<xcp:lov
+								id="lovProcessoRat"
+								value="#{empresasBacking.entity.processoRatFk}"
+								label="#{bundle.lbl_ProcessoRat}"
+								query="processoesoc"
+								size="10" />
+
+							<xcp:combo
+								id="cboIndPispag"
+								value="#{empresasBacking.entity.indPispag}"
+								label="#{bundle.lbl_indPispag}"
+								itens="#{empresasBacking.itensIndSimNaoNull}" />
+
+							<xcp:combo
+								id="cboTipDesoneracao"
+								value="#{empresasBacking.entity.tipDesoneracao}"
+								label="#{bundle.lbl_tipDesoneracao}"
+								itens="#{empresasBacking.itensTipDesoneracao}" />
+
+						</xcp:border>
+					</p:outputPanel>
+
+				</xcp:panelGrid>
+			</ui:define>
+		</xcp:panelManut>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+	<p:blockUI
+		block="panelSelecao"
+		trigger="btn_buscar">
+		<p:graphicImage value="/resources/img/ajaxloadingbar.gif" />
+	</p:blockUI>
+	<p:outputPanel id="panelSelecao">
+		<p:fieldset
+			legend="#{bundle.tit_portaria_ferias}"
+			style="width:800px">
+
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovOrgao"
+					value="#{backing.helper.orgao}"
+					selectionListener="#{backing.selectOrgao}"
+					label="#{bundle.lbl_orgao}"
+					query="orgaos"
+					update="lovDivisao,lovSetor"
+					size="8" />
+
+				<xcp:lov
+					id="lovDivisao"
+					value="#{backing.helper.divisao}"
+					label="#{bundle.lbl_divisao}"
+					query="divisoes_orgao"
+					selectionListener="#{backing.selectDivisao}"
+					params="#{backing.paramsDivisao}"
+					update="lovSetor"
+					size="8" />
+
+				<xcp:lov
+					id="lovSetor"
+					value="#{backing.helper.setor}"
+					label="#{bundle.lbl_setor}"
+					params="#{backing.paramsSetor}"
+					query="setores_divisao"
+					size="8" />
+
+				<xcp:lov
+					id="lovVinculo"
+					value="#{backing.helper.vinculo}"
+					label="#{bundle.lbl_vinculo}"
+					query="vinculos"
+					size="8" />
+
+				<xcp:lov
+					id="lovCargo"
+					value="#{backing.helper.cargo}"
+					label="#{bundle.lbl_cargo}"
+					query="cargos"
+					size="8" />
+			</xcp:panelForm>
+			<p:toolbar>
+				<f:facet name="left">
+
+					<xcp:commandButton
+						id="btn_buscar"
+						value="#{bundle.btn_buscar}"
+						icon="ui-icon-search"
+						action="#{backing.actionBuscaFuncionarios}"
+						update="tblFuncionarios" />
+
+					<xcp:commandButton
+						id="btn_limpar"
+						value="#{bundle.btn_limparSelecao}"
+						icon="ui-icon-search"
+						action="#{backing.actionLimparSelecao}"
+						update="tblFuncionarios" />
+				</f:facet>
+			</p:toolbar>
+
+		</p:fieldset>
+		<p:fieldset
+			legend="#{bundle.tit_individual}"
+			style="width:800px">
+
+			<xcp:panelForm>
+				<xcp:lov
+					id="lovMatricula"
+					value="#{backing.helper.funcionario}"
+					label="#{bundle.lbl_matricula}"
+					selectionListener="#{backing.selectFuncionario}"
+					update="tblFuncionarios"
+					query="#{lovFunc}"
+					size="8" />
+
+			</xcp:panelForm>
+
+		</p:fieldset>
+
+		<p:fieldset
+			legend="#{bundle.tit_selecionados}"
+			style="width:800px">
+			<p:dataTable
+				id="tblFuncionarios"
+				var="row"
+				rowKey="#{row.PK}"
+				value="#{backing.helper.listaFuncionarios}"
+				selection="#{backing.helper.listaFuncionariosSel}"
+				sortMode="multiple"
+				scrollHeight="120"
+				emptyMessage="#{bundle.msg_sem_resultado}"
+				scrollable="true">
+
+				<p:column
+					selectionMode="multiple"
+					style="width:1%;text-align:center" />
+
+				<xcp:column
+					headerText="#{bundle.col_matricula}"
+					value="#{row.numMatricula}"
+					type="Number"
+					size="3">
+					<xcp:outputSimpleNumber
+						value="#{row.numMatricula}"
+						precision="10"
+						scale="0" />
+				</xcp:column>
+
+				<xcp:column
+					headerText="#{bundle.col_descricao}"
+					value="#{row.desNome}"
+					type="String"
+					size="20">
+					<xcp:outputSimple value="#{row.desNome}" />
+				</xcp:column>
+
+			</p:dataTable>
+		</p:fieldset>
+		<p:toolbar>
+			<f:facet name="left">
+				<xcp:commandButton
+					id="btn_gerar_coletivo"
+					icon="ui-icon-gear"
+					action="#{backing.actionValidaPortariaColetiva}"
+					process="@form"
+					update=":#{backing.formId}"
+					value="#{bundle.btn_gerar_coletivo}" />
+			</f:facet>
+		</p:toolbar>
+	</p:outputPanel>
+</ui:composition>

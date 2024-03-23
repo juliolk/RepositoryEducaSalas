@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:xcp="http://www.xcapesoftware.com.br/xcp_tags">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<p:outputPanel>
+				<h1 class="datacard-container-title">
+					<a
+						class="datacard-icon-action"
+						data-toggle="collapse"
+						data-target="#pnlcolcompl"><i class='fa fa-minus-square-o' /></a>#{bundle.tit_infcompl}
+				</h1>
+			</p:outputPanel>
+			<div
+				id="pnlcolcompl"
+				class="collapse in">
+				<div class="datacard-listcontainer">
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_trab_manual}
+
+							<h:commandLink
+								href="#"
+								styleClass="datacard-icon-action"
+								title="#{bundle.title_adic_manual}">
+
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.functrabmanual}"
+									value="#{null}" />
+
+								<p:ajax
+									update=":frmTrabManual"
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgTrabManual_w').show();" />
+
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+						</h:commandLink>
+
+						</div>
+						<p:outputPanel
+							id="listaTrabManual"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listTrabManual }">
+								<div class="datacard-empty-message">#{bundle.msg_nenhum_trabalho_manual}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="trabManual"
+									value="#{talentosPortalBacking.helper.listTrabManual}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#">
+												<p:ajax
+													update=":frmTrabManual"
+													oncomplete="PF('dlgTrabManual_w').show()" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.functrabmanual}"
+													value="#{trabManual}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink
+												href="#"
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverTrabManual(trabManual)}">
+												<p:ajax update=":#{p:component('listaTrabManual')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{trabManual.sequencia}&#160;-&#160;#{trabManual.codigoFk.descricao}
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_material}:</small><br />
+												<h:outputText
+													value="#{fn:replace(trabManual.material,'\\n','&lt;br/&gt;')}"
+													escape="false" />
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_descricao}:</small><br />
+												<h:outputText
+													value="#{fn:replace(trabManual.descricao,'\\n','&lt;br/&gt;')}"
+													escape="false" />
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_trab_volunt}
+
+							<h:commandLink
+								href="#"
+								styleClass="datacard-icon-action"
+								title="#{bundle.hlp_adic_trab_vol}">
+
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.functrabvolunt}"
+									value="#{null}" />
+
+								<p:ajax
+									update=":frmTrabVol"
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgTrabVol_w').show();" />
+
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+						</h:commandLink>
+
+						</div>
+						<p:outputPanel
+							id="listaTrabVol"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listTrabVolunt }">
+								<div class="datacard-empty-message">#{bundle.msg_nenhum_trabalho_volunt}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="trabVol"
+									value="#{talentosPortalBacking.helper.listTrabVolunt}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#">
+												<p:ajax
+													update=":frmTrabVol"
+													oncomplete="PF('dlgTrabVol_w').show()" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.functrabvolunt}"
+													value="#{trabVol}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink
+												href="#"
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverTrabVolunt(trabVol)}">
+												<p:ajax update=":#{p:component('listaTrabVol')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{trabVol.sequencia}&#160;-&#160;#{trabVol.entidade}</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>Período:&#160;<xcp:outputSimpleDate
+															value="#{trabVol.datainicio}" /> à&#160;<xcp:outputSimpleDate
+															value="#{trabVol.datafim}" /></span><br /> <span>#{bundle.lbl_frequencia}:&#160;<xcp:outputSimple
+															value="#{trabVol.frequencia}"
+															itens="#{talentosPortalBacking.itensFrequencia}" /></span> <span>#{bundle.lbl_horas}:&#160;<xcp:outputSimple
+															value="#{trabVol.tempo}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_descricao}:</small><br />
+												<h:outputText
+													value="#{fn:replace(trabVol.descricao,'\\n','&lt;br/&gt;')}"
+													escape="false" />
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_func_lazer}
+
+							<h:commandLink
+								href="#"
+								styleClass="datacard-icon-action"
+								title="#{bundle.hlp_adic_lazer}">
+
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.funclazer}"
+									value="#{null}" />
+
+								<p:ajax
+									update=":frmFuncLazer"
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgFuncLazer_w').show();" />
+
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+						</h:commandLink>
+
+						</div>
+						<p:outputPanel
+							id="listaLazer"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listFuncLazer }">
+								<div class="datacard-empty-message">#{bundle.msg_nenhuma_ativ_lazer}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="lazer"
+									value="#{talentosPortalBacking.helper.listFuncLazer}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#">
+												<p:ajax
+													update=":frmFuncLazer"
+													oncomplete="PF('dlgFuncLazer_w').show()" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funclazer}"
+													value="#{lazer}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink
+												href="#"
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverFuncLazer(lazer)}">
+												<p:ajax update=":#{p:component('listaLazer')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{lazer.codigoFk.descricao}</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_frequencia}:&#160;<xcp:outputSimple
+															value="#{lazer.frequencia}"
+															itens="#{talentosPortalBacking.itensFrequencia}" /></span> <span>Tempo:&#160;<xcp:outputSimple
+															value="#{lazer.tempo}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>#{bundle.lbl_descricao}:</small><br />
+												<h:outputText
+													value="#{fn:replace(lazer.descricao,'\\n','&lt;br/&gt;')}"
+													escape="false" />
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_func_viagens}
+
+							<h:commandLink
+								href="#"
+								styleClass="datacard-icon-action"
+								title="#{bundle.hlp_adic_viagem}">
+
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.funcviagens}"
+									value="#{null}" />
+
+								<p:ajax
+									update=":frmFuncViagens"
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgFuncViagens_w').show();" />
+
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+						</h:commandLink>
+
+						</div>
+						<p:outputPanel
+							id="listaViagem"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listFuncViagens }">
+								<div class="datacard-empty-message">#{bundle.msg_nenhuma_viagem}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="viagem"
+									value="#{talentosPortalBacking.helper.listFuncViagens}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#">
+												<p:ajax
+													update=":frmFuncViagens"
+													oncomplete="PF('dlgFuncViagens_w').show()" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funcviagens}"
+													value="#{viagem}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink
+												href="#"
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverFuncViagens(viagem)}">
+												<p:ajax update=":#{p:component('listaViagem')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{viagem.especieFk.descricao} em&#160;
+													<xcp:outputSimpleDate value="#{viagem.data}" />
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_cidade}:&#160;<xcp:outputSimple
+															value="#{viagem.cidadeFk.descricao}" /></span><br /> <span>Dias:&#160;<xcp:outputSimple
+															value="#{viagem.duracao}" /></span> <span>Período:&#160;<xcp:outputSimple
+															value="#{viagem.tpduracao}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-4 datacard-item-obs">
+												<small>Descrição:</small><br />
+												<h:outputText
+													value="#{fn:replace(viagem.descricao,'\\n','&lt;br/&gt;')}"
+													escape="false" />
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.tit_func_ativfisica}
+							<h:commandLink
+								href="#"
+								styleClass="datacard-icon-action"
+								title="#{bundle.hlp_adic_ativ_fis}">
+
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.funcativfisica}"
+									value="#{null}" />
+
+								<p:ajax
+									update=":frmFuncAtivFisica"
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgFuncAtivFisica_w').show();" />
+
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+						</h:commandLink>
+
+						</div>
+						<p:outputPanel
+							id="listaAtivFisica"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listFuncAtivFisica }">
+								<div class="datacard-empty-message">#{bundle.msg_nenhuma_ativ_fis}</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="ativFisica"
+									value="#{talentosPortalBacking.helper.listFuncAtivFisica}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#">
+												<p:ajax
+													update=":frmFuncAtivFisica"
+													oncomplete="PF('dlgFuncAtivFisica_w').show()" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funcativfisica}"
+													value="#{ativFisica}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink
+												href="#"
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverFuncAtivFisica(ativFisica)}">
+												<p:ajax update=":#{p:component('listaAtivFisica')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{ativFisica.tipoFk.descricao}</div>
+											</div>
+											<div class="col-sm-8">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_modalidade}:&#160;<xcp:outputSimple
+															value="#{ativFisica.modalidade}" /></span> <span>#{bundle.lbl_frequencia}:&#160;<xcp:outputSimple
+															value="#{ativFisica.frequencia}"
+															itens="#{talentosPortalBacking.itensFrequencia}" /></span> <span>Horas:&#160;<xcp:outputSimple
+															value="#{ativFisica.tempo}" /></span>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+					<div class="datacard datacard-grouped">
+						<div class="datacard-title">
+							#{bundle.title_obras}
+
+							<h:commandLink
+								href="#"
+								styleClass="datacard-icon-action"
+								title="#{bundle.hlp_adic_obra}">
+
+								<f:setPropertyActionListener
+									target="#{talentosPortalBacking.helper.funcobras}"
+									value="#{null}" />
+
+								<p:ajax
+									update=":frmFuncObras"
+									onstart="PF('w_dlgXcpExecStatus').show();"
+									oncomplete="PF('w_dlgXcpExecStatus').hide(); PF('dlgFuncObras_w').show();" />
+
+								<i class="fa fa-fw fa-plus"></i> #{bundle.btn_adicionar_selecao}
+						</h:commandLink>
+
+						</div>
+						<p:outputPanel
+							id="listaObras"
+							class="datacard-content">
+							<ui:fragment
+								rendered="#{empty talentosPortalBacking.helper.listFuncObras }">
+								<div class="datacard-empty-message">#{bundle.msg_nenhuma_obra}
+								</div>
+							</ui:fragment>
+
+							<ul class="datacard-itemslist-container">
+								<ui:repeat
+									var="obra"
+									value="#{talentosPortalBacking.helper.listFuncObras}">
+									<li class="datacard-item container-fluid">
+										<div class="datacard-item-actions">
+											<h:commandLink href="#">
+												<p:ajax
+													update=":frmFuncObras"
+													oncomplete="PF('dlgFuncObras_w').show()" />
+												<f:setPropertyActionListener
+													target="#{talentosPortalBacking.helper.funcobras}"
+													value="#{obra}" />
+												<i class="fa fa-fw fa-pencil"></i>
+											</h:commandLink>
+											<h:commandLink
+												href="#"
+												onclick="if(!confirm('#{bundle.tit_confirma_exclusao}?')) return false;"
+												action="#{talentosPortalBacking.actionRemoverFuncObras(obra)}">
+												<p:ajax update=":#{p:component('listaObras')}" />
+												<i class="fa fa-fw fa-trash"></i>
+											</h:commandLink>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="datacard-item-highlight">
+													#{obra.codigoFk.descricao}: <small>#{obra.titulo}</small>
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_data}:&#160;<xcp:outputSimpleDate
+															value="#{obra.data}" /></span> <span>Assunto:&#160;<xcp:outputSimple
+															value="#{obra.assunto}" /></span>
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="datacard-item-info">
+													<span>#{bundle.lbl_editora}:&#160;<xcp:outputSimple
+															value="#{obra.editora}" /></span> <span>#{bundle.lbl_volume}:&#160;<xcp:outputSimple
+															value="#{obra.volume}" /></span> <span>#{bundle.lbl_paginas}:&#160;<xcp:outputSimple
+															value="#{obra.paginas}" /></span>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</p:outputPanel>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>
